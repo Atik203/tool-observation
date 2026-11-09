@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software or dataset, please cite it as below."
+title: "Tool-Observation Sensitivity in Language-Model Agents: A Fixed-Prefix Causal Study"
+abstract: >-
+  Pre-confirmatory research software for a fixed-prefix causal study of how the
+  content of a real tool observation changes a language-model agent's next
+  decision, and how quickly the agent recovers over four steps. The repository
+  contains the CTO-800 harvest pipeline, perturbation renderer, calibration and
+  main-run harnesses, analysis code, and governance documents. No confirmatory
+  results are reported in version 0.1.0; the pilot is N=60 and is a screening
+  signal, not a dose-response law.
+authors:
+  - family-names: Rahaman
+    given-names: Atikur
+    email: atikurrahaman0305@gmail.com
+version: 0.1.0
+date-released: 2026-11-09
+repository-code: "https://github.com/Atik203/tool-observation"
+url: "https://github.com/Atik203/tool-observation"
+license: MIT
+keywords:
+  - llm-agents
+  - causal-inference
+  - tool-use
+  - tau-bench
+  - evaluation
+  - research
+  - reproducibility
+  - dataset
+type: software

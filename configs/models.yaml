@@ -1,0 +1,71 @@
+# Target models for the confirmatory run.
+# Revision is intentionally TBD until the rental environment is pinned and the
+# exact commit hashes are recorded in data/manifests/model_pins.json. Do not
+# guess a revision.
+models:
+  - id: qwen2_5_7b_instruct_awq
+    repo_id: Qwen/Qwen2.5-7B-Instruct-AWQ
+    revision: TBD
+    params_b: 7
+    quantization: awq_4bit
+    license: Apache-2.0
+    role: primary_family
+    family: qwen
+    dtype: float16
+    max_model_len: 8192
+    gpu_memory_utilization: 0.90
+    enforce_eager: false
+  - id: mistral_7b_instruct_v03_awq
+    repo_id: mistralai/Mistral-7B-Instruct-v0.3-AWQ
+    revision: TBD
+    params_b: 7
+    quantization: awq_4bit
+    license: Apache-2.0
+    role: second_family
+    family: mistral
+    dtype: float16
+    max_model_len: 8192
+    gpu_memory_utilization: 0.90
+    enforce_eager: false
+  - id: llama_3_1_8b_instruct_awq
+    repo_id: meta-llama/Llama-3.1-8B-Instruct-AWQ
+    revision: TBD
+    params_b: 8
+    quantization: awq_4bit
+    license: Llama-3.1-Community
+    role: third_family
+    family: llama
+    dtype: float16
+    max_model_len: 8192
+    gpu_memory_utilization: 0.90
+    enforce_eager: false
+
+decoding:
+  temperature: 0.0
+  top_p: 1.0
+  top_k: -1
+  max_tokens: 256
+  stop: ["\n\n"]
+  seed: 20261108
+
+serving:
+  engine: vllm
+  tensor_parallel: 1
+  batch_size: 12
+  max_num_seqs: 16
+  one_model_at_a_time: true
+
+substitute_policy:
+  trigger: "Primary model unavailable, license not accepted, or AWQ weights fail to load on the rental."
+  candidates:
+    - InternLM/InternLM2_5-7B-Chat
+    - 01-ai/Yi-1.5-9B-Chat
+  requirements:
+    - open_weight
+    - params_between_7_and_9
+    - chat_or_instruct_tuned
+    - reproducible_revision
+  rule: >-
+    A substitute must be recorded in prereg/AMENDMENTS.md before calibration and
+    must not be selected after seeing target-model outcomes. The three-family
+    structure is preserved; a substitute replaces a failed family, it is not added.

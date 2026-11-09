@@ -1,0 +1,71 @@
+# G0 harvest configuration.
+# The upstream commit is pinned on day 1 of the sprint; TBD is deliberate.
+source:
+  name: tau-bench
+  repository: https://github.com/sierra-research/tau-bench
+  license: MIT
+  pin: TBD
+  license_notice_retained: true
+  trajectory_files:
+    - historical_trajectories/gpt-4o-airline.json
+    - historical_trajectories/gpt-4o-retail.json
+    - historical_trajectories/sonnet-35-new-airline.json
+    - historical_trajectories/sonnet-35-new-retail.json
+  expected_trajectories: 1980
+  expected_candidates: 13605
+  expected_json_parseable: 11318
+  expected_eligible_value_used: 6554
+
+domains:
+  - airline
+  - retail
+
+harvest:
+  cap_per_task_domain: 10
+  max_capped_pool_empirical: 1646
+  sample_size: 880
+  freeze_size: 800
+  reserve_size: 80
+  domain_target:
+    airline: 400
+    retail: 400
+  stratify_by:
+    - domain
+    - donor
+    - step_index_bucket
+    - tool_family
+  random_seed: 20261108
+
+eligibility:
+  exclude_profile_tools: true
+  profile_tool_candidates_excluded: 3692
+  require_value_used: true
+  require_replay_match: true
+  replay_match_threshold: 0.98
+
+pii:
+  scrub_direct_identifiers: true
+  fields:
+    - person_name
+    - email
+    - phone
+    - street_address
+    - payment_identifier
+  replacement: stable_synthetic_token
+  exclude_if_decision_critical_pii: true
+
+audit:
+  sample_size: 40
+  pass_minimum: 36
+  pass_rate: 0.90
+  dimensions:
+    - eligibility
+    - pii
+    - decision_relevance
+    - replay_match
+
+freeze:
+  manifest: data/manifests/cto800_v1.json
+  perturbations: data/manifests/perturbations.jsonl
+  renderer_version: cto-prose-v1
+  no_target_outcomes_before_freeze: true

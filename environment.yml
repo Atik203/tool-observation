@@ -1,0 +1,21 @@
+name: tool-observation
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - statsmodels
+  - scikit-learn
+  - pyarrow
+  - pyyaml
+  - jinja2
+  - requests
+  - tqdm
+  - pytest
+  - ruff
+  - pip:
+      - -e .

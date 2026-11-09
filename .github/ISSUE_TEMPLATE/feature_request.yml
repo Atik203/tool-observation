@@ -1,0 +1,66 @@
+name: Feature request
+description: Propose a capability, analysis, or documentation improvement.
+title: "[feat]: "
+labels: ["enhancement", "triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a pre-confirmatory research repository. Proposals that change the sample,
+        severity manipulation, outcome coding, or analysis plan require a prereg amendment.
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What problem does this solve for the study or its reproducibility?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the behavior, interface, or document change.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - harvest / data pipeline
+        - renderer / perturbations
+        - inference / models
+        - outcome coding
+        - analysis / statistics
+        - docs / governance
+        - CI / tooling
+        - release
+    validations:
+      required: true
+  - type: dropdown
+    id: prereg
+    attributes:
+      label: Does this touch frozen data, the preregistration, or analysis code?
+      options:
+        - "No"
+        - "Yes — amendment required"
+        - "Unsure"
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional; note simpler options or why they are insufficient.
+    validations:
+      required: false
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This stays within the claim boundary in ROADMAP.md (no universal law, no model ranking, no frontier/live-API claim).
+          required: true
+        - label: I have not included secrets, PII, or raw data.
+          required: true

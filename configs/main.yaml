@@ -1,0 +1,80 @@
+# Main confirmatory run configuration.
+run:
+  name: cto800-main-v1
+  frozen_manifest: data/manifests/cto800_v1.json
+  seed: 20261108
+  arms: [V, s0, s1, s2, s3]
+  models: 3
+  prefixes: 800
+  domains:
+    airline: 400
+    retail: 400
+  decoding: greedy
+
+recovery:
+  horizon_steps: 4
+  transient:
+    enabled: true
+    prefixes: 800
+    severities: [s2, s3]
+    steps: 4
+    role: primary
+  persistent:
+    enabled: true
+    prefixes: 200
+    share_of_sample: 0.25
+    severities: [s3]
+    steps: 4
+    role: secondary
+  endpoints:
+    - R1_correct_decision
+    - R2_detection
+  censoring: at_h4
+
+jitter:
+  prefixes: 80
+  arms: 5
+  models: 3
+  repeats: 1
+
+generation_budget:
+  base: 12000          # 800 prefixes x 5 arms x 3 models
+  recovery_transient: 19200  # 800 x 2 severities x 4 steps x 3 models
+  recovery_persistent: 2400  # 200 x 1 severity x 4 steps x 3 models
+  jitter_repeats: 1200       # 80 x 5 arms x 3 models
+  total: 34800
+
+budget:
+  gpu_hours_min: 35
+  gpu_hours_max: 45
+  gpu_hourly_min_usd: 0.30
+  gpu_hourly_max_usd: 0.50
+  gpu_cost_min_usd: 15
+  gpu_cost_max_usd: 22
+  storage_egress_usd_min: 2
+  storage_egress_usd_max: 3
+  contingency_usd_min: 3
+  contingency_usd_max: 5
+  base_usd: 23
+  hard_cap_usd: 50
+  stop_at_spend_usd: 22
+  stop_at_gpu_hours: 45
+  paid_api: false
+  second_rental: false
+
+execution:
+  engine: vllm
+  one_model_at_a_time: true
+  batch_size: 12
+  max_num_seqs: 16
+  checkpoint_every_prefixes: 40
+  ledger: data/runs/main/ledger.jsonl
+  shard_by: [model, domain]
+  resume: true
+  fail_fast_on_parser_error_rate: 0.05
+
+outputs:
+  raw_dir: data/runs/main/raw
+  parsed_dir: data/runs/main/parsed
+  recovery_dir: data/runs/main/recovery
+  cost_report: artifacts/cost/main_cost.json

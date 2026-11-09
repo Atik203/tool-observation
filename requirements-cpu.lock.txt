@@ -1,0 +1,37 @@
+# requirements-cpu.lock.txt — PLACEHOLDER LOCK TEMPLATE
+#
+# This is NOT a resolved lock file. It records the packages the CPU environment is
+# expected to contain. Exact pins must be generated on the target machine (or in the
+# target container) and committed as a new, reviewed lock file:
+#
+#   python -m pip freeze --exclude-editable > requirements-cpu.lock.txt
+#
+# Do not hand-write versions here. A lock generated on Windows is not a portable
+# Linux/conda lock; regenerate it for each platform that runs the pipeline.
+#
+# Python: 3.12.x
+# Intended environment: conda `tool-observation` on the local CPU machine.
+# CPU-only path must import `toolobs` and run `pytest -q` without GPU packages.
+
+--index-url https://pypi.org/simple
+
+# Core scientific stack (unpinned on purpose; resolve on target)
+numpy
+pandas
+scipy
+statsmodels
+scikit-learn
+pyarrow
+
+# Configuration, rendering, IO
+pyyaml
+jinja2
+requests
+tqdm
+
+# Development / CI
+pytest
+ruff
+
+# This project (editable install)
+-e .

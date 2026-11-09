@@ -1,0 +1,88 @@
+# Analysis configuration — frozen with the preregistration at G0.
+analysis:
+  primary_model: qwen2_5_7b_instruct_awq
+  primary_estimand: pooled_slope
+  cluster: prefix_id
+  alpha: 0.05
+  two_sided: true
+  bootstrap_replicates: 2000
+  seed: 20261108
+
+slope:
+  model: conditional_logistic
+  stratify_by: prefix_id
+  dose_variable: severity
+  levels: [0, 1, 2, 3]
+  exclude_verbatim_anchor_from_primary: true
+  cluster_robust_se: true
+  pooled_stratify_by: [prefix_id, model_id]
+  fixed_sequence:
+    - pooled_beta
+    - per_model_beta_holm
+    - silent_propagation_descriptive
+    - recovery_half_life
+    - heterogeneity_exploratory
+  linearity:
+    test: quadratic_term
+    fallback: categorical_severity
+    alpha: 0.05
+    report_tier_ors_on_reject: true
+  sensitivity:
+    exclude_placebo: true
+    per_domain: true
+    per_donor: true
+
+outcomes:
+  Y_any: "signature differs from verbatim V continuation"
+  Y_silent: "false critical value appears in decision content and no flag"
+  Y_flag: "explicit flag, doubt, inconsistency, verify, or cannot-trust language"
+  Y_action: "tool or canonicalized args differ from V"
+  decomposition: "Y = Y_action or Y_flag or Y_silent"
+  canonicalization:
+    sort_keys: true
+    normalize_numbers: true
+    lowercase_entities: true
+
+recovery:
+  model: discrete_time_exponential
+  hazard: "1 - exp(-mu)"
+  half_life: "ln(2) / mu"
+  horizon: 4
+  interval_censoring: true
+  kaplan_meier: true
+  rmst: true
+  weibull_shape_test: true
+  weibull_lrt_alpha: 0.01
+  min_event_share_for_half_life: 0.50
+  primary_endpoint: R1_transient_s3
+  secondary_endpoints:
+    - R2_transient_s3
+    - R1_persistent_s3
+    - R1_transient_s2
+
+power:
+  mde_per_model_logit: 0.203
+  mde_or_per_level: 1.22
+  pooled_mde_logit: 0.15
+  power: 0.80
+  assumed_placebo_switch_rate: 0.04
+  recovery_switch_rate_assumed: 0.20
+  recovery_ci_pooled_approx_pct: 11.4
+
+labels:
+  severity_alpha_min: 0.75
+  outcome_kappa_min: 0.80
+  outcome_kappa_downgrade: 0.70
+  recovery_kappa_min: 0.75
+  silent_ppv_min: 0.90
+  parser_failure_max: 0.01
+  seed_repeat_stability_min: 0.90
+  adjudication: "third co-author; blind to arm"
+
+multiplicity:
+  method: fixed_sequence_then_holm
+  family: three_models
+  exploratory:
+    - model_by_severity
+    - task_by_severity
+    - model_recovery_ranking

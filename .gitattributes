@@ -1,0 +1,40 @@
+# Normalize line endings and mark binary files.
+* text=auto eol=lf
+
+*.py   text eol=lf
+*.pyi  text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml  text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
+*.md   text eol=lf
+*.cff  text eol=lf
+*.txt  text eol=lf
+*.cfg  text eol=lf
+*.ini  text eol=lf
+*.sh   text eol=lf
+Makefile text eol=lf
+
+*.ps1  text eol=crlf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+*.parquet binary
+*.arrow   binary
+*.feather binary
+*.pkl     binary
+*.npz     binary
+*.npy     binary
+*.safetensors binary
+*.bin     binary
+*.pt      binary
+*.pth     binary
+*.gguf    binary
+*.pdf     binary
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.zip     binary
+*.gz      binary

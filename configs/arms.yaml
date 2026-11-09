@@ -1,0 +1,65 @@
+# Observation arms. All of s=0..3 share one deterministic prose rendering;
+# only content differs. V is the verbatim JSON anchor and is excluded from the
+# primary linear slope.
+renderer:
+  version: cto-prose-v1
+  deterministic: true
+  llm_paraphrase: false
+  template: key_value_bullets
+  verify_s0_value_set_equals_v: true
+
+arms:
+  - id: V
+    label: verbatim
+    severity: null
+    in_primary_slope: false
+    role: format_and_jitter_anchor
+    observation: exact real tool output as raw JSON
+  - id: s0
+    label: faithful_prose
+    severity: 0
+    in_primary_slope: true
+    role: placebo
+    observation: deterministic prose paraphrase with all values preserved
+  - id: s1
+    label: noncritical_change
+    severity: 1
+    in_primary_slope: true
+    role: negative_control
+    observation: one non-critical field changed or omitted; field must not be used in the donor's factual continuation
+  - id: s2
+    label: critical_wrong_value
+    severity: 2
+    in_primary_slope: true
+    role: dose
+    observation: one decision-critical field changed to a plausible wrong value that changes the correct action if trusted
+  - id: s3
+    label: critical_plus_contradiction
+    severity: 3
+    in_primary_slope: true
+    role: dose
+    observation: >-
+      one critical field changed to an extreme or contradictory value plus a second
+      inconsistency (for example "cancelled" while seats are available, or
+      "non-refundable" inside the refund window)
+
+perturbation_record_fields:
+  - prefix_id
+  - json_path
+  - true_value
+  - false_value
+  - criticality
+  - expected_action_change
+  - renderer_version
+
+recovery:
+  horizon_steps: 4
+  transient:
+    enabled: true
+    share: 1.0
+    role: primary
+  persistent:
+    enabled: true
+    share: 0.25
+    severity: 3
+    role: secondary

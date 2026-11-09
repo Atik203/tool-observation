@@ -1,0 +1,38 @@
+# Base configuration — shared by all pipeline stages.
+project:
+  name: tool-observation
+  short_name: E2
+  title: "Tool-Observation Sensitivity in Language-Model Agents: A Fixed-Prefix Causal Study"
+  dataset_brand: CTO-800
+  version: 0.1.0
+  seed: 20261108
+
+paths:
+  root: .
+  configs: configs
+  data: data
+  raw: data/raw
+  upstream: data/upstream
+  interim: data/interim
+  frozen: data/frozen
+  manifests: data/manifests
+  runs: data/runs
+  artifacts: artifacts
+  paper: paper
+  release: release
+
+python:
+  required: "3.12"
+  local_interpreter: 'C:\ProgramData\anaconda3\python.exe'
+  package: toolobs
+
+runtime:
+  local_gpu: "RTX 3060 6GB (smoke tests only)"
+  main_gpu: "24GB RTX 3090/4090 rental"
+  paid_api: false
+  timezone: Asia/Dhaka
+
+logging:
+  level: INFO
+  jsonl: true
+  redact_pii: true

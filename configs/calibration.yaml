@@ -1,0 +1,37 @@
+# G1 calibration configuration.
+calibration:
+  n_prefixes: 60
+  prefixes_per_domain: 30
+  models: 3
+  arms: 5
+  generations: 900
+  decoding: greedy
+  seed: 20261108
+  prompt_version: cto-next-decision-v1
+  parser_version: cto-parser-v1
+
+sample:
+  stratify_by:
+    - domain
+    - donor
+    - step_index_bucket
+    - tool_family
+  disjoint_from_main: true
+
+gates:
+  parse_rate_min: 0.95
+  placebo_jitter_max: 0.20
+  s3_switch_min: 0.10
+  s3_switch_max: 0.80
+  refusal_rate_max: 0.05
+  per_model: true
+  fail_action: "fix prompt/parser and rerun calibration; do not start the main run"
+
+reporting:
+  output: artifacts/audit/g1_calibration.json
+  include:
+    - parse_rate_by_model
+    - jitter_by_model
+    - switch_rate_by_model_arm
+    - refusal_examples
+    - latency_and_cost

@@ -1,0 +1,196 @@
+# Field registry — pre-specified criticality labels for τ-bench observations.
+#
+# critical:      changing this field changes the correct next action if the value is trusted.
+# noncritical:   the field is not used in the donor's factual continuation and should not
+#                change the correct action; used to construct the s=1 negative control.
+# pii:           direct or indirect identifier; scrub before any release, exclude if the
+#                decision-relevant content is itself PII.
+#
+# This registry is frozen at G0. Adding a field after freeze is a prereg amendment.
+# Tool names follow the τ-bench airline and retail domains; field names are canonicalized
+# to snake_case by the parser.
+
+version: field-registry-v1
+frozen: false
+freeze_gate: G0
+
+domains:
+  airline:
+    tools:
+      get_reservation_details:
+        critical:
+          - field: reservation_status
+            rationale: "Cancelled vs confirmed changes whether the agent can modify, cancel, or must rebook."
+          - field: flight_number
+            rationale: "Identifies the segment; a wrong flight changes every downstream action."
+          - field: origin
+            rationale: "Route validity and rebooking options depend on it."
+          - field: destination
+            rationale: "Route validity and rebooking options depend on it."
+          - field: departure_time
+            rationale: "Missed vs upcoming flight changes eligibility and the correct action."
+          - field: cabin
+            rationale: "Change fees, upgrade rules, and eligibility depend on the booked cabin."
+          - field: passenger_count
+            rationale: "Seat availability, fees, and booking changes depend on the party size."
+          - field: refundable
+            rationale: "Refund eligibility determines whether cancel-and-refund is permitted."
+          - field: price_paid
+            rationale: "Refund amount, change fee, and certificate value depend on it."
+        noncritical:
+          - field: aircraft_type
+            rationale: "Not used in the donor's factual continuation and does not change the correct action."
+          - field: gate
+            rationale: "Operational detail; absent from the decision-relevant continuation in the sampled tasks."
+          - field: booking_reference_suffix
+            rationale: "Display-only suffix; the canonical reservation ID is the critical field."
+        pii:
+          - field: passenger_name
+            rationale: "Direct identifier; scrub or exclude."
+          - field: passenger_email
+            rationale: "Direct identifier; scrub or exclude."
+          - field: passenger_phone
+            rationale: "Direct identifier; scrub or exclude."
+          - field: payment_last4
+            rationale: "Payment identifier; scrub or exclude."
+      search_direct_flight:
+        critical:
+          - field: available
+            rationale: "No availability means the agent must not book this itinerary."
+          - field: price
+            rationale: "Budget and fare rules depend on the quoted price."
+          - field: departure_time
+            rationale: "The user's requested window determines whether the itinerary is acceptable."
+          - field: origin
+            rationale: "Wrong origin invalidates the itinerary."
+          - field: destination
+            rationale: "Wrong destination invalidates the itinerary."
+        noncritical:
+          - field: aircraft_type
+            rationale: "Comfort detail; not decision-relevant in the sampled tasks."
+          - field: duration_minutes
+            rationale: "Used only when the user explicitly asks; otherwise display-only."
+      cancel_reservation:
+        critical:
+          - field: cancellation_allowed
+            rationale: "Determines whether the cancellation is permitted at all."
+          - field: refund_amount
+            rationale: "The user's refund expectation depends on it."
+          - field: cancellation_fee
+            rationale: "A fee may make the cancellation unacceptable to the user."
+        noncritical:
+          - field: confirmation_email_sent
+            rationale: "Side-effect flag; does not change the next decision."
+      get_user_details:
+        critical: []
+        noncritical: []
+        pii:
+          - field: name
+            rationale: "Direct identifier; tool excluded from harvest."
+          - field: email
+            rationale: "Direct identifier; tool excluded from harvest."
+          - field: phone
+            rationale: "Direct identifier; tool excluded from harvest."
+          - field: address
+            rationale: "Direct identifier; tool excluded from harvest."
+          - field: payment_methods
+            rationale: "Payment identifiers; tool excluded from harvest."
+        note: "Profile tool. All observations excluded before eligibility."
+
+  retail:
+    tools:
+      get_order_details:
+        critical:
+          - field: order_status
+            rationale: "Pending vs delivered vs cancelled determines which return/exchange tool is valid."
+          - field: product_id
+            rationale: "Identifies the item; a wrong product changes exchange/return eligibility."
+          - field: item_price
+            rationale: "Refund and exchange amounts depend on it."
+          - field: quantity
+            rationale: "Return/exchange quantity and refund total depend on it."
+          - field: delivered_at
+            rationale: "Return window eligibility depends on the delivery date."
+          - field: payment_method_id
+            rationale: "Refund destination depends on it; treat the identifier as sensitive."
+        noncritical:
+          - field: order_notes
+            rationale: "Free-text display field; not used in the donor's decision."
+          - field: carrier
+            rationale: "Shipping detail; not decision-relevant in the sampled tasks."
+        pii:
+          - field: customer_name
+            rationale: "Direct identifier; scrub."
+          - field: shipping_address
+            rationale: "Direct identifier; scrub."
+          - field: customer_email
+            rationale: "Direct identifier; scrub."
+          - field: customer_phone
+            rationale: "Direct identifier; scrub."
+      get_product_details:
+        critical:
+          - field: price
+            rationale: "Purchase, exchange, and refund decisions depend on the price."
+          - field: stock_level
+            rationale: "Out-of-stock blocks purchase or exchange."
+          - field: variant_availability
+            rationale: "Size/color availability determines whether the requested exchange is possible."
+          - field: product_id
+            rationale: "Wrong product invalidates every downstream action."
+        noncritical:
+          - field: description
+            rationale: "Marketing prose; not decision-relevant in the sampled tasks."
+          - field: average_rating
+            rationale: "Display-only for the sampled tasks."
+          - field: review_count
+            rationale: "Display-only for the sampled tasks."
+        pii: []
+      exchange_delivered_order_items:
+        critical:
+          - field: exchange_allowed
+            rationale: "Determines whether the exchange is permitted."
+          - field: replacement_stock
+            rationale: "No stock means the exchange cannot be completed as requested."
+          - field: price_difference
+            rationale: "The user must approve or reject the difference."
+        noncritical:
+          - field: return_label_url
+            rationale: "Operational link; does not change the decision in the sampled tasks."
+      return_delivered_order_items:
+        critical:
+          - field: return_window_open
+            rationale: "Closed window blocks the return."
+          - field: refund_amount
+            rationale: "The user's acceptance depends on the refund."
+          - field: restocking_fee
+            rationale: "A fee may change the correct recommendation."
+        noncritical:
+          - field: return_reason_code
+            rationale: "Administrative label; not decision-relevant for the next action."
+      get_user_details:
+        critical: []
+        noncritical: []
+        pii:
+          - field: name
+            rationale: "Direct identifier; tool excluded from harvest."
+          - field: email
+            rationale: "Direct identifier; tool excluded from harvest."
+          - field: phone
+            rationale: "Direct identifier; tool excluded from harvest."
+          - field: address
+            rationale: "Direct identifier; tool excluded from harvest."
+          - field: payment_methods
+            rationale: "Payment identifiers; tool excluded from harvest."
+        note: "Profile tool. All observations excluded before eligibility."
+
+severity_construction:
+  s1:
+    rule: "Choose one noncritical field, change or omit it, and verify it is absent from the donor's factual continuation."
+  s2:
+    rule: "Choose one critical field and replace it with a plausible wrong value that changes the correct action."
+  s3:
+    rule: "Combine one critical wrong value with a second contradiction that a careful reader can detect."
+  exclusion:
+    - "Do not perturb a field whose true value is PII."
+    - "Do not perturb a field that is absent from the observation."
+    - "Do not use an absurd value for s2 or s3; calibration checks plausibility."

@@ -1,0 +1,50 @@
+# requirements-gpu.lock.txt — PLACEHOLDER LOCK TEMPLATE
+#
+# This is NOT a resolved lock file. It records the packages the 24 GB GPU rental
+# environment is expected to contain. Exact pins must be generated ON THE RENTAL
+# MACHINE and committed as a reviewed lock file:
+#
+#   python -m pip freeze --exclude-editable > requirements-gpu.lock.txt
+#
+# Critical: the CUDA/vLLM/torch wheels must match the rental driver and CUDA
+# runtime. Never copy a lock from a different GPU host or a different CUDA
+# version. Record the driver version, CUDA version, GPU model, and vLLM version
+# in artifacts/env/ with the lock.
+#
+# Python: 3.12.x
+# Target: single 24 GB RTX 3090/4090, AWQ 4-bit, vLLM, batch 8-16, 8-12k context.
+
+--index-url https://pypi.org/simple
+
+# Inference stack (versions must be resolved together on the target host)
+vllm
+torch
+transformers
+accelerate
+autoawq
+huggingface-hub
+safetensors
+sentencepiece
+
+# Core scientific stack used by the runner and analysis
+numpy
+pandas
+scipy
+statsmodels
+scikit-learn
+pyarrow
+pyyaml
+jinja2
+requests
+tqdm
+
+# Development / CI
+pytest
+ruff
+
+# This project (editable install)
+-e .
+
+# Post-install verification (run and record output in artifacts/env/):
+#   python -c "import torch, vllm; print(torch.__version__, torch.version.cuda, vllm.__version__)"
+#   nvidia-smi
