@@ -16,7 +16,7 @@ An LLM agent calls a tool, reads the observation, and decides what to do next. I
 
 This study isolates the moment after the observation. We freeze a real τ-bench conversation immediately after a real tool output, keep the prefix identical, and vary only the observation's content across five arms. Each prefix is its own control. We then follow the episode for four steps to estimate recovery.
 
-The sample is **800 real τ-bench prefixes** (400 airline, 400 retail), plus 80 reserve, tested on three open-weight 7–8B model families with greedy decoding. The main run is 34,800 generations on one 24 GB rental GPU. The primary analysis is a conditional logistic regression of a decision switch on severity, with prefix fixed effects and standard errors clustered by prefix. Recovery uses a discrete-time survival model, an exponential half-life, a Weibull shape check, and an RMST fallback.
+The sample is **800 real τ-bench prefixes** (400 airline, 400 retail), plus 80 reserve, tested on three open-weight 7–8B model families with greedy decoding. The main run is 34,800 generations on one 24 GB GPU. The primary analysis is a conditional logistic regression (a within-prefix comparison) of a decision switch on severity, with prefix fixed effects and standard errors clustered by prefix. Recovery uses a discrete-time survival model, an exponential half-life, a Weibull shape check, and an RMST fallback (average recovery time).
 
 The study is pre-registered and gated (G0–G4); a null is a measurement result.
 
@@ -32,7 +32,7 @@ The study is pre-registered and gated (G0–G4); a null is a measurement result.
 
 An **LLM agent** is a language model in a loop: it reads context, acts, receives a result, and repeats. A **tool call** is a structured request to an external function. An **observation** is what the tool returns. A **prefix** is the frozen conversation up to and including that observation; the **next decision** is the next call or final answer.
 
-If a support agent receives `refund_amount: 84.50` but the tool wrongly returns `48.50`, an agent that trusts it tells the customer $48.50. The episode may still be marked "completed." A wrong flight date or prescription dose has the same shape; this study uses airline and retail, not clinical systems.
+If a support agent receives `refund_amount: 84.50` but the tool wrongly returns `48.50`, an agent that trusts it tells the customer $48.50. The episode may still be marked "completed." A wrong flight date or dose has the same shape; this study uses airline and retail.
 
 End-to-end benchmarks mix tool selection, planning, observation interpretation, and environment noise into one score. Each episode usually contains one realisation, so there is no counterfactual, and no label for "repeated the wrong value without flagging it."
 
@@ -107,7 +107,7 @@ A kill-test recheck found no shipped fixed-prefix observation-branch dataset; if
 | # | Stage | What happens |
 |---:|---|---|
 | 1 | **Harvest** | Pin τ-bench; parse post-tool prefixes; reconstruct continuation; hashes match. |
-| 2 | **PII scrub** | Exclude profile tools; tokenise identifiers; zero raw emails/phones. |
+| 2 | **PII scrub** | Exclude profile tools; tokenise identifiers (personally identifiable information); zero raw emails/phones. |
 | 3 | **Relevance** | Keep observations with a value used in the donor continuation; ≥6,500 pool. |
 | 4 | **Replay** | Execute calls against the task DB; ≥98% match. |
 | 5 | **Sample/freeze** | 10/task cap; 880 = 800 + 80 reserve; seed 20261108; 400/400 split. |
@@ -170,7 +170,7 @@ The source is the public **τ-bench** historical trajectories (MIT): gpt-4o airl
 
 **PII.** Raw trajectories may contain names, emails, addresses, phones, and payment identifiers, and are treated as PII-bearing. Direct identifiers become stable synthetic tokens; profile tools are excluded; a prefix is excluded if decision-relevant content is PII. A 40-item audit runs before freeze.
 
-**Replay.** The harness executes the prefix's tool calls against the task database from the initial state and compares the final observation. The 98% threshold is not relaxed to meet a schedule; replay makes the observation a real environment output.
+**Replay.** The harness executes the prefix's tool calls against the task database from the initial state and compares the final observation. The 98% threshold is not relaxed; replay makes the observation a real environment output.
 
 **Storage and licence.** The project lives on `G:\PROJECT\tool-observation`. Raw data, upstream checkouts, interim files, frozen payloads, weights, caches, and run logs are local-only and gitignored; only small, non-PII manifests under `data/manifests/` are tracked. Code is MIT; documentation and CTO-800 additions are CC BY 4.0; upstream τ-bench remains MIT. The public release contains scrubbed derived data only; raw trajectories, weights, and run logs are never released.
 
@@ -221,7 +221,7 @@ Severity is ordinal; the s=2 versus s=3 contrast is always reported separately.
 
 ## 10. Analysis plan
 
-The primary analysis is a **conditional (fixed-effects) logistic regression**, stratified by prefix. Each prefix gets its own intercept, so the slope is identified from within-prefix changes in severity; stable differences between prefixes cancel out. Standard errors cluster by prefix. The pooled model stratifies by prefix × model.
+The primary analysis is a **conditional (fixed-effects) logistic regression**, stratified by prefix. Each prefix gets its own intercept, so the slope is identified from within-prefix severity changes; between-prefix differences cancel out. Standard errors cluster by prefix. The pooled model stratifies by prefix × model.
 
 Fixed sequence: pooled β; per-model β with Holm across three models; descriptive silent propagation; recovery; exploratory heterogeneity. A quadratic term and categorical-severity LRT check linearity; if rejected, report tier odds ratios and treat the slope as a summary.
 
