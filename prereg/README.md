@@ -5,12 +5,13 @@ is written before G1 and frozen at G0; it is the authority for the confirmatory 
 
 ## Status
 
-- **v1.0-draft** — this scaffold. The design is specified in `docs/PROTOCOL.md` and
-  `ROADMAP.md`; the formal preregistration text will be committed before G0 freeze.
-- **v1.0-frozen** — planned at the end of the 10-day G0 sprint. Its SHA-256 is recorded in
+- **v1.0-draft** — committed as [`PREREGISTRATION.md`](PREREGISTRATION.md). The design is also
+  specified in `docs/PROTOCOL.md` and `ROADMAP.md`; the draft is frozen at the end of the 10-day
+  G0 sprint.
+- **v1.0-frozen** — planned at the end of G0. Its SHA-256 is recorded in
   `data/manifests/cto800_v1.json` and in the G0 report.
-- **Amendments** — any post-freeze change is recorded in an amendments log in this directory
-  (`AMENDMENTS.md`) and summarized in `docs/DECISIONS.md`, before the affected analysis runs.
+- **Amendments** — any post-freeze change is recorded in [`AMENDMENTS.md`](AMENDMENTS.md) and
+  summarized in `docs/DECISIONS.md`, before the affected analysis runs.
 
 ## What the preregistration contains
 
