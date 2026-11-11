@@ -1,0 +1,288 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (Tailwind v4: media query is default) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/* Design tokens — "precision lab instrument"                          */
+/* Dark-first teal + copper signal palette, both themes first-class.   */
+/* ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light;
+  --background: hsl(45 30% 97%);
+  --foreground: hsl(200 25% 12%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(200 25% 12%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(200 25% 12%);
+  --primary: hsl(174 72% 28%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(170 18% 92%);
+  --secondary-foreground: hsl(200 22% 18%);
+  --muted: hsl(170 18% 92%);
+  --muted-foreground: hsl(190 10% 38%);
+  --accent: hsl(28 82% 40%);
+  --accent-foreground: hsl(0 0% 100%);
+  --destructive: hsl(347 77% 42%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(170 14% 84%);
+  --input: hsl(170 14% 84%);
+  --ring: hsl(174 72% 28%);
+  --gauge-track: rgba(15, 23, 20, 0.09);
+  --gauge-needle: hsl(200 25% 16%);
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(15, 23, 20, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.6);
+  --atmosphere-1: rgba(13, 148, 136, 0.10);
+  --atmosphere-2: rgba(217, 119, 6, 0.07);
+  --atmosphere-3: rgba(8, 145, 178, 0.06);
+  --grain-opacity: 0.015;
+  --risk-low: hsl(160 84% 33%);
+  --risk-medium: hsl(35 92% 44%);
+  --risk-high: hsl(347 77% 46%);
+  --chart-teal: hsl(174 72% 34%);
+  --chart-cyan: hsl(188 80% 38%);
+  --chart-cyan: hsl(199 89% 42%);
+  --chart-rose: hsl(347 77% 50%);
+  --chart-emerald: hsl(160 84% 39%);
+  --chart-gray: hsl(200 10% 47%);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: hsl(170 30% 5%);
+  --foreground: hsl(160 20% 96%);
+  --card: hsl(170 24% 8.5%);
+  --card-foreground: hsl(160 20% 96%);
+  --popover: hsl(170 24% 10%);
+  --popover-foreground: hsl(160 20% 96%);
+  --primary: hsl(172 66% 50%);
+  --primary-foreground: hsl(170 40% 8%);
+  --secondary: hsl(170 20% 13%);
+  --secondary-foreground: hsl(160 20% 94%);
+  --muted: hsl(170 20% 13%);
+  --muted-foreground: hsl(165 12% 72%);
+  --accent: hsl(38 92% 60%);
+  --accent-foreground: hsl(30 40% 10%);
+  --destructive: hsl(350 84% 66%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(170 16% 18%);
+  --input: hsl(170 16% 18%);
+  --ring: hsl(172 66% 50%);
+  --gauge-track: rgba(255, 255, 255, 0.10);
+  --gauge-needle: hsl(160 20% 96%);
+  --glass: rgba(10, 22, 20, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-highlight: rgba(255, 255, 255, 0.05);
+  --atmosphere-1: rgba(20, 184, 166, 0.18);
+  --atmosphere-2: rgba(245, 158, 11, 0.10);
+  --atmosphere-3: rgba(6, 182, 212, 0.12);
+  --grain-opacity: 0.035;
+  --risk-low: hsl(158 68% 54%);
+  --risk-medium: hsl(43 96% 60%);
+  --risk-high: hsl(351 92% 68%);
+  --chart-teal: hsl(172 66% 58%);
+  --chart-cyan: hsl(188 80% 58%);
+  --chart-cyan: hsl(198 95% 62%);
+  --chart-rose: hsl(351 92% 68%);
+  --chart-emerald: hsl(160 84% 56%);
+  --chart-gray: hsl(170 12% 64%);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+@theme {
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: var(--font-newsreader), "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  --animate-rise: rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade: fade 0.4s ease both;
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+    font-size: 18px;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+    transition: background-color 300ms ease, color 300ms ease;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(50rem 32rem at 12% -8%, var(--atmosphere-1), transparent 65%),
+      radial-gradient(42rem 30rem at 92% 4%, var(--atmosphere-2), transparent 60%),
+      radial-gradient(56rem 38rem at 50% 118%, var(--atmosphere-3), transparent 65%);
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 30%, transparent);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--primary) 45%, var(--border));
+    background-clip: content-box;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  html.projector {
+    font-size: 20px;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background: var(--glass);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border: 1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    transition: background-color 300ms ease, border-color 300ms ease;
+  }
+
+  .gradient-text {
+    background: linear-gradient(118deg, #0f766e 0%, #0891b2 52%, #b45309 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .dark .gradient-text {
+    background: linear-gradient(118deg, #5eead4 0%, #67e8f9 45%, #fbbf24 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .display-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+
+  .surface-inset {
+    background: color-mix(in oklab, var(--secondary) 55%, transparent);
+    border: 1px solid color-mix(in oklab, var(--border) 75%, transparent);
+  }
+
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

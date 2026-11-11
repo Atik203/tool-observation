@@ -28,7 +28,17 @@ coverage.xml
 .nox/
 
 # ---------------------------------------------------------------------------
-# Data — only manifests and .gitkeep files are trackable
+# Web frontend (Next.js)
+# ---------------------------------------------------------------------------
+web/node_modules/
+web/.next/
+web/out/
+web/.vercel/
+web/*.tsbuildinfo
+web/pnpm-debug.log*
+
+# ---------------------------------------------------------------------------
+# Data - only manifests and .gitkeep files are trackable
 # ---------------------------------------------------------------------------
 data/raw/*
 !data/raw/.gitkeep
