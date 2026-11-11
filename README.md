@@ -123,7 +123,12 @@ See [`data/README.md`](data/README.md) and [`DATA_LICENSE.md`](DATA_LICENSE.md).
 [`ROADMAP.md`](ROADMAP.md) contains the phase plan (P0–P5), the 10-day G0 sprint, gates G0–G4,
 budget, risks, out-of-scope list, and change control.
 
-Supervisor proposal: [`docs/proposal.md`](docs/proposal.md)
+Proposal: [`paper/proposal.tex`](paper/proposal.tex) and
+[`paper/out/proposal.pdf`](paper/out/proposal.pdf). Supervisor-facing summary:
+[`docs/proposal.md`](docs/proposal.md).
+
+Co-author onboarding and task division:
+[`docs/COAUTHOR_GUIDE.md`](docs/COAUTHOR_GUIDE.md).
 
 ## Citation
 
