@@ -58,7 +58,8 @@ circularity.
 
 The airline arm is the binding supply constraint. The eligible pool is 6,554 value-used
 observations across 165 task–domain pairs (airline 1,593; retail 4,961). A 10/task cap yields
-1,646; airline has 50 tasks × 10 = 496 maximum, enough for 400 plus attrition.
+1,646; airline has 50 tasks × 10 = 500 maximum (496 observed after the cap), enough for 400 plus
+attrition.
 
 ---
 

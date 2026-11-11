@@ -54,8 +54,9 @@ a graded law from a handful of flips. **It is a screening signal, not a dose-res
 | Budget | **$23 base / $50 hard cap**; 35–45 GPU-hours on a 24 GB rental; no paid API |
 | Analysis | Discrete-time survival for recovery half-life, Weibull shape check, pre-registered multiplicity sequence |
 
-The full design, power calculations, and stop rules are in [`docs/PROTOCOL.md`](docs/PROTOCOL.md)
-and [`ROADMAP.md`](ROADMAP.md).
+The full design and stop rules are in [`docs/PROTOCOL.md`](docs/PROTOCOL.md) and
+[`ROADMAP.md`](ROADMAP.md). Power calculations are in
+[`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md).
 
 ### Claim boundary
 
@@ -69,15 +70,15 @@ measurement result and will be reported as such.
 
 ```
 tool-observation/
-├─ configs/             # YAML experiment configuration (base, models, harvest, arms, main, analysis)
-├─ src/toolobs/         # Python package: harvest, render, infer, code, analysis, release
+├─ configs/             # YAML config (base, models, harvest, arms, field registry, calibration, main, analysis)
+├─ src/toolobs/         # Python package: taubench, harvest, render, infer, code, analysis, release
 ├─ scripts/             # 00_pin_source … 10_release pipeline entry points
-├─ tests/               # smoke tests and fixtures
+├─ tests/               # smoke tests; fixtures will be added with the pipeline
 ├─ data/                # local-only data staging (raw/upstream/interim/frozen/runs are gitignored)
-├─ artifacts/           # audit, analysis, env, cost, paper outputs (gitignored except READMEs)
-├─ docs/                # protocol, gates, rubric, data card, runbook, decisions, implementation plan
+├─ artifacts/           # audit, analysis, env, cost, paper outputs (gitignored except READMEs and .gitkeep)
+├─ docs/                # protocol, gates, rubric, data card, runbook, decisions, plan, proposal
 ├─ prereg/              # preregistration text and amendments log
-├─ paper/               # manuscript source (not yet started)
+├─ paper/               # proposal and manuscript source
 ├─ release/             # CTO-800 release checklist and packaging notes
 └─ .github/             # CI and contribution templates
 ```

@@ -1,7 +1,9 @@
 # `paper/` — manuscript
 
-Manuscript source and generated figures/tables. **No draft exists yet.** This directory explains
-the intended structure so the analysis and writing stay aligned.
+Manuscript source and generated figures/tables. **No manuscript draft exists yet.** The research
+proposal is `proposal.tex`; it builds to `out/proposal.pdf` with
+`latexmk -pdf -outdir=out proposal.tex`. This directory explains the intended manuscript structure
+so the analysis and writing stay aligned.
 
 ## Planned structure
 
@@ -31,6 +33,7 @@ the intended structure so the analysis and writing stay aligned.
 
 ## Files
 
+- `proposal.tex` — research proposal, built to `out/proposal.pdf` (created 2026-11-11).
 - `main.tex` / `main.md` — manuscript source (not yet created).
 - `refs.bib` — bibliography (not yet created).
 - `figures/` — generated figures (not yet created).
@@ -40,6 +43,7 @@ the intended structure so the analysis and writing stay aligned.
 
 | Milestone | Status |
 |---|---|
+| Proposal | drafted 2026-11-11 (`proposal.tex`) |
 | Outline | not started |
 | Methods draft | blocked on G0 |
 | Results draft | blocked on G3/G4 |

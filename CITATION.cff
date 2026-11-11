@@ -5,10 +5,11 @@ abstract: >-
   Pre-confirmatory research software for a fixed-prefix causal study of how the
   content of a real tool observation changes a language-model agent's next
   decision, and how quickly the agent recovers over four steps. The repository
-  contains the CTO-800 harvest pipeline, perturbation renderer, calibration and
-  main-run harnesses, analysis code, and governance documents. No confirmatory
-  results are reported in version 0.1.0; the pilot is N=60 and is a screening
-  signal, not a dose-response law.
+  provides the scaffold, configuration, schemas, and governance documents for
+  the CTO-800 harvest pipeline, perturbation renderer, calibration and main-run
+  harnesses, and analysis code; pipeline entry points are stubs in version
+  0.1.0. No confirmatory results are reported; the pilot is N=60 and is a
+  screening signal, not a dose-response law.
 authors:
   - family-names: Rahaman
     given-names: Atikur

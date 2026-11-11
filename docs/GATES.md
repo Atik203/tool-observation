@@ -32,7 +32,7 @@ Checks:
 5. **Freeze integrity.** Message hashes, observation hashes, perturbation records, renderer
    version, field-registry hash, and prereg hash recorded.
 
-**Observed pilot supply (planning input, not a gate result):** 13,605 candidates, 11,318
+**Observed harvest supply (planning input, not a gate result):** 13,605 candidates, 11,318
 JSON-parseable, 6,554 eligible value-used, 1,646 at a 10/task cap.
 
 **Fail:** if supply is short or replay fails, fix the harness and re-run before sampling. If the
@@ -62,8 +62,8 @@ s=3 is a ceiling. A model that refuses the forced next-decision format is fixed 
 prompt/grammar change; if it still refuses, it is excluded and the substitution policy applies
 (prereg amendment before calibration results are used).
 
-**Fail:** no main-run spend. Fix and rerun calibration. If jitter stays >20% or s=3 remains >80%,
-stop and report a measurement failure.
+**Fail:** no main-run spend. Fix and rerun calibration. If jitter stays >20%, or the s=3 switch
+rate remains outside 10--80%, stop and report a measurement failure.
 
 ---
 

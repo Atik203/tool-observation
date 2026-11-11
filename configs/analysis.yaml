@@ -85,4 +85,3 @@ multiplicity:
   exploratory:
     - model_by_severity
     - task_by_severity
-    - model_recovery_ranking

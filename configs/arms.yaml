@@ -39,7 +39,7 @@ arms:
     in_primary_slope: true
     role: dose
     observation: >-
-      one critical field changed to an extreme or contradictory value plus a second
+      one critical field changed to a plausible wrong value plus a second
       inconsistency (for example "cancelled" while seats are available, or
       "non-refundable" inside the refund window)
 

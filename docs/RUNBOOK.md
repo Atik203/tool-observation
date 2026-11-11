@@ -101,7 +101,7 @@ python scripts/09_run.py --stage main --config configs/main.yaml --resume
 completed `(model, prefix, arm, step)` rows, and never overwrites a completed row. If the ledger
 is corrupt, stop and restore from the last shard checkpoint; do not fabricate missing rows.
 
-**Stop procedure:** flush the ledger, write `artifacts/cost/main_stop.json` with cumulative spend,
+**Stop procedure:** flush the ledger, write `artifacts/cost/main_cost.json` with cumulative spend,
 GPU-hours, completed prefixes, and reason. Analyze only completed cells and disclose the gap.
 
 ---

@@ -42,7 +42,7 @@ The repository is `Atik203/tool-observation`; the dataset brand is **CTO-800**. 
 configs/        base, models, harvest, arms, field_registry, calibration, main, analysis
 scripts/        00_pin_source … 10_release (stage entry points)
 src/toolobs/    library code; stdlib-only import surface
-tests/          smoke tests; fixtures are synthetic and tiny
+tests/          smoke tests; fixtures will be synthetic and tiny
 data/raw/       downloaded upstream, gitignored
 data/upstream/  pinned τ-bench checkout and task DBs, gitignored
 data/interim/   candidates, scrubbed, eligible, replay tables, gitignored
@@ -99,8 +99,8 @@ G0 is the only stage that can invalidate the study before GPU spend. The empiric
 already measured: 1,980 public trajectories, 13,605 post-tool candidates, 11,318 JSON-parseable,
 and **6,554 eligible value-used observations** across 165 task–domain pairs (airline 1,593;
 retail 4,961). Eligible per task: min 7, median 38, max 121; airline median 31. A cap of 10/task
-yields 1,646, so 800 is feasible; the airline arm is the binding constraint (50 tasks × 10 = 496
-max).
+yields 1,646, so 800 is feasible; the airline arm is the binding constraint (50 tasks × 10 = 500
+maximum; 496 after the observed cap).
 
 The protocol is:
 
@@ -305,7 +305,7 @@ Budget: 35–45 GPU-hours at $0.30–0.50/h = $15–22; storage/egress $2–3; c
 base, $50 hard cap**. Local CPU work is 20–30 hours at $0. Annotation is ~200 team judgments at
 $0 cash. No paid API.
 
-Storage: ~60 GB for three AWQ weights, plus traces. Raw traces stay local; the release contains
+Storage: ~60 GB total disk for three AWQ weights, caches, and traces. Raw traces stay local; the release contains
 only scrubbed derived data. Checkpoints and model caches are deleted after the run once hashes
 and ledgers are archived.
 

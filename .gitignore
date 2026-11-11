@@ -132,6 +132,8 @@ artifacts/paper/*
 # Paper build and release artifacts
 # ---------------------------------------------------------------------------
 paper/build/
+paper/out/*
+!paper/out/*.pdf
 paper/*.aux
 paper/*.bbl
 paper/*.blg
