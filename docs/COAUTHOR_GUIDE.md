@@ -2,9 +2,12 @@
 
 **Project:** Tool-Result Errors in Language-Model Agents: A Controlled Study of Detection, Reliance, and Recovery  
 **Repository:** <https://github.com/Atik203/tool-observation>  
-**First author:** Atikur Rahaman  
-**Audience:** co-authors who will help with annotation, related work, data checks, and paper support  
-**Status:** onboarding guide. It does not replace the preregistration or protocol.
+**Guide for:** Author 2, Author 3, and Author 4  
+**Status:** onboarding and task division. This guide does not replace the preregistration or protocol.
+
+> **Note on Author 1.** Author 1 is the first author and handles the experiments, implementation,
+> analysis, and the related-work matrix with AI agents. Author 1 is therefore not assigned a task
+> in this guide. The tasks below are the human-judgment work that cannot be delegated to an agent.
 
 ---
 
@@ -44,7 +47,7 @@ A **critical field** is one that determines the correct next action, such as ref
 order status, return-window state, flight number, or price. A **non-critical field** is not used
 in the correct next action, such as product rating, carrier, or order notes.
 
-### The three outcomes we care about
+### The outcomes we care about
 
 | Label | Plain meaning |
 |---|---|
@@ -61,66 +64,49 @@ Recovery is coded over four steps:
 
 ---
 
-## 2. What we need from the co-author team
+## 2. Your tasks at a glance
 
-The first author runs the experiments, implementation, and primary analysis. The co-authors do
-the work that requires human judgment and independent reading:
-
-1. **Data and PII audit** — check a sample of prefixes for eligibility, PII, relevance, and replay.
-2. **Severity audit** — rate whether the manipulated observation is plausible and decision-relevant.
-3. **Outcome audit** — label agent responses as same, silent propagation, flagged, or action switch.
-4. **Recovery audit** — label whether the agent corrected, flagged, or stayed wrong over four steps.
-5. **Related work** — build a literature matrix and draft the related-work section.
-6. **Paper support** — verify numbers, citations, terminology, and reproducibility.
-
-You do **not** need to run the GPU models or write the main pipeline. The first author handles
-that. You need to read carefully, follow the rubric, and record your judgments.
-
----
-
-## 3. Roles at a glance
-
-We plan for four authors total. If there are five, split the annotation or release work as noted.
-
-| Role | Person | Main responsibility | Main deliverables |
+| Person | Main role | Main tasks | Main deliverables |
 |---|---|---|---|
-| **Author 1** | First author | Experiments, implementation, analysis, paper integration, gate reports | Frozen pipeline, run ledgers, analysis, paper draft |
-| **Author 2** | Data and PII lead | G0 data audit, PII review, replay spot-check, data card, release checklist | G0 audit sheet, PII report, data card, release checklist |
-| **Author 3** | Annotation lead | Severity, outcome, and recovery audits; rater training; adjudication coordination | Completed annotation batches, agreement report, adjudication log |
-| **Author 4** | Related work and paper support | Literature matrix, related-work draft, reference verification, proofreading | Literature matrix, related-work section, reference check |
+| **Author 2** | Data and PII lead; severity rater | G0 data audit, PII review, replay spot-check, severity ratings, adjudication, data card/release support | G0 audit sheet, severity batch, adjudication log, data card/release checklist |
+| **Author 3** | Annotation lead | Rater training, severity/outcome/recovery batches, blinding, agreement report, adjudication coordination | Training notes, completed batches, agreement report, adjudication log |
+| **Author 4** | Annotation rater; paper support | Severity/outcome/recovery ratings, proofreading, terminology and number spot-checks | Completed batches, proofreading checklist |
 
-**If there are five authors:** add a second annotation rater for the outcome and recovery audits,
-and a release/reproducibility checker. Do not add a fifth person to the same blind rating task
-without updating the annotation plan.
+**Author 1** handles the pipeline, GPU runs, analysis, and the related-work matrix with AI agents.
+Author 4 does **not** need to build the literature matrix; that work stays with Author 1.
 
-### Who is accountable for what
+### Who rates what
 
-- **Author 1** is accountable for the scientific claims, the frozen artifacts, and the final paper.
-- **Author 2** is accountable for the data audit, PII handling, and release checklist.
-- **Author 3** is accountable for annotation quality, blinding, and agreement statistics.
-- **Author 4** is accountable for literature accuracy and reference completeness.
-- **All authors** approve the final claim boundary and the submitted manuscript.
+| Audit | Raters | Adjudicator |
+|---|---|---|
+| G0 data/PII/replay | Author 2 | Author 1 |
+| Severity construct | Author 2, Author 3, Author 4 | A non-rater (fourth co-author; otherwise the first author) |
+| Outcome labels | Author 3 and Author 4 | Author 2 |
+| Recovery labels | Author 3 and Author 4 | Author 2 |
+
+The preregistration currently names the first author as one of three severity raters. The plan
+below uses Authors 2, 3, and 4 as the three raters. If the team keeps three co-authors as raters,
+log a prereg amendment before the audit; if the first author joins, one co-author steps out. Do
+not silently change the rater composition.
 
 ---
 
-## 4. Before you start: reading and access
+## 3. Before you start
 
-### Read these five documents first
+### Read these documents first
 
 | Order | File | Why |
 |---:|---|---|
 | 1 | `README.md` | Project status, claim boundary, pilot evidence |
-| 2 | `paper/proposal.tex` (or `paper/out/proposal.pdf`) | The proposal in one place |
-| 3 | `docs/PROTOCOL.md` | The design, arms, outcomes, and recovery rules |
-| 4 | `docs/LABEL_RUBRIC.md` | The annotation rubric and pass criteria |
+| 2 | `paper/proposal.tex` or `paper/out/proposal.pdf` | The proposal in one place |
+| 3 | `docs/PROTOCOL.md` | Design, arms, outcomes, recovery |
+| 4 | `docs/LABEL_RUBRIC.md` | Annotation rubric and pass criteria |
 | 5 | `docs/GATES.md` | What must pass before the next phase |
-
-Optional but useful: `ROADMAP.md`, `docs/IMPLEMENTATION_PLAN.md`, `docs/DATA_CARD.md`.
 
 ### Access checklist
 
 - [ ] GitHub account with read access to `Atik203/tool-observation`.
-- [ ] Access to the shared annotation folder (the first author will create it).
+- [ ] Access to the shared annotation folder (Author 1 will create it).
 - [ ] A spreadsheet tool (Google Sheets or Excel).
 - [ ] A PDF reader for the proposal and papers.
 - [ ] The team communication channel and the weekly meeting invite.
@@ -141,79 +127,62 @@ for calibration, not for the final data.
 
 ---
 
-## 5. Task 1 — G0 data, PII, and replay audit
+## 4. Author 2 — Data and PII lead; severity rater
 
-**Lead:** Author 2. **When:** P0, weeks 1–2. **Effort:** roughly 4–8 hours.
+### Your role
 
-### What you receive
+You are the data-quality and privacy lead. You check that the prefixes are real, reconstructable,
+free of PII, decision-relevant, and replayable. You also serve as one of the severity raters and
+help adjudicate outcome and recovery disagreements.
 
-A CSV or spreadsheet with 40 randomly selected prefixes. Each row has an `item_id`, domain,
-the reconstructed prefix, the tool observation, and the replay result. The first author will
-provide the file and a short walkthrough.
+### What you will do
 
-### What you check
+1. **G0 data audit.** Check 40 randomly selected prefixes for eligibility, PII, decision
+   relevance, and replay match. Pass threshold: 36/40.
+2. **Severity audit.** Rate 120 observations on decision relevance, severity, and
+   plausibility/detectability. You are one of three blind raters.
+3. **Adjudication.** When the outcome or recovery raters disagree, review both labels and the
+   rubric, then record the adjudicated label. You are blind to the arm label.
+4. **Data card and release support.** Help check the data card, PII re-scan, licence notice, and
+   release checklist.
 
-For each prefix, record **pass** or **fail** on four dimensions:
+### From where you start
 
-1. **Eligibility.** Is there a real tool message? Is the prefix reconstructable? Is there at
-   least one value used in the correct continuation?
-2. **PII.** Does the prefix contain a name, email, phone number, street address, or payment
-   identifier? If yes, stop and report it privately; do not copy the value into your notes.
-3. **Decision relevance.** Does the observation contain a value that the correct next action
-   uses? A refund amount or return-window status is relevant. A product rating is usually not.
-4. **Replay match.** Does the replayed observation match the historical observation after
-   normalization? The target is at least 98% across the retained set.
+- **Files:** `README.md`, `docs/PROTOCOL.md` sections 2 and 7, `docs/GATES.md` G0,
+  `docs/DATA_CARD.md`, `docs/LABEL_RUBRIC.md` section 1.
+- **Folder:** the shared `g0_audit/` folder. Author 1 will give you the 40-prefix CSV and a short
+  walkthrough.
+- **Access:** read access to the repository; write access to the shared annotation folder only.
+  Do not put raw data in GitHub.
 
-### What you submit
+### How you will do it
 
-A sheet with:
+#### G0 audit
 
-```text
-item_id, eligibility_pass, pii_pass, relevance_pass, replay_pass, notes
-```
+1. Open the 40-prefix CSV from the shared folder. Do not edit the original.
+2. Save a copy as `g0_audit_batch01_<your initials>.csv`.
+3. For each row, read the reconstructed prefix and the tool observation.
+4. Mark **pass** or **fail** on four dimensions:
+   - **Eligibility:** real tool message, reconstructable prefix, at least one value used in the
+     correct continuation.
+   - **PII:** name, email, phone, street address, payment identifier. If yes, stop and report it
+     privately. Do not copy the value into your notes.
+   - **Relevance:** does the observation contain a value that the correct next action uses?
+   - **Replay:** does the replayed observation match the historical one after normalization?
+5. Add a short note for every fail.
+6. Submit the CSV and a one-paragraph summary: how many passed, what failed, and whether the
+   failures look systematic.
 
-Then a one-paragraph summary: how many passed, what failed, and whether any failure looks
-systematic. The pass threshold is **36/40**. If the batch fails, the first author will revise the
-rules and re-sample from the reserve.
+#### Severity ratings
 
-### Example
-
-| item_id | eligibility | PII | relevance | replay | note |
-|---|---|---|---|---|---|
-| A-014 | pass | pass | pass | pass | Refund and return-window values used in the continuation |
-| A-027 | pass | fail | pass | pass | Customer email present; reported privately, not copied |
-| R-009 | fail | pass | fail | pass | Observation has no value used in the continuation |
-
-These rows are illustrative, not real harvested records.
-
----
-
-## 6. Task 2 — Severity audit
-
-**Lead:** Author 3. **Raters:** three blind raters (Author 1 plus two co-authors). **When:** P3,
-weeks 8–10. **Effort:** roughly 12–20 person-hours plus adjudication.
-
-### What this audit answers
-
-Is the severity manipulation credible? Does s=1 really look non-critical? Does s=2 look like a
-plausible critical error? Is s=3 detectable but not absurd? If the levels are not distinguishable,
-the "dose" interpretation fails.
-
-### What you receive
-
-A shuffled batch of **120 observations**, 30 per severity level. You will see the observation
-and the task context. You will **not** see the arm label or the perturbation record. The batch is
-shuffled so you cannot infer the level from the order.
-
-### What you rate
-
-For each item, give three scores from 1 to 5 and a short note:
-
-- **Decision relevance:** how much this observation matters for the correct next action.
-- **Severity:** how serious the content error is.
-- **Plausibility/detectability:** how plausible the value is and how hard the problem is to detect.
-
-Use the anchor sheet from the first author. Suggested anchors, to be confirmed at training:
+1. Open the shuffled 120-item batch. Do not edit the original.
+2. You will see the observation and task context, but **not** the arm label or perturbation record.
+3. Rate each item on three 1–5 scales:
+   - **Decision relevance:** how much this observation matters for the correct next action.
+   - **Severity:** how serious the content error is.
+   - **Plausibility/detectability:** how plausible the value is and how hard the problem is to
+     detect.
+4. Use the anchor sheet from Author 1. Suggested anchors, to be confirmed at training:
 
 | Score | Decision relevance | Severity | Plausibility/detectability |
 |---:|---|---|---|
@@ -223,63 +192,147 @@ Use the anchor sheet from the first author. Suggested anchors, to be confirmed a
 | 4 | Likely changes the action | Critical wrong value | Plausible |
 | 5 | Directly determines the action | Critical error plus clear contradiction | Highly plausible and hard to detect |
 
-The frozen rubric is authoritative. If an anchor feels wrong, record the score and a note; do
-not silently invent a new scale.
+5. Record confidence 1–5 and a short note for every hard case.
+6. Submit before the deadline. Do not discuss individual items with the other raters before all
+   raters submit.
 
-### Pass criteria
+#### Adjudication
 
-- Krippendorff's alpha at least .75.
-- Jonckheere–Terpstra trend test p < .01.
-- At least 90% of s=1 items rated non-decision-changing.
-- At least 90% of s=2 and s=3 items rated decision-changing.
-- No more than 20% of s=3 items rated absurd.
+1. Author 3 will send you the disagreement list after both raters submit.
+2. Read both labels, the response or sequence, and the rubric. Do not open the perturbation record.
+3. Choose the label that best fits the rubric. If neither fits, use `other` and explain.
+4. Record `adjudicated_label`, `reason`, and your initials in the adjudication log.
 
-If the audit fails, the first author revises the rubric or collapses levels, then re-audits.
+### Resources to learn
+
+- `docs/DATA_CARD.md` — what the dataset contains and what is excluded.
+- `README.md` data policy — what is never committed.
+- `docs/PROTOCOL.md` sections 2 and 7 — sample, exclusions, missing data.
+- `docs/GATES.md` G0 — the exact pass criteria.
+- Optional: the τ-bench abstract for background on the source data.
+
+You do not need to read the full τ-bench paper or run any code. The first author will show you
+the CSV format and one worked example.
 
 ### What you submit
 
-```text
-item_id, decision_relevance_1_5, severity_1_5, plausibility_1_5, confidence_1_5, notes
-```
+| Deliverable | Format | Deadline |
+|---|---|---|
+| G0 audit | `g0_audit_batch01_<initials>.csv` + summary | End of week 2 |
+| Severity ratings | `severity_batch01_<initials>.csv` | Week 9 |
+| Adjudication log | `adjudication_outcome.csv`, `adjudication_recovery.csv` | Week 10 |
+| Data card/release checklist | Completed checklist | Week 18 |
 
-Do not discuss individual items with the other raters before all raters submit. The lead will
-compute agreement and schedule adjudication.
+### Example G0 row
+
+| item_id | eligibility | PII | relevance | replay | note |
+|---|---|---|---|---|---|
+| A-014 | pass | pass | pass | pass | Refund and return-window values used in the continuation |
+| A-027 | pass | fail | pass | pass | Customer email present; reported privately, not copied |
+| R-009 | fail | pass | fail | pass | Observation has no value used in the continuation |
+
+These rows are illustrative, not real harvested records.
+
+### Time commitment
+
+- Weeks 1–2: 6–8 hours for the G0 audit.
+- Weeks 8–10: 8–12 hours for severity ratings and adjudication.
+- Weeks 15–18: 4–6 hours for data card and release support.
 
 ---
 
-## 7. Task 3 — Outcome audit
+## 5. Author 3 — Annotation lead
 
-**Lead:** Author 3. **Raters:** two blind raters. **When:** P3, weeks 8–10. **Effort:** roughly
-8–12 person-hours plus adjudication.
+### Your role
 
-### What this audit answers
+You run the annotation work. You prepare batches with Author 1, train the raters, protect blinding,
+track completion, compute agreement with Author 1, and coordinate adjudication. You also rate the
+severity, outcome, and recovery batches.
 
-Does the automatic coding agree with a careful human reading? The automatic labels are primary;
-the human labels validate them.
+### What you will do
 
-### What you receive
+1. **Training.** Run the five-item practice batch with Author 2 and Author 4. Explain the rubric,
+   the labels, the priority order, and the blinding rules.
+2. **Batch preparation.** With Author 1, check that each batch has the right item count, no arm
+   labels, no perturbation records, and a shuffled order.
+3. **Severity ratings.** Rate 120 observations as one of three blind raters.
+4. **Outcome ratings.** Rate 160 responses as the first rater.
+5. **Recovery ratings.** Rate 80 sequences as the first rater.
+6. **Agreement and adjudication.** Compute or request Cohen's kappa and Krippendorff's alpha,
+   identify disagreements, send them to Author 2, and keep the adjudication log.
 
-**160 responses**, stratified by three models and four severity levels. You will see the agent's
-response and the rubric. The second rater sees only the response and the rubric, not the
-perturbation record; the lead will tell you whether the reference V continuation is included. You
-will **not** see the arm label or the perturbation record.
+### From where you start
 
-### The four-way label
+- **Files:** `docs/LABEL_RUBRIC.md` sections 1–6, `docs/PROTOCOL.md` sections 4–5 and 8,
+  `paper/proposal.tex` sections 3–4, `docs/GATES.md` G3/G4.
+- **Folder:** the shared `annotations/` folder. Author 1 will give you the first batch, the anchor
+  sheet, and the batch manifest.
+- **Access:** write access to the shared annotation folder. Do not put raw data or PII in GitHub.
 
-Assign one primary label, using this priority:
+### How you will do it
 
-1. **Silent propagation** — the false value of a critical field appears in the response or tool
-   arguments, and there is no flag. Not scored for s=1.
-2. **Flagged** — explicit doubt, "possible error", "inconsistent", "verify", "cannot trust", or a
-   request to re-check.
-3. **Action switch** — the tool name or canonicalized arguments differ from V.
-4. **Same** — the signature matches V.
+#### Training
 
-If a response satisfies more than one, record all indicators in the notes but assign the
-highest-priority primary label. Use **other** for unparseable output, refusal, or a response
-outside the taxonomy; do not silently drop it.
+1. Read the rubric aloud with the team, one section at a time.
+2. Label five practice items together. Compare labels and discuss every disagreement.
+3. Explain the priority order: silent propagation > flagged > action switch > same.
+4. Explain the blinding rules: no arm labels, no perturbation records, no discussion before
+   submission.
+5. Record the training notes and the practice agreement in `annotations/training_notes.md`.
 
-### Examples
+#### Batch preparation
+
+1. Check the row count against the batch manifest.
+2. Confirm that the batch has no `arm`, `severity`, `perturbation`, or `true_value` columns.
+3. Confirm that the item order is shuffled and that item IDs do not reveal the level.
+4. Confirm that the reference continuation is included only where the protocol allows it.
+5. Send the batch to the raters with a deadline and a submission filename.
+
+#### Severity, outcome, and recovery ratings
+
+Follow the shared rules in Section 7. For each batch:
+
+1. Save a copy with your initials.
+2. Label every row. Use confidence and notes for hard cases.
+3. Do not skip rows. Use `other` only when the response is outside the taxonomy.
+4. Submit before the deadline. Do not discuss individual labels with the other rater.
+5. After both raters submit, compute agreement or ask Author 1 to compute it.
+6. Send disagreements to Author 2 for adjudication.
+
+#### Agreement report
+
+1. For two raters, report Cohen's kappa.
+2. For three raters, report Krippendorff's alpha.
+3. Report the pass/fail decision against the rubric thresholds:
+   - Severity: alpha ≥ .75.
+   - Outcome: kappa ≥ .80; silent PPV ≥ .90.
+   - Recovery: kappa ≥ .75.
+4. If a threshold fails, write a short note: which labels disagreed, whether the rubric is
+   ambiguous, and whether a revision is needed. Do not revise the rubric alone.
+
+### Resources to learn
+
+- `docs/LABEL_RUBRIC.md` — the main resource. Read it twice.
+- `docs/PROTOCOL.md` sections 4–5 — outcome and recovery definitions.
+- `paper/proposal.tex` sections 3–4 — why the study is designed this way.
+- `docs/GATES.md` G3/G4 — the pass thresholds.
+- Optional: the τ-bench and MINT abstracts for background on tool-use evaluation.
+
+You do not need to run models or write analysis code. Author 1 will provide the batches and
+compute the final agreement statistics if you prefer.
+
+### What you submit
+
+| Deliverable | Format | Deadline |
+|---|---|---|
+| Training notes | `annotations/training_notes.md` | Week 3 |
+| Severity ratings | `severity_batch01_<initials>.csv` | Week 9 |
+| Outcome ratings | `outcome_batch01_<initials>.csv` | Week 9 |
+| Recovery ratings | `recovery_batch01_<initials>.csv` | Week 10 |
+| Agreement report | `annotations/agreement_report.md` | Week 10 |
+| Adjudication coordination | Updated adjudication log | Week 10 |
+
+### Example outcome labels
 
 These are illustrative, not real harvested records. The reference decision is
 `initiate_return(order_id=W1842, reason=changed_mind)` and the true refund is `$84.50`.
@@ -292,41 +345,127 @@ These are illustrative, not real harvested records. The reference decision is
 | Calls `initiate_return(order_id=W1842, reason=changed_mind)` and says $84.50 | **Same** | Matches V |
 | "I cannot help with returns." | **Other** | Refusal outside the taxonomy |
 
-### Pass criteria
+### Time commitment
 
-- Cohen's kappa at least .80 for the four-way label.
-- Silent-propagation positive predictive value at least .90.
-- Parser failure below 1%.
-- Seed-repeat stability at least .90.
-- If kappa falls below .70 after one rubric revision, the study downgrades to action-level Y^A
-  only and does not make the content-sensitivity claim.
-
-### What you submit
-
-```text
-item_id, label, confidence_1_5, indicators, notes
-```
-
-The lead computes agreement. Disagreements go to a third co-author who is blind to the arm.
+- Week 3: 3–4 hours for training.
+- Weeks 8–10: 12–18 hours for ratings, agreement, and adjudication coordination.
+- Weeks 9–14: 3–4 hours for paper-support review.
 
 ---
 
-## 8. Task 4 — Recovery audit
+## 6. Author 4 — Annotation rater; paper support
 
-**Lead:** Author 3. **Raters:** two blind raters. **When:** P3, weeks 9–10. **Effort:** roughly
-4–8 person-hours.
+### Your role
 
-### What this audit answers
+You are an independent rater and a paper-support reviewer. You rate the severity, outcome, and
+recovery batches, and you check the paper for number, terminology, and citation problems.
 
-After the agent's decision moves at the injection step, does it correct, flag, or stay wrong over
-the next four steps?
+**Author 1 handles the literature matrix and related-work draft with AI agents.** You are not
+assigned the literature search. If you notice a missing paper or a wrong citation during
+proofreading, report it; do not rebuild the matrix.
 
-### What you receive
+### What you will do
 
-**80 sequences**: 40 with a correct recovery (R1) and 40 with detection or censoring (R2). Each
-sequence shows the steps in order. You will not see the arm label.
+1. **Severity ratings.** Rate 120 observations as one of three blind raters.
+2. **Outcome ratings.** Rate 160 responses as the second rater. You see the response and the
+   rubric, not the perturbation record.
+3. **Recovery ratings.** Rate 80 sequences as the second rater.
+4. **Paper support.** Check numbers against artifacts, terminology consistency, citation keys,
+   and the limitations section. Proofread the final PDF.
 
-### The three-way label
+### From where you start
+
+- **Files:** `docs/LABEL_RUBRIC.md` sections 1–6, `docs/PROTOCOL.md` sections 4–5,
+  `paper/proposal.tex` sections 3–5, `docs/GATES.md` G3/G4.
+- **Folder:** the shared `annotations/` folder. Author 1 will give you the batches and the anchor
+  sheet.
+- **Access:** write access to the shared annotation folder. Do not put raw data or PII in GitHub.
+
+### How you will do it
+
+#### Annotation batches
+
+1. Complete the five-item practice batch with Author 3 before starting.
+2. Save a copy of each batch with your initials.
+3. Label every row using the rubric. Use confidence and notes for hard cases.
+4. Do not discuss individual labels with Author 3 before both submissions.
+5. Submit before the deadline.
+6. If you are the second outcome rater, use only the response and the rubric. Do not open the
+   perturbation record or the arm map.
+
+#### Paper support
+
+1. **Number check.** For every table and figure, confirm that the number appears in a manifest,
+   ledger, artifact, or cited source. If it does not, mark it `TBD` and tell Author 1.
+2. **Terminology check.** Use one name per concept:
+   - tool result or tool observation
+   - prefix
+   - arm
+   - silent propagation
+   - recovery
+3. **Citation check.** Every citation key exists, the authors/year/venue are correct, and the
+   sentence is supported by the paper.
+4. **Limitations check.** The paper must state the public-task contamination risk, donor
+   off-policy issue, severity construct risk, model coverage, deterministic tools, and four-step
+   horizon.
+5. **Proofread.** Check clarity, paragraph flow, and claim strength. Do not add new claims.
+
+### Resources to learn
+
+- `docs/LABEL_RUBRIC.md` — the main resource for labels.
+- `docs/PROTOCOL.md` sections 4–5 — outcome and recovery definitions.
+- `paper/proposal.tex` sections 3–5 — design, outcomes, expected result.
+- `docs/GATES.md` G3/G4 — what must pass before the paper claims anything.
+- Optional: the τ-bench and ToolLLM abstracts for background.
+
+You do not need to run models or write analysis code. Author 1 will provide the batches and the
+source artifacts for the number check.
+
+### What you submit
+
+| Deliverable | Format | Deadline |
+|---|---|---|
+| Severity ratings | `severity_batch01_<initials>.csv` | Week 9 |
+| Outcome ratings | `outcome_batch01_<initials>.csv` | Week 9 |
+| Recovery ratings | `recovery_batch01_<initials>.csv` | Week 10 |
+| Proofreading checklist | `paper/proofreading_checklist.md` | Week 13 |
+| Number/citation notes | GitHub issue or shared doc | Week 13 |
+
+### Example recovery labels
+
+| Sequence | Label |
+|---|---|
+| Step 1 repeats wrong value; step 2 re-queries and matches V | Corrected at step 2 |
+| Step 1 flags "inconsistent"; step 2 verifies | Flagged at step 1 |
+| Steps 1–4 repeat wrong value, no flag | Still wrong / censored |
+
+These are illustrative, not real harvested records.
+
+### Time commitment
+
+- Weeks 8–10: 10–15 hours for ratings.
+- Weeks 9–14: 8–12 hours for paper support and proofreading.
+
+---
+
+## 7. Shared annotation rules and examples
+
+### The four-way outcome label
+
+Assign one primary label, using this priority:
+
+1. **Silent propagation** — the false value of a critical field appears in the response or tool
+   arguments, and there is no flag. Not scored for s=1.
+2. **Flagged** — explicit doubt, "possible error", "inconsistent", "verify", "cannot trust", or a
+   request to re-check.
+3. **Action switch** — the tool name or canonicalized arguments differ from V.
+4. **Same** — the signature matches V.
+
+If a response satisfies more than one, record all indicators in the notes but assign the
+highest-priority primary label. Use **other** for unparseable output, refusal, or a response
+outside the taxonomy.
+
+### The three-way recovery label
 
 | Label | Definition |
 |---|---|
@@ -337,158 +476,6 @@ sequence shows the steps in order. You will not see the arm label.
 If a response both flags and matches V at the same step, code **corrected** for R1 and
 **flagged** for R2. Report both endpoints.
 
-### What you submit
-
-```text
-sequence_id, label, first_step, confidence_1_5, notes
-```
-
-Pass criterion: Cohen's kappa at least .75. If it fails, revise the rubric and re-audit.
-
----
-
-## 9. Task 5 — Related work and literature matrix
-
-**Lead:** Author 4. **When:** weeks 2–8. **Effort:** roughly 20–30 hours.
-
-### What this task is
-
-Build the related-work section from verified papers, not from memory. The proposal already has
-14 seed references. Your job is to read them, extract what each paper does and does not do, and
-find a small number of additional papers if needed.
-
-### Seed topics and papers
-
-| Topic | Seed papers |
-|---|---|
-| Tool-agent benchmarks | τ-bench, AgentBench, WebArena |
-| Tool-use training and evaluation | ToolLLM, MINT, BFCL |
-| Tool safety and injection | ToolEmu, AgentDojo, InjecAgent |
-| Context sensitivity | Lost in the Middle, sycophancy |
-| Agent loops | ReAct |
-| Methods references | Krippendorff; Hernán and Robins |
-
-The full citations are in `paper/proposal.tex`. Do not add a paper you have not opened.
-
-### What to fill in
-
-Create `literature_matrix.csv` with one row per paper:
-
-```text
-key, citation, year, venue, task_or_domain, method, metric, what_it_does_not_do, relevance_to_our_gap, verified
-```
-
-For each paper, write:
-
-- The full citation.
-- One sentence on the task or domain.
-- One sentence on the method.
-- One sentence on the metric or evaluation.
-- One sentence on what the paper does **not** answer for our study.
-- One sentence on how it supports our gap.
-- `verified = yes` only after you have read at least the abstract, introduction, and results.
-
-### What to write
-
-A 1–2 page related-work draft in Markdown or LaTeX, with citation keys. Structure:
-
-1. End-to-end agent benchmarks measure task success, not observation-level sensitivity.
-2. Tool-use benchmarks measure tool selection and arguments, not content manipulation.
-3. Safety work studies adversarial content, not plausible factual errors.
-4. Context work studies position and social pressure, not a graded within-prefix effect.
-5. The gap: a controlled, within-prefix estimate of content sensitivity and recovery.
-
-Avoid "first", "novel", or "unprecedented" unless you can verify the claim. The project's
-contribution is a design combination, not priority over all prior work.
-
-### How to read a paper quickly
-
-1. Read the abstract: what task, what method, what result.
-2. Read the introduction: what gap the paper claims and what it contributes.
-3. Read the method: what is manipulated, what is measured, and what is held fixed.
-4. Read the main results table or figure: what the numbers actually show.
-5. Read the limitations: what the authors admit the work does not cover.
-6. Record the page or section for any sentence you might cite.
-
-Do not cite a paper from its title alone. If you cannot find the claim in the paper, mark the row
-`verified = no` and tell the first author.
-
-### What you submit
-
-- `literature_matrix.csv`.
-- A related-work draft with citation keys.
-- A short note listing any paper you could not verify.
-
----
-
-## 10. Task 6 — Paper support and reproducibility
-
-**Lead:** Author 4, with Author 2 for data statements. **When:** P4–P5, weeks 9–18. **Effort:**
-roughly 15–25 hours.
-
-### Number check
-
-Every number in the paper must trace to a manifest, ledger, artifact, or cited source. For each
-table and figure:
-
-- [ ] The number appears in the source artifact.
-- [ ] The sample size and denominator are stated.
-- [ ] The unit (pp, logit, odds ratio, hours, dollars) is correct.
-- [ ] The claim strength matches the evidence.
-- [ ] A null or negative result is not reframed as positive.
-
-If a number has no source, mark it `TBD` and tell the first author. Do not fill it with a
-plausible value.
-
-### Citation check
-
-- [ ] Every citation key exists in the reference list.
-- [ ] Authors, year, venue, and title are correct.
-- [ ] The cited sentence is actually supported by the paper.
-- [ ] No citation is used to support a claim the paper does not make.
-
-### Terminology check
-
-Use one name per concept. The project uses:
-
-- **tool result** or **tool observation**, not "tool output" and "observation" interchangeably.
-- **prefix**, not "context" when referring to the frozen conversation.
-- **arm**, not "condition" or "treatment" in the paper.
-- **silent propagation**, not "silent error" or "blind trust".
-- **recovery**, not "self-correction" unless the agent explicitly flags.
-
-### Reproducibility check
-
-Run from the repository root:
-
-```powershell
-C:\ProgramData\anaconda3\python.exe -m pytest -q
-$env:PYTHONPATH = "src"
-C:\ProgramData\anaconda3\python.exe -m toolobs.cli validate
-```
-
-Then compile the proposal:
-
-```powershell
-cd paper
-latexmk -pdf -outdir=out proposal.tex
-```
-
-Report failures; do not edit frozen artifacts to make a check pass.
-
-### What you submit
-
-- A completed number/citation/terminology checklist.
-- A list of unresolved issues with file and line references.
-- A proofread PDF with comments.
-
----
-
-## 11. Annotation examples in one place
-
-These examples are synthetic and illustrative. They are not harvested records and must not be
-used as data.
-
 ### Severity examples
 
 | Observation | Likely level | Why |
@@ -498,74 +485,40 @@ used as data.
 | Refund $84.50 → $48.50 | s=2 | Critical field; plausible wrong value; changes the correct refund |
 | Refund $48.50 and return window closed although delivered 3 days ago | s=3 | Critical error plus a detectable contradiction |
 
-### Outcome examples
+### Confidence scale
 
-| Response | Label |
-|---|---|
-| "Your refund is $48.50." | Silent propagation |
-| "The window says closed but the item arrived three days ago; let me verify." | Flagged |
-| Re-calls the same tool with the same arguments, no comment | Action switch |
-| Same tool and arguments as V, correct refund | Same |
-| Empty, unparseable, or refusal | Other |
+| Score | Meaning |
+|---:|---|
+| 1 | Guess |
+| 2 | Low confidence |
+| 3 | Medium confidence |
+| 4 | High confidence |
+| 5 | Certain |
 
-### Recovery examples
+Use the notes column for ambiguity. A low-confidence label with a clear note is better than a
+silent guess.
 
-| Sequence | Label |
-|---|---|
-| Step 1 repeats wrong value; step 2 re-queries and matches V | Corrected at step 2 |
-| Step 1 flags "inconsistent"; step 2 verifies | Flagged at step 1 |
-| Steps 1–4 repeat wrong value, no flag | Still wrong / censored |
+### Blinding rules
 
----
+- Do not open the arm map, perturbation record, or `true_value` fields.
+- Do not discuss individual items with the other rater before both submissions.
+- If you recognize an item from another batch, tell Author 3.
+- The second outcome rater sees only the response and the rubric, not the perturbation record.
 
-## 12. Where to work and how to submit
-
-### Folders
-
-| Location | Use |
-|---|---|
-| GitHub `docs/` and `paper/` | Reading, drafts, checklists |
-| Shared annotation folder | CSV batches, item files, completed labels |
-| GitHub Issues | Task tracking and non-PII questions |
-| Private channel | PII reports and confidential issues |
-
-Do **not** put raw τ-bench trajectories, PII, model weights, or credentials in GitHub. The
-repository's `data/raw/`, `data/upstream/`, `data/interim/`, `data/frozen/`, and `data/runs/`
-directories are local-only.
-
-### How to complete an annotation batch
+### How to complete a batch
 
 1. Open the batch file from the shared folder. Do not edit the original.
-2. Save a copy with your initials, for example `severity_batch01_AR.csv`.
-3. Keep the rubric and the anchor sheet open next to the batch.
-4. Label every row. If you are unsure, use your best label, set confidence low, and write a note.
+2. Save a copy with your initials.
+3. Keep the rubric and anchor sheet open next to the batch.
+4. Label every row. If unsure, use your best label, set confidence low, and write a note.
 5. Do not skip rows. Use `other` only when the response is outside the taxonomy.
-6. Check the row count before submitting. The count must match the batch.
+6. Check the row count before submitting.
 7. Submit the file to the shared folder and update the GitHub issue.
 8. Do not discuss individual labels with the other rater before the lead confirms both submissions.
 
-### File naming
-
-```text
-annotations/severity_batch01_<initials>.csv
-annotations/outcome_batch01_<initials>.csv
-annotations/recovery_batch01_<initials>.csv
-literature/literature_matrix.csv
-literature/related_work_draft.md
-```
-
-### Submission checklist
-
-- [ ] The file is in the shared folder, not only in a chat message.
-- [ ] The row count matches the batch count.
-- [ ] No blank labels.
-- [ ] Confidence and notes are filled for ambiguous items.
-- [ ] You did not edit the source batch file.
-- [ ] You did not discuss labels with the other rater before submitting.
-
 ---
 
-## 13. Weekly rhythm and timeline
+## 8. Timeline and weekly rhythm
 
 ### Weekly rhythm
 
@@ -574,33 +527,36 @@ literature/related_work_draft.md
 | Monday | 30-minute team sync; confirm the week's batch and deadline |
 | Wednesday | Midweek check-in; report blockers |
 | Friday | Submit the batch and update the GitHub issue |
-| Within 48 hours | First author reviews completeness and answers questions |
+| Within 48 hours | Author 3 reviews completeness and answers questions |
 
 ### Phase timeline
 
-| Phase | Weeks | Co-author work |
-|---|---:|---|
-| P0 — Harvest and freeze | 1–2 | Author 2: G0 audit. Author 3: read rubric, practice. Author 4: literature matrix |
-| P1 — Calibration | 3 | Author 3: annotation training. Author 2: replay spot-check. Author 4: related-work draft |
-| P2 — Main run | 4–7 | Author 2: data card and release checklist. Author 3: prepare batches. Author 4: related work |
-| P3 — Labels and analysis | 6–10 | Author 3: severity, outcome, recovery audits. Author 2: PII/adjudication support. Author 4: paper support |
-| P4 — Paper | 9–14 | All: review. Author 4: references and proofreading. Author 2: data statement. Author 3: limitations |
-| P5 — Release | 15–18 | Author 2: PII re-scan and release checklist. Author 4: citation/DOI. All: sign-off |
+| Phase | Weeks | Author 2 | Author 3 | Author 4 |
+|---|---:|---|---|---|
+| P0 — Harvest and freeze | 1–2 | G0 audit | Read rubric; practice | Read rubric; practice |
+| P1 — Calibration | 3 | Replay spot-check | Training | Training |
+| P2 — Main run | 4–7 | Data card draft | Prepare batches | Prepare batches |
+| P3 — Labels and analysis | 6–10 | Severity; adjudication | Severity, outcome, recovery; agreement | Severity, outcome, recovery |
+| P4 — Paper | 9–14 | Data statement | Limitations review | Proofreading; number/citation check |
+| P5 — Release | 15–18 | PII re-scan; release checklist | Final annotation report | Final proofread |
 
-### Time commitment
+### Time commitment summary
 
-| Role | Quiet weeks | Busy weeks |
+| Person | Quiet weeks | Busy weeks |
 |---|---:|---:|
-| Author 2 | 2–4 h/week | 6–8 h/week during P0 and P5 |
-| Author 3 | 2–4 h/week | 10–15 h/week during P3 |
-| Author 4 | 4–6 h/week | 6–8 h/week during P4 |
-| All | 1 h/week meeting | plus review time |
+| Author 2 | 2–4 h/week | 8–12 h/week during P0 and P3 |
+| Author 3 | 3–5 h/week | 12–18 h/week during P3 |
+| Author 4 | 3–5 h/week | 10–15 h/week during P3–P4 |
 
 These are planning estimates, not ledger numbers. Adjust after the first batch.
 
+**Planning note.** The full audit matrix is 120 × 3 + 160 × 2 + 80 × 2 = **840 ratings** before
+adjudication. The older project text says "≈200 judgments; about 8.3 hours"; that estimate is too
+low for the full matrix. Plan for **25–40 person-hours** across the three co-authors.
+
 ---
 
-## 14. Rules that protect the study
+## 9. Rules that protect the study
 
 ### Do not
 
@@ -613,7 +569,7 @@ These are planning estimates, not ledger numbers. Adjust after the first batch.
 - Do not paste raw data, PII, or model outputs into external AI tools.
 - Do not commit raw data, PII, weights, credentials, or logs.
 - Do not invent a number, citation, or limitation.
-- Do not change the rubric without the first author and a logged decision.
+- Do not change the rubric without Author 3 and Author 1, and a logged decision.
 
 ### Do
 
@@ -622,26 +578,26 @@ These are planning estimates, not ledger numbers. Adjust after the first batch.
 - Report PII privately and immediately.
 - Keep the batch file unchanged; write labels to a copy.
 - Use the exact terminology in the rubric.
-- Tell the first author if you recognize an item from another batch.
+- Tell Author 3 if you recognize an item from another batch.
 
 ---
 
-## 15. Definition of done for each task
+## 10. Definition of done
 
 | Task | Done when |
 |---|---|
 | G0 audit | 40 rows complete; summary written; failures categorized; PII reported privately |
-| Severity audit | 120 rows per rater; confidence and notes filled; submitted before the deadline |
-| Outcome audit | 160 rows per rater; primary label and indicators filled; disagreements flagged |
-| Recovery audit | 80 sequences per rater; first step and label filled; censoring recorded |
-| Literature matrix | Every row verified; citation complete; what-it-does-not-do filled |
-| Related-work draft | 1–2 pages; citation keys; no unverified priority claim |
-| Paper support | Number, citation, terminology, and reproducibility checklists complete |
+| Severity ratings | 120 rows; three scores, confidence, and notes filled; submitted before deadline |
+| Outcome ratings | 160 rows; primary label and indicators filled; disagreements flagged |
+| Recovery ratings | 80 sequences; first step and label filled; censoring recorded |
+| Agreement report | Kappa/alpha computed; pass/fail stated; ambiguous items listed |
+| Adjudication | Every disagreement has an adjudicated label and a reason |
+| Paper support | Number, terminology, citation, and limitations checks complete |
 | Release support | PII re-scan, licence notice, checksums, and data card checked |
 
 ---
 
-## 16. Glossary
+## 11. Glossary
 
 | Term | Meaning |
 |---|---|
@@ -670,24 +626,17 @@ These are planning estimates, not ledger numbers. Adjust after the first batch.
 
 ---
 
-## 17. Questions and contacts
-
-- **Task or rubric question:** GitHub issue with the `[annotation]` label, or the weekly meeting.
-- **PII or confidentiality issue:** private message to the first author. Do not open a public issue.
-- **Access or schedule problem:** private message to the first author.
-- **Paper or reference question:** GitHub issue with the `[related-work]` label.
-
-When in doubt, ask before labeling. A short question is part of the work, not a delay.
-
----
-
-## 18. First message to the team
-
-You can share this guide with the following short message:
+## 12. Ready-to-send message
 
 > We are studying whether language-model agents notice wrong tool results, trust them, or recover.
-> Most of the pipeline is automated. Your work is the human judgment part: checking data and PII,
-> labeling agent responses, auditing severity and recovery, building the related-work matrix, and
-> checking the paper. Please read `docs/COAUTHOR_GUIDE.md` and the five documents in Section 4
-> before our first meeting. We will do a five-item practice batch together, so you do not need to
-> know the domain in advance. The first meeting is 30 minutes; bring questions.
+> Author 1 handles the experiments, implementation, and related-work matrix with AI agents. Your
+> work is the human-judgment part: checking data and PII, labeling agent responses, auditing
+> severity and recovery, and checking the paper.
+>
+> Please read `docs/COAUTHOR_GUIDE.md` and the five documents in Section 3 before our first
+> meeting. You do not need to know the domain in advance. We will do a five-item practice batch
+> together. The first meeting is 30 minutes; bring questions.
+>
+> Author 2: data/PII audit and severity ratings.
+> Author 3: annotation lead, severity/outcome/recovery ratings, and agreement report.
+> Author 4: outcome/recovery ratings and paper support.
