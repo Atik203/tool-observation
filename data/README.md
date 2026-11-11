@@ -11,7 +11,7 @@ Only small non-PII manifests and `.gitkeep` placeholders are tracked.
 | `upstream/` | Pinned τ-bench checkout, task databases, `PIN.json` | ignored |
 | `interim/` | Parsed candidates, scrubbed table, eligible table, replay table | ignored |
 | `frozen/` | Frozen prefix payloads and rendered prompts | ignored |
-| `manifests/` | `sample_880.json`, `cto800_v1.json`, `perturbations.jsonl`, model pins, hashes | **tracked** |
+| `manifests/` | `sample_880.json`, `toolresult800_v1.json`, `perturbations.jsonl`, model pins, hashes | **tracked** |
 | `runs/` | Calibration/main ledgers, raw traces, recovery traces | ignored |
 
 ## What may be committed to `data/manifests/`
@@ -26,7 +26,7 @@ in git. Put the payload under `frozen/` and keep only its hash in `manifests/`.
 
 ## Freeze discipline
 
-`data/manifests/cto800_v1.json` is written once at G0 and never edited afterward. It records the
+`data/manifests/toolresult800_v1.json` is written once at G0 and never edited afterward. It records the
 800 primary prefixes, message and observation hashes, perturbation-record hashes, renderer
 version, field-registry hash, and the preregistration hash. Corrections require a new version and
 an amendment.

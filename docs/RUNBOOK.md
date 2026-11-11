@@ -1,4 +1,4 @@
-# Runbook — CTO-800 pipeline
+# Runbook — ToolResult-800 pipeline
 
 This runbook is the operator view. The protocol is authoritative for design; this file is for
 execution, recovery, and troubleshooting.
@@ -43,9 +43,9 @@ python scripts/02_scrub.py --in data/interim/candidates.parquet --out data/inter
 python scripts/03_relevance.py --in data/interim/scrubbed.parquet --out data/interim/eligible.parquet
 python scripts/04_replay.py --in data/interim/eligible.parquet --out data/interim/replay.parquet --threshold 0.98
 python scripts/05_sample.py --in data/interim/replay.parquet --out data/manifests/sample_880.json --seed 20261108
-python scripts/06_freeze.py --sample data/manifests/sample_880.json --out data/manifests/cto800_v1.json
-python scripts/07_render.py --manifest data/manifests/cto800_v1.json --out data/manifests/perturbations.jsonl
-python scripts/08_audit.py --manifest data/manifests/cto800_v1.json --out artifacts/audit/g0_audit.csv
+python scripts/06_freeze.py --sample data/manifests/sample_880.json --out data/manifests/toolresult800_v1.json
+python scripts/07_render.py --manifest data/manifests/toolresult800_v1.json --out data/manifests/perturbations.jsonl
+python scripts/08_audit.py --manifest data/manifests/toolresult800_v1.json --out artifacts/audit/g0_audit.csv
 ```
 
 Acceptance: ≥880 eligible, ≥440/domain pre-audit, ≥400/domain post-audit, replay ≥98%, audit
@@ -127,7 +127,7 @@ Follow `release/README.md`. In short:
 
 1. Scrub re-scan and PII audit on the release candidate.
 2. Verify the upstream MIT notice and `DATA_LICENSE.md`.
-3. Build CTO-800 with manifests, perturbations, labels, and traces.
+3. Build ToolResult-800 with manifests, perturbations, labels, and traces.
 4. Write checksums (`SHA256SUMS`), data card, and CITATION.
 5. Deposit and mint a DOI; tag the repository.
 6. Publish the paper preprint only after the analysis freeze.

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-"""Stage 06 — freeze the CTO-800 manifest.
+"""Stage 06 — freeze the ToolResult-800 manifest.
 
 Input:  data/manifests/sample_880.json, perturbations, renderer metadata
-Output: data/manifests/cto800_v1.json
+Output: data/manifests/toolresult800_v1.json
 
 Record prefix IDs, message hashes, observation hashes, perturbation records, arm
 assignment, renderer version, and the preregistration hash. No target-model
@@ -22,7 +22,7 @@ import sys
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--sample", default="data/manifests/sample_880.json")
-    parser.add_argument("--out", default="data/manifests/cto800_v1.json")
+    parser.add_argument("--out", default="data/manifests/toolresult800_v1.json")
     args = parser.parse_args(argv)
     print(f"[06_freeze] not implemented (sample={args.sample}, out={args.out})")
     return 2

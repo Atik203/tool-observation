@@ -1,6 +1,6 @@
-# Tool-Observation Sensitivity in Language-Model Agents
+# Tool-Result Errors in Language-Model Agents
 
-**A fixed-prefix causal study of how tool-output content changes an agent's next decision — and how long recovery takes.**
+**A fixed-prefix causal study of detection, reliance, and recovery when tool results are wrong.**
 
 [![CI](https://github.com/Atik203/tool-observation/actions/workflows/ci.yml/badge.svg)](https://github.com/Atik203/tool-observation/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -79,11 +79,11 @@ tool-observation/
 ├─ docs/                # protocol, gates, rubric, data card, runbook, decisions, plan, proposal
 ├─ prereg/              # preregistration text and amendments log
 ├─ paper/               # proposal and manuscript source
-├─ release/             # CTO-800 release checklist and packaging notes
+├─ release/             # ToolResult-800 release checklist and packaging notes
 └─ .github/             # CI and contribution templates
 ```
 
-**CTO-800** is the dataset brand. The repository is named `tool-observation`; the dataset is not
+**ToolResult-800** is the dataset brand. The repository is named `tool-observation`; the dataset is not
 the repository.
 
 ## Quick start
@@ -113,7 +113,7 @@ PowerShell equivalents: `.\tasks.ps1 setup|test|lint|validate|clean`.
   committed.
 - τ-bench trajectories can contain names, emails, addresses, phone numbers, and payment
   identifiers. Raw trajectories are treated as PII-bearing even before scrubbing.
-- The public CTO-800 release contains only scrubbed, licensed derived data. Upstream τ-bench data
+- The public ToolResult-800 release contains only scrubbed, licensed derived data. Upstream τ-bench data
   remains MIT and is not re-licensed by this project.
 
 See [`data/README.md`](data/README.md) and [`DATA_LICENSE.md`](DATA_LICENSE.md).

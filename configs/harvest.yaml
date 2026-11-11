@@ -65,7 +65,7 @@ audit:
     - replay_match
 
 freeze:
-  manifest: data/manifests/cto800_v1.json
+  manifest: data/manifests/toolresult800_v1.json
   perturbations: data/manifests/perturbations.jsonl
   renderer_version: cto-prose-v1
   no_target_outcomes_before_freeze: true

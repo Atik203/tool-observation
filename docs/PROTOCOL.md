@@ -1,7 +1,7 @@
-# Protocol — fixed-prefix observation sensitivity (CTO-800)
+# Protocol — fixed-prefix observation sensitivity (ToolResult-800)
 
 **Version:** 1.0-draft (pre-G0). Frozen at G0; amendments logged in `prereg/AMENDMENTS.md`.
-**Study ID:** E2. **Dataset:** CTO-800. **Repository:** `Atik203/tool-observation`.
+**Study ID:** tool-result. **Dataset:** ToolResult-800. **Repository:** `Atik203/tool-observation`.
 
 ---
 

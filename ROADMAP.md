@@ -1,4 +1,4 @@
-# Roadmap — Tool-Observation Sensitivity (E2)
+# Roadmap - Tool-Result Errors in Language-Model Agents
 
 **Status:** pre-confirmatory scaffold, v0.1.0 (2026-11-09).
 **Scope:** open-weight 7–8B models, τ-bench airline and retail, next-decision sensitivity, and
@@ -44,7 +44,7 @@ result:
 7. Severity labels fail the construct audit: s=1 (non-critical) moves decisions as much as s=2,
    or Krippendorff α < .75 after one rubric revision.
 
-A flat or null result is still publishable as a measurement paper with the CTO-800 dataset. It
+A flat or null result is still publishable as a measurement paper with the ToolResult-800 dataset. It
 will not be reframed post hoc as a positive law.
 
 ---
@@ -53,12 +53,12 @@ will not be reframed post hoc as a positive law.
 
 | Phase | Weeks | Work | Exit gate | Main output |
 |---|---:|---|---|---|
-| **P0 — Harvest and freeze** | 1–2 | Pin τ-bench, parse, PII scrub, relevance labeling, replay, stratified sample, freeze 800 + 80 reserve, 40-item audit, preregistration | **G0** | `cto800_v1` frozen manifest, G0 report, prereg draft |
+| **P0 — Harvest and freeze** | 1–2 | Pin τ-bench, parse, PII scrub, relevance labeling, replay, stratified sample, freeze 800 + 80 reserve, 40-item audit, preregistration | **G0** | `toolresult800_v1` frozen manifest, G0 report, prereg draft |
 | **P1 — Calibration** | 3 | 60-prefix × 3-model calibration on the rental; parser and prompt-format fixes; refusal check | **G1** | Calibration ledger, pass/fail report, frozen prompt + parser version |
 | **P2 — Main run** | 4–7 | 34,800-generation envelope: base, transient recovery, persistent recovery, jitter repeats; ledger every generation | **G2** | Raw continuations, recovery traces, run ledger, cost report |
 | **P3 — Labels and analysis** | 6–10 | Human severity audit (120 items), outcome audit (160 items), recovery audit (80 sequences), automatic coding, slope and survival models | **G3 / G4** | κ/α report, slope table, recovery curves, analysis notebook |
 | **P4 — Paper** | 9–14 | Draft, internal review, figures, limitations, reproducibility appendix | Internal review pass | Paper draft, figures, tables |
-| **P5 — Release** | 15–18 | CTO-800 packaging, license audit, PII re-scan, DOI, repository release, artifact check | Release checklist | Public CTO-800 v1.0, tagged repo, DOI |
+| **P5 — Release** | 15–18 | ToolResult-800 packaging, license audit, PII re-scan, DOI, repository release, artifact check | Release checklist | Public ToolResult-800 v1.0, tagged repo, DOI |
 
 Phases overlap deliberately: P3 begins as soon as the first main-run shard lands, and P4 begins
 when the primary slope is estimable, not when every exploratory analysis is finished.
@@ -96,9 +96,9 @@ G0 is CPU-only, $0 cash, and runs before any rental spend.
 | 7 | Stratified sample: cap 10/task, 880 selected, 800 primary + 80 reserve | `data/manifests/sample_880.json` | 400/400 domain target; donor and step strata reported |
 | 8 | Build perturbation records and deterministic prose renderer; verify s=0 value-set identity with V | `data/manifests/perturbations.jsonl`, renderer hash | 100% s=0 value-set equality; every s=1/2/3 record has JSON path, true value, false value, criticality, expected action change |
 | 9 | Human audit of 40 random prefixes (eligibility, PII, relevance, replay) | `artifacts/audit/g0_audit.csv` | **≥ 36/40 (90%)**; every failure categorized |
-| 10 | Freeze manifest, write G0 report, finalize preregistration v1.0 | `data/manifests/cto800_v1.json`, `prereg/PREREGISTRATION.md`, G0 report | Hashes recorded; no target-model outcome seen; prereg locked |
+| 10 | Freeze manifest, write G0 report, finalize preregistration v1.0 | `data/manifests/toolresult800_v1.json`, `prereg/PREREGISTRATION.md`, G0 report | Hashes recorded; no target-model outcome seen; prereg locked |
 
-**G0 freeze rule:** after day 10, `data/manifests/cto800_v1.json`, the perturbation records, the
+**G0 freeze rule:** after day 10, `data/manifests/toolresult800_v1.json`, the perturbation records, the
 renderer version, the field registry, and the analysis plan are immutable. Any later change is a
 logged prereg amendment and is reported in the paper.
 
@@ -138,7 +138,7 @@ generations remain. There is no second rental and no paid judge/API fallback.
 
 ## 6. Deliverables
 
-1. **CTO-800** — 800 frozen real τ-bench prefixes (400 airline / 400 retail) with message hashes,
+1. **ToolResult-800** — 800 frozen real τ-bench prefixes (400 airline / 400 retail) with message hashes,
    observation hashes, perturbation records, arm assignments, and renderer version.
 2. **Frozen manifests** — sample, perturbations, field registry, replay hashes, and preregistration
    hash, all under `data/manifests/`.
@@ -187,7 +187,7 @@ These are follow-up questions, not hidden claims of this study.
 ## 9. Change control
 
 - **No post-freeze changes** to the sample, perturbations, field registry, renderer, prompts,
-  or analysis plan after G0. The freeze hash is recorded in `data/manifests/cto800_v1.json`.
+  or analysis plan after G0. The freeze hash is recorded in `data/manifests/toolresult800_v1.json`.
 - Any necessary deviation is written to `docs/DECISIONS.md` and to the prereg amendments log
   (`prereg/AMENDMENTS.md`) **before** the affected analysis is run.
 - Amendments state the trigger, the change, the analyses affected, and whether the change was

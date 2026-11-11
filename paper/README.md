@@ -18,7 +18,7 @@ so the analysis and writing stay aligned.
    t½ (or null/measurement result).
 7. **Limitations** — contamination, donor off-policy, construct validity, model coverage,
    deterministic tools, four-step horizon.
-8. **Data and ethics** — CTO-800, PII handling, licenses.
+8. **Data and ethics** — ToolResult-800, PII handling, licenses.
 9. **Reproducibility** — environment, manifests, gates, commands.
 10. **Appendix** — gate reports, amendments, prompt templates, full tables.
 

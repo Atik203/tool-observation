@@ -140,7 +140,7 @@ Use these links directly. Do not search for the files.
 | AgentBench paper | <https://arxiv.org/abs/2308.03688> |
 | BFCL leaderboard | <https://gorilla.cs.berkeley.edu/leaderboard.html> |
 
-**Dataset note.** CTO-800 is not public yet. The source dataset is τ-bench (MIT). Do not download
+**Dataset note.** ToolResult-800 is not public yet. The source dataset is τ-bench (MIT). Do not download
 or redistribute raw trajectories. Author 1 will provide the frozen annotation batches in the
 shared folder. The data card describes the planned release.
 
@@ -630,7 +630,7 @@ rows.
 
 ### Do not
 
-- Do not edit `prereg/PREREGISTRATION.md`, `data/manifests/cto800_v1.json`, perturbation records,
+- Do not edit `prereg/PREREGISTRATION.md`, `data/manifests/toolresult800_v1.json`, perturbation records,
   the field registry, or the renderer version after G0 freeze.
 - Do not look at arm labels during a blind audit.
 - Do not discuss individual labels with the other rater before submission.

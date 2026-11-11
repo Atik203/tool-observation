@@ -18,7 +18,7 @@ from .paths import CONFIG_DIR, REQUIRED_CONFIGS
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="toolobs",
-        description="Tool-observation sensitivity study (CTO-800) utilities.",
+        description="Tool-result study (ToolResult-800) utilities.",
     )
     parser.add_argument(
         "--version",

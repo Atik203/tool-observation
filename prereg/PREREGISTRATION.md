@@ -1,4 +1,4 @@
-# Pre-Registration — Tool-Observation Sensitivity in Language-Model Agents (E2)
+# Pre-Registration - Tool-Result Errors in Language-Model Agents
 
 **Status:** DRAFT — not yet frozen. Freeze at the end of G0; tag `prereg-freeze-v1`.
 **Version:** 0.1-draft · 2026-11-09
@@ -144,7 +144,7 @@ is downgraded to action-level `Y^A` only.
    family; freeze 800 primary (400/400) + 80 reserve (40/40).
 7. Audit 40 random prefixes blind: eligibility, PII, decision relevance, replay, renderability.
    Pass ≥36/40. Replace failures from reserve; re-audit replacements.
-8. Freeze `data/manifests/cto800_v1.json` with every prompt, observation, perturbation, renderer
+8. Freeze `data/manifests/toolresult800_v1.json` with every prompt, observation, perturbation, renderer
    version, seed, and SHA-256. No changes after target-model outcomes are seen.
 
 **Exclusions.** Parse failures are excluded from the primary slope and reported as a rate.
@@ -187,7 +187,7 @@ Local CPU 20–30 hours for harvest, replay, analysis, and writing.
   trigger, the change, the analyses affected, and whether it was made blind to target outcomes.
 - Every gate outcome, including failures, is reported. A null result is reported as a null
   result, not reframed as a positive law.
-- The CTO-800 release contains scrubbed derived data, manifests, and traces; raw τ-bench data and
+- The ToolResult-800 release contains scrubbed derived data, manifests, and traces; raw τ-bench data and
   PII are not released.
 - Code and analysis scripts are released under MIT; documentation and derived data under
   CC BY 4.0; upstream τ-bench remains MIT.
@@ -201,4 +201,4 @@ Local CPU 20–30 hours for harvest, replay, analysis, and writing.
 | Data owner | TBD | TBD | TBD |
 
 _Freeze record: commit SHA and SHA-256 of this file are written to
-`data/manifests/cto800_v1.json` at G0._
+`data/manifests/toolresult800_v1.json` at G0._

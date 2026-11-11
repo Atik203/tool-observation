@@ -1,7 +1,7 @@
 # Main confirmatory run configuration.
 run:
-  name: cto800-main-v1
-  frozen_manifest: data/manifests/cto800_v1.json
+  name: toolresult800-main-v1
+  frozen_manifest: data/manifests/toolresult800_v1.json
   seed: 20261108
   arms: [V, s0, s1, s2, s3]
   models: 3

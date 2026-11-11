@@ -9,7 +9,7 @@ is written before G1 and frozen at G0; it is the authority for the confirmatory 
   specified in `docs/PROTOCOL.md` and `ROADMAP.md`; the draft is frozen at the end of the 10-day
   G0 sprint.
 - **v1.0-frozen** — planned at the end of G0. Its SHA-256 is recorded in
-  `data/manifests/cto800_v1.json` and in the G0 report.
+  `data/manifests/toolresult800_v1.json` and in the G0 report.
 - **Amendments** — any post-freeze change is recorded in [`AMENDMENTS.md`](AMENDMENTS.md) and
   summarized in `docs/DECISIONS.md`, before the affected analysis runs.
 

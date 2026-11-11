@@ -10,7 +10,7 @@ observed value, the pass/fail decision, and the consequence.
 
 | Gate | Phase | Criteria | Evidence artifact | Fail action |
 |---|---|---|---|---|
-| **G0** | Harvest / freeze | ≥880 eligible; ≥440/domain pre-audit; ≥400/domain post-audit; replay ≥98%; 40-item audit ≥36/40 | `artifacts/audit/g0_report.md`, `data/manifests/cto800_v1.json` | 500 prefixes / 2 models fallback, or stop |
+| **G0** | Harvest / freeze | ≥880 eligible; ≥440/domain pre-audit; ≥400/domain post-audit; replay ≥98%; 40-item audit ≥36/40 | `artifacts/audit/g0_report.md`, `data/manifests/toolresult800_v1.json` | 500 prefixes / 2 models fallback, or stop |
 | **G1** | Calibration | parse ≥95%; placebo jitter ≤20%; s=3 switch 10–80%; format refusal <5% per model | `artifacts/audit/g1_calibration.json` | Fix prompt/parser and rerun; no main spend |
 | **G2** | Main run | Stop at $22 spend or 45 GPU-hours, whichever first; complete ledger | `artifacts/cost/main_cost.json`, `data/runs/main/ledger.jsonl` | Analyze completed shards; disclose shortfall |
 | **G3** | Analysis | Pooled β>0; positive in ≥2/3 models with the same sign; severity α≥.75; outcome κ≥.80 (or adjudicated ≥.70 with downgrade); recovery κ≥.75 | `artifacts/analysis/g3_report.md` | Null/measurement paper; no content-sensitivity claim |

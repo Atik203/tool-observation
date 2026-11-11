@@ -22,7 +22,7 @@ import sys
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--manifest", default="data/manifests/cto800_v1.json")
+    parser.add_argument("--manifest", default="data/manifests/toolresult800_v1.json")
     parser.add_argument("--out", default="artifacts/audit/g0_audit.csv")
     args = parser.parse_args(argv)
     print(f"[08_audit] not implemented (manifest={args.manifest})")

@@ -1,4 +1,4 @@
-# Tool-Observation Sensitivity in Language-Model Agents
+# Tool-Result Errors in Language-Model Agents
 
 ## A Fixed-Prefix Causal Study — Supervisor Proposal
 
@@ -22,7 +22,7 @@ The study is pre-registered and gated (G0–G4); a null is a measurement result.
 
 **Why approve it.** The question is narrow, the design is paired, the supply is measured, the cost is small, and a negative result is publishable.
 
-**Deliverables and cost.** CTO-800, manifests, ledgers, a reproducibility package, a pre-registration, and a paper draft. The run is 35–45 GPU-hours ($15–22), plus $2–3 storage and $3–5 contingency: **$23 base / $50 hard cap**; 20–30 CPU hours; 18 weeks part-time.
+**Deliverables and cost.** ToolResult-800, manifests, ledgers, a reproducibility package, a pre-registration, and a paper draft. The run is 35–45 GPU-hours ($15–22), plus $2–3 storage and $3–5 contingency: **$23 base / $50 hard cap**; 20–30 CPU hours; 18 weeks part-time.
 
 **Decision requested.** Approve G0 now (CPU only, $0, ten working days) and the staged budget. Main-run GPU spend is released only after G0 and G1 pass; G1 itself is a small calibration shard.
 
@@ -86,7 +86,7 @@ The novelty is a **design combination**, not the bare idea of injecting errors i
 1. **Fixed-prefix content manipulation.** Every arm starts from the same frozen prefix; only content changes. Task difficulty, donor style, domain, and history cancel out.
 2. **Five arms.** V is the exact observation in raw JSON; s=0 is faithful prose; s=1 changes one non-critical field; s=2 changes one critical field to a plausible wrong value; s=3 adds a second contradiction. All s=0…3 use the same prose template.
 3. **Paired design.** The same 800 prefixes are crossed with three model families and two domains.
-4. **CTO-800.** A frozen dataset with hashes, perturbation records, arm assignments, renderer version, decision signatures, and recovery traces.
+4. **ToolResult-800.** A frozen dataset with hashes, perturbation records, arm assignments, renderer version, decision signatures, and recovery traces.
 
 | Work | What it does | What it does not do |
 |---|---|---|
@@ -148,7 +148,7 @@ Under s=2, if the model calls `initiate_return` with the same arguments but answ
 
 ---
 
-## 7. Dataset: CTO-800
+## 7. Dataset: ToolResult-800
 
 The source is the public **τ-bench** historical trajectories (MIT): gpt-4o airline, gpt-4o retail, sonnet-35-new airline, sonnet-35-new retail. The supply analysis measured 1,980 trajectories and 13,605 post-tool candidates. After excluding profile tools, keeping JSON-parseable observations, and requiring a value used in the donor continuation, **6,554 eligible observations** remain across 165 task–domain pairs.
 
@@ -172,7 +172,7 @@ The source is the public **τ-bench** historical trajectories (MIT): gpt-4o airl
 
 **Replay.** The harness executes the prefix's tool calls against the task database from the initial state and compares the final observation. The 98% threshold is not relaxed; replay makes the observation a real environment output.
 
-**Storage and licence.** The project lives on `G:\PROJECT\tool-observation`. Raw data, upstream checkouts, interim files, frozen payloads, weights, caches, and run logs are local-only and gitignored; only small, non-PII manifests under `data/manifests/` are tracked. Code is MIT; documentation and CTO-800 additions are CC BY 4.0; upstream τ-bench remains MIT. The public release contains scrubbed derived data only; raw trajectories, weights, and run logs are never released.
+**Storage and licence.** The project lives on `G:\PROJECT\tool-observation`. Raw data, upstream checkouts, interim files, frozen payloads, weights, caches, and run logs are local-only and gitignored; only small, non-PII manifests under `data/manifests/` are tracked. Code is MIT; documentation and ToolResult-800 additions are CC BY 4.0; upstream τ-bench remains MIT. The public release contains scrubbed derived data only; raw trajectories, weights, and run logs are never released.
 
 ---
 
@@ -278,7 +278,7 @@ The study is designed to estimate, not to confirm the pilot. If the direction su
 
 | Contribution | What it is |
 |---|---|
-| **Dataset** | CTO-800: 800 frozen real prefixes, five arms, perturbation records, renderer hash, decision signatures, recovery traces, data card. |
+| **Dataset** | ToolResult-800: 800 frozen real prefixes, five arms, perturbation records, renderer hash, decision signatures, recovery traces, data card. |
 | **Empirical result** | A within-prefix causal estimate of content sensitivity, graded by severity, plus a four-step recovery estimate across three families and two domains. |
 | **Methods** | A reusable fixed-prefix protocol, deterministic renderer, perturbation schema, and recovery-coding scheme. |
 | **Null-result value** | A well-powered flat slope bounds how much observation content matters; the dataset still enables replication. |
@@ -295,7 +295,7 @@ The claim is bounded: three open-weight 7–8B families, τ-bench airline and re
 | **PI / research lead** | Design, pre-registration, gates, paper, supervisor communication. |
 | **Harvest and data lead** | Pin, parse, PII scrub, relevance, replay, sampling, freeze, data card. |
 | **Inference lead** | Rental, vLLM/AWQ, calibration, main run, ledger, cost stop. |
-| **Analysis and release lead** | Coding, audits, slope/survival models, figures, CTO-800 packaging. |
+| **Analysis and release lead** | Coding, audits, slope/survival models, figures, ToolResult-800 packaging. |
 
 With three people, the PI absorbs paper/release work and the analysis lead keeps the statistics; harvest and inference stay separate because they are schedule-critical.
 
@@ -308,7 +308,7 @@ With three people, the PI absorbs paper/release work and the analysis lead keeps
 | **P4 — Paper** | 9–14 | Internal review |
 | **P5 — Release** | 15–18 | Release checklist |
 
-P0 harvests, replays, samples, and freezes. P1 runs 60 prefixes × 5 arms × 3 models. P2 runs the 34,800-generation envelope (12,000 base + 19,200 transient recovery + 2,400 persistent + 1,200 jitter). P3 runs the 120/160/80 audits and models; P4 drafts the paper; P5 packages and releases CTO-800.
+P0 harvests, replays, samples, and freezes. P1 runs 60 prefixes × 5 arms × 3 models. P2 runs the 34,800-generation envelope (12,000 base + 19,200 transient recovery + 2,400 persistent + 1,200 jitter). P3 runs the 120/160/80 audits and models; P4 drafts the paper; P5 packages and releases ToolResult-800.
 
 | Item | Specification | Cost |
 |---|---|---:|
@@ -345,7 +345,7 @@ The rental needs 24 GB VRAM, 32 GB RAM, 60 GB disk, a compatible CUDA stack, SSH
 
 **Privacy.** Raw τ-bench trajectories may contain names, emails, addresses, phones, and payment identifiers; they are treated as PII-bearing even before scrubbing. Profile tools are excluded, direct identifiers become stable synthetic tokens, and a prefix is excluded if decision-relevant content is PII. A 40-item audit runs before freeze and a re-scan before release. No raw trajectories, weights, credentials, or secrets enter the repository.
 
-**Licensing.** Upstream τ-bench is MIT and its notice is preserved. Code is MIT. Documentation and CTO-800 additions are CC BY 4.0. Model outputs are released only as derived, scrubbed text and remain subject to each model's licence; no weights are redistributed.
+**Licensing.** Upstream τ-bench is MIT and its notice is preserved. Code is MIT. Documentation and ToolResult-800 additions are CC BY 4.0. Model outputs are released only as derived, scrubbed text and remain subject to each model's licence; no weights are redistributed.
 
 **Open science.** The design, estimands, gates, rubric, and analysis plan are frozen at G0 and tagged `prereg-freeze-v1`. Any deviation is logged in `prereg/AMENDMENTS.md` and `docs/DECISIONS.md` before the affected analysis, with trigger, change, affected analyses, and blinding status. Every gate outcome, including failure, is reported. The release includes a data card, checksums, the pre-registration, and the amendments log. The frozen git tag is the record.
 
@@ -353,7 +353,7 @@ The rental needs 24 GB VRAM, 32 GB RAM, 60 GB disk, a compatible CUDA stack, SSH
 
 ## 17. Deliverables and decision requested
 
-**Deliverables.** (1) CTO-800, 800 frozen prefixes plus 80 reserve, with perturbations and recovery traces. (2) Frozen manifests and hashes. (3) One ledger row per generation. (4) A reproducibility package. (5) Pre-registration and amendments. (6) A paper draft with a bounded claim, pilot disclosure, result or null, limitations, and a data statement.
+**Deliverables.** (1) ToolResult-800, 800 frozen prefixes plus 80 reserve, with perturbations and recovery traces. (2) Frozen manifests and hashes. (3) One ledger row per generation. (4) A reproducibility package. (5) Pre-registration and amendments. (6) A paper draft with a bounded claim, pilot disclosure, result or null, limitations, and a data statement.
 
 **Decision requested today.** Approve the **G0 start**: ten working days, CPU only, $0 cash. G0 pins τ-bench, builds the harvest and replay pipeline, scrubs PII, labels relevance, samples 880, freezes 800 + 80 reserve, runs the 40-item audit, and freezes the pre-registration. No target-model output is generated before the freeze.
 

@@ -1,6 +1,6 @@
-# Data card — CTO-800
+# Data card — ToolResult-800
 
-**Status:** template for the v1.0 release. No CTO-800 artifact has been released yet; all values
+**Status:** template for the v1.0 release. No ToolResult-800 artifact has been released yet; all values
 marked TBD are resolved at G0 freeze and must be filled from the manifest, not estimated.
 
 ---
@@ -9,22 +9,22 @@ marked TBD are resolved at G0 freeze and must be filled from the manifest, not e
 
 | Field | Value |
 |---|---|
-| Name | CTO-800 |
+| Name | ToolResult-800 |
 | Full title | Counterfactual Tool-Observation dataset, 800 frozen prefixes |
 | Version | 1.0 (planned; scaffold is pre-release) |
 | Repository | https://github.com/Atik203/tool-observation |
-| Dataset brand | CTO-800 (the repository is not named cto-800) |
-| Study | E2 — Tool-Observation Sensitivity in Language-Model Agents |
+| Dataset brand | ToolResult-800 (the repository is `tool-observation`) |
+| Study | Tool-Result Errors in Language-Model Agents |
 | Maintainer | Atikur Rahaman (atikurrahaman0305@gmail.com) |
 | License | CC BY 4.0 for project additions; upstream τ-bench MIT |
 | Release date | TBD |
 | DOI | TBD |
-| Manifest hash | TBD (`data/manifests/cto800_v1.json`) |
+| Manifest hash | TBD (`data/manifests/toolresult800_v1.json`) |
 | Preregistration hash | TBD |
 
 ## 2. Summary
 
-CTO-800 is a fixed-prefix counterfactual dataset for measuring whether the content of a real tool
+ToolResult-800 is a fixed-prefix counterfactual dataset for measuring whether the content of a real tool
 observation changes a language-model agent's next decision. Each unit is a frozen τ-bench message
 prefix ending immediately after a real tool output, with five observation arms: verbatim JSON
 (V), faithful prose (s=0), one non-critical change (s=1), one critical wrong value (s=2), and a
@@ -94,16 +94,16 @@ privately per `SECURITY.md`.
 
 ## 7. Licensing and attribution
 
-- CTO-800 additions: CC BY 4.0.
+- ToolResult-800 additions: CC BY 4.0.
 - Upstream τ-bench: MIT; notices preserved.
 - Model outputs: subject to each model's license; released only as derived, scrubbed text.
-- Users must cite CTO-800/tool-observation and the upstream τ-bench paper/repository.
+- Users must cite ToolResult-800/tool-observation and the upstream τ-bench paper/repository.
 
 See `DATA_LICENSE.md`.
 
 ## 8. Intended use
 
-Research on tool-observation sensitivity, silent error propagation, agent recovery, and
+Research on tool-result errors, silent propagation, agent recovery, and
 reproducible evaluation of open-weight 7–8B models. Suitable for secondary analysis of
 within-prefix contrasts and for benchmarking detection/flagging behavior.
 

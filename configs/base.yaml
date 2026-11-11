@@ -1,9 +1,9 @@
 # Base configuration — shared by all pipeline stages.
 project:
   name: tool-observation
-  short_name: E2
-  title: "Tool-Observation Sensitivity in Language-Model Agents: A Fixed-Prefix Causal Study"
-  dataset_brand: CTO-800
+  short_name: tool-result
+  title: "Tool-Result Errors in Language-Model Agents: A Fixed-Prefix Causal Study"
+  dataset_brand: ToolResult-800
   version: 0.1.0
   seed: 20261108
 

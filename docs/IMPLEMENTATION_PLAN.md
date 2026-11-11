@@ -1,7 +1,7 @@
-# Implementation plan — CTO-800 / tool-observation
+# Implementation plan — ToolResult-800 / tool-observation
 
 **Version:** 0.1.0 (scaffold), 2026-11-09.
-**Study:** Tool-Observation Sensitivity in Language-Model Agents: A Fixed-Prefix Causal Study (E2).
+**Study:** Tool-Result Errors in Language-Model Agents: A Fixed-Prefix Causal Study (ToolResult-800).
 **Status:** pre-confirmatory. No gate has been run. This plan is the execution reference for
 P0–P5 and is subordinate to the preregistration once frozen.
 
@@ -34,7 +34,7 @@ McNemar p=.0625. It is a screening signal, not a dose-response law.
 
 ## 2. Repository and data layout
 
-The repository is `Atik203/tool-observation`; the dataset brand is **CTO-800**. The package is
+The repository is `Atik203/tool-observation`; the dataset brand is **ToolResult-800**. The package is
 `toolobs`, laid out under `src/toolobs/` with subpackages `taubench`, `harvest`, `render`,
 `infer`, `code`, `analysis`, and `release`.
 
@@ -53,14 +53,14 @@ artifacts/      audit, analysis, env, cost, paper outputs — gitignored except 
 docs/           protocol, gates, rubric, data card, runbook, decisions, this plan
 prereg/         preregistration and amendments log
 paper/          manuscript source
-release/        CTO-800 packaging checklist
+release/        ToolResult-800 packaging checklist
 ```
 
 Only `data/manifests/` and placeholder `.gitkeep` files are tracked under `data/`. Raw
 trajectories, model weights, caches, credentials, and run outputs never enter git. The release
 package is built from local files after a PII re-scan, not from the working tree.
 
-Manifests are the reproducibility spine. `data/manifests/cto800_v1.json` will record prefix IDs,
+Manifests are the reproducibility spine. `data/manifests/toolresult800_v1.json` will record prefix IDs,
 message hashes, observation hashes, arm assignments, perturbation-record hashes, renderer
 version, field-registry hash, and the preregistration hash. Every analysis table must be
 traceable to a manifest row and a ledger row.
@@ -127,7 +127,7 @@ The protocol is:
    arm. Verify s=0 preserves the full value set of V.
 8. **Audit.** A human reads 40 random prefixes for eligibility, PII, relevance, and replay match.
    Pass at **≥36/40 (90%)**.
-9. **Freeze.** Write `cto800_v1.json` with all hashes and the preregistration hash. No target
+9. **Freeze.** Write `toolresult800_v1.json` with all hashes and the preregistration hash. No target
    output may have been generated before this point.
 
 G0 passes only with **≥880 eligible**, **≥440 per domain pre-audit**, **≥400 per domain
@@ -296,7 +296,7 @@ frozen with the preregistration; post-freeze changes require an amendment.
 | G3 | Pooled β>0; positive in ≥2/3 models, same sign; α≥.75; κ≥.80 (or adjudicated ≥.70 with downgrade); recovery κ≥.75 | Null/measurement paper |
 | G4 | ≥50% recovery events by H=4; Weibull shape not rejected | RMST/curve only; t½ exploratory |
 
-Deliverables are CTO-800 (800 frozen prefixes plus perturbations and traces), frozen manifests,
+Deliverables are ToolResult-800 (800 frozen prefixes plus perturbations and traces), frozen manifests,
 raw run ledgers, a reproducibility package (environment, rental contract, scripts, analysis), the
 preregistration and amendments, and a paper draft. If the slope is null, the dataset and the null
 are still released.

@@ -6,10 +6,28 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-006 — Dataset brand is ToolResult-800; E2 retired
+
+- **Date:** 2026-11-11
+- **Status:** accepted
+- **Context:** "CTO-800" reads like a corporate title, and "E2" is an internal code that is not
+  meaningful to a reader. The dataset needs a readable brand that describes what it contains:
+  800 frozen real τ-bench prefixes with tool-result perturbations.
+- **Decision:** The dataset brand is **ToolResult-800**. The study is referred to as the
+  **tool-result study** or by its full title, "Tool-Result Errors in Language-Model Agents."
+  The repository remains **`Atik203/tool-observation`**; the package remains **`toolobs`**; the
+  planned manifest becomes `data/manifests/toolresult800_v1.json`. "E2" and "CTO-800" are retired
+  from new material.
+- **Consequences:** Docs, configs, paper, slides, and release text use ToolResult-800. D-005 is
+  superseded. No scientific design, sample, analysis, or claim changes. Historical entries may
+  retain the old names.
+
+---
+
 ## D-005 — Dataset brand is CTO-800; repository remains tool-observation
 
 - **Date:** 2026-11-09
-- **Status:** accepted
+- **Status:** superseded by D-006
 - **Context:** The dataset needs a citable brand distinct from the software repository. Naming
   the repo `cto-800` would conflate the code, the study, and the released data.
 - **Decision:** The dataset is **CTO-800**. The repository is **`Atik203/tool-observation`**, the

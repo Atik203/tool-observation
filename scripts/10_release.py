@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-"""Stage 10 — analysis and CTO-800 release packaging.
+"""Stage 10 — analysis and ToolResult-800 release packaging.
 
 Input:  data/runs/main, frozen manifests, label reports
-Output: artifacts/analysis/*, release/CTO-800-v1.0/, checksums, licenses
+Output: artifacts/analysis/*, release/ToolResult-800-v1.0/, checksums, licenses
 
 Analysis: conditional-logistic slope, silent-propagation decomposition,
 discrete-time recovery with Weibull shape check, fixed-sequence multiplicity.

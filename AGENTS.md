@@ -40,7 +40,7 @@ instead of editing around it.
 
 ## 4. Preserve the preregistration and frozen artifacts
 
-- Do not edit `prereg/PREREGISTRATION.md`, `data/manifests/cto800_v1.json`, perturbation
+- Do not edit `prereg/PREREGISTRATION.md`, `data/manifests/toolresult800_v1.json`, perturbation
   records, the field registry, or the frozen renderer version after G0 freeze.
 - Do not "fix" a manifest hash to make a test pass.
 - Any deviation goes in `docs/DECISIONS.md` and `prereg/AMENDMENTS.md`, before the affected

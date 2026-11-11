@@ -11,7 +11,7 @@ the v1.0 dataset and paper release.
 
 ### Planned
 
-- G0 harvest implementation and frozen CTO-800 v1 manifest.
+- G0 harvest implementation and frozen ToolResult-800 v1 manifest.
 - Replay harness against the τ-bench task databases.
 - Deterministic prose renderer and perturbation generator.
 - G1 calibration harness for three 7–8B AWQ models.
@@ -20,7 +20,7 @@ the v1.0 dataset and paper release.
 
 ### Added
 
-- Initial public repository scaffold for the tool-observation sensitivity study (E2).
+- Initial public repository scaffold for the tool-result study (ToolResult-800).
 - Governance: README, ROADMAP, AGENTS, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, CITATION,
   MIT code license, CC BY 4.0 documentation and data notices.
 - `toolobs` Python package skeleton with `--version` and `validate` CLI commands.

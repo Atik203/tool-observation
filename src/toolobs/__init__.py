@@ -1,4 +1,4 @@
-"""toolobs — research code for the CTO-800 fixed-prefix observation study.
+"""toolobs — research code for the ToolResult-800 fixed-prefix observation study.
 
 The package is deliberately light at import time: only the standard library is
 imported here. Heavy scientific and inference dependencies are imported inside

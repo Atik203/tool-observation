@@ -218,8 +218,8 @@ $\tau$-bench trajectories. The target models
 are open-weight 7--8B models. Separating donors from targets avoids a circular design in which the
 model that produced the history also supplies the outcome.
 
-\subsection{CTO-800: real prefixes, frozen before outcomes}
-CTO-800 will be built from the public $\tau$-bench historical trajectories (MIT): gpt-4o airline,
+\subsection{ToolResult-800: real prefixes, frozen before outcomes}
+ToolResult-800 will be built from the public $\tau$-bench historical trajectories (MIT): gpt-4o airline,
 gpt-4o retail, sonnet-35-new airline, and sonnet-35-new retail. The supply is measured, not assumed.
 The planning analysis found 1,980 trajectories, 13,605 post-tool candidates, 11,318 JSON-parseable
 observations, and 6,554 eligible value-used observations across 165 task--domain pairs (airline
@@ -229,7 +229,7 @@ airline arm is the binding constraint.
 \begin{table}[h]
 \centering
 \small
-\caption{Planned CTO-800 supply funnel. Counts are measured from the public $\tau$-bench
+\caption{Planned ToolResult-800 supply funnel. Counts are measured from the public $\tau$-bench
 trajectories and are planning inputs, not confirmatory results. Profile-tool exclusions are applied
 after JSON parsing; the value-used filter is applied last.}
 \label{tab:supply}
@@ -417,7 +417,7 @@ people. P0 (weeks 1--2) is the CPU-only harvest and freeze: pin $\tau$-bench, pa
 relevance, replay, sample 880, render, audit, and freeze the manifest and preregistration. P1 (week
 3) is calibration. P2 (weeks 4--7) is the main run. P3 (weeks 6--10) covers labels and analysis,
 beginning as soon as the first main-run shard lands. P4 (weeks 9--14) is the paper, beginning when
-the primary slope is estimable. P5 (weeks 15--18) is the CTO-800 release. The first step is the
+the primary slope is estimable. P5 (weeks 15--18) is the ToolResult-800 release. The first step is the
 ten-day G0 sprint, which is CPU-only, costs \$0, and can invalidate the study before any GPU spend.
 
 The main run is 34,800 generations: 12,000 base decisions (800 prefixes $\times$ 5 arms $\times$ 3
@@ -454,7 +454,7 @@ known precision and prevents practitioners from over-investing in content-level 
 and the null result will still be released, so other groups can replicate or extend the design.
 
 \subsection{Deliverables and limitations}
-The study will produce CTO-800 (800 frozen real prefixes plus 80 reserve, with perturbations,
+The study will produce ToolResult-800 (800 frozen real prefixes plus 80 reserve, with perturbations,
 arm assignments, renderer version, decision signatures, and recovery traces), frozen manifests
 with all hashes, one ledger row per generation, a reproducibility package, the preregistration and
 amendments log, and a paper draft. The contributions are a dataset, an empirical within-prefix
@@ -484,7 +484,7 @@ appears.
 \subsection{Evaluation practice}
 End-to-end success is a useful but coarse metric. Two agents with the same task score can differ
 sharply in whether they notice a wrong observation. An observation-level sensitivity metric
-complements task success and can be reported alongside it. CTO-800 provides a reproducible test bed
+complements task success and can be reported alongside it. ToolResult-800 provides a reproducible test bed
 for that metric: the same frozen prefixes, arms, renderer, and coding rules can be applied to new
 models without re-harvesting trajectories. This makes comparisons across model families more
 interpretable than a single aggregate score.

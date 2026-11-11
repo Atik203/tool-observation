@@ -33,7 +33,7 @@ Include, where possible:
   τ-bench trajectories in a tracked file or release.
 - **Dependency vulnerabilities** that affect the package or the release environment.
 - **Code execution or path traversal** in pipeline scripts, config loading, or the renderer.
-- **Release integrity**: a modified frozen manifest, mismatched hash, or unreviewed CTO-800
+- **Release integrity**: a modified frozen manifest, mismatched hash, or unreviewed ToolResult-800
   artifact.
 
 ## Secret handling
@@ -51,7 +51,7 @@ payment identifiers). Treat all raw trajectories as PII-bearing even before scru
 
 - Never commit `data/raw/`, `data/upstream/`, `data/interim/`, `data/frozen/`, or `data/runs/`.
 - Never commit raw trajectories, unscrubbed observations, or run ledgers containing PII.
-- The public CTO-800 release must pass the scrub and PII audit in `release/README.md`.
+- The public ToolResult-800 release must pass the scrub and PII audit in `release/README.md`.
 - If you believe PII has entered a release, report it privately and do not download or
   redistribute the artifact.
 
