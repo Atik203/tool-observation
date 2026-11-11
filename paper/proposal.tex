@@ -71,9 +71,8 @@ of \$48.50 instead of \$84.50. If the agent repeats \$48.50 to the customer, the
 be recorded as completed. The failure is not a wrong tool call or a planning error. It is a failure
 to notice that the observation conflicts with the policy or with the rest of the context. A wrong
 flight date, a closed return window that the policy says is open, or a cancelled reservation that
-still has seats produces the same shape of failure.
-
-Agents are commonly built as interleaved reason--act loops: they read context, choose an action,
+still has seats produces the same shape of failure. Agents are commonly built as interleaved
+reason--act loops: they read context, choose an action,
 receive an observation, and repeat \cite{react}. This pattern is what makes tool use useful, and it
 is also what makes the observation a decision point. The agent's next action is conditional on what
 the tool returned. If that return is wrong, the agent can propagate the error, re-query the tool,
@@ -88,9 +87,7 @@ environments \cite{agentbench}. WebArena measures task completion in a realistic
 \cite{webarena}. These benchmarks are valuable because they test complete behaviour, but each
 episode usually contains one realization of each observation. Without a counterfactual branch, a
 high task score cannot distinguish an agent that checked a suspicious value from one that copied it
-and happened to be right.
-
-Tool-use benchmarks focus on different slices of the problem. ToolLLM trains and evaluates models
+and happened to be right. Tool-use benchmarks focus on different slices of the problem. ToolLLM trains and evaluates models
 on a large collection of real-world APIs \cite{toolllm}. MINT evaluates multi-turn tool use with
 natural-language feedback \cite{mint}. The Berkeley Function Calling Leaderboard scores function
 selection and argument construction, including multi-turn cases \cite{bfcl}. These benchmarks
@@ -106,9 +103,7 @@ prompt injections in tool-integrated agents \cite{injecagent}. ToolEmu uses an e
 identify risky tool-use behaviour \cite{toolemu}. These studies establish that observation content
 can change what an agent does. They study position, social pressure, or adversarial instructions.
 They do not estimate a graded, within-prefix effect of plausible factual errors, and they do not
-measure how long the effect persists.
-
-The gap is therefore specific. We lack a controlled estimate of how the content of a realistic tool
+measure how long the effect persists. The gap is therefore specific. We lack a controlled estimate of how the content of a realistic tool
 observation changes the next decision, whether that change is ordered by the severity of the
 content error, and how quickly the agent returns to the verbatim-observation decision. This
 proposal targets that gap with a paired design, a frozen real-prefix dataset, and a pre-registered
@@ -158,15 +153,18 @@ used to rescue a null confirmatory result.
 \subsection{Research questions}
 The primary question is: \emph{conditional on a real tool observation inside a frozen prefix, does
 changing the observation's content change the agent's next decision, and is the change ordered by
-the severity of the content error?}
-
-Two secondary questions follow. First, when the decision changes, how often is the false value
+the severity of the content error?} Two secondary questions follow. First, when the decision changes, how often is the false value
 propagated silently rather than flagged or detected? Second, over four subsequent steps, how
 quickly does the agent recover under transient versus persistent injection?
 
 \subsection{Estimand and hypotheses}
-For prefix $p$, model $m$, and severity $s \in \{0,1,2,3\}$, let $Y_{p,m,s}=1$ if the decision
-signature differs from the verbatim-observation (V) continuation. The primary model is a
+For prefix $p$, model $m$, and severity $s \in \{0,1,2,3\}$, define the switch indicator
+\begin{equation}
+Y_{p,m,s} = \mathbf{1}\!\left[\operatorname{sig}(p,m,s)\neq \operatorname{sig}_{V}(p)\right],
+\label{eq:switch}
+\end{equation}
+where $\operatorname{sig}(p,m,s)$ is the decision signature under arm $s$ and
+$\operatorname{sig}_{V}(p)$ is the verbatim-observation continuation. The primary model is a
 conditional (fixed-effects) logistic regression stratified by prefix:
 \begin{equation}
 \operatorname{logit}\Pr(Y_{p,m,s}=1)=\alpha_{p,m}+\beta_m s .
@@ -191,7 +189,6 @@ The pre-registered hypotheses are:
 \end{itemize}
 H1 is the primary test. H2 is a replication gate, not a model ranking. H4 is an estimation target:
 if it fails, the paper reports the recovery curve and restricted mean survival time (RMST).
-
 Severity is ordinal, not interval. The linear slope is a summary of the graded contrast; the
 $s=2$ versus $s=3$ contrast is always reported separately because $s=3$ is intentionally compound.
 A quadratic term and a categorical-severity likelihood-ratio test are pre-registered diagnostics.
@@ -204,9 +201,7 @@ three open-weight 7--8B model families on $\tau$-bench airline and retail, estim
 It will not claim a universal constant or law, a ranking of models by sensitivity or recovery
 speed, transfer to frontier or API models, invariance across tasks or domains, an effect on
 end-to-end task success, or external validity to live web and API tools. $\tau$-bench observations
-are deterministic benchmark outputs, not live services.
-
-A null or flat slope is a legitimate outcome. It will be reported as a measurement result at a
+are deterministic benchmark outputs, not live services. A null or flat slope is a legitimate outcome. It will be reported as a measurement result at a
 known precision, with the dataset and the negative result released together. The pilot will not be
 used to reframe a null confirmatory result as a positive law.
 
@@ -218,9 +213,8 @@ The prefix contains the system policy, the user turns, the donor assistant turns
 calls and results. The target model produces the next decision; it never generates or repairs the
 prefix. Every arm is generated from the same prefix, so task difficulty, domain, donor style, and
 conversation history are held constant. The comparison is within prefix, in the sense of a
-within-unit causal contrast \cite{causal}.
-
-The donors are the public gpt-4o and claude-3.5-sonnet $\tau$-bench trajectories. The target models
+within-unit causal contrast \cite{causal}. The donors are the public gpt-4o and claude-3.5-sonnet
+$\tau$-bench trajectories. The target models
 are open-weight 7--8B models. Separating donors from targets avoids a circular design in which the
 model that produced the history also supplies the outcome.
 
@@ -262,9 +256,8 @@ A prefix is eligible if it contains a real tool message, a reconstructable prefi
 scalar value used in the donor's factual continuation, PII-scrubbed content, a replay match of at
 least 98\%, and a lossless $s=0$ rendering. The main exclusions are profile-tool observations
 (\texttt{get\_user\_details}), observations with no used field, unreproducible observations,
-decision-critical PII, and information loss under the prose renderer.
-
-Replay is the step that makes an observation a real environment output. The harness loads the
+decision-critical PII, and information loss under the prose renderer. Replay is the step that
+makes an observation a real environment output. The harness loads the
 pinned task database, executes the prefix's tool calls from the initial state, and compares the
 final observation with the historical one using a hash and normalized values. The 98\% threshold is
 not relaxed. Replay also makes the four-step recovery continuation possible, because the episode
@@ -316,9 +309,8 @@ was misclassified or the model is hypersensitive, and both are audit findings. F
 value must be plausible for the entity and must change the correct action if trusted; absurd values
 are rejected. For $s=3$, the critical error is combined with a second inconsistency that a careful
 reader can detect, such as ``cancelled'' while seats are available or ``non-refundable'' inside the
-refund window. Calibration checks that $s=3$ is not a ceiling.
-
-A worked example makes the coding concrete. This is an illustrative construction, not a harvested
+refund window. Calibration checks that $s=3$ is not a ceiling. A worked example makes the coding
+concrete. This is an illustrative construction, not a harvested
 record. A user asks to return headphones from order W1842. The tool returns status ``delivered'',
 delivery three days ago, a 30-day return window that is open, a refund of \$84.50, and a product
 rating of 4.4. Under $s=2$, the refund becomes \$48.50. If the agent calls
@@ -335,9 +327,8 @@ one at a time under greedy decoding on a single 24~GB RTX 3090 or 4090 rental, w
 8--16 and a pinned 8k context. The local RTX 3060 (6~GB) is used only for imports, smoke tests,
 renderer checks, and tiny forward passes. Model revisions are pinned before calibration. If
 Llama-3.1 access fails, the pre-registered substitutes are InternLM2.5-7B-Chat or Yi-1.5-9B-Chat,
-recorded before calibration and never selected after seeing target-model outcomes.
-
-Calibration is a harness check, not a result. It uses 60 prefixes (30 per domain), five arms, and
+recorded before calibration and never selected after seeing target-model outcomes. Calibration is a
+harness check, not a result. It uses 60 prefixes (30 per domain), five arms, and
 three models, for 900 generations. The per-model gates are: parse rate at least 95\%, placebo
 jitter at most 20\%, $s=3$ switch rate between 10\% and 80\%, and format refusal below 5\%. No
 main-run spend occurs before calibration passes. Calibration prefixes are disjoint from the main
@@ -372,16 +363,19 @@ pooled $\beta$; per-model $\beta$ with Holm correction across three models; desc
 propagation; recovery; exploratory heterogeneity. No model ranking is a confirmatory claim.
 Linearity is checked with a quadratic term and a categorical-severity likelihood-ratio test. If
 linearity is rejected, tier-specific odds ratios are reported and the slope is described as a
-summary.
-
-The design assumes a 4\% placebo switch rate and a random prefix intercept with standard deviation
+summary. The design assumes a 4\% placebo switch rate and a random prefix intercept with standard deviation
 1.0. At $N=800$, the per-model minimum detectable effect is 0.203 logit per level (odds ratio 1.22)
 at 80\% power and $\alpha=.05$; the pooled minimum detectable effect is at most 0.15. Power is not
 the binding constraint. Construct validity is.
 
 Recovery is analysed with a discrete-time exponential survival model with interval censoring:
-$\Pr(\text{recover at }h \mid \text{not yet}) = 1-\exp(-\mu)$, so $t_{1/2}=\ln 2/\mu$ over $H=4$.
-Kaplan--Meier and restricted mean survival time (RMST) are reported regardless. A Weibull shape
+\begin{equation}
+\Pr(\text{recover at }h \mid \text{not yet}) = 1-e^{-\mu},
+\qquad
+t_{1/2} = \frac{\ln 2}{\mu},
+\label{eq:recovery}
+\end{equation}
+over $H=4$. Kaplan--Meier and restricted mean survival time (RMST) are reported regardless. A Weibull shape
 likelihood-ratio test at $p<.01$ checks the exponential assumption. If the shape rejects or fewer
 than 50\% of the risk set recovers by $H=4$, $t_{1/2}$ is labelled exploratory and the curve and
 RMST are the result.
@@ -395,9 +389,7 @@ raters and requires Cohen's $\kappa \ge .80$, silent-propagation positive predic
 .90, parser failure below 1\%, and seed-repeat stability at least .90. The recovery audit uses 80
 sequences and requires $\kappa \ge .75$. If outcome $\kappa$ falls below .70 after one rubric
 revision, the study downgrades to action-level $Y^{A}$ only and does not make the
-content-sensitivity claim.
-
-Gates are sequential and frozen before the main run. A gate cannot be skipped, relaxed after seeing
+content-sensitivity claim. Gates are sequential and frozen before the main run. A gate cannot be skipped, relaxed after seeing
 data, or re-run on a different sample without a logged amendment. Table~\ref{tab:gates} lists the
 criteria and the consequence of failure.
 
@@ -433,9 +425,7 @@ models), 19,200 transient recovery steps (800 $\times$ 2 severities $\times$ 4 s
 models), 2,400 persistent recovery steps (200 $\times$ 1 severity $\times$ 4 steps $\times$ 3
 models), and 1,200 jitter repeats (80 $\times$ 5 arms $\times$ 3 models). The runner checkpoints
 every 40 prefixes, appends one ledger row per generation, and resumes after an interruption without
-overwriting completed rows. A parser-error rate above 5\% in a shard fails fast.
-
-The budget is \$23 base with a \$50 hard cap. The GPU line is budgeted at \$15--22 for 35--45 hours
+overwriting completed rows. A parser-error rate above 5\% in a shard fails fast. The budget is \$23 base with a \$50 hard cap. The GPU line is budgeted at \$15--22 for 35--45 hours
 on one 24~GB RTX 3090/4090, with a \$22 stop; storage and egress are \$2--3; contingency is \$3--5;
 annotation is about 200 team judgments at \$0; local CPU work is 20--30 hours at \$0; and there is
 no paid API. The repository is currently at scaffold version 0.1.0. No confirmatory data have been
@@ -449,9 +439,7 @@ decision changes that are silent propagation, and a recovery curve with a pooled
 identifiable. The claim will be bounded to three open-weight 7--8B families, $\tau$-bench airline
 and retail, one deterministic renderer, four severity levels, and four recovery steps. The result
 will be conditional on the frozen sample, renderer, and rubric, and every deviation will be
-reported through the amendments log.
-
-A positive result with a substantial silent-propagation share would show that aggregate task scores
+reported through the amendments log. A positive result with a substantial silent-propagation share would show that aggregate task scores
 can hide a real failure mode: an agent can complete an episode while repeating a wrong value. A
 graded slope would show that the probability of a decision change depends on how severe the content
 error is, not merely on whether the format changed. A recovery curve would show whether the effect
@@ -506,9 +494,7 @@ Wrong amounts, dates, and policies can cause financial loss or unsafe actions. S
 is especially relevant because the transcript looks fluent and the episode may be marked complete.
 Making this failure mode visible supports incident analysis, audit, and the design of guardrails. A
 negative result is also useful for accountability: it shows that a proposed guardrail is not
-addressing a large effect in this setting, which can free resources for other risks.
-
-The protocol can be extended to frontier models, live APIs, other domains, or training
+addressing a large effect in this setting, which can free resources for other risks. The protocol can be extended to frontier models, live APIs, other domains, or training
 interventions in follow-up work, but those questions are outside this study's scope. The release
 includes a data card, checksums, the preregistration, and the amendments log, so other groups can
 replicate the analysis or test a different model family. The repository separates code (MIT),
