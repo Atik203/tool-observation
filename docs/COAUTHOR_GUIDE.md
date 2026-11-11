@@ -3,7 +3,11 @@
 **Project:** Tool-Result Errors in Language-Model Agents: A Controlled Study of Detection, Reliance, and Recovery  
 **Repository:** <https://github.com/Atik203/tool-observation>  
 **Guide for:** Author 2, Author 3, and Author 4  
+**Sprint length:** two weeks for the co-author work  
 **Status:** onboarding and task division. This guide does not replace the preregistration or protocol.
+
+**No prior experience needed.** Every term is defined in the glossary, and the first two days are
+for reading and a five-item practice batch. Start with Section 3.
 
 > **Note on Author 1.** Author 1 is the first author and handles the experiments, implementation,
 > analysis, and the related-work matrix with AI agents. Author 1 is therefore not assigned a task
@@ -102,6 +106,51 @@ not silently change the rater composition.
 | 3 | `docs/PROTOCOL.md` | Design, arms, outcomes, recovery |
 | 4 | `docs/LABEL_RUBRIC.md` | Annotation rubric and pass criteria |
 | 5 | `docs/GATES.md` | What must pass before the next phase |
+| 6 | `docs/templates/README.md` | The exact submission formats you must use |
+
+### Direct links
+
+Use these links directly. Do not search for the files.
+
+| Resource | Link |
+|---|---|
+| Project repository | <https://github.com/Atik203/tool-observation> |
+| Proposal PDF | <https://github.com/Atik203/tool-observation/blob/main/paper/out/proposal.pdf> |
+| Proposal source | <https://github.com/Atik203/tool-observation/blob/main/paper/proposal.tex> |
+| Project README | <https://github.com/Atik203/tool-observation/blob/main/README.md> |
+| Protocol | <https://github.com/Atik203/tool-observation/blob/main/docs/PROTOCOL.md> |
+| Label rubric | <https://github.com/Atik203/tool-observation/blob/main/docs/LABEL_RUBRIC.md> |
+| Gates | <https://github.com/Atik203/tool-observation/blob/main/docs/GATES.md> |
+| Data card | <https://github.com/Atik203/tool-observation/blob/main/docs/DATA_CARD.md> |
+| Implementation plan | <https://github.com/Atik203/tool-observation/blob/main/docs/IMPLEMENTATION_PLAN.md> |
+| Co-author guide | <https://github.com/Atik203/tool-observation/blob/main/docs/COAUTHOR_GUIDE.md> |
+| Submission templates | <https://github.com/Atik203/tool-observation/tree/main/docs/templates> |
+| Shared annotation folder (private) | Author 1 will paste the link in the team channel before Day 1 |
+| τ-bench source repository | <https://github.com/sierra-research/tau-bench> |
+| τ-bench paper | <https://arxiv.org/abs/2406.12045> |
+| ToolLLM paper | <https://arxiv.org/abs/2307.16789> |
+| MINT paper | <https://arxiv.org/abs/2309.10691> |
+| WebArena paper | <https://arxiv.org/abs/2307.13854> |
+| ToolEmu paper | <https://arxiv.org/abs/2309.15817> |
+| AgentDojo paper | <https://arxiv.org/abs/2406.13352> |
+| InjecAgent paper | <https://arxiv.org/abs/2403.02691> |
+| ReAct paper | <https://arxiv.org/abs/2210.03629> |
+| Lost in the Middle paper | <https://arxiv.org/abs/2307.03172> |
+| Sycophancy paper | <https://arxiv.org/abs/2310.13548> |
+| AgentBench paper | <https://arxiv.org/abs/2308.03688> |
+| BFCL leaderboard | <https://gorilla.cs.berkeley.edu/leaderboard.html> |
+
+**Dataset note.** CTO-800 is not public yet. The source dataset is τ-bench (MIT). Do not download
+or redistribute raw trajectories. Author 1 will provide the frozen annotation batches in the
+shared folder. The data card describes the planned release.
+
+### How to use these links
+
+1. Click a link to open the file in your browser.
+2. For a CSV template, click **Raw** or **Download** and save it with your initials.
+3. If GitHub asks you to sign in, create a free account and send your username to Author 1.
+4. Do not click **Fork**, **Pull request**, or **Commit** unless Author 1 asks.
+5. If a link is broken, tell Author 1 in the team channel. Do not search for a replacement alone.
 
 ### Access checklist
 
@@ -112,15 +161,12 @@ not silently change the rater composition.
 - [ ] The team communication channel and the weekly meeting invite.
 - [ ] Agreement not to copy raw data, PII, or model outputs into public tools.
 
-### First-week onboarding
+### Day 1–2 onboarding
 
 | Day | Task | Output |
 |---:|---|---|
-| 1 | Read the five documents above | Notes and questions |
-| 2 | 30-minute walkthrough with Author 1 | Shared understanding of one example |
-| 3 | Label five practice items | Practice sheet |
-| 4 | Compare labels with Author 1 and discuss disagreements | Calibration notes |
-| 5 | Set up access and confirm your weekly availability | Access checklist complete |
+| 1 | Read the six documents above; complete the access checklist | Notes and questions |
+| 2 | 30-minute walkthrough; label five practice items; compare labels | Practice sheet and calibration notes |
 
 Do not start a real annotation batch until the practice batch is discussed. The first batch is
 for calibration, not for the final data.
@@ -216,12 +262,12 @@ the CSV format and one worked example.
 
 ### What you submit
 
-| Deliverable | Format | Deadline |
-|---|---|---|
-| G0 audit | `g0_audit_batch01_<initials>.csv` + summary | End of week 2 |
-| Severity ratings | `severity_batch01_<initials>.csv` | Week 9 |
-| Adjudication log | `adjudication_outcome.csv`, `adjudication_recovery.csv` | Week 10 |
-| Data card/release checklist | Completed checklist | Week 18 |
+| Deliverable | Template | Submit as | Deadline |
+|---|---|---|---|
+| G0 audit | [`g0_audit_template.csv`](templates/g0_audit_template.csv) | `g0_audit_batch01_<initials>.csv` | Day 6 |
+| Severity ratings | [`severity_rating_template.csv`](templates/severity_rating_template.csv) | `severity_batch01_<initials>.csv` | Day 7 |
+| Adjudication log | [`adjudication_template.csv`](templates/adjudication_template.csv) | `adjudication_outcome.csv`, `adjudication_recovery.csv` | Day 11 |
+| Data card/release checklist | [`submission_checklist.md`](templates/submission_checklist.md) | `submission_<initials>.md` | Day 14 |
 
 ### Example G0 row
 
@@ -235,9 +281,9 @@ These rows are illustrative, not real harvested records.
 
 ### Time commitment
 
-- Weeks 1–2: 6–8 hours for the G0 audit.
-- Weeks 8–10: 8–12 hours for severity ratings and adjudication.
-- Weeks 15–18: 4–6 hours for data card and release support.
+- Days 1–7: 10–12 hours for the G0 audit and severity ratings.
+- Days 8–14: 8–10 hours for adjudication and data card/release support.
+- Total: roughly 18–22 hours across the two-week sprint.
 
 ---
 
@@ -323,14 +369,14 @@ compute the final agreement statistics if you prefer.
 
 ### What you submit
 
-| Deliverable | Format | Deadline |
-|---|---|---|
-| Training notes | `annotations/training_notes.md` | Week 3 |
-| Severity ratings | `severity_batch01_<initials>.csv` | Week 9 |
-| Outcome ratings | `outcome_batch01_<initials>.csv` | Week 9 |
-| Recovery ratings | `recovery_batch01_<initials>.csv` | Week 10 |
-| Agreement report | `annotations/agreement_report.md` | Week 10 |
-| Adjudication coordination | Updated adjudication log | Week 10 |
+| Deliverable | Template | Submit as | Deadline |
+|---|---|---|---|
+| Training notes | [`training_notes.md`](templates/training_notes.md) | `training_notes.md` | Day 2 |
+| Severity ratings | [`severity_rating_template.csv`](templates/severity_rating_template.csv) | `severity_batch01_<initials>.csv` | Day 7 |
+| Outcome ratings | [`outcome_rating_template.csv`](templates/outcome_rating_template.csv) | `outcome_batch01_<initials>.csv` | Day 9 |
+| Recovery ratings | [`recovery_rating_template.csv`](templates/recovery_rating_template.csv) | `recovery_batch01_<initials>.csv` | Day 11 |
+| Agreement report | [`agreement_report_template.md`](templates/agreement_report_template.md) | `agreement_report.md` | Day 12 |
+| Adjudication coordination | [`adjudication_template.csv`](templates/adjudication_template.csv) | `adjudication_outcome.csv`, `adjudication_recovery.csv` | Day 13 |
 
 ### Example outcome labels
 
@@ -347,9 +393,10 @@ These are illustrative, not real harvested records. The reference decision is
 
 ### Time commitment
 
-- Week 3: 3–4 hours for training.
-- Weeks 8–10: 12–18 hours for ratings, agreement, and adjudication coordination.
-- Weeks 9–14: 3–4 hours for paper-support review.
+- Days 1–2: 2–3 hours for training.
+- Days 3–11: 16–20 hours for severity, outcome, and recovery ratings.
+- Days 12–14: 6–8 hours for agreement, adjudication, and the final report.
+- Total: roughly 24–30 hours across the two-week sprint.
 
 ---
 
@@ -423,13 +470,13 @@ source artifacts for the number check.
 
 ### What you submit
 
-| Deliverable | Format | Deadline |
-|---|---|---|
-| Severity ratings | `severity_batch01_<initials>.csv` | Week 9 |
-| Outcome ratings | `outcome_batch01_<initials>.csv` | Week 9 |
-| Recovery ratings | `recovery_batch01_<initials>.csv` | Week 10 |
-| Proofreading checklist | `paper/proofreading_checklist.md` | Week 13 |
-| Number/citation notes | GitHub issue or shared doc | Week 13 |
+| Deliverable | Template | Submit as | Deadline |
+|---|---|---|---|
+| Severity ratings | [`severity_rating_template.csv`](templates/severity_rating_template.csv) | `severity_batch01_<initials>.csv` | Day 7 |
+| Outcome ratings | [`outcome_rating_template.csv`](templates/outcome_rating_template.csv) | `outcome_batch01_<initials>.csv` | Day 9 |
+| Recovery ratings | [`recovery_rating_template.csv`](templates/recovery_rating_template.csv) | `recovery_batch01_<initials>.csv` | Day 11 |
+| Proofreading checklist | [`paper_support_checklist.md`](templates/paper_support_checklist.md) | `paper_support_checklist_<initials>.md` | Day 14 |
+| Number/citation notes | [`paper_support_checklist.md`](templates/paper_support_checklist.md) | GitHub issue or shared doc | Day 13 |
 
 ### Example recovery labels
 
@@ -443,8 +490,9 @@ These are illustrative, not real harvested records.
 
 ### Time commitment
 
-- Weeks 8–10: 10–15 hours for ratings.
-- Weeks 9–14: 8–12 hours for paper support and proofreading.
+- Days 1–11: 16–20 hours for severity, outcome, and recovery ratings.
+- Days 12–14: 6–8 hours for paper support and proofreading.
+- Total: roughly 22–28 hours across the two-week sprint.
 
 ---
 
@@ -507,52 +555,74 @@ silent guess.
 
 ### How to complete a batch
 
+Use the matching template from [`docs/templates/`](templates/README.md). Do not create your own
+columns or change the header row.
+
 1. Open the batch file from the shared folder. Do not edit the original.
-2. Save a copy with your initials.
+2. Save a copy with your initials, using the matching template.
 3. Keep the rubric and anchor sheet open next to the batch.
 4. Label every row. If unsure, use your best label, set confidence low, and write a note.
 5. Do not skip rows. Use `other` only when the response is outside the taxonomy.
 6. Check the row count before submitting.
 7. Submit the file to the shared folder and update the GitHub issue.
-8. Do not discuss individual labels with the other rater before the lead confirms both submissions.
+8. Complete the [submission checklist](templates/submission_checklist.md) before you upload.
+9. Do not discuss individual labels with the other rater before the lead confirms both submissions.
 
 ---
 
-## 8. Timeline and weekly rhythm
+## 8. Two-week sprint timeline
 
-### Weekly rhythm
+The overall project runs 18 weeks. Your work is concentrated in a **two-week sprint**. The clock
+starts when Author 1 delivers the batch package. If a batch is late, use the day for reading or
+practice; do not guess labels.
 
-| Day | Activity |
-|---|---|
-| Monday | 30-minute team sync; confirm the week's batch and deadline |
-| Wednesday | Midweek check-in; report blockers |
-| Friday | Submit the batch and update the GitHub issue |
-| Within 48 hours | Author 3 reviews completeness and answers questions |
+### Week 1 — data and severity
 
-### Phase timeline
+| Days | Author 2 | Author 3 | Author 4 |
+|---|---|---|---|
+| 1–2 | Read docs; practice; access check | Read docs; lead practice; training notes | Read docs; practice; access check |
+| 3–4 | G0 audit (40 prefixes) | Prepare severity batch; check blinding | Severity ratings (first half) |
+| 5–6 | G0 audit summary; severity ratings (first half) | Severity ratings (all) | Severity ratings (second half) |
+| 7 | Severity ratings finish | Severity ratings finish; check completeness | Severity ratings finish; check completeness |
 
-| Phase | Weeks | Author 2 | Author 3 | Author 4 |
-|---|---:|---|---|---|
-| P0 — Harvest and freeze | 1–2 | G0 audit | Read rubric; practice | Read rubric; practice |
-| P1 — Calibration | 3 | Replay spot-check | Training | Training |
-| P2 — Main run | 4–7 | Data card draft | Prepare batches | Prepare batches |
-| P3 — Labels and analysis | 6–10 | Severity; adjudication | Severity, outcome, recovery; agreement | Severity, outcome, recovery |
-| P4 — Paper | 9–14 | Data statement | Limitations review | Proofreading; number/citation check |
-| P5 — Release | 15–18 | PII re-scan; release checklist | Final annotation report | Final proofread |
+### Week 2 — outcome, recovery, agreement, paper support
 
-### Time commitment summary
+| Days | Author 2 | Author 3 | Author 4 |
+|---|---|---|---|
+| 8–9 | Outcome adjudication setup | Outcome ratings | Outcome ratings |
+| 10–11 | Recovery adjudication | Recovery ratings | Recovery ratings |
+| 12 | Data card draft | Agreement report | Paper support: number check |
+| 13 | Data card/release checklist | Adjudication coordination | Citation/terminology check |
+| 14 | Final checks; submit | Final annotation report; submit | Proofreading; submit |
 
-| Person | Quiet weeks | Busy weeks |
-|---|---:|---:|
-| Author 2 | 2–4 h/week | 8–12 h/week during P0 and P3 |
-| Author 3 | 3–5 h/week | 12–18 h/week during P3 |
-| Author 4 | 3–5 h/week | 10–15 h/week during P3–P4 |
+### Checkpoints
 
-These are planning estimates, not ledger numbers. Adjust after the first batch.
+| Day | Checkpoint |
+|---:|---|
+| 1 | Kickoff; access confirmed |
+| 2 | Practice batch discussed; training notes started |
+| 7 | Severity batch complete for all raters |
+| 9 | Outcome batch complete for both raters |
+| 11 | Recovery batch complete for both raters |
+| 12 | Agreement report draft |
+| 14 | All files submitted; sign-off |
+
+### Time commitment (two weeks)
+
+| Person | Total hours | Main load |
+|---|---:|---|
+| Author 2 | 18–22 | G0 audit, severity, adjudication, data card |
+| Author 3 | 24–30 | Training, severity/outcome/recovery, agreement |
+| Author 4 | 22–28 | Severity/outcome/recovery, paper support |
+
+These are planning estimates, not ledger numbers.
 
 **Planning note.** The full audit matrix is 120 × 3 + 160 × 2 + 80 × 2 = **840 ratings** before
 adjudication. The older project text says "≈200 judgments; about 8.3 hours"; that estimate is too
-low for the full matrix. Plan for **25–40 person-hours** across the three co-authors.
+low for the full matrix. Plan for **25–40 person-hours** across the three co-authors. In a two-week
+sprint, that is roughly **8–13 hours per person per week** plus onboarding. If the team cannot
+commit that time, extend the sprint or reduce the audit sample with a prereg amendment; do not skip
+rows.
 
 ---
 
@@ -633,9 +703,13 @@ low for the full matrix. Plan for **25–40 person-hours** across the three co-a
 > work is the human-judgment part: checking data and PII, labeling agent responses, auditing
 > severity and recovery, and checking the paper.
 >
-> Please read `docs/COAUTHOR_GUIDE.md` and the five documents in Section 3 before our first
-> meeting. You do not need to know the domain in advance. We will do a five-item practice batch
-> together. The first meeting is 30 minutes; bring questions.
+> Please read `docs/COAUTHOR_GUIDE.md`, the six documents in Section 3, and the submission
+> templates in `docs/templates/` before our first meeting. You do not need to know the domain in
+> advance. We will do a five-item practice batch together. The sprint is two weeks; the exact start
+> date will be announced. The first meeting is 30 minutes; bring questions.
+>
+> Guide: https://github.com/Atik203/tool-observation/blob/main/docs/COAUTHOR_GUIDE.md
+> Templates: https://github.com/Atik203/tool-observation/tree/main/docs/templates
 >
 > Author 2: data/PII audit and severity ratings.
 > Author 3: annotation lead, severity/outcome/recovery ratings, and agreement report.

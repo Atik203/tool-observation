@@ -128,7 +128,8 @@ Proposal: [`paper/proposal.tex`](paper/proposal.tex) and
 [`docs/proposal.md`](docs/proposal.md).
 
 Co-author onboarding and task division:
-[`docs/COAUTHOR_GUIDE.md`](docs/COAUTHOR_GUIDE.md).
+[`docs/COAUTHOR_GUIDE.md`](docs/COAUTHOR_GUIDE.md). Submission templates:
+[`docs/templates/`](docs/templates/).
 
 ## Citation
 
