@@ -301,8 +301,8 @@ raw run ledgers, a reproducibility package (environment, rental contract, script
 preregistration and amendments, and a paper draft. If the slope is null, the dataset and the null
 are still released.
 
-Budget: 35–45 GPU-hours at $0.30–0.50/h = $15–22; storage/egress $2–3; contingency $3–5; **$23
-base, $50 hard cap**. Local CPU work is 20–30 hours at $0. Annotation is ~200 team judgments at
+Budget: 35–45 GPU-hours, budgeted at $15–22 (market rate $0.30–0.50/h; the $22 stop is binding);
+storage/egress $2–3; contingency $3–5; **$23 base, $50 hard cap**. Local CPU work is 20–30 hours at $0. Annotation is ~200 team judgments at
 $0 cash. No paid API.
 
 Storage: ~60 GB total disk for three AWQ weights, caches, and traces. Raw traces stay local; the release contains

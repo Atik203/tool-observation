@@ -24,7 +24,7 @@ The study is pre-registered and gated (G0–G4); a null is a measurement result.
 
 **Deliverables and cost.** CTO-800, manifests, ledgers, a reproducibility package, a pre-registration, and a paper draft. The run is 35–45 GPU-hours ($15–22), plus $2–3 storage and $3–5 contingency: **$23 base / $50 hard cap**; 20–30 CPU hours; 18 weeks part-time.
 
-**Decision requested.** Approve G0 now (CPU only, $0, ten working days) and the staged budget. GPU spend is released only after G0 and G1 pass.
+**Decision requested.** Approve G0 now (CPU only, $0, ten working days) and the staged budget. Main-run GPU spend is released only after G0 and G1 pass; G1 itself is a small calibration shard.
 
 ---
 
@@ -312,7 +312,7 @@ P0 harvests, replays, samples, and freezes. P1 runs 60 prefixes × 5 arms × 3 m
 
 | Item | Specification | Cost |
 |---|---|---:|
-| GPU rental | 35–45 h on a 24 GB RTX 3090/4090, $0.30–0.50/h | **$15–22** |
+| GPU rental | 35–45 h on a 24 GB RTX 3090/4090; budgeted at $15–22 (market rate $0.30–0.50/h) | **$15–22** |
 | Storage / egress | ~60 GB weights, logs, traces | **$2–3** |
 | Annotation | ~200 judgments by team members | **$0** |
 | Contingency | GPU or storage overrun | **$3–5** |
