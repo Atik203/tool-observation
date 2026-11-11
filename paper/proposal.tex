@@ -13,6 +13,7 @@
 \usepackage{titlesec}
 \usepackage{xcolor}
 \usepackage{caption}
+\usepackage{float}
 \usepackage{parskip}
 \usepackage[hidelinks]{hyperref}
 
@@ -24,15 +25,15 @@
   urlcolor=navy,
   pdftitle={Tool-Result Errors in Language-Model Agents: A Controlled Study of Detection, Reliance, and Recovery},
   pdfauthor={Atikur Rahaman},
-  pdfsubject={Research proposal: tool-observation sensitivity and recovery},
+  pdfsubject={Research proposal: tool-result errors, detection, reliance, and recovery},
   pdfkeywords={LLM agents, tool use, causal inference, evaluation, recovery}
 }
 
 \titleformat{\section}
-  {\large\bfseries\color{navy}}{}{0em}{}[\vspace{-0.35em}\color{navy}\rule{\textwidth}{0.4pt}]
+  {\large\bfseries\color{navy}}{\thesection}{0.6em}{}[\vspace{-0.35em}\color{navy}\rule{\textwidth}{0.4pt}]
 \titlespacing*{\section}{0pt}{1.5ex plus .3ex}{0.8ex}
 \titleformat{\subsection}
-  {\normalsize\bfseries\color{navy}}{}{0em}{}
+  {\normalsize\bfseries\color{navy}}{\thesubsection}{0.5em}{}
 \titlespacing*{\subsection}{0pt}{1.1ex plus .2ex}{0.4ex}
 
 \setlist[itemize]{leftmargin=1.4em,itemsep=0.15em,topsep=0.2em}
@@ -46,30 +47,21 @@
 {\color{navy}\rule{\textwidth}{1.2pt}}\\[0.7em]
 {\LARGE\bfseries Tool-Result Errors in Language-Model Agents}\\[0.55em]
 {\large A Controlled Study of Detection, Reliance, and Recovery}\\[0.9em]
-{\normalsize Atikur Rahaman}\\[0.25em]
-{\small Study E2 \textbar{} Dataset CTO-800 \textbar{} \today}\\[0.5em]
+{\normalsize Atikur Rahaman}\\[0.5em]
 {\color{navy}\rule{\textwidth}{0.6pt}}
 \end{center}
 
-\vspace{-0.4em}
-\begin{quote}
-\small\textbf{Status.} This is a pre-confirmatory proposal. No confirmatory data have been
-collected, and gates G0--G4 have not been run. The only empirical evidence is a 60-prefix pilot,
-reported in Section~\ref{sec:pilot} as a screening signal, not as an estimate of the confirmatory
-effect.
-\end{quote}
-
-\section*{Summary}
-Language-model agents read tool outputs and act on them, but end-to-end benchmarks score the whole
-episode and cannot show whether an agent notices a wrong price, date, or policy. This proposal
-describes a controlled within-prefix study of that moment. We will freeze 800 real $\tau$-bench
-conversation prefixes immediately after a tool observation, keep each prefix identical, and vary only the
-observation's content across five arms: verbatim JSON, faithful prose, a non-critical change, a
-plausible critical error, and a critical error plus a contradiction. Three open-weight 7--8B model
-families will answer every arm under greedy decoding. We will estimate whether the probability of a
-decision change rises with error severity and how quickly the agent recovers over four subsequent
-steps. The study will be pre-registered, gated, and budgeted at \$23 base with a \$50 hard cap. A
-null result will be reported as a measurement result.
+\section{Summary}
+Language-model agents read tool outputs and act on them, but end-to-end benchmarks score the
+whole episode and cannot show whether an agent notices a wrong price, date, or policy. This
+proposal describes a controlled within-prefix study of that moment. We will freeze 800 real
+$\tau$-bench conversation prefixes immediately after a tool observation, keep each prefix
+identical, and vary only the observation's content across five arms: verbatim JSON, faithful
+prose, a non-critical change, a plausible critical error, and a critical error plus a
+contradiction. Three open-weight 7--8B model families will answer every arm under greedy decoding.
+We will estimate whether the probability of a decision change rises with error severity and how
+quickly the agent recovers over four subsequent steps. The study will be pre-registered, gated, and
+budgeted at \$23 base with a \$50 hard cap. A null result will be reported as a measurement result.
 
 \section{Motivation}
 
@@ -105,17 +97,16 @@ selection and argument construction, including multi-turn cases \cite{bfcl}. The
 measure whether a model can call the right tool with the right arguments. They do not hold a real
 observation fixed and vary only its content.
 
-\subsection{Evidence that observation content matters}
-Prior work shows that context and content influence model behaviour in ways that bear on this
-question. Performance varies with the position of relevant information in long contexts
-\cite{lostmiddle}. Models can agree with a user's stated belief over a truthful answer, a behaviour
-known as sycophancy \cite{sycophancy}. Tool-returned content can hijack an agent in prompt-injection
-attacks: AgentDojo evaluates attacks and defences in tool-using environments \cite{agentdojo}, and
-InjecAgent benchmarks indirect prompt injections in tool-integrated agents \cite{injecagent}.
-ToolEmu uses an emulated sandbox to identify risky tool-use behaviour \cite{toolemu}. These studies
-establish that observation content can change what an agent does. They study position, social
-pressure, or adversarial instructions. They do not estimate a graded, within-prefix effect of
-plausible factual errors, and they do not measure how long the effect persists.
+Prior work also shows that context and content influence model behaviour. Performance varies with
+the position of relevant information in long contexts \cite{lostmiddle}. Models can agree with a
+user's stated belief over a truthful answer, a behaviour known as sycophancy \cite{sycophancy}.
+Tool-returned content can hijack an agent in prompt-injection attacks: AgentDojo evaluates attacks
+and defences in tool-using environments \cite{agentdojo}, and InjecAgent benchmarks indirect
+prompt injections in tool-integrated agents \cite{injecagent}. ToolEmu uses an emulated sandbox to
+identify risky tool-use behaviour \cite{toolemu}. These studies establish that observation content
+can change what an agent does. They study position, social pressure, or adversarial instructions.
+They do not estimate a graded, within-prefix effect of plausible factual errors, and they do not
+measure how long the effect persists.
 
 The gap is therefore specific. We lack a controlled estimate of how the content of a realistic tool
 observation changes the next decision, whether that change is ordered by the severity of the
@@ -186,25 +177,20 @@ increase in severity. The pooled model stratifies by prefix $\times$ model and c
 errors by prefix. V is excluded from the slope because it differs in format as well as content;
 $s=0$ is the placebo that absorbs format jitter.
 
-\begin{table}[h]
-\centering
-\small
-\caption{Pre-registered hypotheses. H1 is the primary test. H2 is a replication gate, not a model
-ranking. H4 is an estimation target: if it fails, the paper reports the recovery curve and
-restricted mean survival time (RMST).}
-\label{tab:hypotheses}
-\begin{tabularx}{\textwidth}{@{}l X l@{}}
-\toprule
-ID & Hypothesis & Type \\
-\midrule
-H1 & The pooled slope of a decision switch on severity is positive ($\beta>0$). & Primary \\
-H2 & The per-model slope is positive in at least two of three models, with the same sign. & Confirmatory \\
-H3 & Silent propagation ($Y^{U}$) is a non-zero share of the decision changes at $s=2$ and $s=3$. & Secondary \\
-H4 & At least 50\% of the $s=3$ risk set recovers by $H=4$, and the Weibull shape is not rejected at $p<.01$. & Confirmatory estimation \\
-H5 & The $s=3$ switch rate exceeds the $s=1$ rate. & Secondary \\
-\bottomrule
-\end{tabularx}
-\end{table}
+The pre-registered hypotheses are:
+\begin{itemize}
+  \item \textbf{H1 (primary).} The pooled slope of a decision switch on severity is positive:
+  $\beta>0$.
+  \item \textbf{H2.} The per-model slope is positive in at least two of three models, with the same
+  sign.
+  \item \textbf{H3.} Silent propagation ($Y^{U}$) is a non-zero share of the decision changes at
+  $s=2$ and $s=3$.
+  \item \textbf{H4.} At least 50\% of the $s=3$ risk set recovers by $H=4$, and the Weibull shape is
+  not rejected at $p<.01$.
+  \item \textbf{H5.} The $s=3$ switch rate exceeds the $s=1$ rate.
+\end{itemize}
+H1 is the primary test. H2 is a replication gate, not a model ranking. H4 is an estimation target:
+if it fails, the paper reports the recovery curve and restricted mean survival time (RMST).
 
 Severity is ordinal, not interval. The linear slope is a summary of the graded contrast; the
 $s=2$ versus $s=3$ contrast is always reported separately because $s=3$ is intentionally compound.
@@ -343,30 +329,13 @@ although the item arrived three days ago. A careful reader can detect the contra
 expected behaviour is to flag the conflict or verify the value.
 
 \subsection{Models and inference}
-The confirmatory run uses three open-weight model families, all 4-bit AWQ quantized and served one
-at a time under greedy decoding. Table~\ref{tab:models} lists them. Serving uses vLLM on a single
-24~GB RTX 3090 or 4090 rental, with batch sizes of 8--16 and a pinned 8k context. The local RTX 3060
-(6~GB) is used only for imports, smoke tests, renderer checks, and tiny forward passes. Model
-revisions are pinned before calibration. If Llama-3.1 access fails, the pre-registered substitutes
-are InternLM2.5-7B-Chat or Yi-1.5-9B-Chat, recorded before calibration and never selected after
-seeing target-model outcomes.
-
-\begin{table}[h]
-\centering
-\small
-\caption{Target models. All are open-weight, 4-bit AWQ quantized, and served one at a time under
-greedy decoding.}
-\label{tab:models}
-\begin{tabularx}{\textwidth}{@{}l c l X@{}}
-\toprule
-Model & Parameters & License & Role \\
-\midrule
-Qwen2.5-7B-Instruct-AWQ & 7B & Apache 2.0 & Primary family \\
-Mistral-7B-Instruct-v0.3-AWQ & 7B & Apache 2.0 & Second family \\
-Llama-3.1-8B-Instruct-AWQ & 8B & Llama 3.1 Community & Third family \\
-\bottomrule
-\end{tabularx}
-\end{table}
+The confirmatory run uses three open-weight model families: Qwen2.5-7B-Instruct-AWQ,
+Mistral-7B-Instruct-v0.3-AWQ, and Llama-3.1-8B-Instruct-AWQ. All are 4-bit AWQ quantized and served
+one at a time under greedy decoding on a single 24~GB RTX 3090 or 4090 rental, with batch sizes of
+8--16 and a pinned 8k context. The local RTX 3060 (6~GB) is used only for imports, smoke tests,
+renderer checks, and tiny forward passes. Model revisions are pinned before calibration. If
+Llama-3.1 access fails, the pre-registered substitutes are InternLM2.5-7B-Chat or Yi-1.5-9B-Chat,
+recorded before calibration and never selected after seeing target-model outcomes.
 
 Calibration is a harness check, not a result. It uses 60 prefixes (30 per domain), five arms, and
 three models, for 900 generations. The per-model gates are: parse rate at least 95\%, placebo
@@ -374,30 +343,20 @@ jitter at most 20\%, $s=3$ switch rate between 10\% and 80\%, and format refusal
 main-run spend occurs before calibration passes. Calibration prefixes are disjoint from the main
 800 and stay out of the primary analysis.
 
-\subsection{Outcomes and recovery}
+\subsection{Outcomes and analysis}
 A decision signature is the tool name plus canonicalized JSON arguments, or the final answer's
 action verb plus decision-critical slots. Canonicalization sorts keys, normalizes numbers, and
-lower-cases entities. The verbatim V continuation is the reference. Table~\ref{tab:outcomes}
-defines the outcome labels.
-
-\begin{table}[h]
-\centering
-\small
-\caption{Outcome definitions. A response can satisfy more than one automatic indicator; all flags
-are recorded, but the analysis uses the pre-specified decomposition.}
-\label{tab:outcomes}
-\begin{tabularx}{\textwidth}{@{}l X@{}}
-\toprule
-Label & Definition \\
-\midrule
-$Y$ & Any sensitivity: the signature differs from the verbatim V continuation. \\
-$Y^{U}$ & Silent propagation: the false value of a critical field appears in decision content or arguments, with no flag. Not scored for $s=1$. \\
-$Y^{F}$ & Detection: an explicit flag, doubt, ``inconsistent'', ``verify'', or ``cannot trust''. \\
-$Y^{A}$ & Action switch: the tool name or canonicalized arguments differ from V. \\
-Decomposition & $Y = Y^{A} \lor Y^{F} \lor Y^{U}$; strict silent propagation is $Y^{U} \land \neg Y^{A} \land \neg Y^{F}$. \\
-\bottomrule
-\end{tabularx}
-\end{table}
+lower-cases entities. The verbatim V continuation is the reference. The outcome labels are:
+\begin{itemize}
+  \item $Y$: any sensitivity; the signature differs from the verbatim V continuation.
+  \item $Y^{U}$: silent propagation; the false value of a critical field appears in decision
+  content or arguments, with no flag. Not scored for $s=1$.
+  \item $Y^{F}$: detection; an explicit flag, doubt, ``inconsistent'', ``verify'', or ``cannot
+  trust''.
+  \item $Y^{A}$: action switch; the tool name or canonicalized arguments differ from V.
+  \item Decomposition: $Y = Y^{A} \lor Y^{F} \lor Y^{U}$; strict silent propagation is
+  $Y^{U} \land \neg Y^{A} \land \neg Y^{F}$.
+\end{itemize}
 
 Recovery uses the risk set of prefixes whose decision moved at the injected step ($Y^{U}=1$ or
 $Y^{A}=1$) and did not flag there, separately for $s=2$ and $s=3$. The episode continues for $H=4$
@@ -407,7 +366,6 @@ does neither by $H=4$ is censored. Transient injection is primary; persistent in
 the same field on 25\% of prefixes and requires the model to flag or work around the corruption
 rather than merely re-query for truth.
 
-\subsection{Analysis and quality control}
 The primary analysis is the conditional logistic model in Equation~\ref{eq:primary}. The pooled
 model stratifies by prefix $\times$ model and clusters by prefix. The fixed testing sequence is:
 pooled $\beta$; per-model $\beta$ with Holm correction across three models; descriptive silent
@@ -443,7 +401,7 @@ Gates are sequential and frozen before the main run. A gate cannot be skipped, r
 data, or re-run on a different sample without a logged amendment. Table~\ref{tab:gates} lists the
 criteria and the consequence of failure.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \small
 \caption{Sequential gates and stop rules. A failed gate changes the claim, not the data.}
@@ -461,71 +419,27 @@ G4 & Weeks 9--10 & At least 50\% of the $s=3$ risk set recovers by $H=4$; Weibul
 \end{tabularx}
 \end{table}
 
-\subsection{Implementation plan and feasibility}
-The study is planned as six overlapping phases over 18 weeks with a part-time team of three to four
-people. Table~\ref{tab:phases} summarizes the work and the gate at the end of each phase. P0 is
-CPU-only and costs \$0; it must finish before any rental spend. P1 is a calibration shard of about
-3 GPU-hours. P2 is the main run. P3 begins as soon as the first main-run shard lands, and P4 begins
-when the primary slope is estimable rather than when every exploratory analysis is finished.
+\subsection{Implementation plan}
+The study runs in six overlapping phases over 18 weeks with a part-time team of three to four
+people. P0 (weeks 1--2) is the CPU-only harvest and freeze: pin $\tau$-bench, parse, scrub, label
+relevance, replay, sample 880, render, audit, and freeze the manifest and preregistration. P1 (week
+3) is calibration. P2 (weeks 4--7) is the main run. P3 (weeks 6--10) covers labels and analysis,
+beginning as soon as the first main-run shard lands. P4 (weeks 9--14) is the paper, beginning when
+the primary slope is estimable. P5 (weeks 15--18) is the CTO-800 release. The first step is the
+ten-day G0 sprint, which is CPU-only, costs \$0, and can invalidate the study before any GPU spend.
 
-\begin{table}[h]
-\centering
-\small
-\caption{Phased implementation plan. Phases overlap deliberately; gates are sequential.}
-\label{tab:phases}
-\begin{tabularx}{\textwidth}{@{}l c X l@{}}
-\toprule
-Phase & Weeks & Main work & Gate \\
-\midrule
-P0 --- Harvest and freeze & 1--2 & Pin $\tau$-bench; parse; scrub; label relevance; replay; sample 880; render; audit; freeze manifest and preregistration. & G0 \\
-P1 --- Calibration & 3 & 60 prefixes $\times$ 5 arms $\times$ 3 models; parser, prompt-format, refusal, and jitter checks. & G1 \\
-P2 --- Main run & 4--7 & 34,800 generations: 12,000 base, 19,200 transient recovery, 2,400 persistent, 1,200 jitter; one ledger row per generation. & G2 \\
-P3 --- Labels and analysis & 6--10 & 120 severity, 160 outcome, and 80 recovery audits; slope and survival models; figures. & G3/G4 \\
-P4 --- Paper & 9--14 & Draft, internal review, figures, limitations, reproducibility appendix. & Internal review \\
-P5 --- Release & 15--18 & CTO-800 packaging, licence audit, PII re-scan, DOI, tagged repository. & Release checklist \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The generation envelope is 34,800: 12,000 base decisions (800 prefixes $\times$ 5 arms $\times$ 3
+The main run is 34,800 generations: 12,000 base decisions (800 prefixes $\times$ 5 arms $\times$ 3
 models), 19,200 transient recovery steps (800 $\times$ 2 severities $\times$ 4 steps $\times$ 3
 models), 2,400 persistent recovery steps (200 $\times$ 1 severity $\times$ 4 steps $\times$ 3
 models), and 1,200 jitter repeats (80 $\times$ 5 arms $\times$ 3 models). The runner checkpoints
 every 40 prefixes, appends one ledger row per generation, and resumes after an interruption without
 overwriting completed rows. A parser-error rate above 5\% in a shard fails fast.
 
-\begin{table}[h]
-\centering
-\small
-\caption{Budget. The hard cap is a stop line, not a target.}
-\label{tab:budget}
-\begin{tabularx}{\textwidth}{@{}l X r@{}}
-\toprule
-Item & Specification & Cost \\
-\midrule
-GPU rental & 35--45 hours on one 24~GB RTX 3090/4090; budgeted at \$15--22, with a \$22 stop & \$15--22 \\
-Storage and egress & About 60~GB for weights, logs, and traces & \$2--3 \\
-Annotation & About 200 judgments by team members & \$0 \\
-Contingency & GPU or storage overrun & \$3--5 \\
-\textbf{Total} & \$18 GPU + \$2 storage + \$3 contingency & \textbf{\$23 base / \$50 cap} \\
-Local CPU & 20--30 hours for harvest, replay, analysis, and writing & \$0 \\
-Paid API & None & \$0 \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The team roles are: principal investigator and research lead (design, pre-registration, gates,
-paper); harvest and data lead (pin, parse, scrub, relevance, replay, sampling, freeze, data card);
-inference lead (rental, vLLM and AWQ, calibration, main run, ledger, cost stop); and analysis and
-release lead (coding, audits, slope and survival models, figures, packaging). With three people,
-the principal investigator absorbs paper and release work and the analysis lead keeps the
-statistics; harvest and inference remain separate because they are schedule-critical.
-
-The repository is currently at scaffold version 0.1.0. No confirmatory data have been collected,
-the pipeline entry points are stubs, and no gate has been run. The first step is the ten-day G0
-sprint: pin, parse, scrub, label relevance, replay, sample, render, audit, and freeze. This step is
-CPU-only, costs \$0, and can invalidate the study before any GPU spend. That is deliberate: it is
-cheaper to stop at G0 than to discover a replay or construct-validity failure after the main run.
+The budget is \$23 base with a \$50 hard cap. The GPU line is budgeted at \$15--22 for 35--45 hours
+on one 24~GB RTX 3090/4090, with a \$22 stop; storage and egress are \$2--3; contingency is \$3--5;
+annotation is about 200 team judgments at \$0; local CPU work is 20--30 hours at \$0; and there is
+no paid API. The repository is currently at scaffold version 0.1.0. No confirmatory data have been
+collected, the pipeline entry points are stubs, and no gate has been run.
 
 \section{Expected Outcome}
 
@@ -551,22 +465,13 @@ confirmatory. A well-powered null is useful: it bounds how much observation cont
 known precision and prevents practitioners from over-investing in content-level checks. The dataset
 and the null result will still be released, so other groups can replicate or extend the design.
 
-\subsection{Deliverables and contributions}
-The study will produce six deliverables. First, CTO-800: 800 frozen real prefixes plus 80 reserve,
-with perturbation records, arm assignments, renderer version, decision signatures, and recovery
-traces. Second, frozen manifests with message, observation, perturbation, field-registry, renderer,
-and preregistration hashes. Third, one ledger row per generation, with model, arm, prefix, step,
-prompt hash, output, parser result, latency, and cost. Fourth, a reproducibility package with the
-pinned environment, rental contract, run scripts, analysis code, and figure-generation code. Fifth,
-the preregistration and amendments log. Sixth, a paper draft with a bounded claim, pilot
-disclosure, results or null, limitations, and a data statement.
+\subsection{Deliverables and limitations}
+The study will produce CTO-800 (800 frozen real prefixes plus 80 reserve, with perturbations,
+arm assignments, renderer version, decision signatures, and recovery traces), frozen manifests
+with all hashes, one ledger row per generation, a reproducibility package, the preregistration and
+amendments log, and a paper draft. The contributions are a dataset, an empirical within-prefix
+estimate, a reusable protocol, and a null-result contribution if the effect is absent.
 
-The contributions are a dataset, an empirical within-prefix estimate, a reusable protocol, and a
-null-result contribution if the effect is absent. The protocol includes the deterministic renderer,
-the perturbation schema, the decision-signature coding, and the recovery coding. These are designed
-to be reused with other models, domains, or observation formats in follow-up work.
-
-\subsection{Limitations}
 The main limitations are known in advance. $\tau$-bench tasks are public and may be memorized by
 target models, so baseline reliance could be inflated; the within-prefix contrast remains valid,
 but the absolute switch rate may not transfer. The donor prefixes come from gpt-4o and
@@ -596,14 +501,13 @@ for that metric: the same frozen prefixes, arms, renderer, and coding rules can 
 models without re-harvesting trajectories. This makes comparisons across model families more
 interpretable than a single aggregate score.
 
-\subsection{Safety and accountability}
+\subsection{Safety and reuse}
 Wrong amounts, dates, and policies can cause financial loss or unsafe actions. Silent propagation
 is especially relevant because the transcript looks fluent and the episode may be marked complete.
 Making this failure mode visible supports incident analysis, audit, and the design of guardrails. A
 negative result is also useful for accountability: it shows that a proposed guardrail is not
 addressing a large effect in this setting, which can free resources for other risks.
 
-\subsection{Reuse and follow-up}
 The protocol can be extended to frontier models, live APIs, other domains, or training
 interventions in follow-up work, but those questions are outside this study's scope. The release
 includes a data card, checksums, the preregistration, and the amendments log, so other groups can
