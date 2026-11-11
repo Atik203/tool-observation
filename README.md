@@ -10,6 +10,15 @@
 > The only empirical evidence is a 60-prefix pilot. It is a screening signal, **not** a
 > dose-response law. The confirmatory run has not started; gates G0–G4 are defined but unpassed.
 
+## Live site
+
+- **Home:** <https://tool-observation.vercel.app>
+- **Slides:** <https://tool-observation.vercel.app/slide>
+- **Proposal PDF:** <https://tool-observation.vercel.app/proposal.pdf>
+
+The site is deployed from `web/` on Vercel. The production branch is `main`; pushing to `main`
+triggers an automatic production deployment.
+
 ## The question
 
 An agent calls a tool, reads the observation, and chooses the next action. Benchmarks usually
