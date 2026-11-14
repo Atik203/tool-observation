@@ -19,6 +19,11 @@ FROZEN_DIR = DATA_DIR / "frozen"
 MANIFEST_DIR = DATA_DIR / "manifests"
 RUNS_DIR = DATA_DIR / "runs"
 ARTIFACTS_DIR = REPO_ROOT / "artifacts"
+AUDIT_DIR = ARTIFACTS_DIR / "audit"
+ANALYSIS_DIR = ARTIFACTS_DIR / "analysis"
+ENV_DIR = ARTIFACTS_DIR / "env"
+COST_DIR = ARTIFACTS_DIR / "cost"
+PAPER_ARTIFACTS_DIR = ARTIFACTS_DIR / "paper"
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 PREREG_DIR = REPO_ROOT / "prereg"
 PAPER_DIR = REPO_ROOT / "paper"
@@ -58,5 +63,10 @@ def ensure_local_dirs() -> None:
         MANIFEST_DIR,
         RUNS_DIR,
         ARTIFACTS_DIR,
+        AUDIT_DIR,
+        ANALYSIS_DIR,
+        ENV_DIR,
+        COST_DIR,
+        PAPER_ARTIFACTS_DIR,
     ):
         path.mkdir(parents=True, exist_ok=True)

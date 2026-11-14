@@ -7,12 +7,33 @@ manifest format does not drift silently.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 from typing import Any
 
 
+class RecordMixin:
+    """Small serialization helper shared by every record."""
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]):
+        names = {item.name for item in fields(cls)}
+        return cls(**{key: value for key, value in data.items() if key in names})
+
+
+PREFIX_SCHEMA_VERSION = "toolresult800-prefix-v1"
+PERTURBATION_SCHEMA_VERSION = "toolresult800-perturbation-v1"
+LEDGER_SCHEMA_VERSION = "toolresult800-ledger-v1"
+SAMPLE_SCHEMA_VERSION = "toolresult800-sample-v1"
+PIN_SCHEMA_VERSION = "toolresult800-pin-v1"
+MODEL_PINS_SCHEMA_VERSION = "toolresult800-model-pins-v1"
+MANIFEST_SCHEMA_VERSION = "toolresult800-manifest-v1"
+
+
 @dataclass(slots=True)
-class PrefixRecord:
+class PrefixRecord(RecordMixin):
     """A frozen message prefix ending immediately after a real tool observation."""
 
     prefix_id: str
@@ -31,12 +52,21 @@ class PrefixRecord:
     eligible: bool = False
     split: str = "unassigned"
 
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+    # G0 contract additions
+    tool_family: str = ""
+    step_index_bucket: str = ""
+    used_fields: list[dict[str, Any]] = field(default_factory=list)
+    critical_fields: list[str] = field(default_factory=list)
+    perturbations: list[str] = field(default_factory=list)
+    renderer_version: str = ""
+    arm: str = ""
+    severity: int | None = None
+    decision_signature: str = ""
+    schema_version: str = PREFIX_SCHEMA_VERSION
 
 
 @dataclass(slots=True)
-class PerturbationRecord:
+class PerturbationRecord(RecordMixin):
     """One content perturbation applied to a prefix observation."""
 
     prefix_id: str
@@ -49,18 +79,38 @@ class PerturbationRecord:
     expected_action_change: bool
     renderer_version: str
 
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+    # G0 contract additions
+    record_id: str = ""
+    perturbation_hash: str = ""
+    renderer_hash: str = ""
+    second_perturbation_id: str | None = None
+    value_type: str = ""
+    registry_criticality: str = ""
+    value_used_in_continuation: bool = False
+    selection_rule: str = ""
+    perturbation_mode: str = ""
+    plausibility_checks: list[str] = field(default_factory=list)
+    pii_check: bool = False
+    identifier_check: bool = False
+    s2_base_record_id: str | None = None
+    json_path_2: str = ""
+    true_value_2: Any = None
+    false_value_2: Any = None
+    criticality_2: str = ""
+    contradiction_type: str = ""
+    contradiction_basis: str = ""
+    schema_version: str = PERTURBATION_SCHEMA_VERSION
 
 
 @dataclass(slots=True)
-class DecisionSignature:
+class DecisionSignature(RecordMixin):
     """Canonicalized next decision: tool name plus normalized arguments."""
 
     tool_name: str
     arguments: dict[str, Any]
     final_answer_slots: dict[str, Any] = field(default_factory=dict)
     action_verb: str = ""
+    schema_version: str = "toolresult800-signature-v1"
 
     def canonical(self) -> str:
         import json
@@ -79,7 +129,7 @@ class DecisionSignature:
 
 
 @dataclass(slots=True)
-class OutcomeLabels:
+class OutcomeLabels(RecordMixin):
     """Automatic and adjudicated labels for one generated decision."""
 
     prefix_id: str
@@ -93,10 +143,11 @@ class OutcomeLabels:
     parser_status: str
     adjudicated_label: str | None = None
     rater_ids: list[str] = field(default_factory=list)
+    schema_version: str = "toolresult800-outcome-v1"
 
 
 @dataclass(slots=True)
-class RecoveryEvent:
+class RecoveryEvent(RecordMixin):
     """Recovery observation for one prefix, model, and injection regime."""
 
     prefix_id: str
@@ -108,10 +159,11 @@ class RecoveryEvent:
     endpoint: str
     censored: bool
     state_hash: str = ""
+    schema_version: str = "toolresult800-recovery-v1"
 
 
 @dataclass(slots=True)
-class LedgerRow:
+class LedgerRow(RecordMixin):
     """One generation ledger row. Every reported number must trace to one."""
 
     run_id: str
@@ -126,9 +178,18 @@ class LedgerRow:
     cost_usd: float
     timestamp_utc: str
 
+    # G1/G2 contract additions
+    stage: str = ""
+    gpu_hours: float = 0.0
+    storage_gb: float = 0.0
+    parser_version: str = ""
+    prompt_version: str = ""
+    manifest_hash: str = ""
+    schema_version: str = LEDGER_SCHEMA_VERSION
+
 
 @dataclass(slots=True)
-class GateResult:
+class GateResult(RecordMixin):
     """Pass/fail record for a pre-registered gate."""
 
     gate: str
@@ -136,3 +197,76 @@ class GateResult:
     criteria: dict[str, Any]
     observed: dict[str, Any]
     note: str = ""
+    schema_version: str = "toolresult800-gate-v1"
+
+
+@dataclass(slots=True)
+class SampleRecord(RecordMixin):
+    """One selected prefix in the frozen sample."""
+
+    prefix_id: str
+    domain: str
+    task_id: str
+    donor: str
+    step_bucket: str
+    tool_family: str
+    split: str
+    stratum: str
+    seed: int
+    schema_version: str = SAMPLE_SCHEMA_VERSION
+
+
+@dataclass(slots=True)
+class PinRecord(RecordMixin):
+    """Pinned upstream source and environment hashes."""
+
+    repo_url: str
+    commit_sha: str
+    license: str
+    trajectory_hashes: dict[str, str] = field(default_factory=dict)
+    task_db_hashes: dict[str, str] = field(default_factory=dict)
+    harness_hash: str = ""
+    pinned_utc: str = ""
+    pin_version: str = PIN_SCHEMA_VERSION
+    schema_version: str = PIN_SCHEMA_VERSION
+
+
+@dataclass(slots=True)
+class ModelPins(RecordMixin):
+    """Pinned model revisions and tokenizer hashes."""
+
+    model_id: str
+    repo_id: str
+    revision: str
+    quantization: str
+    tokenizer_hash: str
+    license: str
+    pinned_utc: str = ""
+    schema_version: str = MODEL_PINS_SCHEMA_VERSION
+
+
+@dataclass(slots=True)
+class FrozenManifest(RecordMixin):
+    """Top-level frozen dataset manifest.
+
+    Per-prefix payloads are stored in ``prefix_index.jsonl``; this object
+    records identity, hashes, counts, and freeze integrity.
+    """
+
+    schema_version: str
+    manifest_id: str
+    created_utc: str
+    prereg_hash: str
+    renderer_version: str
+    renderer_hash: str
+    field_registry_hash: str
+    sample_hash: str
+    perturbations_hash: str
+    prefixes: list[dict[str, Any]] = field(default_factory=list)
+    calibration_ids: list[str] = field(default_factory=list)
+    reserve_ids: list[str] = field(default_factory=list)
+    counts: dict[str, Any] = field(default_factory=dict)
+    config_hashes: dict[str, str] = field(default_factory=dict)
+    source_pin_hash: str = ""
+    audit: dict[str, Any] = field(default_factory=dict)
+    freeze: dict[str, Any] = field(default_factory=dict)

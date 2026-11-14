@@ -9,6 +9,14 @@ the v1.0 dataset and paper release.
 
 ## [Unreleased]
 
+### Added
+
+- Foundation record contracts for prefixes, perturbations, ledger rows, samples, source pins,
+  model pins, and the frozen manifest.
+- Typed config loader with cross-file validation and stable config hashing.
+- Provenance helpers for commit SHA, artifact hashes, manifest sidecars, and pre-freeze checks.
+- Contract tests for hashing, schemas, config invariants, paths, CLI, and the field registry.
+
 ### Planned
 
 - G0 harvest implementation and frozen ToolResult-800 v1 manifest.

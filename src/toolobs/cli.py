@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import argparse
 import sys
-from pathlib import Path
 
 from . import __version__
 from .paths import CONFIG_DIR, REQUIRED_CONFIGS
