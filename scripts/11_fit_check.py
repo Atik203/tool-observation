@@ -101,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
             for _ in range(args.batch_size)
         ]
         prompts = [
-            tokenizer.apply_chat_template(message, tokenize=False, add_generation_prompt=True)
+            tokenizer.apply_chat_template([message], tokenize=False, add_generation_prompt=True)
             for message in messages
         ]
         sampling = SamplingParams(temperature=0.0, top_p=1.0, max_tokens=args.max_tokens)
