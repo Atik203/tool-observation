@@ -205,6 +205,9 @@ class LedgerRow(RecordMixin):
     gpu_hours: float = 0.0
     storage_gb: float = 0.0
     parser_version: str = ""
+    parser_status: str = ""
+    signature_hash: str = ""
+    decision_json: str = ""
     prompt_version: str = ""
     manifest_hash: str = ""
     schema_version: str = LEDGER_SCHEMA_VERSION

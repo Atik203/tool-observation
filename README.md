@@ -36,6 +36,9 @@ triggers an automatic production deployment.
 - **Render:** 4,400 arms and 2,640 perturbation records; 100% s=0 value-set equality.
 - **Calibration:** 60 disjoint prefixes (30 airline + 30 retail).
 - **Freeze dry-run:** manifest shape validates; final freeze is blocked on the human audit.
+- **Inference/analysis core:** next-decision prompt, parser, ledger, fake backend, lazy vLLM
+  adapter, conditional-logit slope with prefix-cluster bootstrap, and recovery estimators are
+  implemented and CPU-tested. No GPU model has been loaded.
 - **Pending:** human 40-item audit (≥36/40) and the frozen `toolresult800_v1` manifest. No GPU
   workload has run.
 

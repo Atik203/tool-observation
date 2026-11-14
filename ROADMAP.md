@@ -24,6 +24,9 @@
 | Render + perturb | **DONE** | 4,400 arms (880 × 5); 2,640 perturbation records (880 each s=1/2/3); 100% s=0 value-set equality; `data/interim/rendered.jsonl`, `data/interim/perturbations.jsonl` |
 | Calibration selection | **DONE** | 60 prefixes (30 airline + 30 retail), disjoint from the 880; `data/interim/calibration.jsonl` |
 | Freeze dry-run | **DONE** | Manifest shape validates: 800+80, 4,400 arms, 2,640 perturbations, 60 calibration; `artifacts/audit/freeze_dry_run.json` |
+| Inference core | **DONE (CPU)** | Next-decision prompt, JSON parser, ledger, fake backend, lazy vLLM adapter; calibration gate evaluator; CPU tests pass |
+| Analysis core | **DONE (CPU)** | Outcome labels, pure-Python conditional-logit slope with prefix-cluster bootstrap, recovery/KM/RMST/Weibull; synthetic tests pass |
+| Cross-platform reproduction | **DONE** | Local and H200 normalized hashes match for sample, rendered arms, perturbations, and calibration |
 | Human audit | **PENDING** | 40-item packet and blank sheet generated; gate ≥36/40; `artifacts/audit/g0_audit_packet.csv` |
 | Freeze | **PENDING** | Blocked on audit; no `toolresult800_v1.json` yet; no target output generated |
 | H200 environment | **PARTIAL** | project clone + CPU venv + tests pass; GPU stack not installed; no GPU workload run |

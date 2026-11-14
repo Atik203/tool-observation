@@ -180,6 +180,12 @@ def extract_tool_calls(messages: Iterable[dict[str, Any]]) -> tuple[list[tuple[s
     return calls, argument_errors
 
 
+def load_domain_tools(upstream_dir: str | Path, domain: str) -> list[dict[str, Any]]:
+    """Return the pinned τ-bench tool schemas for one domain."""
+    _, tools = _load_domain(Path(upstream_dir).resolve(), domain)
+    return [tool.get_info() for tool in tools]
+
+
 class TauBenchReplay:
     """Replay harness for one τ-bench domain."""
 

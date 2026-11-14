@@ -6,6 +6,25 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-014 — Next-decision prompt and parser contract
+
+- **Date:** 2026-11-15
+- **Status:** accepted (pre-freeze)
+- **Context:** The three target families use different chat templates. A model-specific
+  tool-call grammar would add a format confound. The frozen prefix already ends at the real
+  tool observation; the target must emit one next action.
+- **Decision:** The prompt appends a deterministic instruction to the prefix's system message:
+  respond with exactly one JSON object, either
+  `{"tool": "<name>", "arguments": {...}}` or `{"final_answer": "<answer>"}`. The pinned tool
+  schemas are serialized into the system message. The parser accepts that form, fenced JSON,
+  and OpenAI-style `name`/`arguments`; refusals and parse failures are ledger statuses, never
+  silently dropped. Prompt version is `toolresult-next-decision-v1`; parser version is
+  `toolresult-parser-v1`.
+- **Consequences:** G1 checks parse rate, refusal rate, placebo jitter, and s=3 switch rate before
+  any main-run GPU spend. A model that refuses the format is fixed or excluded before G1 freeze.
+
+---
+
 ## D-013 — Renderability filter excludes scalar-only `calculate` prefixes
 
 - **Date:** 2026-11-15
@@ -29,9 +48,10 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 - **Status:** accepted (pre-freeze)
 - **Context:** The scaffold used the legacy label `cto-prose-v1` for the deterministic renderer.
   The dataset brand is ToolResult-800 and the old brand should not appear in new frozen material.
-- **Decision:** The renderer version is **`toolresult-prose-v1`** in `configs/arms.yaml`,
-  `configs/harvest.yaml`, the renderer constant, and the perturbation records. No artifact has
-  been frozen yet, so this is a rename, not a version change to a released dataset.
+- **Decision:** The renderer version is **`toolresult-prose-v1`**, the next-decision prompt is
+  **`toolresult-next-decision-v1`**, and the parser is **`toolresult-parser-v1`** in the configs,
+  code constants, and perturbation records. No artifact has been frozen yet, so this is a rename,
+  not a version change to a released dataset.
 - **Consequences:** Regenerate the rendered arms and perturbation records after the rename; the
   renderer hash and version are recorded in the G0 manifest.
 

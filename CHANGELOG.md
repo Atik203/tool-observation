@@ -31,8 +31,12 @@ the v1.0 dataset and paper release.
 - G0 human audit packet and scoring path; audit remains pending human labels.
 - Disjoint 60-prefix calibration selection and freeze dry-run manifest builder; final manifest is
   gated on the human audit.
+- Next-decision prompt/parser/ledger, fake and lazy vLLM backends, calibration gate evaluator,
+  outcome labels, conditional-logit slope with prefix-cluster bootstrap, and recovery/KM/RMST/
+  Weibull estimators, all CPU-tested.
 - Contract tests for hashing, schemas, config invariants, paths, CLI, field registry, pinning,
-  parsing, relevance, scrubbing, replay comparison, sampling, and rendering.
+  parsing, relevance, scrubbing, replay comparison, sampling, rendering, inference, calibration,
+  outcomes, slope, and recovery.
 
 ### Planned
 

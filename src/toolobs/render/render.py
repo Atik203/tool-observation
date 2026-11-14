@@ -44,6 +44,7 @@ class RenderedArm:
     observation_text: str
     messages_json: str
     prompt_hash: str
+    domain: str = ""
     renderer_version: str = RENDERER_VERSION
 
     def to_dict(self) -> dict[str, Any]:
@@ -54,6 +55,7 @@ class RenderedArm:
             "observation_text": self.observation_text,
             "messages_json": self.messages_json,
             "prompt_hash": self.prompt_hash,
+            "domain": self.domain,
             "renderer_version": self.renderer_version,
         }
 
@@ -342,6 +344,7 @@ def render_arm_messages(
                 observation_text=observation_text,
                 messages_json=messages_json,
                 prompt_hash=sha256_text(messages_json),
+                domain=record.domain,
             )
         )
     return rows

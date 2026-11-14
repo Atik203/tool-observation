@@ -82,8 +82,8 @@ def test_ledger_round_trip() -> None:
         stage="calibration",
         gpu_hours=0.01,
         storage_gb=0.001,
-        parser_version="cto-parser-v1",
-        prompt_version="cto-next-decision-v1",
+        parser_version="toolresult-parser-v1",
+        prompt_version="toolresult-next-decision-v1",
         manifest_hash="def",
     )
     restored = LedgerRow.from_dict(row.to_dict())
