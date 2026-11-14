@@ -21,6 +21,7 @@ class VLLMBackend:
         *,
         max_tokens: int = 256,
         seed: int = 20261108,
+        max_num_seqs: int = 8,
     ) -> None:
         try:
             from vllm import LLM, SamplingParams  # noqa: PLC0415 - lazy GPU import
@@ -44,6 +45,7 @@ class VLLMBackend:
             "gpu_memory_utilization": float(model_config.get("gpu_memory_utilization", 0.85)),
             "enforce_eager": bool(model_config.get("enforce_eager", False)),
             "tensor_parallel_size": int(model_config.get("tensor_parallel", 1)),
+            "max_num_seqs": max_num_seqs,
         }
         if quantization not in {"", "auto", "none"}:
             kwargs["quantization"] = quantization

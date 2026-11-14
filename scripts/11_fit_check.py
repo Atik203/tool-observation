@@ -43,6 +43,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-model-len", type=int, default=8192)
     parser.add_argument("--gpu-memory-utilization", type=float, default=0.90)
     parser.add_argument("--batch-size", type=int, default=4)
+    parser.add_argument("--max-num-seqs", type=int, default=8)
     parser.add_argument("--max-tokens", type=int, default=8)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--out", default=str(ARTIFACTS_DIR / "env" / "qwen_fit_check.json"))
@@ -77,6 +78,7 @@ def main(argv: list[str] | None = None) -> int:
         "max_model_len": args.max_model_len,
         "gpu_memory_utilization": args.gpu_memory_utilization,
         "batch_size": args.batch_size,
+        "max_num_seqs": args.max_num_seqs,
         "gpu_before": _gpu_memory(),
     }
     started = time.perf_counter()
@@ -94,6 +96,7 @@ def main(argv: list[str] | None = None) -> int:
             "gpu_memory_utilization": args.gpu_memory_utilization,
             "enforce_eager": bool(config.get("enforce_eager", True)),
             "tensor_parallel_size": 1,
+            "max_num_seqs": args.max_num_seqs,
         }
         if quantization not in {"", "auto", "none"}:
             llm_kwargs["quantization"] = quantization

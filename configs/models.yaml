@@ -59,7 +59,7 @@ serving:
   engine: vllm
   tensor_parallel: 1
   batch_size: 8
-  max_num_seqs: 12
+  max_num_seqs: 8
   one_model_at_a_time: true
 
 substitute_policy:

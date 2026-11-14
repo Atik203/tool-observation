@@ -113,6 +113,7 @@ def main(argv: list[str] | None = None) -> int:
                 model,
                 max_tokens=int(load_config("models.yaml")["decoding"]["max_tokens"]),
                 seed=int(calibration["seed"]),
+                max_num_seqs=int(load_config("models.yaml")["serving"]["max_num_seqs"]),
             )
         stats = run_rendered_rows(
             rows,
