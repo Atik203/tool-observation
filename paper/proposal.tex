@@ -252,6 +252,15 @@ Reserve (airline / retail) & 80 (40 / 40) \\
 \end{tabular}
 \end{table}
 
+A pre-freeze implementation of the operational rule yields \textbf{5,516 eligible} observations
+(airline 1,434; retail 4,082), \textbf{5,511 replay-matched} (99.91\%), and a 10/task capped pool
+of airline 442 / retail 1,144. The difference from the 6,554 planning figure is the stricter
+normalized value-used rule and the exclusion of PII-only or PII-target prefixes; the G0 gate is
+still $\ge$880 eligible and $\ge$440 per domain, not 6,554. Scalar-only \texttt{calculate}
+prefixes (194) are excluded because they cannot support $s=1$ and $s=3$; this leaves the airline
+cap-10 at 442. The 40-item human audit and the frozen manifest are pending; no target-model
+outcome has been generated.
+
 A prefix is eligible if it contains a real tool message, a reconstructable prefix, at least one
 scalar value used in the donor's factual continuation, PII-scrubbed content, a replay match of at
 least 98\%, and a lossless $s=0$ rendering. The main exclusions are profile-tool observations
