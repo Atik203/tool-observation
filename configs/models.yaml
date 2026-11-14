@@ -1,47 +1,50 @@
 # Target models for the confirmatory run.
-# Revision is intentionally TBD until the H200 environment is pinned and the
-# exact commit hashes are recorded in data/manifests/model_pins.json. Do not
-# guess a revision.
+# Revisions are pinned to exact commits; do not use a floating main.
 #
-# The approved slice has 18 GB VRAM, below the older 24 GB assumption. Verify
-# the pinned AWQ model, 8k context, and batch fit before G1/G2. Lower batch or
-# context if OOM; log any reduction in docs/DECISIONS.md.
+# The approved slice has 18 GB VRAM. Qwen3.5-9B and Ministral-3-8B use
+# community AWQ/compressed-tensors builds because the upstream repositories do
+# not publish an official AWQ artifact. The Llama build is the high-download
+# hugging-quants AWQ conversion of the official Llama-3.1-8B-Instruct weights.
+# Fit checks are recorded in docs/H200_ENV.md.
 models:
-  - id: qwen2_5_7b_instruct_awq
-    repo_id: Qwen/Qwen2.5-7B-Instruct-AWQ
-    revision: b25037543e9394b818fdfca67ab2a00ecc7dd641
-    params_b: 7
-    quantization: awq_4bit
+  - id: qwen3_5_9b_instruct_awq
+    repo_id: cyankiwi/Qwen3.5-9B-AWQ-4bit
+    revision: e4d2d39cede8c5d1716d824cd843e2889c648083
+    base_repo_id: Qwen/Qwen3.5-9B
+    params_b: 9
+    quantization: compressed-tensors
     license: Apache-2.0
     role: primary_family
     family: qwen
     dtype: float16
     max_model_len: 8192
-    gpu_memory_utilization: 0.90
+    gpu_memory_utilization: 0.85
     enforce_eager: false
-  - id: mistral_7b_instruct_v03_awq
-    repo_id: mistralai/Mistral-7B-Instruct-v0.3-AWQ
-    revision: TBD
-    params_b: 7
-    quantization: awq_4bit
+  - id: ministral_3_8b_instruct_2512_awq
+    repo_id: cyankiwi/Ministral-3-8B-Instruct-2512-AWQ-4bit
+    revision: 563842192acb68a00b8864e3bfa5a3e740ece90c
+    base_repo_id: mistralai/Ministral-3-8B-Instruct-2512
+    params_b: 8
+    quantization: compressed-tensors
     license: Apache-2.0
     role: second_family
     family: mistral
     dtype: float16
     max_model_len: 8192
-    gpu_memory_utilization: 0.90
+    gpu_memory_utilization: 0.85
     enforce_eager: false
   - id: llama_3_1_8b_instruct_awq
-    repo_id: meta-llama/Llama-3.1-8B-Instruct-AWQ
-    revision: TBD
+    repo_id: hugging-quants/Meta-Llama-3.1-8B-Instruct-AWQ-INT4
+    revision: db1f81ad4b8c7e39777509fac66c652eb0a52f91
+    base_repo_id: meta-llama/Llama-3.1-8B-Instruct
     params_b: 8
-    quantization: awq_4bit
+    quantization: awq
     license: Llama-3.1-Community
     role: third_family
     family: llama
     dtype: float16
     max_model_len: 8192
-    gpu_memory_utilization: 0.90
+    gpu_memory_utilization: 0.85
     enforce_eager: false
 
 decoding:
@@ -55,8 +58,8 @@ decoding:
 serving:
   engine: vllm
   tensor_parallel: 1
-  batch_size: 12
-  max_num_seqs: 16
+  batch_size: 8
+  max_num_seqs: 12
   one_model_at_a_time: true
 
 substitute_policy:

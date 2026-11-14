@@ -30,20 +30,24 @@ class VLLMBackend:
         revision = str(model_config.get("revision", "TBD"))
         if revision == "TBD":
             raise RuntimeError("model revision is TBD; pin it in configs/models.yaml")
-        quantization = str(model_config.get("quantization", "awq"))
+        quantization = str(model_config.get("quantization", "auto"))
         if quantization == "awq_4bit":
             quantization = "awq"
+        elif quantization in {"compressed_tensors", "compressed_tensors_4bit"}:
+            quantization = "compressed-tensors"
         self.model_id = str(model_config["id"])
-        self.llm = LLM(
-            model=str(model_config["repo_id"]),
-            revision=revision,
-            quantization=quantization,
-            dtype=str(model_config.get("dtype", "float16")),
-            max_model_len=int(model_config.get("max_model_len", 8192)),
-            gpu_memory_utilization=float(model_config.get("gpu_memory_utilization", 0.90)),
-            enforce_eager=bool(model_config.get("enforce_eager", False)),
-            tensor_parallel_size=int(model_config.get("tensor_parallel", 1)),
-        )
+        kwargs: dict[str, Any] = {
+            "model": str(model_config["repo_id"]),
+            "revision": revision,
+            "dtype": str(model_config.get("dtype", "float16")),
+            "max_model_len": int(model_config.get("max_model_len", 8192)),
+            "gpu_memory_utilization": float(model_config.get("gpu_memory_utilization", 0.85)),
+            "enforce_eager": bool(model_config.get("enforce_eager", False)),
+            "tensor_parallel_size": int(model_config.get("tensor_parallel", 1)),
+        }
+        if quantization not in {"", "auto", "none"}:
+            kwargs["quantization"] = quantization
+        self.llm = LLM(**kwargs)
         self.tokenizer = self.llm.get_tokenizer()
         self.sampling = SamplingParams(
             temperature=0.0,

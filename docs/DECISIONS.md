@@ -18,6 +18,12 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   a non-study fit check (model load plus a short generic prompt). Record driver, CUDA, vLLM,
   torch, model revision, peak VRAM, and latency in `artifacts/env/`. Do not run calibration or
   main-run prefixes until the human audit and G0 freeze pass.
+- **Observed fit (2026-11-15):** Qwen2.5-7B-Instruct-AWQ loaded at 8k context, batch 4, and
+  `gpu_memory_utilization=0.85` on the 18 GB slice: 5.38 GiB weights, 7.76 GiB KV cache
+  (145,376 tokens; 17.75x concurrency at 8k), 27.7 s load, 0.08 s for the four-prompt batch.
+  vLLM 0.33.0 / torch 2.14.0+cu130. The 0.90 setting requested 16.02 GiB and failed because
+  15.36 GiB was free; 0.85 is the logged reduction. Python headers were extracted project-locally
+  for Triton; no system package or driver change.
 - **Consequences:** Mistral and Llama revisions remain TBD until their access and fit checks.
   The fit check is environment evidence, not a study result; no target-model outcome on a study
   prefix exists.

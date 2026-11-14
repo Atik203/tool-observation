@@ -81,19 +81,23 @@ def main(argv: list[str] | None = None) -> int:
     }
     started = time.perf_counter()
     try:
-        quantization = str(config.get("quantization", "awq"))
+        quantization = str(config.get("quantization", "auto"))
         if quantization == "awq_4bit":
             quantization = "awq"
-        llm = LLM(
-            model=str(config["repo_id"]),
-            revision=str(config["revision"]),
-            quantization=quantization,
-            dtype=str(config.get("dtype", "float16")),
-            max_model_len=args.max_model_len,
-            gpu_memory_utilization=args.gpu_memory_utilization,
-            enforce_eager=bool(config.get("enforce_eager", True)),
-            tensor_parallel_size=1,
-        )
+        elif quantization in {"compressed_tensors", "compressed_tensors_4bit"}:
+            quantization = "compressed-tensors"
+        llm_kwargs = {
+            "model": str(config["repo_id"]),
+            "revision": str(config["revision"]),
+            "dtype": str(config.get("dtype", "float16")),
+            "max_model_len": args.max_model_len,
+            "gpu_memory_utilization": args.gpu_memory_utilization,
+            "enforce_eager": bool(config.get("enforce_eager", True)),
+            "tensor_parallel_size": 1,
+        }
+        if quantization not in {"", "auto", "none"}:
+            llm_kwargs["quantization"] = quantization
+        llm = LLM(**llm_kwargs)
         load_seconds = time.perf_counter() - started
         tokenizer = llm.get_tokenizer()
         messages = [

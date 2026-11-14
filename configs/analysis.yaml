@@ -1,6 +1,6 @@
 # Analysis configuration — frozen with the preregistration at G0.
 analysis:
-  primary_model: qwen2_5_7b_instruct_awq
+  primary_model: qwen3_5_9b_instruct_awq
   primary_estimand: pooled_slope
   cluster: prefix_id
   alpha: 0.05

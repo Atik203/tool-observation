@@ -88,6 +88,13 @@ storage_gb=...
    `data/manifests/model_pins.json`. Do not accept a floating `main`.
 7. **Fit check:** the slice has 18 GB VRAM. Verify the pinned AWQ model, 8k context, and batch
    fit. Lower batch or context if OOM; log any reduction in `docs/DECISIONS.md`.
+
+```powershell
+python scripts/11_fit_check.py --model-id qwen2_5_7b_instruct_awq --batch-size 4
+```
+
+The fit check uses a generic non-study prompt and writes
+`artifacts/env/qwen_fit_check.json`; it is environment evidence, not a study result.
 8. Run the 60-prefix calibration before the main run.
 
 ```powershell
