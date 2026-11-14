@@ -39,6 +39,8 @@ triggers an automatic production deployment.
 - **Inference/analysis core:** next-decision prompt, parser, ledger, fake backend, lazy vLLM
   adapter, conditional-logit slope with prefix-cluster bootstrap, and recovery estimators are
   implemented and CPU-tested. No GPU model has been loaded.
+- **Frozen payload/release:** 880 scrubbed prefixes with five arm observations are built
+  (preview); the release packager verifies hashes and PII and refuses without a passed audit.
 - **Pending:** human 40-item audit (≥36/40) and the frozen `toolresult800_v1` manifest. No GPU
   workload has run.
 

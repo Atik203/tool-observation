@@ -46,10 +46,60 @@ class FreezeInputs:
     source_pin_hash: str
     sample_hash: str
     perturbations_hash: str
+    frozen_prefixes_hash: str = ""
 
 
 def _hash_file(path: str | Path) -> str:
     return sha256_text_file(path)
+
+
+def build_frozen_prefixes(
+    sample: list[PrefixRecord],
+    rendered: list[dict[str, Any]],
+    perturbations: list[PerturbationRecord],
+) -> list[dict[str, Any]]:
+    """Build the self-contained scrubbed prefix payload for release."""
+    rendered_by_key = {
+        (str(row.get("prefix_id")), str(row.get("arm"))): row for row in rendered
+    }
+    perturbations_by_prefix: dict[str, list[PerturbationRecord]] = defaultdict(list)
+    for item in perturbations:
+        perturbations_by_prefix[item.prefix_id].append(item)
+    rows: list[dict[str, Any]] = []
+    for record in sorted(sample, key=lambda item: item.prefix_id):
+        v_row = rendered_by_key.get((record.prefix_id, "V"))
+        if v_row is None:
+            raise ValueError(f"missing V arm for {record.prefix_id}")
+        messages = json.loads(str(v_row["messages_json"]))
+        arm_observations = {
+            arm: str(rendered_by_key[(record.prefix_id, arm)]["observation_text"])
+            for arm in ARMS
+            if (record.prefix_id, arm) in rendered_by_key
+        }
+        rows.append(
+            {
+                "prefix_id": record.prefix_id,
+                "domain": record.domain,
+                "task_id": record.task_id,
+                "trajectory_id": record.trajectory_id,
+                "donor": record.donor,
+                "split": record.split,
+                "stratum": stratum_key(record),
+                "messages": messages,
+                "arm_observations": arm_observations,
+                "perturbation_ids": [
+                    item.record_id for item in perturbations_by_prefix.get(record.prefix_id, [])
+                ],
+                "observation_hash": record.observation_hash,
+                "prefix_hash": record.prefix_hash,
+                "scrubbed_observation_hash": record.scrubbed_observation_hash,
+                "scrubbed_prefix_hash": record.scrubbed_prefix_hash,
+                "replay_match": record.replay_match,
+                "replay_diff": record.replay_diff,
+                "renderer_version": str(v_row.get("renderer_version", "")),
+            }
+        )
+    return rows
 
 
 def build_manifest(inputs: FreezeInputs) -> FrozenManifest:
@@ -129,6 +179,7 @@ def build_manifest(inputs: FreezeInputs) -> FrozenManifest:
         field_registry_hash=inputs.field_registry_hash,
         sample_hash=inputs.sample_hash,
         perturbations_hash=inputs.perturbations_hash,
+        frozen_prefixes_hash=inputs.frozen_prefixes_hash,
         prefixes=prefixes,
         calibration_ids=sorted(record.prefix_id for record in inputs.calibration),
         reserve_ids=sorted(record.prefix_id for record in reserve),
@@ -200,6 +251,8 @@ def validate_freeze_inputs(
         problems.append("duplicate perturbation hashes")
     if len(inputs.perturbations) != 2640:
         problems.append(f"perturbations {len(inputs.perturbations)} != 2640")
+    if not inputs.frozen_prefixes_hash:
+        problems.append("missing frozen prefix payload hash")
     if require_audit and not inputs.audit.get("gate_pass"):
         problems.append("human audit gate is not passed")
     return problems

@@ -63,11 +63,14 @@ Per-record fields:
 
 ## 4. Collection
 
-Source: public τ-bench historical trajectories, pinned commit (TBD), MIT license. Four files:
-gpt-4o airline, gpt-4o retail, sonnet-35-new airline, sonnet-35-new retail. The empirical pool is
-1,980 trajectories, 13,605 post-tool candidates, 11,318 JSON-parseable, and 6,554 value-used
-eligible observations after excluding profile tools. Sampling caps at 10 per task–domain,
-stratified by domain, donor, step-index bucket, and tool family, seed 20261108.
+Source: public τ-bench historical trajectories, pinned commit **`59a200c`**, MIT license. Four
+files: gpt-4o airline, gpt-4o retail, sonnet-35-new airline, sonnet-35-new retail. The empirical
+pool is 1,980 trajectories, **13,605 post-tool candidates**, **11,318 JSON-parseable**, **3,692
+profile/PII-tool candidates excluded**, and **5,516 eligible value-used observations** (airline
+1,434; retail 4,082). Eligible-pool replay matches 5,511/5,516 (99.91%). Sampling caps at 10 per
+task-domain and stratifies by domain, donor, step-index bucket, and tool family, seed 20261108.
+The earlier 6,554 planning figure is retained as a planning input, not a gate; the operational
+value-used rule is stricter.
 
 "Real tool output" means emitted by the benchmark's tool implementation against the task
 database and verified by replay, not LLM-generated prose.

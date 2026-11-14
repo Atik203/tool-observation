@@ -502,6 +502,22 @@ def read_jsonl_dicts(path: str | Path) -> list[dict[str, Any]]:
     return rows
 
 
+def write_jsonl_dicts(rows: Iterable[dict[str, Any]], path: str | Path) -> Path:
+    """Write arbitrary JSON objects as canonical JSONL."""
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with target.open("w", encoding="utf-8", newline="\n") as handle:
+        for row in rows:
+            handle.write(canonical_json(row) + "\n")
+    return target
+
+
+def hash_jsonl_dicts(rows: Iterable[dict[str, Any]]) -> str:
+    """Hash canonical JSONL rows without writing a file."""
+    text = "\n".join(canonical_json(row) for row in rows)
+    return sha256_text(text + ("\n" if text else ""))
+
+
 def validate_candidate(record: PrefixRecord) -> list[str]:
     """Return missing or inconsistent fields for one candidate."""
     problems: list[str] = []

@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -27,13 +28,20 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 from toolobs.config import config_hashes, load_config  # noqa: E402
 from toolobs.harvest.freeze import (  # noqa: E402
     FreezeInputs,
+    build_frozen_prefixes,
     build_manifest,
     hash_renderer,
     load_audit,
     validate_freeze_inputs,
     write_manifest,
 )
-from toolobs.harvest.parse import read_jsonl, read_jsonl_dicts, write_jsonl  # noqa: E402
+from toolobs.harvest.parse import (  # noqa: E402
+    hash_jsonl_dicts,
+    read_jsonl,
+    read_jsonl_dicts,
+    write_jsonl,
+    write_jsonl_dicts,
+)
 from toolobs.harvest.sample import select_calibration  # noqa: E402
 from toolobs.hashing import sha256_text_file  # noqa: E402
 from toolobs.paths import (  # noqa: E402
@@ -60,6 +68,7 @@ def main(argv: list[str] | None = None) -> int:
         "--audit-result", default=str(ARTIFACTS_DIR / "audit" / "g0_audit_result.json")
     )
     parser.add_argument("--calibration-out", default=str(INTERIM_DIR / "calibration.jsonl"))
+    parser.add_argument("--frozen-prefixes-out", default=str(REPO_ROOT / "data" / "frozen" / "prefixes.jsonl"))
     parser.add_argument("--out", default=str(MANIFEST_DIR / "toolresult800_v1.json"))
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
@@ -71,6 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     audit_path = resolve_repo_path(args.audit_result)
     calibration_path = resolve_repo_path(args.calibration_out)
     output_path = resolve_repo_path(args.out)
+    frozen_path = resolve_repo_path(args.frozen_prefixes_out)
 
     config = load_config("harvest.yaml")
     sample = read_jsonl(sample_path)
@@ -98,6 +108,8 @@ def main(argv: list[str] | None = None) -> int:
 
     renderer_path = REPO_ROOT / "src" / "toolobs" / "render" / "render.py"
     perturb_path = REPO_ROOT / "src" / "toolobs" / "render" / "perturb.py"
+    frozen_rows = build_frozen_prefixes(sample, rendered, perturbations)
+    frozen_hash = hash_jsonl_dicts(frozen_rows)
     inputs = FreezeInputs(
         sample=sample,
         rendered=rendered,
@@ -112,6 +124,7 @@ def main(argv: list[str] | None = None) -> int:
         source_pin_hash=sha256_text_file(MANIFEST_DIR / "source_pin.json"),
         sample_hash=sha256_text_file(sample_path),
         perturbations_hash=sha256_text_file(perturbations_path),
+        frozen_prefixes_hash=frozen_hash,
     )
     problems = validate_freeze_inputs(inputs, require_audit=False)
     audit_pass = bool(audit.get("gate_pass"))
@@ -127,6 +140,8 @@ def main(argv: list[str] | None = None) -> int:
 
     manifest = build_manifest(inputs)
     if args.dry_run:
+        preview_path = INTERIM_DIR / "frozen_prefixes_preview.jsonl"
+        write_jsonl_dicts(frozen_rows, preview_path)
         dry_run_path = ARTIFACTS_DIR / "audit" / "freeze_dry_run.json"
         write_json(
             dry_run_path,
@@ -145,8 +160,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[06_freeze] calibration {calibration_stats}")
         print(f"[06_freeze] audit_status {'passed' if audit_pass else 'pending_human'}")
         print(f"[06_freeze] wrote {dry_run_path}")
+        print(f"[06_freeze] wrote {preview_path}")
         return 0
 
+    write_jsonl_dicts(frozen_rows, frozen_path)
+    MANIFEST_DIR.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(perturbations_path, MANIFEST_DIR / "perturbations.jsonl")
     target, sidecar = write_manifest(manifest, output_path)
     report_path = ARTIFACTS_DIR / "audit" / "g0_report.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -158,6 +177,7 @@ def main(argv: list[str] | None = None) -> int:
         f"- Counts: `{json.dumps(manifest.counts, sort_keys=True)}`\n"
         f"- Audit: `{json.dumps(manifest.audit, sort_keys=True)}`\n"
         f"- Renderer: `{manifest.renderer_version}` ({manifest.renderer_hash})\n"
+        f"- Frozen prefixes hash: `{manifest.frozen_prefixes_hash}`\n"
         f"- Prereg hash: `{manifest.prereg_hash}`\n"
         f"- Source pin hash: `{manifest.source_pin_hash}`\n",
         encoding="utf-8",

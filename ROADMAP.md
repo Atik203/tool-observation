@@ -27,6 +27,8 @@
 | Inference core | **DONE (CPU)** | Next-decision prompt, JSON parser, ledger, fake backend, lazy vLLM adapter; calibration gate evaluator; CPU tests pass |
 | Analysis core | **DONE (CPU)** | Outcome labels, pure-Python conditional-logit slope with prefix-cluster bootstrap, recovery/KM/RMST/Weibull; synthetic tests pass |
 | Cross-platform reproduction | **DONE** | Local and H200 normalized hashes match for sample, rendered arms, perturbations, and calibration |
+| Frozen prefix payload | **DONE (preview)** | 880 scrubbed prefixes, 23 MB, five arm observations; hash recorded in dry-run |
+| Release packager | **DONE (gated)** | `10_release.py` verifies manifest/payload hashes and PII, then copies only scrubbed derived data; refuses without a passed audit |
 | Human audit | **PENDING** | 40-item packet and blank sheet generated; gate ≥36/40; `artifacts/audit/g0_audit_packet.csv` |
 | Freeze | **PENDING** | Blocked on audit; no `toolresult800_v1.json` yet; no target output generated |
 | H200 environment | **PARTIAL** | project clone + CPU venv + tests pass; GPU stack not installed; no GPU workload run |

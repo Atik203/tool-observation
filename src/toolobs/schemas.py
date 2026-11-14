@@ -287,6 +287,7 @@ class FrozenManifest(RecordMixin):
     field_registry_hash: str
     sample_hash: str
     perturbations_hash: str
+    frozen_prefixes_hash: str = ""
     prefixes: list[dict[str, Any]] = field(default_factory=list)
     calibration_ids: list[str] = field(default_factory=list)
     reserve_ids: list[str] = field(default_factory=list)

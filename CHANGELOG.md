@@ -34,6 +34,8 @@ the v1.0 dataset and paper release.
 - Next-decision prompt/parser/ledger, fake and lazy vLLM backends, calibration gate evaluator,
   outcome labels, conditional-logit slope with prefix-cluster bootstrap, and recovery/KM/RMST/
   Weibull estimators, all CPU-tested.
+- Frozen scrubbed prefix payload (880 prefixes, five arm observations) and a release packager
+  that verifies manifest/payload hashes and PII before copying.
 - Contract tests for hashing, schemas, config invariants, paths, CLI, field registry, pinning,
   parsing, relevance, scrubbing, replay comparison, sampling, rendering, inference, calibration,
   outcomes, slope, and recovery.
