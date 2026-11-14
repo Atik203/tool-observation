@@ -8,6 +8,7 @@ from toolobs.hashing import (
     sha256_file,
     sha256_record,
     sha256_text,
+    sha256_text_file,
 )
 
 
@@ -33,3 +34,12 @@ def test_file_hash_reads_bytes(tmp_path) -> None:
     path = tmp_path / "payload.bin"
     path.write_bytes(b"abc")
     assert sha256_file(path) == sha256_bytes(b"abc")
+
+
+def test_text_file_hash_normalizes_line_endings(tmp_path) -> None:
+    crlf = tmp_path / "crlf.txt"
+    lf = tmp_path / "lf.txt"
+    crlf.write_bytes(b"a\r\nb\r\n")
+    lf.write_bytes(b"a\nb\n")
+    assert sha256_text_file(crlf) == sha256_text_file(lf)
+    assert sha256_text_file(crlf) == sha256_text("a\nb\n")

@@ -13,7 +13,7 @@ import re
 import subprocess
 from pathlib import Path
 
-from ..hashing import sha256_file, sha256_record
+from ..hashing import sha256_record, sha256_text_file
 from ..provenance import git_commit, utc_now, write_json
 from ..schemas import PinRecord
 
@@ -75,7 +75,7 @@ def trajectory_hashes(root: str | Path, files: tuple[str, ...] = TRAJECTORY_FILE
         path = base / relative
         if not path.is_file():
             raise PinError(f"missing trajectory file: {relative}")
-        hashes[relative] = sha256_file(path)
+        hashes[relative] = sha256_text_file(path)
     return hashes
 
 
@@ -91,7 +91,7 @@ def task_db_hashes(
             path = base / relative
             if not path.is_file():
                 raise PinError(f"missing task database for {domain}: {relative}")
-            hashes[relative] = sha256_file(path)
+            hashes[relative] = sha256_text_file(path)
     return hashes
 
 
@@ -104,7 +104,7 @@ def harness_hashes(root: str | Path, globs: tuple[str, ...] = HARNESS_GLOBS) -> 
             if not path.is_file() or "__pycache__" in path.parts:
                 continue
             relative = path.relative_to(base).as_posix()
-            hashes[relative] = sha256_file(path)
+            hashes[relative] = sha256_text_file(path)
     if not hashes:
         raise PinError("harness hash set is empty")
     return dict(sorted(hashes.items()))
@@ -173,14 +173,14 @@ def verify_pin(
         path = root / relative
         if not path.is_file():
             problems.append(f"missing trajectory: {relative}")
-        elif sha256_file(path) != expected:
+        elif sha256_text_file(path) != expected:
             problems.append(f"trajectory hash mismatch: {relative}")
 
     for relative, expected in record.task_db_hashes.items():
         path = root / relative
         if not path.is_file():
             problems.append(f"missing task database: {relative}")
-        elif sha256_file(path) != expected:
+        elif sha256_text_file(path) != expected:
             problems.append(f"task database hash mismatch: {relative}")
 
     try:

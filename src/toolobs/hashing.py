@@ -34,6 +34,15 @@ def sha256_file(path: str | Path) -> str:
     return digest.hexdigest()
 
 
+def sha256_text_file(path: str | Path) -> str:
+    """Hash a UTF-8 text file with newline normalization.
+
+    Git checkouts on Windows may use CRLF while Linux uses LF. Source pins and
+    other text artifacts must hash the same logical content on both.
+    """
+    return sha256_text(Path(path).read_text(encoding="utf-8"))
+
+
 def canonical_json(value: Any) -> str:
     """Serialize a value deterministically: sorted keys, compact, UTF-8 text."""
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
