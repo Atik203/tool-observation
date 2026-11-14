@@ -46,6 +46,12 @@ def config_path(name: str) -> Path:
     return CONFIG_DIR / name
 
 
+def resolve_repo_path(value: str | Path) -> Path:
+    """Resolve a path relative to the repository root unless it is absolute."""
+    path = Path(value)
+    return path if path.is_absolute() else REPO_ROOT / path
+
+
 def require_repo_root() -> Path:
     """Return the repository root, raising if the layout is not recognisable."""
     if not (REPO_ROOT / "pyproject.toml").exists():

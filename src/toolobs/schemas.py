@@ -46,6 +46,15 @@ class PrefixRecord(RecordMixin):
     tool_name: str
     observation_json: str
     factual_continuation: str
+    raw_observation: str = ""
+    observation_format: str = "json"
+    tool_call_id: str = ""
+    tool_arguments_json: str = ""
+    message_index: int = -1
+    continuation_type: str = ""
+    source_file: str = ""
+    prefix_hash: str = ""
+    prefix_messages_json: str = ""
     message_hashes: list[str] = field(default_factory=list)
     observation_hash: str = ""
     replay_match: bool = False

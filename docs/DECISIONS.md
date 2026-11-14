@@ -6,6 +6,29 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-009 — G0 candidate definition and profile-tool exclusion set
+
+- **Date:** 2026-11-15
+- **Status:** accepted
+- **Context:** The parser must reproduce the preregistered harvest frame before any sampling. The
+  τ-bench trajectory schema stores each tool result as a `tool` message and the donor's next
+  decision as the following `assistant` message. The internal `think` tool is not an environment
+  observation. The plan's 3,692 excluded profile-tool candidates must map to an explicit tool set.
+- **Decision:** A candidate is a `tool` message followed immediately by an `assistant` message,
+  excluding `think`. On the pinned frame this yields **13,605 candidates**, of which **11,318**
+  are JSON-parseable and **2,287** are text; the counts match `configs/harvest.yaml`. The
+  profile/PII exclusion set is `get_user_details`, `find_user_id_by_name_zip`,
+  `find_user_id_by_email`, and `modify_user_address`; their union is exactly **3,692** candidates
+  (1,719 + 1,159 + 695 + 119). Step-index buckets are `early` 0-2, `mid` 3-6, `late` 7+, where
+  the step index counts every tool message including `think`. Tool families are `read`, `write`,
+  `compute`, `lookup`, `escalate`, `profile`, and `internal`.
+- **Consequences:** The interim candidate table stores message hashes and a source reference;
+  full prefixes are materialized from the pinned trajectory and hash-verified (13,605/13,605
+  verified locally). Changing the candidate definition, bucket boundaries, or exclusion set
+  changes the sampling frame and requires a new logged decision before the G0 freeze.
+
+---
+
 ## D-008 — Cash budget is $0 on the university H200 slice
 
 - **Date:** 2026-11-14

@@ -1,0 +1,23 @@
+{
+  "commit_sha": "59a200c6d575d595120f1cb70fea53cef0632f6b",
+  "harness_hash": "cc32f019076fd69f098c6169a2979c5f5a2f6bdecc9ebf69ea736b0fe4716eb2",
+  "license": "MIT",
+  "pin_version": "toolresult800-pin-v1",
+  "pinned_utc": "2026-11-14T18:23:40+00:00",
+  "repo_url": "https://github.com/sierra-research/tau-bench",
+  "schema_version": "toolresult800-pin-v1",
+  "task_db_hashes": {
+    "tau_bench/envs/airline/data/flights.json": "79ecb8afc3e92b6a70439dc526c4d7f8d5e5dad180ff4c0361490fcc9b383ab0",
+    "tau_bench/envs/airline/data/reservations.json": "4715c5e69c1a16f6bab3cc424c3a7dd430b20ff4a7e927e072161f10db443d56",
+    "tau_bench/envs/airline/data/users.json": "19137b06afec00896ce8d5189cff1c1fb78c25e9ccb6ffbe41b35b37890f0f89",
+    "tau_bench/envs/retail/data/orders.json": "81595d5cb28171e01133b52714b456003a9cd733cfd013c1d9d397ac0a7484c4",
+    "tau_bench/envs/retail/data/products.json": "9ee1541a51eaa14222bd418d2981eb4527ca42420e977ecfb36f72cab15ef64e",
+    "tau_bench/envs/retail/data/users.json": "351c93bce10ce26ba2c9f6a048665d7e002ccff2c1c42a9d628680e73acc5342"
+  },
+  "trajectory_hashes": {
+    "historical_trajectories/gpt-4o-airline.json": "97abc24223ce9f360048945df06d3d0b61904cacd7be14f75db22a31ac5127f9",
+    "historical_trajectories/gpt-4o-retail.json": "2573729600ce4ae6d7cb6f190aae91884a18239a8cebf7d25e52ccd1d92c6623",
+    "historical_trajectories/sonnet-35-new-airline.json": "33e63c377a789cb5ed0553b1e946cb81a51bcdc05db50762ac939eaf28c82787",
+    "historical_trajectories/sonnet-35-new-retail.json": "49bf22a2cf6c6a0ecf6f1feda54ec378f376b6b6e4d2cc276c50db5836d7443f"
+  }
+}

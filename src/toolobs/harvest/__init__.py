@@ -1,5 +1,6 @@
 """Harvest pipeline: candidates, PII scrub, relevance, replay, sampling, freeze.
 
+Trajectory parsing is implemented in :mod:`toolobs.harvest.parse`.
 TODO(G0): implement value-used relevance labeling in scripts/03_relevance.py.
 TODO(G0): implement replay verification in scripts/04_replay.py.
 TODO(G0): implement the stratified 880/800/80 sample in scripts/05_sample.py.

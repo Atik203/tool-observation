@@ -4,7 +4,7 @@ source:
   name: tau-bench
   repository: https://github.com/sierra-research/tau-bench
   license: MIT
-  pin: TBD
+  pin: 59a200c6d575d595120f1cb70fea53cef0632f6b
   license_notice_retained: true
   trajectory_files:
     - historical_trajectories/gpt-4o-airline.json

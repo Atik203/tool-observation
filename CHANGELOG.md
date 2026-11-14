@@ -15,7 +15,13 @@ the v1.0 dataset and paper release.
   model pins, and the frozen manifest.
 - Typed config loader with cross-file validation and stable config hashing.
 - Provenance helpers for commit SHA, artifact hashes, manifest sidecars, and pre-freeze checks.
-- Contract tests for hashing, schemas, config invariants, paths, CLI, and the field registry.
+- τ-bench source pinning: commit SHA, four trajectory hashes, six task-database hashes, harness
+  digest, and a tracked `data/manifests/source_pin.json`.
+- Trajectory parser that reproduces the preregistered frame (13,605 candidates; 11,318
+  JSON-parseable; 3,692 profile-tool candidates) and materializes hash-verified prefixes from
+  the pinned checkout.
+- Contract tests for hashing, schemas, config invariants, paths, CLI, field registry, pinning,
+  and parsing.
 
 ### Planned
 

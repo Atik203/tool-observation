@@ -112,11 +112,15 @@ The protocol is:
 1. **Pin.** Resolve the τ-bench commit, record the URL, license, and SHA-256 of
    `gpt-4o-airline.json`, `gpt-4o-retail.json`, `sonnet-35-new-airline.json`, and
    `sonnet-35-new-retail.json`. Retain the MIT notice.
-2. **Parse.** For every assistant message immediately following a `tool` message, reconstruct
-   the exact prefix (system policy, user turns, donor turns, prior tool calls/results). Record
-   trajectory ID, task ID, trial, donor, domain, step index, tool name, raw observation, and the
-   factual continuation.
-3. **Scrub.** Exclude profile tools (`get_user_details`, 3,692 candidates). Replace names,
+2. **Parse.** For every `tool` message immediately followed by an `assistant` message, excluding
+   the internal `think` tool, reconstruct the exact prefix (system policy, user turns, donor
+   turns, prior tool calls/results). Record trajectory ID, task ID, trial, donor, domain, step
+   index, tool name, raw observation, and the factual continuation. Candidates are written as
+   `data/interim/candidates.jsonl` with message and prefix hashes; the full prefix is
+   materialized from the pinned trajectory and hash-verified on demand. On the pinned frame this
+   is 13,605 candidates, 11,318 JSON-parseable.
+3. **Scrub.** Exclude the profile/PII tools `get_user_details`, `find_user_id_by_name_zip`,
+   `find_user_id_by_email`, and `modify_user_address` (3,692 candidates). Replace names,
    emails, addresses, phones, and payment identifiers with stable synthetic tokens. Exclude a
    prefix if decision-relevant content is itself PII.
 4. **Relevance.** Flatten scalar values from the observation and test which appear in the
