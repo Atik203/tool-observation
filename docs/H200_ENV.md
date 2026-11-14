@@ -34,6 +34,17 @@ The 0.90 setting requested 16.02 GiB but only 15.36 GiB was free, so 0.85 is the
 reduction. The slice is 18 GB nominal; another process or allocator overhead can reduce free
 memory at startup, so `0.85` is the operating point.
 
+## Updated-trio fit status (paused 2026-11-15)
+
+- **Qwen3.5-9B-AWQ:** weights load (8.37 GiB) and the 8k KV cache fits (73,045 tokens), but the
+  default `max_num_seqs=256` exceeds the Mamba cache blocks (214). The fit check is capped at
+  `max_num_seqs=8` and must be rerun. No generation was produced.
+- **Ministral-3-8B-Instruct-2512-AWQ:** fit check pending.
+- **Llama-3.1-8B-Instruct-AWQ-INT4:** fit check pending.
+
+The Qwen2.5-7B check above is historical environment evidence; it is not the confirmatory Qwen
+model after D-016.
+
 ## Project-local Python headers
 
 vLLM/Triton compiles a small CUDA helper at first use and needs Python headers. The system
