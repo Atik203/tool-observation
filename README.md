@@ -41,9 +41,13 @@ triggers an automatic production deployment.
   implemented and CPU-tested. No GPU model has been loaded.
 - **Frozen payload/release:** 880 scrubbed prefixes with five arm observations are built
   (preview); the release packager verifies hashes and PII and refuses without a passed audit.
-- **GPU:** Qwen AWQ revision pinned; vLLM/torch are installing in the project venv for a
-  non-study fit check. No study workload has run.
-- **Pending:** human 40-item audit (≥36/40) and the frozen `toolresult800_v1` manifest.
+- **GPU:** vLLM 0.33.0 / torch 2.14.0 installed in the project venv. Qwen2.5-7B-AWQ passed a
+  non-study fit check at 0.85/8k/batch 4; the updated trio (Qwen3.5-9B, Ministral-3-8B,
+  Llama-3.1-8B AWQ) is pinned and its fit checks are in progress. No study workload has run.
+- **Audit:** an AI pre-audit passes 40/40 mechanical checks; the official human sheet remains
+  blank and the gate is not claimed.
+- **Pending:** human 40-item audit (≥36/40), model-fit completion, and the frozen
+  `toolresult800_v1` manifest.
 
 ## The question
 

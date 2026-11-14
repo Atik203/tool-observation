@@ -42,6 +42,21 @@ to target-model outcomes.
 - **Blind to outcomes:** yes; no target-model outcomes have been generated.
 - **Record:** `docs/DECISIONS.md` D-009, D-010, D-011, D-013.
 
+## Pre-freeze model-trio note
+
+- **Date:** 2026-11-15
+- **Change:** The target trio is updated from Qwen2.5-7B / Mistral-7B-v0.3 / Llama-3.1-8B to
+  **Qwen3.5-9B-AWQ**, **Ministral-3-8B-Instruct-2512-AWQ**, and **Llama-3.1-8B-Instruct-AWQ-INT4**.
+  Qwen3.5-9B and Ministral-3-8B use public, high-download community AWQ/compressed-tensors builds
+  (Apache-2.0); Llama uses the high-download hugging-quants AWQ conversion. The study size class
+  becomes **8–9B**.
+- **Original text:** `prereg/PREREGISTRATION.md` §3 model row and the "7–8B" claim boundary.
+- **Replacement:** The claim is bounded to three open-weight **8–9B** families; the estimand,
+  severity levels, outcome labels, and analysis plan are unchanged.
+- **Analyses affected:** none beyond the model-family description. No target outcomes exist.
+- **Blind to outcomes:** yes; only non-study fit checks have run.
+- **Record:** `docs/DECISIONS.md` D-016; fit evidence in `docs/H200_ENV.md`.
+
 ## Status
 
 - **Frozen version:** TBD (tag `prereg-freeze-v1`, commit SHA + SHA-256 recorded at G0).

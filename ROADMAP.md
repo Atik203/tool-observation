@@ -29,6 +29,8 @@
 | Cross-platform reproduction | **DONE** | Local and H200 normalized hashes match for sample, rendered arms, perturbations, and calibration |
 | Frozen prefix payload | **DONE (preview)** | 880 scrubbed prefixes, 23 MB, five arm observations; hash recorded in dry-run |
 | Release packager | **DONE (gated)** | `10_release.py` verifies manifest/payload hashes and PII, then copies only scrubbed derived data; refuses without a passed audit |
+| Model trio update | **IN PROGRESS** | Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ pinned; Qwen2.5 fit passed; Qwen3.5 fit needs `max_num_seqs=8`; Ministral/Llama fit pending |
+| AI pre-audit | **DONE (draft)** | 40/40 mechanical checks pass; official human sheet remains blank; no gate claim |
 | Human audit | **PENDING** | 40-item packet and blank sheet generated; gate ≥36/40; `artifacts/audit/g0_audit_packet.csv` |
 | Freeze | **PENDING** | Blocked on audit; no `toolresult800_v1.json` yet; no target output generated |
 | H200 environment | **IN PROGRESS** | project clone + CPU venv + tests pass; Qwen AWQ pinned; vLLM 0.33.0 / torch 2.14.0 installing; fit check pending; no study workload |

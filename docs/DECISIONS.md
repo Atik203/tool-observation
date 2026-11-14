@@ -6,6 +6,30 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-016 — Updated 8–9B model trio pinned; fit checks in progress
+
+- **Date:** 2026-11-15
+- **Status:** provisional (pre-freeze; fit checks pending)
+- **Context:** The user asked to use updated, high-download community AWQ builds that fit the
+  18 GB slice. Official AWQ artifacts do not exist for Qwen3.5-9B or Ministral-3-8B; the
+  selected builds are public and Apache-2.0. The Llama build is the high-download hugging-quants
+  AWQ conversion of the official Llama-3.1-8B-Instruct weights.
+- **Decision:** Pin the trio:
+  - `cyankiwi/Qwen3.5-9B-AWQ-4bit` @ `e4d2d39cede8c5d1716d824cd843e2889c648083`
+  - `cyankiwi/Ministral-3-8B-Instruct-2512-AWQ-4bit` @ `563842192acb68a00b8864e3bfa5a3e740ece90c`
+  - `hugging-quants/Meta-Llama-3.1-8B-Instruct-AWQ-INT4` @ `db1f81ad4b8c7e39777509fac66c652eb0a52f91`
+  The study size class becomes **8–9B** (from 7–8B). Qwen2.5-7B remains only as a completed
+  environment fit check; it is not the confirmatory Qwen model.
+- **Fit status:** Qwen2.5-7B-AWQ passed at 0.85/8k/batch 4 (5.38 GiB weights, 7.76 GiB KV).
+  Qwen3.5-9B loaded (8.37 GiB weights, 73k-token KV) but needs `max_num_seqs=8` because of its
+  Mamba cache; the rerun is pending. Ministral-3-8B and Llama-3.1-8B fit checks are pending.
+- **Consequences:** This is a pre-freeze model-family amendment; no target outcomes exist. The
+  paper, data card, and prereg model table must be updated from 7–8B/Qwen2.5 to 8–9B/updated trio
+  before G1. If a new model fails to load or fit, fall back to the previous family with a logged
+  decision; do not select after seeing outcomes.
+
+---
+
 ## D-015 — Qwen AWQ revision pinned; non-study H200 fit check authorized
 
 - **Date:** 2026-11-15

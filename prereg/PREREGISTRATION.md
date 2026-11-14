@@ -20,7 +20,7 @@ The pilot is a screening signal, not a dose-response estimate. It used one model
 prefixes, coarse action coding, and no recovery data.
 
 The confirmatory object is the **within-prefix causal effect of tool-observation content on the
-next decision, graded by severity**, across real τ-bench prefixes, three open-weight 7–8B model
+next decision, graded by severity**, across real τ-bench prefixes, three open-weight 8–9B model
 families, and two task domains; plus a four-step recovery estimate. The study does **not** claim
 a universal law, a model ranking, transfer to frontier models, or an end-to-end task-success
 effect.
@@ -48,14 +48,14 @@ target: if it fails, the paper reports the recovery curve and restricted mean su
 | Unit | A frozen message prefix ending immediately after a real τ-bench tool observation |
 | Sample | **800 prefixes**: 400 airline + 400 retail; 80 held in reserve; seed `20261108` |
 | Harvest frame | 1,980 public τ-bench trajectories; 13,605 candidate post-tool decision points; 6,554 eligible value-used observations expected |
-| Models | Qwen2.5-7B-Instruct-AWQ; Mistral-7B-Instruct-v0.3-AWQ; Llama-3.1-8B-Instruct-AWQ |
+| Models | Qwen3.5-9B-AWQ; Ministral-3-8B-Instruct-2512-AWQ; Llama-3.1-8B-Instruct-AWQ-INT4 |
 | Model substitution | If Llama-3.1 access fails, InternLM2.5-7B-Chat or Yi-1.5-9B-Chat, pre-registered before G1 |
 | Arms | **V** verbatim JSON; **s=0** faithful prose; **s=1** one non-critical change; **s=2** one critical wrong value; **s=3** critical change + contradiction |
 | Recovery | H=4 steps; transient injection primary; persistent injection on 25% of prefixes at `s=3` |
 | Generation envelope | 34,800: 12,000 base + 19,200 transient recovery + 2,400 persistent + 1,200 jitter repeats |
 | Decoding | Greedy (T=0), fixed seed, fixed prompt and parser version |
 | Prefix source | Real τ-bench historical trajectories; target models never generate or repair prefixes |
-| Donor separation | Prefix donors are gpt-4o and claude-3.5-sonnet; target models are open-weight 7–8B models |
+| Donor separation | Prefix donors are gpt-4o and claude-3.5-sonnet; target models are open-weight 8–9B models |
 
 The full sampling, replay, renderer, and audit procedures are frozen at G0 and specified in
 `docs/PROTOCOL.md`.
