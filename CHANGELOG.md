@@ -20,8 +20,11 @@ the v1.0 dataset and paper release.
 - Trajectory parser that reproduces the preregistered frame (13,605 candidates; 11,318
   JSON-parseable; 3,692 profile-tool candidates) and materializes hash-verified prefixes from
   the pinned checkout.
+- Automatic value-used relevance with a draft path-based PII policy, and a deterministic PII
+  scrubber with a leak scan. Draft output: 5,516 eligible (airline 1,434; retail 4,082), zero
+  residual direct identifiers.
 - Contract tests for hashing, schemas, config invariants, paths, CLI, field registry, pinning,
-  and parsing.
+  parsing, relevance, and scrubbing.
 
 ### Planned
 

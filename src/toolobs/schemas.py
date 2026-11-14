@@ -66,6 +66,14 @@ class PrefixRecord(RecordMixin):
     step_index_bucket: str = ""
     used_fields: list[dict[str, Any]] = field(default_factory=list)
     critical_fields: list[str] = field(default_factory=list)
+    noncritical_fields: list[str] = field(default_factory=list)
+    pii_fields: list[str] = field(default_factory=list)
+    exclusion_reason: str = ""
+    scrubbed_observation_json: str = ""
+    scrubbed_factual_continuation: str = ""
+    scrubbed_observation_hash: str = ""
+    scrubbed_prefix_hash: str = ""
+    pii_token_count: int = 0
     perturbations: list[str] = field(default_factory=list)
     renderer_version: str = ""
     arm: str = ""

@@ -51,6 +51,10 @@ PROFILE_TOOLS = frozenset(
     }
 )
 
+# Tools whose next action directly targets a PII field. A prefix from one of
+# these tools is excluded when its used content is PII, even after scrubbing.
+PII_TARGET_TOOLS = frozenset({"modify_pending_order_address", "update_reservation_passengers"})
+
 TOOL_FAMILIES: dict[str, str] = {
     # airline
     "book_reservation": "write",
@@ -439,12 +443,17 @@ class TrajectoryStore:
             self._cache[relative] = {item.trajectory_id: item for item in trajectories}
         return self._cache[relative]
 
-    def materialize(self, record: PrefixRecord) -> list[dict[str, Any]]:
-        """Return the exact prefix messages and verify the stored hash."""
+    def get_trajectory(self, record: PrefixRecord) -> Trajectory:
+        """Return the source trajectory for a candidate."""
         trajectories = self._load(record.source_file)
         trajectory = trajectories.get(record.trajectory_id)
         if trajectory is None:
             raise ParseError(f"trajectory not found: {record.trajectory_id}")
+        return trajectory
+
+    def materialize(self, record: PrefixRecord) -> list[dict[str, Any]]:
+        """Return the exact prefix messages and verify the stored hash."""
+        trajectory = self.get_trajectory(record)
         prefix = trajectory.messages[: record.message_index + 1]
         actual = sha256_record(prefix)
         if actual != record.prefix_hash:

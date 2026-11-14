@@ -124,8 +124,10 @@ The protocol is:
    emails, addresses, phones, and payment identifiers with stable synthetic tokens. Exclude a
    prefix if decision-relevant content is itself PII.
 4. **Relevance.** Flatten scalar values from the observation and test which appear in the
-   donor's factual continuation after normalization. Keep prefixes with at least one used field.
-   This is the automatic criticality label used to build s=1 and s=2.
+   donor's factual continuation after normalization. Keep prefixes with at least one used
+   non-PII field. Used fields are the automatic criticality label used to build s=1 and s=2;
+   PII is scrubbed, and a prefix is excluded only when PII is the sole used content or the tool
+   directly targets a PII field.
 5. **Replay.** Load the task DB, execute the prefix's tool calls from the initial state, and
    compare the last observation to the historical one (hash plus normalized values). Keep only
    ≥98% matches. Replay is what makes the observation a real environment output and makes the

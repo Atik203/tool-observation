@@ -6,6 +6,32 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-010 — Draft automatic relevance and PII policy; airline supply risk
+
+- **Date:** 2026-11-15
+- **Status:** provisional (not frozen)
+- **Context:** The field registry covers only a subset of tools and uses conceptual field
+  names that do not map one-to-one to the JSON paths emitted by τ-bench. The operational
+  pipeline therefore uses the preregistered value-used rule as the automatic criticality
+  label, with a path-based PII policy as a draft overlay.
+- **Decision:** A scalar field is used when its normalized value appears in the donor's
+  continuation surface (answer content or tool-call arguments) after NFKC, case, whitespace,
+  digit-comma, and numeric normalization. Used non-PII fields are critical; unused non-PII
+  fields are noncritical. PII paths are scrubbed with deterministic tokens. A candidate is
+  excluded if the tool is a profile tool, the observation is text-only, no non-PII field is
+  used, or the only used content is PII; a PII-target tool (`modify_pending_order_address`,
+  `update_reservation_passengers`) is excluded when its used content is PII. Incidental PII
+  that is scrubbed does not by itself exclude a prefix.
+- **Observed (draft):** 5,516 eligible (airline 1,434; retail 4,082); at the 10/task cap,
+  airline 442 and retail 1,144. This is below the 6,554 planning figure in `configs/harvest.yaml`
+  but above the G0 880 floor. Airline is only two above the 440 pre-audit floor before replay.
+- **Consequences:** Replay must be run before sampling; if airline cap-10 after replay is below
+  440, the G0 fallback (500 prefixes / 2 models) or a prereg amendment is required. The final
+  field-registry path mapping, the `payment_method_id` critical-versus-PII decision, and the
+  registry coverage remain open. Do not freeze the manifest until those decisions are logged.
+
+---
+
 ## D-009 — G0 candidate definition and profile-tool exclusion set
 
 - **Date:** 2026-11-15

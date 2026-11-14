@@ -183,6 +183,33 @@ domains:
             rationale: "Payment identifiers; tool excluded from harvest."
         note: "Profile tool. All observations excluded before eligibility."
 
+path_policy:
+  # Draft path patterns used by the automatic relevance and PII scrubber.
+  # Frozen only after the field-registry decision at G0.
+  version: path-policy-v1-draft
+  status: draft
+  pii:
+    - "$.user_id"
+    - "$.passengers[].first_name"
+    - "$.passengers[].last_name"
+    - "$.passengers[].dob"
+    - "$.saved_passengers[].first_name"
+    - "$.saved_passengers[].last_name"
+    - "$.saved_passengers[].dob"
+    - "$.payment_history[].payment_id"
+    - "$.payment_history[].payment_method_id"
+    - "$.exchange_payment_method_id"
+    - "$.return_payment_method_id"
+    - "$.address.address1"
+    - "$.address.address2"
+    - "$.address.city"
+    - "$.address.zip"
+    - "$.email"
+    - "$.name.first_name"
+    - "$.name.last_name"
+    - "$.dob"
+    - "$.payment_methods.*"
+
 severity_construction:
   s1:
     rule: "Choose one noncritical field, change or omit it, and verify it is absent from the donor's factual continuation."
