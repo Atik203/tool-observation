@@ -2,8 +2,9 @@
 
 Replay starts from a fresh task database, executes every assistant tool call in
 the frozen prefix in order, and compares the final tool output with the
-historical observation. It never calls a model or the user simulator: the
-``litellm`` import is stubbed because τ-bench imports it at module load time.
+historical observation. It never calls a model or the user simulator. The
+pinned data and tool modules are loaded directly, so τ-bench's package
+``__init__`` and its optional model dependencies are not imported.
 
 A match is exact string equality or normalized JSON/text equality. The
 normalized comparison rounds floats and sorts object keys so JSON formatting
@@ -12,7 +13,7 @@ and insignificant float noise do not count as mismatches.
 
 from __future__ import annotations
 
-import importlib
+import importlib.util
 import json
 import sys
 import types
@@ -26,35 +27,50 @@ from ..harvest.relevance import normalize_text
 from ..hashing import canonical_json, sha256_text
 from ..schemas import PrefixRecord
 
-DOMAIN_MODULES: dict[str, tuple[str, str, str, str]] = {
-    "airline": (
-        "tau_bench.envs.airline.data",
-        "load_data",
-        "tau_bench.envs.airline.tools",
-        "ALL_TOOLS",
-    ),
-    "retail": (
-        "tau_bench.envs.retail.data",
-        "load_data",
-        "tau_bench.envs.retail.tools",
-        "ALL_TOOLS",
-    ),
-}
-
 TERMINATE_TOOLS = frozenset({"transfer_to_human_agents"})
 
 
-def _install_litellm_stub() -> None:
-    """Install a no-call stub before τ-bench imports its user simulator."""
-    if "litellm" in sys.modules:
-        return
-    stub = types.ModuleType("litellm")
+def _ensure_package(name: str, path: Path) -> types.ModuleType:
+    """Create a package shim without executing τ-bench's ``__init__``."""
+    if name in sys.modules:
+        return sys.modules[name]
+    module = types.ModuleType(name)
+    module.__path__ = [str(path)]
+    module.__package__ = name
+    sys.modules[name] = module
+    return module
 
-    def completion(*args: Any, **kwargs: Any) -> Any:
-        raise RuntimeError("litellm is stubbed; replay never calls a model")
 
-    stub.completion = completion
-    sys.modules["litellm"] = stub
+def _load_module(name: str, path: Path) -> types.ModuleType:
+    """Load a pinned τ-bench module directly from its file."""
+    spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load module {name} from {path}")
+    module = importlib.util.module_from_spec(spec)
+    if path.name == "__init__.py":
+        module.__path__ = [str(path.parent)]
+        module.__package__ = name
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _load_domain(root: Path, domain: str) -> tuple[Any, list[Any]]:
+    """Load the pinned data loader and tool classes for one domain."""
+    _ensure_package("tau_bench", root / "tau_bench")
+    _ensure_package("tau_bench.envs", root / "tau_bench" / "envs")
+    _ensure_package(f"tau_bench.envs.{domain}", root / "tau_bench" / "envs" / domain)
+    if "tau_bench.envs.tool" not in sys.modules:
+        _load_module("tau_bench.envs.tool", root / "tau_bench" / "envs" / "tool.py")
+    data_module = _load_module(
+        f"tau_bench.envs.{domain}.data",
+        root / "tau_bench" / "envs" / domain / "data" / "__init__.py",
+    )
+    tools_module = _load_module(
+        f"tau_bench.envs.{domain}.tools",
+        root / "tau_bench" / "envs" / domain / "tools" / "__init__.py",
+    )
+    return data_module.load_data, list(tools_module.ALL_TOOLS)
 
 
 def normalize_json(value: Any) -> Any:
@@ -168,16 +184,11 @@ class TauBenchReplay:
     """Replay harness for one τ-bench domain."""
 
     def __init__(self, upstream_dir: str | Path, domain: str) -> None:
-        if domain not in DOMAIN_MODULES:
+        if domain not in {"airline", "retail"}:
             raise ValueError(f"unknown domain: {domain}")
         self.root = Path(upstream_dir).resolve()
-        _install_litellm_stub()
-        if str(self.root) not in sys.path:
-            sys.path.insert(0, str(self.root))
-        data_module, data_attr, tools_module, tools_attr = DOMAIN_MODULES[domain]
         self.domain = domain
-        self._load_data = getattr(importlib.import_module(data_module), data_attr)
-        tools = getattr(importlib.import_module(tools_module), tools_attr)
+        self._load_data, tools = _load_domain(self.root, domain)
         self._tools = {tool.get_info()["function"]["name"]: tool for tool in tools}
 
     def replay_messages(self, messages: list[dict[str, Any]], historical: str) -> ReplayResult:
