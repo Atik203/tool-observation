@@ -22,10 +22,40 @@ instead of editing around it.
 - **Package:** `toolobs` in `src/toolobs/` (src layout).
 - **Local GPU:** RTX 3060, 6 GB. Use it for import/smoke tests and tiny forward passes only.
   Do not attempt the main run locally.
-- **Main run:** a single 24 GB rental (RTX 3090/4090), AWQ 4-bit, vLLM, batch 8–16, 8–12k
-  context. One model at a time.
+- **Approved project GPU:** H200 MIG 1g.18gb slice, 18 GB VRAM, driver 580.178.04, CUDA 13.5.
+  Access only via the `uiu-h200` SSH alias. See §2.1.
+- **Legacy rental plan:** older documents describe a single 24 GB RTX 3090/4090 rental. Do not
+  book or spend on it without a logged decision; the approved resource is the H200 slice.
+- **Fit check:** the 18 GB slice is below the older 24 GB assumption. Before G1/G2, verify that
+  the pinned AWQ model, context, and batch fit. Any reduction in batch, context, sample, or model
+  set is a logged decision and, if it affects the analysis, a prereg amendment.
 - The repository must import and run `pytest` without numpy, pandas, yaml, torch, or vLLM.
   Keep heavyweight imports lazy.
+
+## 2.1 University GPU access — `uiu-h200`
+
+**Scope:** this resource is for this project only. These rules apply to every agent and session.
+If an action is not explicitly allowed here, ask the user for permission first.
+
+- **Access:** SSH via the local alias `uiu-h200` only. Do not expose ports or create another
+  connection method.
+- **GPU:** H200 MIG 1g.18gb, 18 GB VRAM maximum. Use only this slice.
+- **Driver / CUDA:** NVIDIA driver 580.178.04; CUDA 13.5. Do not change, overwrite, reinstall, or
+  upgrade either; do not replace system libraries.
+- **Do not change:** GPU clocks, power limits, MIG settings, SSH daemon, host keys, account name,
+  login method, or other users' authorized_keys.
+- **Storage:** 200 GB maximum. Check `df -h` and `du -sh`; stay inside the project space; do not
+  change mounts, quotas, or permissions; do not delete other users' files.
+- **Python:** use a project-local venv or conda environment only. No system-wide packages or
+  `sudo` without administrator approval.
+- **Jobs:** use `tmux` or `screen`; stop idle GPU jobs. No mining, public services, port scanning,
+  or unrelated workloads.
+- **Secrets:** never commit a server address, hostname, username, account ID, password, SSH key,
+  or host fingerprint. Allowed identifiers: `uiu-h200`, `H200 1g.18gb`, driver `580.178.04`,
+  CUDA `13.5`.
+- **Policy:** follow the university's monitoring, acceptable-use, and data-handling policies.
+- **Change control:** record approved hardware, driver, CUDA, or environment changes in
+  `docs/DECISIONS.md` before confirmatory work.
 
 ## 3. Never commit
 
@@ -34,6 +64,8 @@ instead of editing around it.
 - raw τ-bench trajectories or any unscrubbed tool output
 - PII, names, emails, addresses, phone numbers, payment identifiers
 - `.env`, tokens, API keys, SSH keys, rental credentials, cloud configs
+- university GPU server addresses, hostnames, usernames, account IDs, host fingerprints, or
+  session credentials
 - large binary artifacts (parquet releases belong in the release process, not git)
 
 `data/manifests/` is tracked, but only for small, non-PII JSON/YAML manifests and hashes.

@@ -6,6 +6,25 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-007 — University H200 MIG slice approved for project execution
+
+- **Date:** 2026-11-14
+- **Status:** accepted
+- **Context:** The project has been granted access to a shared university GPU server. The
+  approved resource is an H200 MIG 1g.18gb slice with 18 GB VRAM, driver 580.178.04, CUDA 13.5.
+  This is below the older 24 GB rental assumption in the roadmap.
+- **Decision:** Use only the `uiu-h200` SSH alias and the H200 1g.18gb slice for project GPU
+  work. Keep the Python environment project-local. Follow the storage, job, secret, and
+  change-control rules in `AGENTS.md` §2.1. Do not change the driver, CUDA, MIG settings, clocks,
+  power limits, SSH configuration, or other users' files.
+- **Consequences:** Calibration and main-run work use the 18 GB slice. Before G1/G2, verify that
+  the pinned AWQ model, context, and batch fit; any reduction in batch, context, sample, or model
+  set is a logged decision and, if it affects the analysis, a prereg amendment. The older 24 GB
+  rental is not booked without a new decision. No server address, hostname, username, account ID,
+  password, SSH key, or host fingerprint is committed.
+
+---
+
 ## D-006 — Dataset brand is ToolResult-800; E2 retired
 
 - **Date:** 2026-11-11
