@@ -4,9 +4,9 @@
 Input:  frozen manifest, perturbations, configs/calibration.yaml or main.yaml
 Output: data/runs/{calibration,main}/ledger.jsonl and raw traces
 
-G1: 60 prefixes x 3 models; parse >= 95%, placebo jitter <= 20%,
+G1: 60 prefixes x 5 arms x 3 models; parse >= 95%, placebo jitter <= 20%,
     s=3 switch 10-80%, refusal < 5%.
-P2: 34,800-generation envelope; stop at $22 or 45 GPU-hours.
+P2: 34,800-generation envelope; stop at 45 GPU-hours or 200 GB storage.
 
 Every generation writes one ledger row. No result may be reported without a row.
 

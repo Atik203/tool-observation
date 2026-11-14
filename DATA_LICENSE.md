@@ -41,7 +41,7 @@ the upstream τ-bench source, and should indicate whether changes were made.
 
 - Raw τ-bench trajectories. Users obtain them from upstream under the upstream license.
 - Unscrubbed observations or any file containing PII.
-- Model weights, adapters, caches, or rental credentials.
+- Model weights, adapters, caches, or GPU credentials.
 - Third-party content that the project has no right to re-license.
 
 ## PII

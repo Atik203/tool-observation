@@ -423,7 +423,7 @@ export default function Home() {
             <h3 className="text-base font-bold flex items-center gap-2">
               <ListChecks className="w-4 h-4 text-teal-700 dark:text-teal-300" aria-hidden /> Phase plan
             </h3>
-            <span className="font-mono text-xs text-muted-foreground">$23 base / $50 hard cap · stop at $22 or 45 GPU-h</span>
+            <span className="font-mono text-xs text-muted-foreground">$0 cash · 45 GPU-hour / 200 GB stop</span>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-2">
             {phases.map((phase) => (

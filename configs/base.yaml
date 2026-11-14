@@ -28,7 +28,7 @@ python:
 
 runtime:
   local_gpu: "RTX 3060 6GB (smoke tests only)"
-  main_gpu: "24GB RTX 3090/4090 rental"
+  main_gpu: "uiu-h200 H200 1g.18gb (18 GB VRAM)"
   paid_api: false
   timezone: Asia/Dhaka
 

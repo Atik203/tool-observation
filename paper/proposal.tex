@@ -61,7 +61,7 @@ prose, a non-critical change, a plausible critical error, and a critical error p
 contradiction. Three open-weight 7--8B model families will answer every arm under greedy decoding.
 We will estimate whether the probability of a decision change rises with error severity and how
 quickly the agent recovers over four subsequent steps. The study will be pre-registered, gated, and
-budgeted at \$23 base with a \$50 hard cap. A null result will be reported as a measurement result.
+run at \$0 cash on a university H200 slice. A null result will be reported as a measurement result.
 
 \section{Motivation}
 
@@ -323,15 +323,17 @@ expected behaviour is to flag the conflict or verify the value.
 \subsection{Models and inference}
 The confirmatory run uses three open-weight model families: Qwen2.5-7B-Instruct-AWQ,
 Mistral-7B-Instruct-v0.3-AWQ, and Llama-3.1-8B-Instruct-AWQ. All are 4-bit AWQ quantized and served
-one at a time under greedy decoding on a single 24~GB RTX 3090 or 4090 rental, with batch sizes of
-8--16 and a pinned 8k context. The local RTX 3060 (6~GB) is used only for imports, smoke tests,
+one at a time under greedy decoding on a single H200 1g.18gb slice (18~GB VRAM), with batch sizes
+of 8--16 and a pinned 8k context. The 18~GB slice is below the older 24~GB assumption; verify the
+pinned model, 8k context, and batch fit before G1/G2. The local RTX 3060 (6~GB) is used only for
+imports, smoke tests,
 renderer checks, and tiny forward passes. Model revisions are pinned before calibration. If
 Llama-3.1 access fails, the pre-registered substitutes are InternLM2.5-7B-Chat or Yi-1.5-9B-Chat,
 recorded before calibration and never selected after seeing target-model outcomes. Calibration is a
 harness check, not a result. It uses 60 prefixes (30 per domain), five arms, and
 three models, for 900 generations. The per-model gates are: parse rate at least 95\%, placebo
 jitter at most 20\%, $s=3$ switch rate between 10\% and 80\%, and format refusal below 5\%. No
-main-run spend occurs before calibration passes. Calibration prefixes are disjoint from the main
+main-run start occurs before calibration passes. Calibration prefixes are disjoint from the main
 800 and stay out of the primary analysis.
 
 \subsection{Outcomes and analysis}
@@ -403,8 +405,8 @@ criteria and the consequence of failure.
 Gate & When & Pass criterion & If it fails \\
 \midrule
 G0 & End of week 2 & At least 880 eligible; at least 440 per domain before audit and 400 after audit; replay at least 98\%; 40-item audit at least 36/40. & Fall back to 500 prefixes and 2 models, or stop. \\
-G1 & Week 3 & Parse at least 95\%; placebo jitter at most 20\%; $s=3$ switch 10--80\%; refusal below 5\% per model. & Fix prompt or parser and rerun; no main spend. \\
-G2 & Weeks 4--7 & Stop at \$22 spend or 45 GPU-hours, whichever comes first; ledger complete. & Analyse completed shards; disclose the shortfall. \\
+G1 & Week 3 & Parse at least 95\%; placebo jitter at most 20\%; $s=3$ switch 10--80\%; refusal below 5\% per model. & Fix prompt or parser and rerun; no main-run start. \\
+G2 & Weeks 4--7 & Stop at 45 GPU-hours or 200~GB storage, whichever comes first; ledger complete. & Analyse completed shards; disclose the shortfall. \\
 G3 & Weeks 8--10 & Pooled $\beta>0$; positive in at least 2 of 3 models with the same sign; severity $\alpha \ge .75$; outcome $\kappa \ge .80$ (or adjudicated at least .70 with downgrade); recovery $\kappa \ge .75$. & Null or measurement paper; no content-sensitivity claim. \\
 G4 & Weeks 9--10 & At least 50\% of the $s=3$ risk set recovers by $H=4$; Weibull shape not rejected at $p \ge .01$. & Report RMST and the curve; $t_{1/2}$ exploratory only. \\
 \bottomrule
@@ -418,17 +420,19 @@ relevance, replay, sample 880, render, audit, and freeze the manifest and prereg
 3) is calibration. P2 (weeks 4--7) is the main run. P3 (weeks 6--10) covers labels and analysis,
 beginning as soon as the first main-run shard lands. P4 (weeks 9--14) is the paper, beginning when
 the primary slope is estimable. P5 (weeks 15--18) is the ToolResult-800 release. The first step is the
-ten-day G0 sprint, which is CPU-only, costs \$0, and can invalidate the study before any GPU spend.
+ten-day G0 sprint, which is CPU-only, costs \$0, and can invalidate the study before any GPU
+allocation.
 
 The main run is 34,800 generations: 12,000 base decisions (800 prefixes $\times$ 5 arms $\times$ 3
 models), 19,200 transient recovery steps (800 $\times$ 2 severities $\times$ 4 steps $\times$ 3
 models), 2,400 persistent recovery steps (200 $\times$ 1 severity $\times$ 4 steps $\times$ 3
 models), and 1,200 jitter repeats (80 $\times$ 5 arms $\times$ 3 models). The runner checkpoints
 every 40 prefixes, appends one ledger row per generation, and resumes after an interruption without
-overwriting completed rows. A parser-error rate above 5\% in a shard fails fast. The budget is \$23 base with a \$50 hard cap. The GPU line is budgeted at \$15--22 for 35--45 hours
-on one 24~GB RTX 3090/4090, with a \$22 stop; storage and egress are \$2--3; contingency is \$3--5;
-annotation is about 200 team judgments at \$0; local CPU work is 20--30 hours at \$0; and there is
-no paid API. The repository is currently at scaffold version 0.1.0. No confirmatory data have been
+overwriting completed rows. A parser-error rate above 5\% in a shard fails fast. The cash budget is
+\$0: the university provides the H200 1g.18gb slice. The run is 35--45 GPU-hours and stops at
+45 GPU-hours or 200~GB storage. Annotation is about 200 team judgments at \$0; local CPU work is
+20--30 hours at \$0; and there is no paid API. The repository is currently at scaffold version
+0.1.0. No confirmatory data have been
 collected, the pipeline entry points are stubs, and no gate has been run.
 
 \section{Expected Outcome}

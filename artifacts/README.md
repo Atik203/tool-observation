@@ -8,8 +8,8 @@ track.
 |---|---|
 | `audit/` | G0 40-item audit, scrub report, replay report, G1 calibration report, label audits |
 | `analysis/` | Slope tables, recovery curves, κ/α reports, figures, notebooks, G3/G4 reports |
-| `env/` | Rental contract, driver/CUDA/vLLM versions, environment snapshots, lock provenance |
-| `cost/` | Per-shard and cumulative GPU-hour/spend ledgers, G2 stop records |
+| `env/` | H200 environment record, driver/CUDA/vLLM versions, environment snapshots, lock provenance |
+| `cost/` | Per-shard and cumulative GPU-hour/storage ledgers, G2 stop records |
 | `paper/` | Generated figures and tables for the manuscript |
 
 ## Rules
@@ -20,7 +20,7 @@ track.
 - Do not hand-edit a generated table. Regenerate it from the pipeline.
 - Audit and analysis artifacts may contain model outputs. Treat them as potentially sensitive
   until scrubbed; never commit free text from a trajectory.
-- Cost artifacts are the evidence for the $23 base / $50 cap and the $22/45-hour stop.
+- Cost artifacts are the evidence for the $0 cash budget and the 45 GPU-hour / 200 GB stop.
 - The release package is built from a clean checkout plus local data after a PII re-scan; do not
   publish `artifacts/` wholesale.
 

@@ -24,7 +24,8 @@ is written before G1 and frozen at G0; it is the authority for the confirmatory 
 6. Outcome coding and label audit thresholds.
 7. Analysis plan, multiplicity sequence, and linearity/Weibull checks.
 8. Gates G0–G4 and stop conditions.
-9. Budget ($23 base / $50 cap) and compute envelope (34,800 generations, 35–45 GPU-hours).
+9. Budget ($0 cash on the university H200 slice) and compute envelope (34,800 generations,
+   35-45 GPU-hours; 45 GPU-hour / 200 GB stop).
 10. Deviations and reporting policy.
 
 ## Rules

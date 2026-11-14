@@ -45,22 +45,24 @@ generation_budget:
   total: 34800
 
 budget:
+  gpu_resource: "uiu-h200 H200 1g.18gb (18 GB VRAM)"
   gpu_hours_min: 35
   gpu_hours_max: 45
-  gpu_hourly_min_usd: 0.30
-  gpu_hourly_max_usd: 0.50
-  gpu_cost_min_usd: 15
-  gpu_cost_max_usd: 22
-  storage_egress_usd_min: 2
-  storage_egress_usd_max: 3
-  contingency_usd_min: 3
-  contingency_usd_max: 5
-  base_usd: 23
-  hard_cap_usd: 50
-  stop_at_spend_usd: 22
+  gpu_hourly_min_usd: 0
+  gpu_hourly_max_usd: 0
+  gpu_cost_min_usd: 0
+  gpu_cost_max_usd: 0
+  storage_egress_usd_min: 0
+  storage_egress_usd_max: 0
+  contingency_usd_min: 0
+  contingency_usd_max: 0
+  base_usd: 0
+  hard_cap_usd: 0
+  stop_at_spend_usd: 0
   stop_at_gpu_hours: 45
+  storage_cap_gb: 200
   paid_api: false
-  second_rental: false
+  second_gpu: false
 
 execution:
   engine: vllm

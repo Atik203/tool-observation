@@ -6,6 +6,22 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-008 — Cash budget is $0 on the university H200 slice
+
+- **Date:** 2026-11-14
+- **Status:** accepted
+- **Context:** The approved H200 1g.18gb slice is university-provided, so the project no longer
+  needs a paid GPU rental. The old $23 base / $50 hard cap / $22 stop described a rental that will
+  not be booked.
+- **Decision:** The project cash budget is **$0**. Use the H200 slice for 35–45 GPU-hours. The
+  operational stop is **45 GPU-hours or 200 GB storage**, whichever comes first. No paid API,
+  no second GPU, and no paid annotation. The 18 GB fit check remains in force before G1/G2.
+- **Consequences:** Docs, configs, paper, and site now state $0 cash. The old rental budget is
+  historical only. Any paid resource requires a new decision and, if it affects the analysis, a
+  prereg amendment.
+
+---
+
 ## D-007 — University H200 MIG slice approved for project execution
 
 - **Date:** 2026-11-14
@@ -99,8 +115,9 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   and run data stay under `data/` and are gitignored. Only manifests, docs, code, and governance
   files are tracked. The public repo is `Atik203/tool-observation`.
 - **Consequences:** Do not place raw data or weights in the repo. Do not modify
-  `E:\PROJECT\Research-Ideas` or `E:\PROJECT\energy-optimal-rag`. Storage/egress is budgeted at
-  $2–3; large caches are deleted after hashes and ledgers are archived.
+  `E:\PROJECT\Research-Ideas` or `E:\PROJECT\energy-optimal-rag`. Storage/egress is now $0 within
+  the university allocation (D-008); large caches are deleted after hashes and ledgers are
+  archived.
 
 ---
 

@@ -170,16 +170,17 @@ recovery. No prefix is dropped after seeing target-model outcomes without a logg
 | Gate | Criterion | Fail action |
 |---|---|---|
 | **G0** | ≥880 eligible; ≥440/domain pre-audit; ≥400/domain post-audit; replay ≥98%; 40-item audit ≥36/40; freeze hash stable | Fallback 500 prefixes/2 models or stop |
-| **G1** | Parse ≥95%; placebo jitter ≤20%; `s=3` switch 10–80%; refusal <5% per model | Stop and fix; no main spend |
-| **G2** | Main run completes within $22 or 45 GPU-hours | Analyze completed shards; disclose |
+| **G1** | Parse ≥95%; placebo jitter ≤20%; `s=3` switch 10–80%; refusal <5% per model | Stop and fix; no main-run start |
+| **G2** | Main run completes within 45 GPU-hours and 200 GB storage | Analyze completed shards; disclose |
 | **G3** | Pooled `β > 0`; positive in ≥2/3 models with the same sign; severity `α ≥ .75`; outcome `κ ≥ .80` (or adjudicated `.70–.80` with downgrade); recovery `κ ≥ .75` | Null/measurement paper |
 | **G4** | ≥50% recovery events by H=4; Weibull shape not rejected (`p ≥ .01`) | Report RMST/curve; `t½` exploratory |
 
 ## 10. Budget and compute
 
-35–45 GPU-hours on a single 24 GB rental at $0.30–0.50/h ($15–22), storage/egress $2–3,
-contingency $3–5; **$23 base / $50 hard cap**. No paid API, no second GPU, no paid annotation.
-Local CPU 20–30 hours for harvest, replay, analysis, and writing.
+35–45 GPU-hours on the university H200 1g.18gb slice at **$0 cash**; storage stays within the
+200 GB project allocation; no paid API, no second GPU, no paid annotation. Local CPU 20–30 hours
+for harvest, replay, analysis, and writing. The 18 GB slice is below the older 24 GB assumption;
+verify the pinned model, 8k context, and batch fit before G1/G2.
 
 ## 11. Deviations, reporting, and availability
 

@@ -16,15 +16,16 @@ An LLM agent calls a tool, reads the observation, and decides what to do next. I
 
 This study isolates the moment after the observation. We freeze a real τ-bench conversation immediately after a real tool output, keep the prefix identical, and vary only the observation's content across five arms. Each prefix is its own control. We then follow the episode for four steps to estimate recovery.
 
-The sample is **800 real τ-bench prefixes** (400 airline, 400 retail), plus 80 reserve, tested on three open-weight 7–8B model families with greedy decoding. The main run is 34,800 generations on one 24 GB GPU. The primary analysis is a conditional logistic regression (a within-prefix comparison) of a decision switch on severity, with prefix fixed effects and standard errors clustered by prefix. Recovery uses a discrete-time survival model, an exponential half-life, a Weibull shape check, and an RMST fallback (average recovery time).
+The sample is **800 real τ-bench prefixes** (400 airline, 400 retail), plus 80 reserve, tested on three open-weight 7–8B model families with greedy decoding. The main run is 34,800 generations on the university H200 1g.18gb slice (18 GB VRAM).
+The primary analysis is a conditional logistic regression (a within-prefix comparison) of a decision switch on severity, with prefix fixed effects and standard errors clustered by prefix. Recovery uses a discrete-time survival model, an exponential half-life, a Weibull shape check, and an RMST fallback (average recovery time).
 
 The study is pre-registered and gated (G0–G4); a null is a measurement result.
 
 **Why approve it.** The question is narrow, the design is paired, the supply is measured, the cost is small, and a negative result is publishable.
 
-**Deliverables and cost.** ToolResult-800, manifests, ledgers, a reproducibility package, a pre-registration, and a paper draft. The run is 35–45 GPU-hours ($15–22), plus $2–3 storage and $3–5 contingency: **$23 base / $50 hard cap**; 20–30 CPU hours; 18 weeks part-time.
+**Deliverables and cost.** ToolResult-800, manifests, ledgers, a reproducibility package, a pre-registration, and a paper draft. The run is 35-45 GPU-hours on the university H200 slice at **$0 cash**; storage stays within the 200 GB project allocation; no paid API. The operational stop is 45 GPU-hours or 200 GB storage. Local CPU work is 20-30 hours; 18 weeks part-time.
 
-**Decision requested.** Approve G0 now (CPU only, $0, ten working days) and the staged budget. Main-run GPU spend is released only after G0 and G1 pass; G1 itself is a small calibration shard.
+**Decision requested.** Approve G0 now (CPU only, $0, ten working days) and the staged GPU allocation. Main-run GPU use is released only after G0 and G1 pass; G1 itself is a small calibration shard on the H200 slice.
 
 ---
 
@@ -186,7 +187,7 @@ The source is the public **τ-bench** historical trajectories (MIT): gpt-4o airl
 
 If Llama-3.1 access fails, the pre-registered substitutes are InternLM2.5-7B-Chat or Yi-1.5-9B-Chat, logged before calibration and never chosen after seeing outcomes.
 
-Serving uses **vLLM** (an inference server), **AWQ 4-bit** weights (compression that fits a 7–8B model on 24 GB), and **greedy decoding** (always pick the most likely next token). Batch 8–16, 8–12k context, fixed seed, pinned revisions. The local RTX 3060 (6 GB) is only for smoke tests, renderer checks, and tiny forward passes. The models are open-weight, reproducible, fit one 24 GB rental, and come from distinct families; the design tests whether a result is family-specific.
+Serving uses **vLLM** (an inference server), **AWQ 4-bit** weights (compression that fits a 7-8B model in 18 GB with the pinned 8k context; verify fit before G1/G2), and **greedy decoding** (always pick the most likely next token). Batch 8-16, 8k context, fixed seed, pinned revisions. The local RTX 3060 (6 GB) is only for smoke tests, renderer checks, and tiny forward passes. The models are open-weight, reproducible, fit the H200 1g.18gb slice, and come from distinct families; the design tests whether a result is family-specific.
 
 ---
 
@@ -268,7 +269,7 @@ Human labels validate, not replace, automatic coding. Raters are blind to arm la
 
 If outcome κ falls between .70 and .80 after one revision, adjudicated labels are primary on the audit subsample and both analyses are reported. Below .70, the study drops the content-sensitivity claim.
 
-Calibration (G1) is a harness check: parse ≥95%, placebo jitter ≤20%, s=3 switch 10–80%, format refusal <5% per model. Failure: fix and rerun; no main spend.
+Calibration (G1) is a harness check: parse ≥95%, placebo jitter ≤20%, s=3 switch 10–80%, format refusal <5% per model. Failure: fix and rerun; no main-run start.
 
 ---
 
@@ -294,7 +295,7 @@ The claim is bounded: three open-weight 7–8B families, τ-bench airline and re
 |---|---|
 | **PI / research lead** | Design, pre-registration, gates, paper, supervisor communication. |
 | **Harvest and data lead** | Pin, parse, PII scrub, relevance, replay, sampling, freeze, data card. |
-| **Inference lead** | Rental, vLLM/AWQ, calibration, main run, ledger, cost stop. |
+| **Inference lead** | H200, vLLM/AWQ, calibration, main run, ledger, GPU-hour/storage stop. |
 | **Analysis and release lead** | Coding, audits, slope/survival models, figures, ToolResult-800 packaging. |
 
 With three people, the PI absorbs paper/release work and the analysis lead keeps the statistics; harvest and inference stay separate because they are schedule-critical.
@@ -312,15 +313,15 @@ P0 harvests, replays, samples, and freezes. P1 runs 60 prefixes × 5 arms × 3 m
 
 | Item | Specification | Cost |
 |---|---|---:|
-| GPU rental | 35–45 h on a 24 GB RTX 3090/4090; budgeted at $15–22 (market rate $0.30–0.50/h) | **$15–22** |
-| Storage / egress | ~60 GB weights, logs, traces | **$2–3** |
+| University H200 | 35–45 h on the `uiu-h200` H200 1g.18gb slice (18 GB VRAM) | **$0 cash** |
+| Storage | Within the 200 GB project allocation; ~60 GB expected | **$0 cash** |
 | Annotation | ~200 judgments by team members | **$0** |
-| Contingency | GPU or storage overrun | **$3–5** |
-| **Total** | $18 GPU + $2 storage + $3 contingency | **$23 base / $50 hard cap** |
+| Contingency | None; no paid rental or paid API | **$0** |
+| **Total** | University-provided GPU; operational stop at 45 GPU-hours / 200 GB | **$0 cash** |
 | Local CPU | Harvest, replay, analysis, writing: 20–30 h | **$0** |
 | Paid API | None | **$0** |
 
-The rental needs 24 GB VRAM, 32 GB RAM, 60 GB disk, a compatible CUDA stack, SSH or job API, resumable uploads, and a spend dashboard. The run stops at **$22** or **45 GPU-hours**, whichever first; no second rental, no paid API. If a 24 GB instance is unavailable at ≤$0.50/h, the fallback is a $0.89/h secure 4090 at 30 GPU-hours with N=600 or no persistent arm.
+The H200 slice provides 18 GB VRAM, 200 GB project storage, driver 580.178.04, and CUDA 13.5. Access is only via `uiu-h200`; the Python environment is project-local; use `tmux` or `screen`; do not change the driver, CUDA, MIG settings, clocks, power limits, or system libraries. Verify the pinned AWQ model, 8k context, and batch fit before G1/G2. The run stops at **45 GPU-hours or 200 GB storage**; no second GPU and no paid API. If the slice is unavailable or the fit fails, reduce batch/context first; if still infeasible, reduce N or drop persistent with a logged decision/amendment. Do not book a paid rental without a new decision.
 
 ---
 
@@ -332,11 +333,11 @@ The rental needs 24 GB VRAM, 32 GB RAM, 60 GB disk, a compatible CUDA stack, SSH
 | **Donor-prefix off-policy** | Targets continue gpt-4o/sonnet histories. | Fix prefixes across arms; stratify by donor; report donor slopes; targets never generate prefixes. |
 | **Severity construct validity** | If s=1 moves decisions like s=2, "dose" is not a dose. | Three-rater blind audit; α ≥ .75; s=1 negative control; s=3 plausibility check. |
 | **Model-format refusal** | A model may refuse the format. | G1 refusal gate <5%; fix prompt/grammar; document exclusions. |
-| **Rental availability** | 24 GB instances can be scarce. | Book early; $0.89/h fallback at 30 GPU-hours; reduce N or drop persistent. |
+| **H200 availability** | The shared slice may be busy, or the 18 GB fit may fail. | Wait for the allocation; reduce batch/context first; reduce N or drop persistent with a logged decision/amendment; do not book a paid rental without a new decision. |
 | **Replay mismatch** | A non-replayable observation is not real. | ≥98% match; mismatch taxonomy; fix harness before sampling. |
 | **PII leakage** | Trajectories contain profile data. | Exclude profile tools; synthetic tokens; 40-item audit; re-scan; no raw data in git. |
 | **Recovery state drift** | Four steps may diverge from the donor episode. | Continue with the real environment; log state hashes; report divergence. |
-| **Budget overrun** | GPU rental is the only cash risk. | Hard stop at $22/45 h; per-shard ledger; no second rental. |
+| **GPU-hour/storage overrun** | The H200 allocation and 200 GB project space are finite. | Hard stop at 45 GPU-hours or 200 GB; per-shard ledger; no second GPU. |
 | **Analysis overreach** | Many contrasts invite post-hoc stories. | Fixed sequence; pre-registered primaries; heterogeneity exploratory. |
 
 ---
@@ -357,11 +358,11 @@ The rental needs 24 GB VRAM, 32 GB RAM, 60 GB disk, a compatible CUDA stack, SSH
 
 **Decision requested today.** Approve the **G0 start**: ten working days, CPU only, $0 cash. G0 pins τ-bench, builds the harvest and replay pipeline, scrubs PII, labels relevance, samples 880, freezes 800 + 80 reserve, runs the 40-item audit, and freezes the pre-registration. No target-model output is generated before the freeze.
 
-**Budget release.** Approve **$23 base / $50 hard cap**. G0 costs $0. G1 costs about 3 GPU-hours (~$2) and runs only after G0 passes. The main run is released only after G1 passes and stops at $22 or 45 GPU-hours. The hard cap is a stop line, not a target.
+**Budget release.** Approve **$0 cash** and the university H200 allocation. G0 costs $0. G1 costs about 3 GPU-hours at $0 cash and runs only after G0 passes. The main run is released only after G1 passes and stops at 45 GPU-hours or 200 GB storage. The GPU-hour/storage cap is a stop line, not a target.
 
-**Resources requested.** One 24 GB GPU rental for 35–45 hours; ~60 GB storage; 3–4 team members for 18 weeks part-time; 20–30 local CPU hours; ~200 human judgments at $0 cash. No paid API, second GPU, or external annotator.
+**Resources requested.** One H200 1g.18gb slice for 35–45 GPU-hours; 200 GB project storage; 3–4 team members for 18 weeks part-time; 20–30 local CPU hours; ~200 human judgments at $0 cash. No paid API, second GPU, or external annotator.
 
-**Gate consequences.** G0 fail → 500-prefix/2-model fallback or stop; G1 fail → no main spend; G2 early stop → analyse completed shards; G3 fail → null/measurement paper or action-level downgrade; G4 fail → RMST/curve only.
+**Gate consequences.** G0 fail → 500-prefix/2-model fallback or stop; G1 fail → no main-run start; G2 early stop → analyse completed shards; G3 fail → null/measurement paper or action-level downgrade; G4 fail → RMST/curve only.
 
 ---
 
@@ -430,7 +431,7 @@ The pilot used **N=60 synthetic WebArena-lite / τ-style prefixes**, `qwen3.5:4b
 
 ## Appendix B. Ten-day G0 sprint and gates G0–G4
 
-G0 is CPU-only, $0 cash, and runs before any rental spend.
+G0 is CPU-only, $0 cash, and runs before any GPU allocation.
 
 | Day | Task | Check |
 |---:|---|---|
@@ -448,8 +449,8 @@ G0 is CPU-only, $0 cash, and runs before any rental spend.
 | Gate | Criteria | Fail action |
 |---|---|---|
 | **G0 — Harvest/freeze** | ≥880 eligible; ≥440/domain pre-audit; ≥400/domain post-audit; replay ≥98%; 40-item audit ≥36/40. | 500 prefixes / 2 models, or stop. |
-| **G1 — Calibration** | Parse ≥95%; placebo jitter ≤20%; s=3 switch 10–80%; refusal <5% per model. | Fix and rerun; no main spend. |
-| **G2 — Main run** | Stop at $22 or 45 GPU-hours; ledger complete. | Analyse completed shards; disclose. |
+| **G1 — Calibration** | Parse ≥95%; placebo jitter ≤20%; s=3 switch 10–80%; refusal <5% per model. | Fix and rerun; no main-run start. |
+| **G2 — Main run** | Stop at 45 GPU-hours or 200 GB storage; ledger complete. | Analyse completed shards; disclose. |
 | **G3 — Analysis** | Pooled β > 0; positive in ≥2/3 models, same sign; severity α ≥ .75; outcome κ ≥ .80 (or adjudicated ≥ .70 with downgrade); recovery κ ≥ .75. | Null/measurement paper; no content claim. |
 | **G4 — Recovery** | ≥50% of s=3 risk set recovers by H=4; Weibull shape not rejected (p ≥ .01). | RMST/curve; `t½` exploratory. |
 

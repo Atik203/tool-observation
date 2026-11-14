@@ -11,8 +11,8 @@ observed value, the pass/fail decision, and the consequence.
 | Gate | Phase | Criteria | Evidence artifact | Fail action |
 |---|---|---|---|---|
 | **G0** | Harvest / freeze | ≥880 eligible; ≥440/domain pre-audit; ≥400/domain post-audit; replay ≥98%; 40-item audit ≥36/40 | `artifacts/audit/g0_report.md`, `data/manifests/toolresult800_v1.json` | 500 prefixes / 2 models fallback, or stop |
-| **G1** | Calibration | parse ≥95%; placebo jitter ≤20%; s=3 switch 10–80%; format refusal <5% per model | `artifacts/audit/g1_calibration.json` | Fix prompt/parser and rerun; no main spend |
-| **G2** | Main run | Stop at $22 spend or 45 GPU-hours, whichever first; complete ledger | `artifacts/cost/main_cost.json`, `data/runs/main/ledger.jsonl` | Analyze completed shards; disclose shortfall |
+| **G1** | Calibration | parse ≥95%; placebo jitter ≤20%; s=3 switch 10–80%; format refusal <5% per model | `artifacts/audit/g1_calibration.json` | Fix prompt/parser and rerun; no main-run start |
+| **G2** | Main run | Stop at 45 GPU-hours or 200 GB storage, whichever first; complete ledger | `artifacts/cost/main_cost.json`, `data/runs/main/ledger.jsonl` | Analyze completed shards; disclose shortfall |
 | **G3** | Analysis | Pooled β>0; positive in ≥2/3 models with the same sign; severity α≥.75; outcome κ≥.80 (or adjudicated ≥.70 with downgrade); recovery κ≥.75 | `artifacts/analysis/g3_report.md` | Null/measurement paper; no content-sensitivity claim |
 | **G4** | Recovery | ≥50% of the s=3 risk set recovers by H=4; Weibull shape not rejected (p≥.01) | `artifacts/analysis/g4_report.md` | Report RMST/curve; t½ exploratory only |
 
@@ -43,7 +43,7 @@ persists, fall back to 500 prefixes and 2 models (drop persistent first), or sto
 
 ## G1 — Calibration
 
-**Owner:** inference lead. **Cost:** ~3 GPU-hours, ~$2. **Timing:** week 3.
+**Owner:** inference lead. **Cost:** ~3 GPU-hours, $0 cash. **Timing:** week 3.
 
 Sample: 60 prefixes (30/domain), 5 arms, 3 models = 900 generations. Calibration prefixes are
 disjoint from the main 800.
@@ -69,14 +69,13 @@ rate remains outside 10--80%, stop and report a measurement failure.
 
 ## G2 — Main run stop
 
-**Owner:** inference lead. **Budget:** $23 base, $50 hard cap, stop at **$22** or **45
-GPU-hours**.
+**Owner:** inference lead. **Budget:** $0 cash; **45 GPU-hours** and **200 GB storage** caps.
 
-The runner checks cumulative cost and GPU-hours after every shard and every 40 prefixes. On
+The runner checks cumulative GPU-hours and storage after every shard and every 40 prefixes. On
 reaching either limit it stops cleanly, flushes the ledger, and writes a stop record. Completed
-shards are analyzed; missing cells are reported, not imputed. No second rental and no paid API.
+shards are analyzed; missing cells are reported, not imputed. No second GPU and no paid API.
 
-**Fail:** budget reached before completion is not a scientific failure, but the paper must
+**Fail:** a cap reached before completion is not a scientific failure, but the paper must
 disclose the reduced sample and any resulting power loss.
 
 ---
@@ -125,7 +124,7 @@ Stop the study and write a public note if any of the following occurs:
 - G0 cannot reach 880 eligible after a documented re-run and the fallback is not viable.
 - G1 cannot reach a parseable, non-ceiling format after two calibration attempts.
 - A PII leak is found in a release candidate (stop the release, not the science).
-- The budget hard cap is reached before any confirmatory shard completes.
+- The 45 GPU-hour or 200 GB storage cap is reached before any confirmatory shard completes.
 - A frozen manifest is found to be corrupted and cannot be reconstructed from upstream hashes.
 
 ## Reporting

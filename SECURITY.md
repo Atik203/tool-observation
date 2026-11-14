@@ -28,7 +28,7 @@ Include, where possible:
 ## What to report
 
 - **Secrets** committed or exposed: API keys, GitHub tokens, Hugging Face tokens, cloud or
-  rental credentials, SSH keys, `.env` contents.
+  GPU credentials, SSH keys, `.env` contents.
 - **PII or data leaks**: names, emails, addresses, phone numbers, payment identifiers, or raw
   τ-bench trajectories in a tracked file or release.
 - **Dependency vulnerabilities** that affect the package or the release environment.

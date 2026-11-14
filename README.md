@@ -60,7 +60,7 @@ a graded law from a handful of flips. **It is a screening signal, not a dose-res
 | Recovery | **H=4** steps; transient injection primary, persistent injection on 25%; R1 correct decision, R2 detection |
 | Generation envelope | **34,800** generations (12,000 base + 19,200 transient recovery + 2,400 persistent + 1,200 jitter repeats) |
 | Primary estimand | Conditional-logistic slope of content switch on severity, clustered by prefix; pooled first, then per-model |
-| Budget | **$23 base / $50 hard cap**; 35–45 GPU-hours on a 24 GB rental; no paid API |
+| Budget | **$0 cash**; 35–45 GPU-hours on the university H200 1g.18gb slice (18 GB VRAM); 45 GPU-hour / 200 GB stop; no paid API |
 | Analysis | Discrete-time survival for recovery half-life, Weibull shape check, pre-registered multiplicity sequence |
 
 The full design and stop rules are in [`docs/PROTOCOL.md`](docs/PROTOCOL.md) and
@@ -107,7 +107,8 @@ pytest -q
 
 On the local Windows machine the base interpreter is
 `C:\ProgramData\anaconda3\python.exe` (Python 3.12). The local RTX 3060 (6 GB) is for smoke tests
-only; the main run uses a 24 GB rental. See [`docs/RUNBOOK.md`](docs/RUNBOOK.md).
+only; the main run uses the university H200 1g.18gb slice via `uiu-h200`. See
+[`docs/RUNBOOK.md`](docs/RUNBOOK.md).
 
 Make targets: `make setup`, `make test`, `make lint`, `make validate`, `make clean`.
 PowerShell equivalents: `.\tasks.ps1 setup|test|lint|validate|clean`.
@@ -118,7 +119,7 @@ PowerShell equivalents: `.\tasks.ps1 setup|test|lint|validate|clean`.
   are **never committed**. They live under `data/` and are gitignored.
 - `data/manifests/` is the only data directory tracked by git: it holds small, non-PII manifests,
   hashes, and freeze records.
-- Model weights, adapters, caches, `.env` files, tokens, and rental credentials are never
+- Model weights, adapters, caches, `.env` files, tokens, and GPU credentials are never
   committed.
 - τ-bench trajectories can contain names, emails, addresses, phone numbers, and payment
   identifiers. Raw trajectories are treated as PII-bearing even before scrubbing.

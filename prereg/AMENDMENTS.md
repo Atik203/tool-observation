@@ -13,6 +13,15 @@ to target-model outcomes.
 - **Blind to outcomes:** yes; no target-model outcomes have been generated.
 - **Record:** `docs/DECISIONS.md` D-006.
 
+## Pre-freeze compute and budget note
+
+- **Date:** 2026-11-14
+- **Change:** Approved execution GPU is the university **H200 1g.18gb** slice. Cash budget is
+  **$0**; operational stop is **45 GPU-hours or 200 GB storage**. No paid API, no second GPU.
+- **Analyses affected:** none. No scientific design, sample, analysis, or claim change.
+- **Blind to outcomes:** yes; no target-model outcomes have been generated.
+- **Record:** `docs/DECISIONS.md` D-007 and D-008.
+
 ## Status
 
 - **Frozen version:** TBD (tag `prereg-freeze-v1`, commit SHA + SHA-256 recorded at G0).

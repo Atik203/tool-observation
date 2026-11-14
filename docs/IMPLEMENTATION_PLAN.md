@@ -67,25 +67,30 @@ traceable to a manifest row and a ledger row.
 
 ---
 
-## 3. Environment and rental contract
+## 3. Environment and university GPU
 
 Local work uses Python 3.12 at `C:\ProgramData\anaconda3\python.exe`, the `tool-observation`
 conda environment, and an RTX 3060 6 GB. The 3060 is for imports, smoke tests, renderer checks,
 and tiny forward passes only. It cannot host a 7–8B AWQ model with an 8k context at the batch
 sizes the study needs.
 
-The main run uses one 24 GB RTX 3090/4090 community instance at $0.30–0.50/h, with vLLM, AWQ
-4-bit, batch 8–16, 8–12k context, greedy decoding, and one model loaded at a time. The rental
-contract is defined by these requirements:
+The main run uses the approved university **H200 MIG 1g.18gb** slice (18 GB VRAM) via the
+`uiu-h200` SSH alias, with vLLM, AWQ 4-bit, batch 8–16, 8k context, greedy decoding, and one model
+loaded at a time. The 18 GB slice is below the older 24 GB assumption, so verify that the pinned
+AWQ model, 8k context, and batch fit before G1/G2. Any reduction in batch, context, sample, or
+model set is logged in `docs/DECISIONS.md` and, if it affects the analysis, in
+`prereg/AMENDMENTS.md`.
 
-- 24 GB VRAM minimum, 32 GB system RAM recommended, 60 GB disk for weights plus traces.
-- CUDA/driver compatible with the vLLM and torch wheels recorded in
-  `artifacts/env/rental_env.txt`.
-- Stable SSH or job API, resumable uploads, and a spend dashboard.
+The environment is defined by these requirements:
+
+- 18 GB VRAM maximum; 200 GB project storage; driver 580.178.04 and CUDA 13.5 unchanged.
+- Project-local venv or conda environment only; no system-wide packages or `sudo`.
+- SSH via `uiu-h200` only; use `tmux` or `screen`; stop idle GPU jobs.
+- Record the environment in `artifacts/env/h200_env.txt`.
 - The three model revisions are pinned in `data/manifests/model_pins.json` before G1.
 - No paid API, no second GPU, no autoscaling, no managed inference endpoint.
-- Hard stop at **$22 spend or 45 GPU-hours**, whichever comes first. Base budget is **$23**;
-  hard cap **$50**. Reaching the cap is a G2 stop, not permission to continue.
+- Hard stop at **45 GPU-hours or 200 GB storage**, whichever comes first. Cash budget is **$0**;
+  the university provides the GPU. Reaching either cap is a G2 stop, not permission to continue.
 
 Lock files are placeholders in the scaffold. CPU and GPU locks are generated on the target
 machine and committed with the driver, CUDA, and vLLM versions recorded. A lock from a different
@@ -176,12 +181,12 @@ prompt-format noise, not to increase power.
 
 Execution is sharded by model and domain. Each shard checkpoints every 40 prefixes and appends
 one ledger row per generation: run ID, model, prefix, arm, step, prompt hash, output, parse
-status, latency, cost, UTC timestamp. A parser-error rate above 5% in a shard fails fast rather
-than burning budget. The runner is resumable after a rental interruption.
+status, latency, GPU-hours, storage, UTC timestamp. A parser-error rate above 5% in a shard fails
+fast rather than burning GPU hours. The runner is resumable after an H200 session interruption.
 
-The main run stops at **$22** or **45 GPU-hours**, whichever comes first. If the stop lands
+The main run stops at **45 GPU-hours or 200 GB storage**, whichever comes first. If the stop lands
 mid-envelope, the analysis uses completed shards and the paper discloses the shortfall. No second
-rental is authorized.
+GPU is authorized.
 
 ---
 
@@ -291,23 +296,23 @@ frozen with the preregistration; post-freeze changes require an amendment.
 | Gate | Criteria | Fail action |
 |---|---|---|
 | G0 | ≥880 eligible; ≥440/domain pre-audit; ≥400/domain post-audit; replay ≥98%; audit ≥36/40 | 500/2-model fallback or stop |
-| G1 | parse ≥95%; jitter ≤20%; s=3 switch 10–80%; refusal <5% | Fix and rerun; no main spend |
-| G2 | Stop at $22 or 45 GPU-h | Analyze completed shards; disclose |
+| G1 | parse ≥95%; jitter ≤20%; s=3 switch 10–80%; refusal <5% | Fix and rerun; no main-run start |
+| G2 | Stop at 45 GPU-hours or 200 GB storage | Analyze completed shards; disclose |
 | G3 | Pooled β>0; positive in ≥2/3 models, same sign; α≥.75; κ≥.80 (or adjudicated ≥.70 with downgrade); recovery κ≥.75 | Null/measurement paper |
 | G4 | ≥50% recovery events by H=4; Weibull shape not rejected | RMST/curve only; t½ exploratory |
 
 Deliverables are ToolResult-800 (800 frozen prefixes plus perturbations and traces), frozen manifests,
-raw run ledgers, a reproducibility package (environment, rental contract, scripts, analysis), the
+raw run ledgers, a reproducibility package (environment, H200 record, scripts, analysis), the
 preregistration and amendments, and a paper draft. If the slope is null, the dataset and the null
 are still released.
 
-Budget: 35–45 GPU-hours, budgeted at $15–22 (market rate $0.30–0.50/h; the $22 stop is binding);
-storage/egress $2–3; contingency $3–5; **$23 base, $50 hard cap**. Local CPU work is 20–30 hours at $0. Annotation is ~200 team judgments at
-$0 cash. No paid API.
+Budget: 35–45 GPU-hours on the university H200 1g.18gb slice at **$0 cash**; storage stays within
+the 200 GB project allocation; no paid API. Local CPU work is 20–30 hours at $0. Annotation is
+~200 team judgments at $0 cash. The operational stop is 45 GPU-hours or 200 GB storage.
 
-Storage: ~60 GB total disk for three AWQ weights, caches, and traces. Raw traces stay local; the release contains
-only scrubbed derived data. Checkpoints and model caches are deleted after the run once hashes
-and ledgers are archived.
+Storage: about 60 GB expected for three AWQ weights, caches, and traces; the hard cap is 200 GB.
+Raw traces stay local; the release contains only scrubbed derived data. Checkpoints and model
+caches are deleted after the run once hashes and ledgers are archived.
 
 ---
 
@@ -316,17 +321,18 @@ and ledgers are archived.
 The dominant risks are construct validity and contamination, not prefix supply. τ-bench tasks are
 public and may be memorized; the within-prefix perturbation is novel, but baseline reliance may be
 inflated. Mitigations: verbatim-arm accuracy, s=0 jitter, an optional 120-prefix template-transfer
-arm only if under budget, and explicit domain scope.
+arm only if within the GPU-hour/storage caps, and explicit domain scope.
 
 Donor-prefix off-policy is handled by fixing prefixes across arms and stratifying by donor.
 Severity construct validity is handled by the s=1 negative control, three blind raters, α≥.75,
-and the s=3 plausibility check. Model-format refusal is a G1 gate. Rental availability is handled
-by early booking and the $0.89/h fallback at 30 GPU-hours with N=600 or no persistent arm. Replay
+and the s=3 plausibility check. Model-format refusal is a G1 gate. H200 availability is handled
+by the approved university allocation; if the slice is unavailable, wait and do not book a paid
+rental without a new decision. Replay
 mismatch is handled by a ≥98% threshold and a mismatch taxonomy before sampling. PII is handled by
 profile-tool exclusion, scrubbing, human audit, and a release re-scan. Recovery state drift is
-handled by continuing with the real environment and logging state hashes and divergence. Budget
-overrun is handled by the G2 stop. Analysis overreach is handled by the fixed sequence, the
-preregistration, and labeling heterogeneity exploratory.
+handled by continuing with the real environment and logging state hashes and divergence.
+GPU-hour/storage overrun is handled by the G2 stop. Analysis overreach is handled by the fixed
+sequence, the preregistration, and labeling heterogeneity exploratory.
 
 ---
 

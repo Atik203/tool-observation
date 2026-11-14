@@ -55,34 +55,38 @@ Acceptance: ≥880 eligible, ≥440/domain pre-audit, ≥400/domain post-audit, 
 
 ---
 
-## 3. Rental setup (24 GB GPU)
+## 3. University GPU setup — `uiu-h200`
 
-1. Book a 24 GB RTX 3090/4090 community instance at $0.30–0.50/h. Prefer a host with 60 GB disk.
-2. Record the host, GPU, driver, CUDA, and hourly rate in `artifacts/env/rental_contract.txt`.
-3. Install Python 3.12 and create the environment from `environment.yml`; install the GPU stack
-   from `requirements-gpu.lock.txt` **generated on that host**.
-4. Write `artifacts/env/rental_env.txt`:
+1. Connect only via the `uiu-h200` SSH alias. Do not expose ports or create another connection
+   method.
+2. Check `df -h` and `du -sh`; stay inside the project space. The hard cap is 200 GB.
+3. Create a project-local venv or conda environment. Install from `environment.yml` and the GPU
+   stack from `requirements-gpu.lock.txt` **generated on that host**. Do not change driver
+   580.178.04, CUDA 13.5, system libraries, MIG settings, clocks, or power limits.
+4. Use `tmux` or `screen`; stop idle GPU jobs.
+5. Record the GPU, driver, CUDA, vLLM, torch, and storage in `artifacts/env/h200_env.txt`:
 
 ```text
-host=...
-gpu=...
-driver=...
-cuda=...
+gpu=H200 1g.18gb
+driver=580.178.04
+cuda=13.5
 vllm=...
 torch=...
-hourly_usd=...
+storage_gb=...
 ```
 
-5. Download the three pinned models once. Verify revision hashes against
+6. Download the three pinned models once. Verify revision hashes against
    `data/manifests/model_pins.json`. Do not accept a floating `main`.
-6. Run the 60-prefix calibration before the main run.
+7. **Fit check:** the slice has 18 GB VRAM. Verify the pinned AWQ model, 8k context, and batch
+   fit. Lower batch or context if OOM; log any reduction in `docs/DECISIONS.md`.
+8. Run the 60-prefix calibration before the main run.
 
 ```powershell
 python scripts/09_run.py --stage calibration --config configs/calibration.yaml
 ```
 
-Acceptance: parse ≥95%, jitter ≤20%, s=3 switch 10–80%, refusal <5% per model. No main spend
-before this passes.
+Acceptance: parse ≥95%, jitter ≤20%, s=3 switch 10–80%, refusal <5% per model. No main-run
+start before this passes.
 
 ---
 
@@ -94,15 +98,16 @@ python scripts/09_run.py --stage main --config configs/main.yaml --resume
 
 - 34,800-generation envelope; sharded by model and domain.
 - Checkpoint every 40 prefixes; one ledger row per generation.
-- Stop at $22 spend or 45 GPU-hours, whichever first.
+- Stop at 45 GPU-hours or 200 GB storage, whichever first.
 - A parser-error rate >5% in a shard fails fast.
 
 **Resume after interruption:** relaunch with `--resume`; the runner reads the ledger, skips
 completed `(model, prefix, arm, step)` rows, and never overwrites a completed row. If the ledger
 is corrupt, stop and restore from the last shard checkpoint; do not fabricate missing rows.
 
-**Stop procedure:** flush the ledger, write `artifacts/cost/main_cost.json` with cumulative spend,
-GPU-hours, completed prefixes, and reason. Analyze only completed cells and disclose the gap.
+**Stop procedure:** flush the ledger, write `artifacts/cost/main_cost.json` with cumulative
+GPU-hours, storage, completed prefixes, and reason. Analyze only completed cells and disclose the
+gap.
 
 ---
 
@@ -141,12 +146,12 @@ Follow `release/README.md`. In short:
 | `toolobs validate` missing PyYAML | Minimal environment | `pip install pyyaml`; CI intentionally does not need it |
 | `pytest` import error | Package not installed | `pip install -e .` or use `python -m pytest` after editable install |
 | Replay mismatch spike | Task DB version or tool schema drift | Check pin; rebuild harness; do not lower the 98% threshold |
-| vLLM OOM at 8k context | Batch too large or KV cache | Lower `batch_size` to 8, `max_num_seqs` to 8, `gpu_memory_utilization` to 0.85 |
-| AWQ load failure | Wheel/CUDA mismatch | Regenerate the GPU lock on the host; do not reuse a CPU lock |
+| vLLM OOM at 8k context on 18 GB | Batch too large, context too long, or KV cache | Lower `batch_size` to 8, `max_num_seqs` to 8, `gpu_memory_utilization` to 0.85; lower context if needed; log the reduction |
+| AWQ load failure | Wheel/CUDA mismatch | Regenerate the GPU lock on the host; do not reuse a CPU lock; do not reinstall the driver or CUDA |
 | Refusal rate >5% | Prompt/format mismatch | Fix the prompt at G1; do not coerce at analysis time |
 | Parser failures >5% | Model output drift | Stop the shard; inspect examples; fix parser and re-calibrate |
 | Ledger write failure | Disk full or permissions | Stop; free space; resume from the last checkpoint; never re-generate completed rows silently |
-| Budget approaching $22 | Rental clock or long generations | Stop at the limit; analyze completed shards; no second rental |
+| GPU-hour or storage cap approaching | Long generations or large traces | Stop at 45 GPU-hours or 200 GB; analyze completed shards; no second GPU |
 | Suspected PII | Scrub miss or new field | Stop the release; report privately per `SECURITY.md`; re-scan |
 
 ---
