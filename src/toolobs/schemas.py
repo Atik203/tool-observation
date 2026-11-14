@@ -58,6 +58,11 @@ class PrefixRecord(RecordMixin):
     message_hashes: list[str] = field(default_factory=list)
     observation_hash: str = ""
     replay_match: bool = False
+    replay_diff: str = ""
+    replay_historical_hash: str = ""
+    replay_observed_hash: str = ""
+    replay_error: str = ""
+    replay_executed_calls: int = 0
     eligible: bool = False
     split: str = "unassigned"
 

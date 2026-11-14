@@ -23,8 +23,10 @@ the v1.0 dataset and paper release.
 - Automatic value-used relevance with a draft path-based PII policy, and a deterministic PII
   scrubber with a leak scan. Draft output: 5,516 eligible (airline 1,434; retail 4,082), zero
   residual direct identifiers.
+- Replay harness that executes pinned τ-bench tool calls from a fresh task database and compares
+  normalized observations. Eligible-pool replay: 5,511/5,516 (99.91%); airline cap-10 442.
 - Contract tests for hashing, schemas, config invariants, paths, CLI, field registry, pinning,
-  parsing, relevance, and scrubbing.
+  parsing, relevance, scrubbing, and replay comparison.
 
 ### Planned
 

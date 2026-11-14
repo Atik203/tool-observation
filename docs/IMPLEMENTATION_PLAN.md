@@ -130,7 +130,9 @@ The protocol is:
    directly targets a PII field.
 5. **Replay.** Load the task DB, execute the prefix's tool calls from the initial state, and
    compare the last observation to the historical one (hash plus normalized values). Keep only
-   ≥98% matches. Replay is what makes the observation a real environment output and makes the
+   ≥98% matches. Replay is evaluated on the eligible non-profile pool; full-pool mismatches from
+   the historical `get_user_details` schema (`province` vs `state`) are reported separately.
+   Replay is what makes the observation a real environment output and makes the
    four-step recovery continuation possible.
 6. **Sample.** Cap 10/task, target 400 airline + 400 retail, stratify by domain, donor,
    step-index bucket, and tool family, seed 20261108. Select **880**: 800 primary plus 80 reserve.

@@ -6,6 +6,30 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-011 — Replay passes on eligible prefixes; profile-tool schema drift disclosed
+
+- **Date:** 2026-11-15
+- **Status:** accepted (draft G0 evidence)
+- **Context:** Replay executes every assistant tool call in a frozen prefix from a fresh pinned task
+  database and compares the final observation. The historical trajectories and the pinned commit
+  are not perfectly schema-identical: historical `get_user_details` observations use
+  `address.province`, while the pinned data uses `address.state`.
+- **Observed:** Full-pool replay is **11,889/13,605 (87.39%)**, dominated by
+  `get_user_details` (**9/1,719**); every other tool is at or above 98% except
+  `book_reservation` (143/147) and `cancel_reservation` (186/188), where fixed booking-ID reuse
+  (`HATHAT`/`HATHAU`/`HATHAV`) can diverge. On the eligible non-profile pool, replay is
+  **5,511/5,516 (99.91%)**; the five mismatches are the same airline booking-ID cases.
+- **Decision:** The G0 replay gate is evaluated on the eligible non-profile pool, because profile
+  tools are excluded before replay by design. The eligible pool passes at 99.91%. The
+  `province`/`state` drift and the booking-ID mismatches are reported as a source caveat; they are
+  not hidden by changing the pin or normalizing the field away.
+- **Consequences:** Airline cap-10 after replay is **442**, only two above the 440 pre-audit floor;
+  retail is 1,144. Sampling must preserve the airline cap and audit replacements carefully. If the
+  user requires the full-pool replay gate instead, the source pin must be changed to the historical
+  data version or an amendment must redefine the replay population.
+
+---
+
 ## D-010 — Draft automatic relevance and PII policy; airline supply risk
 
 - **Date:** 2026-11-15
