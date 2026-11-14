@@ -3,9 +3,11 @@
 This runbook is the operator view. The protocol is authoritative for design; this file is for
 execution, recovery, and troubleshooting.
 
-> **Current state:** v0.1.0 is a scaffold. Pipeline stages `00`–`10` are honest stubs that exit
-> with code 2 and print their plan. The commands below are the intended interface; they do not
-> produce data yet. Do not report results from a stub.
+> **Current state (2026-11-15):** the CPU-only G0 pipeline is implemented through render, the
+> 60-prefix calibration selection, the freeze dry-run, and the release packager. The 40-item
+> human audit and the frozen `toolresult800_v1` manifest are pending. No study GPU run has
+> started; the Qwen AWQ fit check is an environment check only. Stages are real, not stubs; do
+> not report results from the dry-run or from the fake backend.
 
 ---
 
@@ -38,15 +40,22 @@ Run in order. Each stage must pass its acceptance check before the next starts.
 
 ```powershell
 python scripts/00_pin_source.py --config configs/harvest.yaml
-python scripts/01_parse.py --upstream data/upstream --out data/interim/candidates.parquet
-python scripts/02_scrub.py --in data/interim/candidates.parquet --out data/interim/scrubbed.parquet
-python scripts/03_relevance.py --in data/interim/scrubbed.parquet --out data/interim/eligible.parquet
-python scripts/04_replay.py --in data/interim/eligible.parquet --out data/interim/replay.parquet --threshold 0.98
-python scripts/05_sample.py --in data/interim/replay.parquet --out data/manifests/sample_880.json --seed 20261108
-python scripts/06_freeze.py --sample data/manifests/sample_880.json --out data/manifests/toolresult800_v1.json
-python scripts/07_render.py --manifest data/manifests/toolresult800_v1.json --out data/manifests/perturbations.jsonl
-python scripts/08_audit.py --manifest data/manifests/toolresult800_v1.json --out artifacts/audit/g0_audit.csv
+python scripts/01_parse.py --upstream data/upstream/tau-bench --out data/interim/candidates.jsonl
+python scripts/02_scrub.py --in data/interim/candidates.jsonl --out data/interim/scrubbed.jsonl
+python scripts/03_relevance.py --in data/interim/scrubbed.jsonl --out data/interim/eligible.jsonl
+python scripts/04_replay.py --in data/interim/eligible.jsonl --out data/interim/replayed.jsonl
+python scripts/05_sample.py --in data/interim/replay_matched.jsonl --out data/interim/sample.jsonl
+python scripts/07_render.py --sample data/interim/sample.jsonl --out data/interim/rendered.jsonl --perturbations-out data/interim/perturbations.jsonl
+python scripts/08_audit.py --sample data/interim/sample.jsonl
+# Fill artifacts/audit/g0_audit_sheet.csv, then:
+python scripts/08_audit.py --score artifacts/audit/g0_audit_sheet.csv
+python scripts/06_freeze.py --dry-run
+python scripts/06_freeze.py   # only after the audit passes
 ```
+
+The numeric prefixes are stage names, not execution order: render (07) and audit (08) run before
+freeze (06). The freeze script also selects the 60 calibration prefixes and writes the scrubbed
+`data/frozen/prefixes.jsonl` payload.
 
 Acceptance: ≥880 eligible, ≥440/domain pre-audit, ≥400/domain post-audit, replay ≥98%, audit
 ≥36/40. Freeze only after the audit. Record the manifest hash and the prereg hash.
@@ -82,7 +91,9 @@ storage_gb=...
 8. Run the 60-prefix calibration before the main run.
 
 ```powershell
-python scripts/09_run.py --stage calibration --config configs/calibration.yaml
+python scripts/09_run.py --stage calibration --model-id qwen2_5_7b_instruct_awq --backend vllm
+# or, once all three revisions are pinned:
+python scripts/09_run.py --stage calibration --all-models --backend vllm
 ```
 
 Acceptance: parse ≥95%, jitter ≤20%, s=3 switch 10–80%, refusal <5% per model. No main-run
@@ -93,7 +104,7 @@ start before this passes.
 ## 4. Main run
 
 ```powershell
-python scripts/09_run.py --stage main --config configs/main.yaml --resume
+python scripts/09_run.py --stage main --model-id qwen2_5_7b_instruct_awq --backend vllm
 ```
 
 - 34,800-generation envelope; sharded by model and domain.
@@ -113,16 +124,16 @@ gap.
 
 ## 5. Analysis
 
-```powershell
-python scripts/10_release.py --runs data/runs/main --out artifacts/analysis
-```
+The analysis core is implemented in `src/toolobs/analysis/`:
 
-Intended outputs: parsed outcomes, slope table (pooled and per model), silent-propagation share,
-s=3 vs s=1 McNemar, recovery curves, t½ with CI, Weibull shape test, κ/α report, figures. Every
-table includes the manifest hash and ledger row count.
+- `outcomes.py`: automatic `Y`, `Y^A`, `Y^F`, `Y^U` labels from ledger rows and perturbation records.
+- `slope.py`: pure-Python conditional-logit slope, prefix-cluster SE, percentile bootstrap, Holm.
+- `recovery.py`: discrete exponential, Kaplan–Meier, RMST, Weibull shape LRT.
 
-Check G3/G4 before writing any claim. If a gate fails, write the null/measurement report; do not
-reframe exploratory analyses as confirmatory.
+There is no standalone analysis CLI yet; call these from a notebook or a small script and write
+outputs under `artifacts/analysis/`. Every table must include the manifest hash and ledger row
+count. Check G3/G4 before writing any claim. If a gate fails, write the null/measurement report;
+do not reframe exploratory analyses as confirmatory.
 
 ---
 
@@ -136,6 +147,10 @@ Follow `release/README.md`. In short:
 4. Write checksums (`SHA256SUMS`), data card, and CITATION.
 5. Deposit and mint a DOI; tag the repository.
 6. Publish the paper preprint only after the analysis freeze.
+
+The packager is `python scripts/10_release.py`; it verifies the frozen manifest, payload hashes,
+renderer hash, prereg hash, and a PII rescan before copying anything. It refuses without a passed
+G0 audit and a frozen manifest.
 
 ---
 

@@ -41,8 +41,9 @@ triggers an automatic production deployment.
   implemented and CPU-tested. No GPU model has been loaded.
 - **Frozen payload/release:** 880 scrubbed prefixes with five arm observations are built
   (preview); the release packager verifies hashes and PII and refuses without a passed audit.
-- **Pending:** human 40-item audit (≥36/40) and the frozen `toolresult800_v1` manifest. No GPU
-  workload has run.
+- **GPU:** Qwen AWQ revision pinned; vLLM/torch are installing in the project venv for a
+  non-study fit check. No study workload has run.
+- **Pending:** human 40-item audit (≥36/40) and the frozen `toolresult800_v1` manifest.
 
 ## The question
 

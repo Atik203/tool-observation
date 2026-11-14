@@ -31,7 +31,7 @@
 | Release packager | **DONE (gated)** | `10_release.py` verifies manifest/payload hashes and PII, then copies only scrubbed derived data; refuses without a passed audit |
 | Human audit | **PENDING** | 40-item packet and blank sheet generated; gate ≥36/40; `artifacts/audit/g0_audit_packet.csv` |
 | Freeze | **PENDING** | Blocked on audit; no `toolresult800_v1.json` yet; no target output generated |
-| H200 environment | **PARTIAL** | project clone + CPU venv + tests pass; GPU stack not installed; no GPU workload run |
+| H200 environment | **IN PROGRESS** | project clone + CPU venv + tests pass; Qwen AWQ pinned; vLLM 0.33.0 / torch 2.14.0 installing; fit check pending; no study workload |
 
 The ten-day table below is the original plan. Intermediate files are now JSONL rather than
 parquet, and the 6,500/1,500 relevance figures are planning inputs, not G0 gates; the

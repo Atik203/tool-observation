@@ -9,7 +9,7 @@
 models:
   - id: qwen2_5_7b_instruct_awq
     repo_id: Qwen/Qwen2.5-7B-Instruct-AWQ
-    revision: TBD
+    revision: b25037543e9394b818fdfca67ab2a00ecc7dd641
     params_b: 7
     quantization: awq_4bit
     license: Apache-2.0

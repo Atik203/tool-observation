@@ -6,6 +6,24 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-015 — Qwen AWQ revision pinned; non-study H200 fit check authorized
+
+- **Date:** 2026-11-15
+- **Status:** accepted (pre-G1)
+- **Context:** The H200 slice is free and the project needs to verify that the pinned AWQ model,
+  8k context, and a small batch fit in 18 GB before G1. The user authorized GPU use; no study
+  prompt or target outcome should be generated before the G0 freeze.
+- **Decision:** Pin `Qwen/Qwen2.5-7B-Instruct-AWQ` at revision
+  `b25037543e9394b818fdfca67ab2a00ecc7dd641`. Install the GPU stack in the project venv and run
+  a non-study fit check (model load plus a short generic prompt). Record driver, CUDA, vLLM,
+  torch, model revision, peak VRAM, and latency in `artifacts/env/`. Do not run calibration or
+  main-run prefixes until the human audit and G0 freeze pass.
+- **Consequences:** Mistral and Llama revisions remain TBD until their access and fit checks.
+  The fit check is environment evidence, not a study result; no target-model outcome on a study
+  prefix exists.
+
+---
+
 ## D-014 — Next-decision prompt and parser contract
 
 - **Date:** 2026-11-15
