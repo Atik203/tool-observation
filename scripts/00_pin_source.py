@@ -47,7 +47,8 @@ def main(argv: list[str] | None = None) -> int:
     manifest_out = resolve_repo_path(args.manifest_out)
 
     try:
-        existing = load_pin(out) if out.is_file() else None
+        existing_path = manifest_out if manifest_out.is_file() else out
+        existing = load_pin(existing_path) if existing_path.is_file() else None
     except (OSError, ValueError, PinError):
         existing = None
     try:
