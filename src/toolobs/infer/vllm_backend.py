@@ -30,11 +30,14 @@ class VLLMBackend:
         revision = str(model_config.get("revision", "TBD"))
         if revision == "TBD":
             raise RuntimeError("model revision is TBD; pin it in configs/models.yaml")
+        quantization = str(model_config.get("quantization", "awq"))
+        if quantization == "awq_4bit":
+            quantization = "awq"
         self.model_id = str(model_config["id"])
         self.llm = LLM(
             model=str(model_config["repo_id"]),
             revision=revision,
-            quantization=str(model_config.get("quantization", "awq")),
+            quantization=quantization,
             dtype=str(model_config.get("dtype", "float16")),
             max_model_len=int(model_config.get("max_model_len", 8192)),
             gpu_memory_utilization=float(model_config.get("gpu_memory_utilization", 0.90)),

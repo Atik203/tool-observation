@@ -81,10 +81,13 @@ def main(argv: list[str] | None = None) -> int:
     }
     started = time.perf_counter()
     try:
+        quantization = str(config.get("quantization", "awq"))
+        if quantization == "awq_4bit":
+            quantization = "awq"
         llm = LLM(
             model=str(config["repo_id"]),
             revision=str(config["revision"]),
-            quantization=str(config.get("quantization", "awq")),
+            quantization=quantization,
             dtype=str(config.get("dtype", "float16")),
             max_model_len=args.max_model_len,
             gpu_memory_utilization=args.gpu_memory_utilization,
