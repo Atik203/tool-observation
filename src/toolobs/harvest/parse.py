@@ -489,6 +489,19 @@ def read_jsonl(path: str | Path) -> list[PrefixRecord]:
     return records
 
 
+def read_jsonl_dicts(path: str | Path) -> list[dict[str, Any]]:
+    """Read a JSONL file of arbitrary JSON objects."""
+    rows: list[dict[str, Any]] = []
+    with Path(path).open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if line.strip():
+                payload = json.loads(line)
+                if not isinstance(payload, dict):
+                    raise ParseError(f"JSONL row is not an object: {path}")
+                rows.append(payload)
+    return rows
+
+
 def validate_candidate(record: PrefixRecord) -> list[str]:
     """Return missing or inconsistent fields for one candidate."""
     problems: list[str] = []

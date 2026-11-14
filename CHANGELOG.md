@@ -29,6 +29,8 @@ the v1.0 dataset and paper release.
 - Deterministic prose renderer and perturbation generator: 4,400 arms, 2,640 perturbation
   records, 100% s=0 value-set equality, no PII perturbations.
 - G0 human audit packet and scoring path; audit remains pending human labels.
+- Disjoint 60-prefix calibration selection and freeze dry-run manifest builder; final manifest is
+  gated on the human audit.
 - Contract tests for hashing, schemas, config invariants, paths, CLI, field registry, pinning,
   parsing, relevance, scrubbing, replay comparison, sampling, and rendering.
 

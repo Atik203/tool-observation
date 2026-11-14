@@ -34,6 +34,8 @@ triggers an automatic production deployment.
   `docs/DECISIONS.md`.
 - **Sample:** 800 primary + 80 reserve; 400 airline + 400 retail; cap-10 airline 442.
 - **Render:** 4,400 arms and 2,640 perturbation records; 100% s=0 value-set equality.
+- **Calibration:** 60 disjoint prefixes (30 airline + 30 retail).
+- **Freeze dry-run:** manifest shape validates; final freeze is blocked on the human audit.
 - **Pending:** human 40-item audit (≥36/40) and the frozen `toolresult800_v1` manifest. No GPU
   workload has run.
 

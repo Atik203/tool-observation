@@ -22,6 +22,8 @@
 | Replay | **DONE** | 5,511/5,516 eligible matches (99.91%); full-pool 87.39% due to historical `get_user_details` `province`/`state` drift; `data/interim/replay_matched.jsonl` |
 | Sample | **DONE** | 800 primary + 80 reserve; 400/400 domain; cap-10 airline 442, retail 1,144; `data/interim/sample.jsonl` |
 | Render + perturb | **DONE** | 4,400 arms (880 × 5); 2,640 perturbation records (880 each s=1/2/3); 100% s=0 value-set equality; `data/interim/rendered.jsonl`, `data/interim/perturbations.jsonl` |
+| Calibration selection | **DONE** | 60 prefixes (30 airline + 30 retail), disjoint from the 880; `data/interim/calibration.jsonl` |
+| Freeze dry-run | **DONE** | Manifest shape validates: 800+80, 4,400 arms, 2,640 perturbations, 60 calibration; `artifacts/audit/freeze_dry_run.json` |
 | Human audit | **PENDING** | 40-item packet and blank sheet generated; gate ≥36/40; `artifacts/audit/g0_audit_packet.csv` |
 | Freeze | **PENDING** | Blocked on audit; no `toolresult800_v1.json` yet; no target output generated |
 | H200 environment | **PARTIAL** | project clone + CPU venv + tests pass; GPU stack not installed; no GPU workload run |
