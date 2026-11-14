@@ -2,7 +2,7 @@
 # only content differs. V is the verbatim JSON anchor and is excluded from the
 # primary linear slope.
 renderer:
-  version: cto-prose-v1
+  version: toolresult-prose-v1
   deterministic: true
   llm_paraphrase: false
   template: key_value_bullets

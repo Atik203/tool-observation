@@ -62,12 +62,12 @@ class RelevanceResult:
         }
 
 
-def _is_simple_key(key: str) -> bool:
+def is_simple_key(key: str) -> bool:
     return re.fullmatch(r"[A-Za-z_][A-Za-z0-9_ -]*", key) is not None
 
 
-def _join(path: str, key: str) -> str:
-    if _is_simple_key(key):
+def join_path(path: str, key: str) -> str:
+    if is_simple_key(key):
         return f"{path}.{key}"
     return f'{path}["{key}"]'
 
@@ -84,8 +84,8 @@ def flatten_leaves(
             key_text = str(key)
             yield from flatten_leaves(
                 child,
-                path=_join(path, key_text),
-                pattern=f"{pattern}.{key_text}" if _is_simple_key(key_text) else f"{pattern}.*",
+                path=join_path(path, key_text),
+                pattern=f"{pattern}.{key_text}" if is_simple_key(key_text) else f"{pattern}.*",
             )
     elif isinstance(value, list):
         for index, child in enumerate(value):

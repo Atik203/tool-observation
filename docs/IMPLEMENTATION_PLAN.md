@@ -2,8 +2,10 @@
 
 **Version:** 0.1.0 (scaffold), 2026-11-09.
 **Study:** Tool-Result Errors in Language-Model Agents: A Fixed-Prefix Causal Study (ToolResult-800).
-**Status:** pre-confirmatory. No gate has been run. This plan is the execution reference for
-P0–P5 and is subordinate to the preregistration once frozen.
+**Status:** pre-confirmatory. The CPU-only G0 pipeline is implemented through render and the
+human audit packet; the 40-item audit and the frozen manifest are pending. No GPU run has
+started. This plan is the execution reference for P0–P5 and is subordinate to the
+preregistration once frozen.
 
 ---
 

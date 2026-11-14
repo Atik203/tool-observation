@@ -25,8 +25,12 @@ the v1.0 dataset and paper release.
   residual direct identifiers.
 - Replay harness that executes pinned τ-bench tool calls from a fresh task database and compares
   normalized observations. Eligible-pool replay: 5,511/5,516 (99.91%); airline cap-10 442.
+- Deterministic stratified sampler: 800 primary + 80 reserve, 400/400 domain, cap 10/task.
+- Deterministic prose renderer and perturbation generator: 4,400 arms, 2,640 perturbation
+  records, 100% s=0 value-set equality, no PII perturbations.
+- G0 human audit packet and scoring path; audit remains pending human labels.
 - Contract tests for hashing, schemas, config invariants, paths, CLI, field registry, pinning,
-  parsing, relevance, scrubbing, and replay comparison.
+  parsing, relevance, scrubbing, replay comparison, sampling, and rendering.
 
 ### Planned
 

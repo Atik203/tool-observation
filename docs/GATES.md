@@ -35,6 +35,27 @@ Checks:
 **Observed harvest supply (planning input, not a gate result):** 13,605 candidates, 11,318
 JSON-parseable, 6,554 eligible value-used, 1,646 at a 10/task cap.
 
+**Current G0 evidence (draft, 2026-11-15):**
+
+| Check | Observed | Status |
+|---|---|---|
+| Candidates | 13,605 (1,980 trajectories; 11,318 JSON) | pass |
+| Profile/PII excluded | 3,692 candidates | pass |
+| Eligible value-used | 5,516 (airline 1,434; retail 4,082) | pass ≥880 |
+| Replay (eligible non-profile) | 5,511/5,516 = 99.91% | pass ≥98% |
+| Cap-10 supply | airline 442; retail 1,144 | pass ≥440/domain, airline margin 2 |
+| Sample | 800 primary (400/400) + 80 reserve (40/40) | pass |
+| Render | 4,400 arms; 2,640 perturbations; 100% s=0 value-set equality | pass |
+| Human audit | 40-item packet generated; sheet unfilled | **pending** |
+| Freeze | `toolresult800_v1.json` not written | **pending** |
+
+The observed 5,516 eligible is below the 6,554 planning figure because the operational
+value-used rule is stricter (normalized token matching; incidental scrubbed PII is allowed, but
+PII-only or PII-target prefixes are excluded). The authoritative G0 floor is 880, not 6,554.
+Full-pool replay is 87.39% because historical `get_user_details` outputs use
+`address.province` while the pinned data uses `address.state`; the eligible non-profile pool is
+the replay population (D-011).
+
 **Fail:** if supply is short or replay fails, fix the harness and re-run before sampling. If the
 audit fails, revise the scrub/relevance rules and re-sample from the reserve. If the shortfall
 persists, fall back to 500 prefixes and 2 models (drop persistent first), or stop.

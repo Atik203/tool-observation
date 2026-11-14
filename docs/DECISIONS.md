@@ -6,6 +6,37 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-013 — Renderability filter excludes scalar-only `calculate` prefixes
+
+- **Date:** 2026-11-15
+- **Status:** accepted (pre-freeze)
+- **Context:** The five-arm design requires one critical field for s=2 and one noncritical field for
+  s=1 (and for the s=3 second contradiction). A scalar `calculate` observation has one used field
+  and no noncritical field, so s=1 and s=3 cannot be constructed without changing the design.
+- **Decision:** A prefix is renderable only if it has at least one critical and at least one
+  noncritical field. The sampler drops unrenderable prefixes before the 10/task cap. This removes
+  194 matched `calculate` candidates. The airline cap-10 remains **442** and retail **1,144**, so
+  the 400/400 + 40/40 target is unaffected.
+- **Consequences:** The frozen sample has no `compute` stratum. The renderer, not the sampler,
+  remains the authority on field coverage; any future tool with fewer than two fields is excluded
+  by the same rule before freeze.
+
+---
+
+## D-012 — Renderer version renamed to `toolresult-prose-v1`
+
+- **Date:** 2026-11-15
+- **Status:** accepted (pre-freeze)
+- **Context:** The scaffold used the legacy label `cto-prose-v1` for the deterministic renderer.
+  The dataset brand is ToolResult-800 and the old brand should not appear in new frozen material.
+- **Decision:** The renderer version is **`toolresult-prose-v1`** in `configs/arms.yaml`,
+  `configs/harvest.yaml`, the renderer constant, and the perturbation records. No artifact has
+  been frozen yet, so this is a rename, not a version change to a released dataset.
+- **Consequences:** Regenerate the rendered arms and perturbation records after the rename; the
+  renderer hash and version are recorded in the G0 manifest.
+
+---
+
 ## D-011 — Replay passes on eligible prefixes; profile-tool schema drift disclosed
 
 - **Date:** 2026-11-15

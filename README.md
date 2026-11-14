@@ -6,9 +6,12 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](pyproject.toml)
 
-> **Research status: pre-confirmatory (scaffold, v0.1.0).** No confirmatory results exist yet.
-> The only empirical evidence is a 60-prefix pilot. It is a screening signal, **not** a
-> dose-response law. The confirmatory run has not started; gates G0–G4 are defined but unpassed.
+> **Research status: pre-confirmatory (G0 implementation complete; human audit and freeze
+> pending).** The CPU-only G0 pipeline is implemented: 13,605 candidates → 5,516 eligible →
+> 5,511 replay-matched → 880 sampled (800 primary + 80 reserve). The 40-item human audit and the
+> frozen manifest are not complete, and no GPU run has started. The only empirical evidence is
+> the 60-prefix pilot; it is a screening signal, **not** a dose-response law. Gates G0–G4 are
+> defined but unpassed.
 
 ## Live site
 
@@ -18,6 +21,21 @@
 
 The site is deployed from `web/` on Vercel. The production branch is `main`; pushing to `main`
 triggers an automatic production deployment.
+
+## G0 progress (2026-11-15)
+
+- **Pin:** τ-bench commit `59a200c`; four trajectory files, six task databases, and the harness
+  digest are recorded in `data/manifests/source_pin.json`.
+- **Parse:** 1,980 trajectories → 13,605 post-tool candidates; 11,318 JSON-parseable.
+- **Scrub/relevance:** 5,516 eligible (airline 1,434; retail 4,082); 0 residual direct
+  identifiers in the scrubbed scan.
+- **Replay:** 5,511/5,516 eligible matches (99.91%). Full-pool replay is 87.39%; the gap is the
+  historical `get_user_details` `province`/`state` schema drift, disclosed in
+  `docs/DECISIONS.md`.
+- **Sample:** 800 primary + 80 reserve; 400 airline + 400 retail; cap-10 airline 442.
+- **Render:** 4,400 arms and 2,640 perturbation records; 100% s=0 value-set equality.
+- **Pending:** human 40-item audit (≥36/40) and the frozen `toolresult800_v1` manifest. No GPU
+  workload has run.
 
 ## The question
 

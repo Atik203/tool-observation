@@ -30,7 +30,7 @@ def test_prefix_round_trip() -> None:
         step_index_bucket="early",
         used_fields=[{"json_path": "/a", "value": 1}],
         critical_fields=["a"],
-        renderer_version="cto-prose-v1",
+        renderer_version="toolresult-prose-v1",
         arm="s0",
         severity=0,
     )
@@ -49,7 +49,7 @@ def test_perturbation_round_trip() -> None:
         false_value=48.5,
         criticality="critical",
         expected_action_change=True,
-        renderer_version="cto-prose-v1",
+        renderer_version="toolresult-prose-v1",
         record_id="r1",
         perturbation_mode="numeric_scale",
         pii_check=True,

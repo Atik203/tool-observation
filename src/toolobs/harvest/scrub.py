@@ -370,6 +370,55 @@ def build_pii_map(
     return pii_map
 
 
+def build_trajectory_pii_map(
+    trajectory: Trajectory,
+    *,
+    policy: PiiPolicy,
+    users: dict[str, dict[str, Any]],
+) -> PiiMap:
+    """Build a map from the task user and every tool message in a trajectory."""
+    pii_map = PiiMap()
+    task = trajectory.info.get("task") if isinstance(trajectory.info, dict) else {}
+    user_id = task.get("user_id") if isinstance(task, dict) else None
+    if isinstance(user_id, str):
+        user = users.get(user_id)
+        if isinstance(user, dict):
+            _add_task_user(pii_map, user, user_id)
+        else:
+            pii_map.add("user", user_id)
+    for message in trajectory.messages:
+        if message.get("role") != "tool":
+            continue
+        content = message.get("content")
+        if not isinstance(content, str):
+            continue
+        try:
+            observation = json.loads(content)
+        except json.JSONDecodeError:
+            continue
+        _collect_observation_pii(observation, policy, pii_map)
+    return pii_map
+
+
+def scrub_prefix_messages(
+    record: PrefixRecord,
+    store: TrajectoryStore,
+    *,
+    policy: PiiPolicy,
+    users: dict[str, dict[str, Any]],
+    pii_map: PiiMap | None = None,
+) -> tuple[list[dict[str, Any]], PiiMap]:
+    """Scrub the frozen prefix messages for one candidate."""
+    trajectory = store.get_trajectory(record)
+    if pii_map is None:
+        pii_map = build_trajectory_pii_map(trajectory, policy=policy, users=users)
+    messages = [
+        scrub_message(message, policy, pii_map)
+        for message in trajectory.messages[: record.message_index + 1]
+    ]
+    return messages, pii_map
+
+
 def _iter_scalar_texts(value: Any) -> Iterable[str]:
     """Yield scalar values, excluding dict keys, for leak scanning."""
     if isinstance(value, dict):

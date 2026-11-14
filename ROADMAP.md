@@ -6,7 +6,29 @@
 (18 GB VRAM).
 **Cash:** $0; the university provides the GPU. No paid API, no second GPU. Operational stop:
 45 GPU-hours or 200 GB storage.
-**Planning horizon:** 18 weeks, part-time team of 3–4.
+**Planning horizon:** 18 weeks, part-time team of 3-4.
+
+---
+
+## 0. Current progress (2026-11-15)
+
+**Status: G0 implementation complete; human audit and freeze pending. No GPU run has started.**
+
+| G0 stage | Status | Evidence |
+|---|---|---|
+| Pin τ-bench | **DONE** | commit `59a200c`, 4 trajectory + 6 task-DB hashes, harness digest; `data/manifests/source_pin.json` |
+| Parse | **DONE** | 1,980 trajectories, 13,605 candidates, 11,318 JSON-parseable; `data/interim/candidates.jsonl` |
+| Scrub + relevance | **DONE (draft policy)** | 5,516 eligible (airline 1,434; retail 4,082); 0 PII leaks; `data/interim/eligible.jsonl` |
+| Replay | **DONE** | 5,511/5,516 eligible matches (99.91%); full-pool 87.39% due to historical `get_user_details` `province`/`state` drift; `data/interim/replay_matched.jsonl` |
+| Sample | **DONE** | 800 primary + 80 reserve; 400/400 domain; cap-10 airline 442, retail 1,144; `data/interim/sample.jsonl` |
+| Render + perturb | **DONE** | 4,400 arms (880 × 5); 2,640 perturbation records (880 each s=1/2/3); 100% s=0 value-set equality; `data/interim/rendered.jsonl`, `data/interim/perturbations.jsonl` |
+| Human audit | **PENDING** | 40-item packet and blank sheet generated; gate ≥36/40; `artifacts/audit/g0_audit_packet.csv` |
+| Freeze | **PENDING** | Blocked on audit; no `toolresult800_v1.json` yet; no target output generated |
+| H200 environment | **PARTIAL** | project clone + CPU venv + tests pass; GPU stack not installed; no GPU workload run |
+
+The ten-day table below is the original plan. Intermediate files are now JSONL rather than
+parquet, and the 6,500/1,500 relevance figures are planning inputs, not G0 gates; the
+authoritative floor is ≥880 eligible and ≥440/domain (`docs/GATES.md`).
 
 ---
 
