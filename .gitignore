@@ -179,3 +179,5 @@ scratch/
 
 # Never ignore the placeholder files that keep directories in git
 !.gitkeep
+# Project-local toolchain headers and scratch dependencies
+.deps/
