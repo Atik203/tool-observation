@@ -7,7 +7,9 @@ FakeBackend and never import torch or vLLM.
 from __future__ import annotations
 
 import json
+import re
 from collections import Counter
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
@@ -20,6 +22,28 @@ from .parse_output import ParsedDecision, parse_decision, signature_hash, signat
 from .prompt import PROMPT_VERSION, build_prompt_messages, prompt_hash
 
 PARSER_VERSION = "toolresult-parser-v1"
+
+
+def response_regex_for_tools(tools: Iterable[dict[str, Any]]) -> str | None:
+    """Regex forcing one JSON decision over the allowed tool names or a final answer.
+
+    vLLM's structured-output backend silently ignores JSON schemas that use
+    ``anyOf``/``oneOf``; a single regex is enforced. The tool list is already
+    filtered to exclude reasoning scaffolds such as ``think``.
+    """
+    names = [
+        str(tool["function"]["name"])
+        for tool in tools
+        if isinstance(tool, dict) and isinstance(tool.get("function"), dict)
+    ]
+    if not names:
+        return None
+    alternatives = "|".join(re.escape(name) for name in names)
+    return (
+        r'\{"(?:tool": "(?:'
+        + alternatives
+        + r')", "arguments": \{[\s\S]*\}|final_answer": "[\s\S]*")\}'
+    )
 
 
 @dataclass(slots=True)
@@ -117,6 +141,7 @@ def run_rendered_rows(
     step: int = 0,
     batch_size: int = 1,
     skip_completed: set[tuple[str, str, int]] | None = None,
+    excluded_tools: Iterable[str] = (),
 ) -> RunStats:
     """Run one model over rendered arms and append one ledger row per generation.
 
@@ -124,12 +149,24 @@ def run_rendered_rows(
     vLLM backend can use continuous batching. The ledger order is unchanged.
     ``skip_completed`` holds ``(prefix_id, arm, step)`` keys already present in
     the ledger, so an interrupted run resumes without duplicating rows.
+    ``excluded_tools`` removes reasoning scaffolds such as ``think`` from the
+    prompt and from the constrained-decoding regex.
     """
     if batch_size < 1:
         raise ValueError("batch_size must be >= 1")
     completed = skip_completed or set()
+    excluded = set(excluded_tools)
     stats = RunStats()
     tools_cache = dict(tools_by_domain or {})
+    for domain, tools in list(tools_cache.items()):
+        tools_cache[domain] = [
+            tool
+            for tool in tools
+            if str((tool.get("function") or {}).get("name")) not in excluded
+        ]
+    regex_cache: dict[str, str | None] = {
+        domain: response_regex_for_tools(tools) for domain, tools in tools_cache.items()
+    }
     pending: list[tuple[dict[str, Any], list[dict[str, Any]], str, str]] = []
     pending_domain: str | None = None
 
@@ -137,7 +174,10 @@ def run_rendered_rows(
         nonlocal pending, pending_domain
         if not pending:
             return
-        generations = backend.generate([item[1] for item in pending])
+        generations = backend.generate(
+            [item[1] for item in pending],
+            response_regex=regex_cache.get(pending_domain or ""),
+        )
         if len(generations) != len(pending):
             raise RuntimeError(
                 f"backend returned {len(generations)} generations for {len(pending)} prompts"
@@ -186,7 +226,12 @@ def run_rendered_rows(
         if domain not in tools_cache:
             if upstream_dir is None:
                 raise ValueError(f"no tools for domain {domain!r}")
-            tools_cache[domain] = load_domain_tools(upstream_dir, domain)
+            tools_cache[domain] = [
+                tool
+                for tool in load_domain_tools(upstream_dir, domain)
+                if str((tool.get("function") or {}).get("name")) not in excluded
+            ]
+            regex_cache[domain] = response_regex_for_tools(tools_cache[domain])
         if pending and (domain != pending_domain or len(pending) >= batch_size):
             flush()
         messages = json.loads(row["messages_json"])

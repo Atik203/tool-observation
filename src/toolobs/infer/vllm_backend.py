@@ -67,15 +67,23 @@ class VLLMBackend:
         self.llm = LLM(**kwargs)
         self.tokenizer = self.llm.get_tokenizer()
         self.template_kwargs = chat_template_kwargs(model_config)
+        self.max_tokens = max_tokens
+        self.seed = seed
         self.sampling = SamplingParams(
             temperature=0.0,
             top_p=1.0,
             max_tokens=max_tokens,
-            stop=["\n\n"],
             seed=seed,
         )
+        self._sampling_params_cls = SamplingParams
 
-    def generate(self, prompts: list[list[dict[str, Any]]], **kwargs: Any) -> list[Generation]:
+    def generate(
+        self,
+        prompts: list[list[dict[str, Any]]],
+        *,
+        response_regex: str | None = None,
+        **kwargs: Any,
+    ) -> list[Generation]:
         texts = [
             self.tokenizer.apply_chat_template(
                 prompt,
@@ -85,8 +93,19 @@ class VLLMBackend:
             )
             for prompt in prompts
         ]
+        sampling = self.sampling
+        if response_regex:
+            from vllm.sampling_params import StructuredOutputsParams  # noqa: PLC0415
+
+            sampling = self._sampling_params_cls(
+                temperature=0.0,
+                top_p=1.0,
+                max_tokens=self.max_tokens,
+                seed=self.seed,
+                structured_outputs=StructuredOutputsParams(regex=response_regex),
+            )
         started = perf_counter()
-        outputs = self.llm.generate(texts, self.sampling)
+        outputs = self.llm.generate(texts, sampling)
         elapsed_ms = (perf_counter() - started) * 1000.0
         per_prompt = elapsed_ms / max(1, len(outputs))
         generations: list[Generation] = []

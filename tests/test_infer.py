@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from toolobs.hashing import canonical_json
 from toolobs.infer.ledger import read_ledger
 from toolobs.infer.parse_output import (
@@ -10,7 +12,12 @@ from toolobs.infer.parse_output import (
     signature_hash,
 )
 from toolobs.infer.prompt import build_prompt_messages, normalize_messages
-from toolobs.infer.runner import FakeBackend, Generation, run_rendered_rows
+from toolobs.infer.runner import (
+    FakeBackend,
+    Generation,
+    response_regex_for_tools,
+    run_rendered_rows,
+)
 from toolobs.infer.vllm_backend import chat_template_kwargs
 
 TOOLS = [
@@ -20,6 +27,17 @@ TOOLS = [
             "name": "get_order_details",
             "description": "Get order details.",
             "parameters": {"type": "object", "properties": {"order_id": {"type": "string"}}},
+        },
+    }
+]
+
+TOOLS_WITH_THINK = TOOLS + [
+    {
+        "type": "function",
+        "function": {
+            "name": "think",
+            "description": "Reason about the next step.",
+            "parameters": {"type": "object", "properties": {"thought": {"type": "string"}}},
         },
     }
 ]
@@ -177,10 +195,55 @@ def test_fake_runner_writes_ledger(tmp_path) -> None:
 class _BatchRecordingBackend:
     def __init__(self) -> None:
         self.batch_sizes: list[int] = []
+        self.regexes: list[str | None] = []
+        self.prompts: list[list[dict]] = []
 
     def generate(self, prompts, **kwargs):
         self.batch_sizes.append(len(prompts))
+        self.regexes.append(kwargs.get("response_regex"))
+        self.prompts.extend(prompts)
         return [Generation(text='{"final_answer": "ok"}') for _ in prompts]
+
+
+def test_response_regex_allows_tool_or_final_answer_but_not_think() -> None:
+    pattern = response_regex_for_tools(TOOLS)
+    assert pattern is not None
+    assert re.fullmatch(pattern, '{"tool": "get_order_details", "arguments": {"order_id": "#w1"}}')
+    assert re.fullmatch(pattern, '{"final_answer": "done"}')
+    assert re.fullmatch(pattern, '{"tool": "think", "arguments": {"thought": "hmm"}}') is None
+
+
+def test_runner_excludes_think_and_passes_regex(tmp_path) -> None:
+    rows = [
+        {
+            "prefix_id": "airline-a",
+            "domain": "airline",
+            "arm": "V",
+            "messages_json": canonical_json(
+                [
+                    {"role": "system", "content": "policy"},
+                    {"role": "tool", "name": "get_order_details", "content": "{}"},
+                ]
+            ),
+        }
+    ]
+    backend = _BatchRecordingBackend()
+    run_rendered_rows(
+        rows,
+        backend=backend,
+        model_id="qwen",
+        run_id="run-regex",
+        stage="calibration",
+        manifest_hash="m" * 64,
+        ledger_path=tmp_path / "ledger.jsonl",
+        tools_by_domain={"airline": TOOLS_WITH_THINK},
+        excluded_tools=["think"],
+    )
+    assert backend.regexes and backend.regexes[0] is not None
+    assert "think" not in backend.prompts[0][0]["content"]
+    assert re.fullmatch(
+        backend.regexes[0], '{"tool": "think", "arguments": {"thought": "hmm"}}'
+    ) is None
 
 
 def test_runner_resumes_without_duplicating(tmp_path) -> None:

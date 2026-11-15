@@ -100,6 +100,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.limit:
         rows = rows[: args.limit]
     manifest_hash = _manifest_hash(args.stage, args.manifest)
+    models_config = load_config("models.yaml")
     started = time.perf_counter()
     ledgers: dict[str, Path] = {}
 
@@ -129,9 +130,9 @@ def main(argv: list[str] | None = None) -> int:
 
             backend = VLLMBackend(
                 model,
-                max_tokens=int(load_config("models.yaml")["decoding"]["max_tokens"]),
+                max_tokens=int(models_config["decoding"]["max_tokens"]),
                 seed=int(calibration["seed"]),
-                max_num_seqs=int(load_config("models.yaml")["serving"]["max_num_seqs"]),
+                max_num_seqs=int(models_config["serving"]["max_num_seqs"]),
             )
         stats = run_rendered_rows(
             rows,
@@ -144,8 +145,9 @@ def main(argv: list[str] | None = None) -> int:
             upstream_dir=resolve_repo_path("data/upstream/tau-bench"),
             prompt_version=str(calibration["prompt_version"]),
             parser_version=str(calibration["parser_version"]),
-            batch_size=int(load_config("models.yaml")["serving"]["batch_size"]),
+            batch_size=int(models_config["serving"]["batch_size"]),
             skip_completed=completed,
+            excluded_tools=models_config["serving"].get("excluded_tools", []),
         )
         ledgers[model_id] = ledger_path
         print(f"[09_run] {model_id} {stats.as_dict()}")

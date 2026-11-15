@@ -6,6 +6,43 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-023 — G1 harness fix: exclude `think`, constrain JSON, 1,024-token budget
+
+- **Date:** 2026-11-15
+- **Status:** accepted (G1 calibration fix; no target outcomes analyzed)
+- **Context:** The first G1 calibration run passed Qwen 300/300 but Ministral parsed only
+  76/300 (25.3%): 42 empty outputs, 134 truncated `final_answer` objects, and a few prompt
+  echoes. `think` is a real τ-bench tool, but using it as a reasoning scratchpad spends the
+  decision budget without taking a task action.
+- **Decision:** Exclude `think` from the prompt tool list and from constrained decoding; force
+  one JSON object with either a listed task tool or `final_answer` using a vLLM structured
+  regex; raise the decision budget from 256 to 1,024 tokens; remove the `\n\n` stop sequence.
+  The regex is built from the filtered domain tools and applied uniformly to all three models.
+- **Evidence:** On five previously failing Ministral rows, the constrained run parsed 5/5 as
+  real task actions (`get_user_details`, `search_direct_flight`) with no empty or truncated
+  output. This is harness evidence, not a study result.
+- **Consequences:** G1 is rerun from scratch for all three models. The frozen data, manifest,
+  sample, arms, and estimand are unchanged; the manifest's `config_hashes` remain the G0
+  snapshot, while the G1 serving configuration is recorded here and in the paper. The G1 gate
+  (parse ≥95%, jitter ≤20%, s=3 switch 10–80%, refusal <5% per model) is unchanged.
+
+---
+
+## D-022 — One vLLM process per model
+
+- **Date:** 2026-11-15
+- **Status:** accepted (G1 calibration fix)
+- **Context:** `09_run.py --all-models` loaded Qwen, then Ministral in the same process; vLLM
+  kept the first engine alive and Ministral failed at initialization with
+  `CUBLAS_STATUS_ALLOC_FAILED`. Deleting the Python object did not release the engine.
+- **Decision:** Run one `09_run.py` process per model via `scripts/09a_run_all.py`, which skips
+  completed ledgers, streams each model, and combines the calibration report. `09_run.py`
+  refuses `--all-models` with the vLLM backend.
+- **Consequences:** GPU memory is released between families. The orchestration is resumable and
+  is used for G1 and G2.
+
+---
+
 ## D-021 — G0 audit labels adopted from the AI pre-audit; author verification deferred
 
 - **Date:** 2026-11-15

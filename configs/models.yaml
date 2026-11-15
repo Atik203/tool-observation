@@ -6,7 +6,7 @@
 # not publish an official AWQ artifact. The Llama build is the high-download
 # hugging-quants AWQ conversion of the official Llama-3.1-8B-Instruct weights.
 # Fit checks are recorded in docs/H200_ENV.md. The context is 24,576 tokens
-# because the longest real prompt is 20,848 tokens plus the 256-token decision;
+# because the longest real prompt is 20,848 tokens plus the 1,024-token decision;
 # an 8k context would reject 107-237 of the 880 frozen prefixes.
 models:
   - id: qwen3_5_9b_instruct_awq
@@ -22,7 +22,7 @@ models:
     max_model_len: 24576
     gpu_memory_utilization: 0.85
     enforce_eager: false
-    # Qwen3.5 is a reasoning model; disable the thinking block so the 256-token
+    # Qwen3.5 is a reasoning model; disable the thinking block so the 1,024-token
     # decision budget is spent on the single JSON decision, as for the others.
     chat_template_kwargs:
       enable_thinking: false
@@ -44,7 +44,7 @@ models:
     enforce_eager: true
     max_num_seqs: 4
     max_num_batched_tokens: 4096
-    # Ministral 3 is reasoning-capable; turn off [THINK] blocks so the 256-token
+    # Ministral 3 is reasoning-capable; turn off [THINK] blocks so the 1,024-token
     # budget goes to the single JSON decision, as for the other families.
     chat_template_kwargs:
       reasoning_effort: none
@@ -66,8 +66,7 @@ decoding:
   temperature: 0.0
   top_p: 1.0
   top_k: -1
-  max_tokens: 256
-  stop: ["\n\n"]
+  max_tokens: 1024
   seed: 20261108
 
 serving:
@@ -76,6 +75,10 @@ serving:
   batch_size: 8
   max_num_seqs: 8
   one_model_at_a_time: true
+  # `think` is a τ-bench reasoning scaffold, not a task action. Excluding it
+  # keeps the next-decision outcome about environment actions and final answers.
+  excluded_tools:
+    - think
 
 substitute_policy:
   trigger: "Primary model unavailable, license not accepted, or AWQ weights fail to load on the H200 slice."
