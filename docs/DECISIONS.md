@@ -6,6 +6,29 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-020 — Prompt v3: plain-text call history plus a final instruction turn
+
+- **Date:** 2026-11-15
+- **Status:** accepted (pre-freeze; no study generation has run)
+- **Context:** The v2 transcript rendered historical tool calls as `<tool_call>` blocks. A
+  synthetic backend smoke showed Qwen3.5 echoing the block instead of the requested JSON, and
+  Ministral returning an empty completion whenever the last turn was a bare tool result. The
+  model needs a plain history and an explicit instruction as the final user turn.
+- **Decision:** `normalize_messages` renders each historical call as
+  `I called <name> with <canonical-json-arguments>.`; tool results remain user turns with a
+  `[tool result: name]` marker; `build_prompt_messages` appends
+  `Respond now with exactly one JSON object for the next action.` as the final user message.
+  The prompt version becomes **`toolresult-next-decision-v3`**. The system instruction, tool
+  schemas, parser, and 256-token budget are unchanged.
+- **Evidence:** A synthetic airline tool-call history generated valid parsed JSON on all three
+  models (`artifacts/env/v3_smoke.log`). Ministral produced empty output under v2 and valid JSON
+  under v3. No study prefix was used.
+- **Consequences:** This supersedes the rendering detail of D-018; v2 was never used for a
+  study generation. The extra instruction turn adds about 15 tokens, which still fits the 24k
+  context. The prompt is not tuned per family.
+
+---
+
 ## D-019 — Context raised to 24,576 tokens for the frozen prefixes
 
 - **Date:** 2026-11-15

@@ -14,7 +14,9 @@ from typing import Any
 
 from ..hashing import canonical_json, sha256_text
 
-PROMPT_VERSION = "toolresult-next-decision-v2"
+PROMPT_VERSION = "toolresult-next-decision-v3"
+
+NEXT_ACTION_TAIL = "Respond now with exactly one JSON object for the next action."
 
 
 def _instruction(tools_info: list[dict[str, Any]]) -> str:
@@ -45,10 +47,12 @@ def normalize_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
     τ-bench histories use OpenAI-style assistant ``tool_calls`` with JSON-string
     arguments and sometimes ``content: null``. Qwen's template expects a mapping,
-    Llama's expects string content, and Ministral's validator rejects the
-    original tool-call ids. Rendering calls as canonical text blocks and tool
-    results as user turns with a ``[tool result: name]`` marker gives all three
-    families the same valid transcript without template-specific tool grammar.
+    Llama's expects string content, and Ministral's validator rejects the original
+    tool-call ids. Rendering calls as "I called ..." text, tool results as user
+    turns with a ``[tool result: name]`` marker, and a final user instruction turn
+    gives all three families the same valid transcript without template-specific
+    tool grammar; Ministral otherwise emits an empty completion when the last turn
+    is a bare tool result.
     """
     normalized: list[dict[str, Any]] = []
     for message in copy.deepcopy(messages):
@@ -74,8 +78,8 @@ def normalize_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 arguments = _canonical_arguments(
                     function.get("arguments", call.get("arguments", {}))
                 )
-                payload = canonical_json({"name": name, "arguments": arguments})
-                blocks.append(f"<tool_call>\n{payload}\n</tool_call>")
+                payload = canonical_json(arguments)
+                blocks.append(f"I called {name} with {payload}.")
             body = message["content"].rstrip()
             message["content"] = "\n\n".join(part for part in (body, *blocks) if part)
         if message.get("tool_call_id") is None:
@@ -97,6 +101,7 @@ def build_prompt_messages(
         updated[0]["content"] = f"{content.rstrip()}\n\n{instruction}"
     else:
         updated.insert(0, {"role": "system", "content": instruction})
+    updated.append({"role": "user", "content": NEXT_ACTION_TAIL})
     return updated
 
 

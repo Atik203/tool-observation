@@ -37,7 +37,9 @@ def test_prompt_appends_instruction_and_preserves_prefix() -> None:
     assert "Respond with exactly one JSON object" in prompt[0]["content"]
     assert "get_order_details" in prompt[0]["content"]
     assert messages[0]["content"] == "policy"
-    assert len(prompt) == len(messages)
+    assert len(prompt) == len(messages) + 1
+    assert prompt[-1]["role"] == "user"
+    assert prompt[-1]["content"].startswith("Respond now with exactly one JSON object")
 
 
 def test_parse_tool_call() -> None:
@@ -97,8 +99,7 @@ def test_normalize_messages_renders_tool_calls_as_text() -> None:
     ]
     normalized = normalize_messages(messages)
     assert normalized[0]["content"] == "policy"
-    assert normalized[1]["content"].startswith("<tool_call>")
-    assert '"name":"get_user_details"' in normalized[1]["content"]
+    assert normalized[1]["content"].startswith("I called get_user_details with")
     assert '"user_id":"user_abc"' in normalized[1]["content"]
     assert "tool_calls" not in normalized[1]
     assert "tool_call_id" not in normalized[1]
