@@ -1,7 +1,9 @@
 # Evidence map — ToolResult-800 manuscript
 
-**Snapshot:** 2026-11-15 · repository HEAD `0a0ebc0` · working tree at snapshot (uncommitted
-edits present) · pre-G2.
+**Snapshot:** 2026-11-15 · working tree at time of writing · HEAD moved from `0a0ebc0` to
+`e25782a` during the session · pre-G2. Re-check line numbers and the decision log before citing.
+**Companion:** `paper/toolresult800.tex` (manuscript skeleton). This file is the register for its
+numbers; the manuscript's `\pending{...}` markers should match the placeholders in §4.
 **Purpose:** one register of every quantitative claim the manuscript may make, the exact value,
 and the file that records it. If a value is not in a source, it stays `[PENDING: ...]`.
 **Hard rule:** a number may enter the manuscript only if it appears here with a source that
@@ -267,11 +269,13 @@ appendix, not in the prose.
 | Target | **target model** | One of the three open-weight 8–9B models that produces the next decision | "test model", "student" |
 | Study | **tool-result study** or **Tool-Result Errors in Language-Model Agents** | The study name | "E2" |
 
-**Open title decision (fix before drafting):** three title variants exist —
-`configs/base.yaml` uses "A Fixed-Prefix Causal Study"; `paper/proposal.tex` uses "A Controlled
-Study of Detection, Reliance, and Recovery"; `README.md` uses "A fixed-prefix causal study of
-detection, reliance, and recovery when tool results are wrong." Pick one and use it in the PDF
-metadata, abstract, and release. Do not mix subtitles.
+**Title status (fix before submission):** the working manuscript
+(`paper/toolresult800.tex:255`) uses "Tool-Result Errors in Language-Model Agents: A Fixed-Prefix
+Causal Study of Detection, Reliance, and Recovery". Other variants remain in
+`configs/base.yaml` ("A Fixed-Prefix Causal Study"), `paper/proposal.tex` ("A Controlled Study of
+Detection, Reliance, and Recovery"), and `README.md` (a lowercase sentence). Use the manuscript
+title in the PDF metadata, abstract, and release; update the other files to match. Do not mix
+subtitles.
 
 ### 2.2 Arms
 
@@ -342,8 +346,8 @@ historical `Qwen2.5-7B-Instruct-AWQ` check is environment history, not a fourth 
 | Renderer | `toolresult-prose-v1` | manifest → `renderer_version` |
 | Prompt | `toolresult-next-decision-v3` | `configs/calibration.yaml:10`; D-020 |
 | Parser, G0 snapshot | `toolresult-parser-v1` | D-014; G0 config snapshot |
-| Parser, D-024 decision | `toolresult-parser-v2` | D-024 (final-answer status/action slots) |
-| Parser, current code/config | `toolresult-parser-v3` | `src/toolobs/infer/runner.py:24`; `configs/calibration.yaml:11`; **undocumented** (X-23) |
+| Parser, D-024 decision | `toolresult-parser-v2` | D-024 (status/action slots; superseded by D-025) |
+| Parser, current code/config | `toolresult-parser-v3` | D-025 (decision-verb slots and ledger re-scoring); `src/toolobs/infer/runner.py:24`; `configs/calibration.yaml:11` |
 | Manifest schema | `toolresult800-manifest-v1` | manifest → `schema_version` |
 | Perturbation schema | `toolresult800-perturbation-v1` | `data/manifests/perturbations.jsonl` |
 | G1 serving overlay | constrained JSON regex; `think` excluded; 1,024-token budget; no `\n\n` stop | D-023 |
@@ -369,11 +373,11 @@ not started. The calibration sample is 60 prefixes (30 airline + 30 retail), dis
 
 | Model | Rows generated | Parse result | G1 status | Source |
 |---|---:|---|---|---|
-| Qwen3.5-9B-AWQ | 300/300 first run; fixed-harness rerun | 300/300 first run (D-023); fixed-harness rerun: **42.4% placebo jitter** (fails ≤20%), action-level differences 10% | Parse gate passed; jitter gate failed; parser v2 introduced (D-024); rerun pending | `docs/DECISIONS.md` D-023, D-024 |
-| Ministral-3-8B-Instruct-2512-AWQ | First attempt: 300 rows | 76/300 parsed = 25.3% (42 empty outputs, 134 truncated `final_answer` objects, a few prompt echoes) | **Failed the parse gate** (<95%); rerun required under D-023 | `docs/DECISIONS.md` D-023; `configs/models.yaml:41-46` |
+| Qwen3.5-9B-AWQ | 300/300 first run; re-scored, not regenerated | 300/300 first run (D-023); placebo jitter **42.4%** (v1) → **23.7%** (v2) → **13.3%** (v3) | Parse gate passed; jitter is 13.3% under v3 (below the 20% threshold); s=3 and refusal gates not recorded; final G1 verdict `[PENDING: g1_qwen_verdict]` | `docs/DECISIONS.md` D-023, D-024, D-025 |
+| Ministral-3-8B-Instruct-2512-AWQ | First attempt: 300 rows | 76/300 parsed = 25.3% (42 empty outputs, 134 truncated `final_answer` objects, a few prompt echoes) | **Failed the parse gate** (<95%); rerun required under D-023/D-024 | `docs/DECISIONS.md` D-023; `configs/models.yaml:41-46` |
 | Llama-3.1-8B-Instruct-AWQ-INT4 | 0 recorded | Not run | `[PENDING: g1_llama_rows]` | No Llama G1 artifact in `artifacts/`; D-023 reports no Llama run |
 
-**What changed after the first Ministral attempt**
+**What changed during G1**
 
 - D-022: one vLLM process per model. Loading Qwen then Ministral in one process left the first
   engine alive and Ministral failed with `CUBLAS_STATUS_ALLOC_FAILED`.
@@ -383,27 +387,33 @@ not started. The calibration sample is 60 prefixes (30 airline + 30 retail), dis
 - D-024: Qwen's first fixed-harness calibration had **42.4% placebo jitter**; the differences were
   almost entirely paraphrased `final_answer` text, and action-level differences were 10%. The
   final-answer signature was changed to an action verb plus sorted status slots (numbers, dates,
-  and identifiers excluded); the parser becomes `toolresult-parser-v2`. This is a signature-
-  definition fix, not a model-capability finding.
+  and identifiers excluded); the parser becomes `toolresult-parser-v2`. Jitter fell to 23.7%,
+  still above the 20% gate.
+- D-025: the status set was restricted to decision verbs; jitter fell to **13.3%**. The parser
+  becomes `toolresult-parser-v3`. Existing G1 ledgers are re-scored without regenerating outputs,
+  and the stored `output_text` is never changed. The primary Y is decision-level for final
+  answers; Y^U remains value-level.
+- The jitter progression is a signature-definition fix, not a model-capability finding.
 - Ministral serving was made conservative after a 24k + batch-8 OOM at row 96: eager mode, 4
   sequences, 4k chunked prefill (`configs/models.yaml:41-46`).
 - On five previously failing Ministral rows, the constrained run parsed 5/5 as real task actions
   (`get_user_details`, `search_direct_flight`). This is **harness evidence, not a study result**
   (`docs/DECISIONS.md` D-023).
-- G1 is rerun from scratch for all three models; the frozen data, manifest, sample, arms, and
-  estimand are unchanged (`docs/DECISIONS.md` D-023).
+- G1 was rerun from scratch after D-023; D-025 re-scores the existing G1 ledgers without
+  regenerating outputs. The frozen data, manifest, sample, arms, and estimand are unchanged
+  (`docs/DECISIONS.md` D-023, D-025).
 
 **Prohibited sentences (do not write any of these)**
 
 - "Qwen is more robust than Ministral" or any model comparison from G1 rows.
 - "Ministral fails calibration" as a model-capability finding. Write: "the first Ministral
   calibration attempt failed the parse gate; the harness was revised and G1 is being rerun."
-- "Qwen passed calibration." Write: "Qwen produced 300/300 parseable rows in the first attempt,
-  but the fixed-harness rerun exceeded the placebo-jitter gate; the signature definition was
-  revised (D-024) and G1 is being rerun."
+- "Qwen passed calibration." Write: "Qwen produced 300/300 parseable rows; placebo jitter fell
+  from 42.4% to 13.3% as the final-answer signature was revised (D-024/D-025); the remaining G1
+  gates are not yet recorded."
 - "Qwen is unstable" or "Qwen is hypersensitive." The 42.4% jitter was driven by paraphrased
   `final_answer` text under an over-strict signature; it is a parser/signature artifact, not a
-  model-capability finding (D-024).
+  model-capability finding (D-024/D-025).
 - "Llama passed/failed." Llama has not been run under G1.
 - "Calibration shows s=3 is not a ceiling." That is a G1 gate check, not a result; the value is
   `[PENDING: g1_s3_switch_rate]`.
@@ -419,10 +429,14 @@ D-024, and the final pass/fail. It may not report a calibration effect size.
 ## 4. Numbers to fill after G2
 
 Every row below is a number the manuscript will need but cannot source today. `Cardinality` is the
-number of distinct values to report; do not collapse cells silently. G1 rows must be filled
-**before** G2 can start; the rest are filled from the main run and the G3/G4 analysis.
+number of distinct values to report; do not collapse cells silently. §4.1 is the only pre-G2
+block; §4.2–4.8 are filled from the main run, the label audits, the G0 re-verification, and the
+release.
 
 ### 4.1 G1 handoff (before G2)
+
+First-attempt and interim G1 values are recorded in §3; the placeholders below are for the final
+G1 report that clears the gate.
 
 | # | Quantity | Cardinality | Placeholder | Fill from |
 |---|---|---:|---|---|
@@ -434,6 +448,10 @@ number of distinct values to report; do not collapse cells silently. G1 rows mus
 | 6 | Calibration GPU-hours and wall-clock | 2 | `[PENDING: calibration_cost]` | calibration ledger/cost |
 | 7 | Final prompt, parser, and serving-version strings | 3 | `[PENDING: g1_version_strings]` | G1 report/config snapshot |
 | 8 | G1 report date and hash | 2 | `[PENDING: g1_report_provenance]` | `artifacts/audit/g1_calibration.json` |
+
+Qwen interim values, for orientation only: parse 300/300; placebo jitter 42.4% → 23.7% → 13.3%
+under parser v1 → v2 → v3 (D-023–D-025). These are harness values; the final G1 report is still
+the source for the gate verdict.
 
 ### 4.2 G2 run accounting (Methods/Reproducibility)
 
@@ -576,14 +594,14 @@ edit the frozen manifest.
 |---|---|---|---|---|
 | X-01 | `README.md:9-14, 49-50` | "human audit and freeze pending"; "G1 calibration starts only after both pass" | `toolresult800_v1.json` → `freeze` (frozen 2026-11-15T09:45:02Z); `g0_audit_result.json`; D-021 | Say: "G0 is frozen under a provisional AI-scored audit (D-021); human verification is deferred." Never say human audit passed. |
 | X-02 | `README.md:47-48` | "the official human sheet remains blank and the gate is not claimed" | `g0_audit_sheet.csv` has 40 filled rows; `g0_audit_result.json` → `gate_pass: true` | Same as X-01. |
-| X-03 | `README.md:12,46`; `ROADMAP.md:15`; `RUNBOOK.md:6-10` | "no GPU run has started" / "no study workload has run" | D-023: G1 calibration ran (Qwen 300/300; Ministral 76/300); no G2 | Say: "G1 calibration is in progress; no confirmatory G2 generation has run." |
+| X-03 | `README.md:12,46`; `ROADMAP.md:15`; `RUNBOOK.md:6-10` | "no GPU run has started" / "no study workload has run" | D-023/D-024: G1 calibration ran (Qwen 300/300 first run, 42.4% jitter on the fixed harness; Ministral 76/300); no G2 | Say: "G1 calibration is in progress; no confirmatory G2 generation has run." |
 | X-04 | `ROADMAP.md:37-38` | Human audit **PENDING**; Freeze **PENDING** | manifest `freeze`; `g0_audit_result.json` | Mark G0 complete-provisional, not pending. |
 | X-05 | `docs/GATES.md:52` | "Freeze … pending this step" | manifest `freeze` | Mark freeze done; keep the audit provisional. |
 | X-06 | `paper/proposal.tex:61,200,218,452,482` | "7–8B" | D-016; amendments model-trio note; `proposal.tex:333-336` itself says 8–9B | Replace all with **8–9B**. |
 | X-07 | `paper/proposal.tex:244` | Table row "Eligible value-used observations 6,554" | `scrub_report.json` → 5,516; `GATES.md:46`; proposal text at 255-258 already corrects it | Use 5,516 as achieved; keep 6,554 only as a labeled planning input. |
 | X-08 | `paper/proposal.tex:261-262` | "The 40-item human audit and the frozen manifest are pending" | manifest `freeze`; `g0_audit_result.json` | Rewrite as provisional-audit + frozen manifest. |
 | X-09 | `paper/proposal.tex:445` | "pipeline entry points are stubs" | G0 stages implemented; G1 ran; manifest exists | Rewrite implementation status. |
-| X-10 | `docs/DECISIONS.md` D-019 (20,848); `docs/H200_ENV.md:49-50`, `ROADMAP.md`, `configs/models.yaml:9` (20,682) | Longest prompt 20,848 or 20,682 tokens | `prompt_lengths.json` max 20,681 | Use 20,681 until reconciled; flag the 167-token and 1-token gaps. |
+| X-10 | `paper/toolresult800.tex:654` (20,682); `docs/DECISIONS.md` D-019 (20,848); `docs/H200_ENV.md:49-50`, `ROADMAP.md`, `configs/models.yaml:9` (20,682) | Longest prompt 20,848 or 20,682 tokens | `prompt_lengths.json` max 20,681 | Use 20,681 until reconciled, or record the source of 20,682; do not let the manuscript and artifact disagree. |
 | X-11 | `docs/DECISIONS.md` D-019, D-020; `configs/models.yaml` comment history | 256-token decision budget | D-023; `configs/models.yaml:69` (1,024) | Say 1,024 for G1/G2; note 256 was the pre-G1 value. |
 | X-12 | `configs/main.yaml:70-71` | `batch_size: 12`, `max_num_seqs: 16` | `configs/models.yaml` serving: batch 8, `max_num_seqs: 8`; Ministral 4 | State the actually served configuration; fix the config or document the override. |
 | X-13 | `artifacts/audit/render_report.json` → `renderer_hash` | `dcfac86b0dd4766363e30ad5280f910c54b083e78ca19541bc7af8a0aa66d576` | manifest `renderer_hash` `9bea0e8d…1405` | Cite the manifest hash as the freeze hash; the render report is an earlier pre-freeze render at commit `3d0d7b6`. |
@@ -596,9 +614,9 @@ edit the frozen manifest.
 | X-20 | `artifacts/audit/g0_report.md`; `artifacts/audit/freeze_dry_run.json` | Freeze commit `1673856…`; audit commit `79c90fa…`; dry-run commit `a79457f…` | Three different commits for three artifacts | In the reproducibility appendix, name each artifact with its own commit; do not present one commit as the whole freeze. |
 | X-21 | `prereg/PREREGISTRATION.md:3-6, 196-205` | Status "DRAFT — not yet frozen"; sign-off `TBD` | `prereg_hash` is recorded in the manifest and matches the current file | Report the hash as recorded; disclose that the prereg text still carries a draft banner and unsigned sign-off. Do not claim a signed prereg. |
 | X-22 | `prereg/PREREGISTRATION.md` §6 vs `docs/PROTOCOL.md` §8 | Prereg: "120 severity items (30/level, 3 blind raters)". Protocol: "160 outcome items plus 40 severity items (≈200 judgments)", then a separate "Severity audit: 120 observations, 30 per level, 3 raters" | The two documents imply different severity-audit item counts (120 vs 40 + 120) | Reconcile the severity-audit design before writing Methods; do not add 120 + 160 + 80 and call it "about 200". |
-| X-23 | `docs/DECISIONS.md` D-024 vs `configs/calibration.yaml:11` and `src/toolobs/infer/runner.py:24` | D-024 says the parser becomes `toolresult-parser-v2`; config and code say `toolresult-parser-v3` | No logged decision records v3 | Record the v3 change (or revert to v2) before reporting a parser version; do not cite v2 and run v3. |
-| X-24 | `paper/toolresult800.tex:5,379,397-398,873,1180` | "the 40-item human audit and the frozen manifest are pending"; "no study prefix has been run on a GPU"; "G1 has not run" | manifest `freeze`; D-023/D-024 G1 runs | Rewrite the manuscript status: G0 frozen under the provisional audit; G1 in progress. |
-| X-25 | `paper/toolresult800.tex:639` | "parser versions are frozen at G0 and recorded in the manifest" | D-024 changes the parser after freeze; current code is v3 | Say the G0 parser snapshot was v1, the G1 parser changed under D-024, and name the final version. |
+| X-23 (resolved) | `docs/DECISIONS.md` D-024 vs `configs/calibration.yaml:11` and `src/toolobs/infer/runner.py:24` | D-024 says the parser becomes `toolresult-parser-v2`; config and code say `toolresult-parser-v3` | D-025 now records v3 and the re-scoring procedure | Cite D-025 for v3; no open conflict. |
+| X-24 | `paper/toolresult800.tex:5,379,397-398,873,1180` | "the 40-item human audit and the frozen manifest are pending"; "no study prefix has been run on a GPU"; "G1 has not run" | manifest `freeze`; D-023/D-024 G1 runs. The abstract at 307-311 is already correct ("manifest is frozen; audit provisionally filled; G1 in progress") | Make the header comment, intro, G1 section, and conclusion match the abstract. |
+| X-25 | `paper/toolresult800.tex:639` | "parser versions are frozen at G0 and recorded in the manifest" | The manifest has no `parser_version` field (it records config hashes and the renderer version); D-024/D-025 change the parser after freeze; current code is v3 | Say the G0 parser snapshot was v1 (recoverable from the hashed config), the G1 parser changed under D-024/D-025, and name the final version (v3). |
 
 ---
 

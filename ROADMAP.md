@@ -30,13 +30,15 @@
 | Batched generation | **DONE (CPU)** | Same-domain batches of 8 through the backend; test asserts batch sizes; shared calibration ledgers deduplicated |
 | Analysis core | **DONE (CPU)** | Outcome labels, pure-Python conditional-logit slope with prefix-cluster bootstrap, recovery/KM/RMST/Weibull; synthetic tests pass |
 | Cross-platform reproduction | **DONE** | Local and H200 normalized hashes match for sample, rendered arms, perturbations, and calibration |
-| Frozen prefix payload | **DONE (preview)** | 880 scrubbed prefixes, 23 MB, five arm observations; hash recorded in dry-run |
+| Frozen prefix payload | **DONE** | 880 scrubbed prefixes, 23 MB, five arm observations; frozen manifest `toolresult800_v1.json` (SHA-256 `d6e034d7…`) |
 | Release packager | **DONE (gated)** | `10_release.py` verifies manifest/payload hashes and PII, then copies only scrubbed derived data; refuses without a passed audit |
-| Model trio update | **DONE** | Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ pinned and fit-checked at 0.85/24k/batch 4 with `max_num_seqs=8`; Qwen3.5 thinking disabled |
-| AI pre-audit | **DONE (draft)** | 40/40 mechanical checks pass; official human sheet remains blank; no gate claim |
-| Human audit | **PENDING** | 40-item packet and blank sheet generated; gate ≥36/40; `artifacts/audit/g0_audit_packet.csv` |
-| Freeze | **PENDING** | Blocked on audit; no `toolresult800_v1.json` yet; no target output generated |
-| H200 environment | **DONE** | project clone + CPU venv + tests pass; vLLM 0.33.0 / torch 2.14.0; all three pinned models pass the 24k/batch-4 fit check; no study workload |
+| Model trio update | **DONE** | Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ pinned and fit-checked at 0.85/24k; Qwen3.5 thinking disabled; Ministral/Llama eager, 4 sequences |
+| AI pre-audit | **DONE (draft)** | 40/40 mechanical checks pass; official sheet filled from the AI draft under D-021 |
+| Human audit | **PROVISIONAL** | Author adopted the 40/40 AI pre-audit; final verification deferred until after experiments (D-021) |
+| Freeze | **DONE** | `data/manifests/toolresult800_v1.json` + SHA-256 sidecar; 800+80, 4,400 arms, 2,640 perturbations, 60 calibration |
+| G1 calibration | **DONE (pass)** | Qwen parse 98.3%, negative-control jitter 11.9%, s3 35.6%; Ministral 100%, 13.3%, 55.0%; Llama 96.7%, 10.5%, 56.1%; V/s0 format jitter 20.3/36.7/45.6% reported separately (D-026) |
+| G2 base run | **IN PROGRESS** | 4,400 rendered arms × 3 models on the H200; recovery and jitter shards still to implement |
+| H200 environment | **DONE** | vLLM 0.33.0 / torch 2.14.0; all three pass the 24k fit check; G1 complete; G2 base running |
 
 The ten-day table below is the original plan. Intermediate files are now JSONL rather than
 parquet, and the 6,500/1,500 relevance figures are planning inputs, not G0 gates; the

@@ -24,6 +24,7 @@ Use ``--verify-only`` to re-check DPI and pixel dimensions without redrawing.
 from __future__ import annotations
 
 import argparse
+import math
 from pathlib import Path
 
 import matplotlib
@@ -372,7 +373,7 @@ def make_design(outdir: Path) -> Path:
         ax,
         50.0,
         40.2,
-        "Target model · greedy decoding (T = 0)",
+        "Target models · greedy decoding (T = 0)",
         size=21,
         weight="bold",
         color=PURPLE,
@@ -443,7 +444,7 @@ def make_design(outdir: Path) -> Path:
         ax,
         50.0,
         3.6,
-        "800 primary prefixes (400 airline + 400 retail)  ·  5 arms × 3 models = 12,000 base generations",
+        "800 primary prefixes (400 airline + 400 retail)  ·  paired within prefix  ·  5 arms × 3 models = 12,000 base generations",
         size=FOOTNOTE_FONT,
         color=MUTED,
     )
@@ -509,7 +510,7 @@ def make_pipeline(outdir: Path) -> Path:
         (
             "4",
             "Sample",
-            ["800 primary + 80", "reserve (400 airline /", "400 retail); cap 10", "prefixes per task."],
+            ["800 primary + 80", "reserve (400 airline /", "400 retail);", "cap 10 per task–domain."],
             BLUE,
         ),
         (
@@ -721,6 +722,15 @@ def _observation_card(
 def make_arms(outdir: Path) -> Path:
     fig, ax = canvas((18.0, 10.0))
 
+    label(
+        ax,
+        50.0,
+        96.3,
+        "Five arms: V format anchor + s = 0…3 severity ladder",
+        size=22,
+        weight="bold",
+    )
+
     panels = [
         {
             "title": "V",
@@ -731,7 +741,7 @@ def make_arms(outdir: Path) -> Path:
             "mono": True,
             "obs": [
                 ('{"flight": "TA100",', None),
-                (' "date": "2026-03-14",', None),
+                (' "date": "2027-03-14",', None),
                 (' "fare_usd": 420,', None),
                 (' "cabin": "economy",', None),
                 (' "status": "confirmed"}', None),
@@ -752,7 +762,7 @@ def make_arms(outdir: Path) -> Path:
             "mono": False,
             "obs": [
                 ("Flight TA100 departs", None),
-                ("2026-03-14. Fare: \\$420.", None),
+                ("2027-03-14. Fare: \\$420.", None),
                 ("Cabin: economy.", None),
                 ("Status: confirmed.", None),
             ],
@@ -772,7 +782,7 @@ def make_arms(outdir: Path) -> Path:
             "mono": False,
             "obs": [
                 ("Flight TA100 departs", None),
-                ("2026-03-14. Fare: \\$420.", None),
+                ("2027-03-14. Fare: \\$420.", None),
                 ("Cabin: economy.", None),
                 ("Aircraft: A321.", TINT[SKY]),
                 ("Status: confirmed.", None),
@@ -793,7 +803,7 @@ def make_arms(outdir: Path) -> Path:
             "mono": False,
             "obs": [
                 ("Flight TA100 departs", None),
-                ("2026-03-14. Fare: \\$520.", TINT[ORANGE]),
+                ("2027-03-14. Fare: \\$520.", TINT[ORANGE]),
                 ("Cabin: economy.", None),
                 ("Status: confirmed.", None),
             ],
@@ -813,7 +823,7 @@ def make_arms(outdir: Path) -> Path:
             "mono": False,
             "obs": [
                 ("Flight TA100 departs", None),
-                ("2026-03-14. Fare: \\$520.", TINT[VERMILLION]),
+                ("2027-03-14. Fare: \\$520.", TINT[VERMILLION]),
                 ("Cabin: economy.", None),
                 ("Status: cancelled.", TINT[VERMILLION]),
                 ("Seats available: 6.", TINT[YELLOW]),
@@ -1023,7 +1033,7 @@ def make_analysis(outdir: Path) -> Path:
     # ---- Panel B: conceptual four-step recovery ---------------------------
     hours = [0, 1, 2, 3, 4]
     mu = 0.45
-    survival = [1.0] + [pow(2.718281828, -mu * h) for h in hours[1:]]
+    survival = [1.0] + [math.exp(-mu * h) for h in hours[1:]]
     ax_rec.plot(
         hours,
         survival,

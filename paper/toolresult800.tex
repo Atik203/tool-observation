@@ -307,8 +307,8 @@
   results paper. The CPU-only G0 pipeline is implemented: 13{,}605 candidate decision points,
   5{,}516 eligible prefixes, 5{,}511 replay-matched (99.91\%), and 880 sampled. The manifest is
   frozen; the 40-item audit is provisionally filled from an AI pre-audit (40/40) with the
-  authors' final verification deferred. G1 calibration is in progress, the main run has not
-  started, and no target-model output exists.
+  authors' final verification deferred. G1 calibration passed; the G2 base run is in progress,
+  and no confirmatory target-model result exists yet.
   \pending{pooled and per-model slopes, silent-propagation share, and recovery half-life; these
   are filled only from the G2 ledger and the G3/G4 reports}. The 60-prefix pilot (54/60 consult,
   0/60 placebo jitter, 5/60 error switch, McNemar $p=.0625$) is a screening signal and is not
@@ -979,12 +979,12 @@ refuses to build without a passed audit and a PII re-scan.
 
 \section{Results}\label{sec:results}
 
-The confirmatory analysis has not been run. No target-model output exists for any study prefix,
-G1 calibration is in progress, and no G2 generation exists. Every value that depends on G1--G4
-is therefore marked \pending{artifact} and will be filled only from the ledger and manifest rows
-named beside it. This section reports the two things that do exist: the pilot, which is prior
-screening evidence, and the G0 harvest counts, which are implementation facts about the sampling
-frame.
+The confirmatory analysis has not been run. No confirmatory target-model result exists for any
+study prefix; the G2 base run is in progress. Every value that depends on G2--G4 is therefore
+marked \pending{artifact} and will be filled only from the ledger and manifest rows named beside
+it. This section reports the three things that do exist: the pilot, which is prior screening
+evidence; the G0 harvest counts, which are implementation facts about the sampling frame; and the
+G1 calibration, which is harness evidence, not a study result.
 
 \subsection{Pilot evidence (screening only)}\label{sec:pilot}
 
@@ -1042,11 +1042,29 @@ filled. \pending{final author verification date and any replacement rows if veri
 
 G1 is running under the fixed harness: \texttt{think} is excluded, decoding is constrained to a
 valid tool-or-final-answer JSON object, the decision budget is 1{,}024 tokens, and each model runs
-in a separate process. This subsection will report, per model, the parse rate, placebo jitter, $s=3$
-switch rate, refusal rate, median and 95th-percentile latency, and the parser failure taxonomy,
-with the pass/fail decision for each threshold. \pending{per-model G1 table from
-\texttt{artifacts/audit/g1\_calibration.json}}. A failure here stops the study before the main
-run; it is not a result about tool-result sensitivity.
+in a separate process. All three models passed. Table~\ref{tab:g1} reports the per-model values.
+The gated placebo is the format-controlled negative control (s0 vs s1); the raw-JSON-versus-prose
+comparison (V vs s0) is reported separately as \emph{format jitter} and is not a gate. The format
+effect is large (20.3--45.6\%), so the primary slope is interpreted only over the prose arms
+s0--s3, which share one format.
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{G1 calibration on 60 disjoint prefixes per model. Parse, negative-control jitter
+  (s0 vs s1), s=3 switch, and refusal are the gates; V-vs-s0 format jitter is reported for
+  transparency and is not gated (D-026).}
+  \label{tab:g1}
+  \small
+  \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Model} & \textbf{Parse} & \textbf{Neg.\ control} & \textbf{Format (V/s0)} & \textbf{s=3 switch} & \textbf{Refusal} \\
+    \midrule
+    Qwen3.5-9B     & 98.3\% (295/300) & 11.9\% & 20.3\% & 35.6\% & 1.7\% \\
+    Ministral-3-8B & 100\% (300/300)  & 13.3\% & 36.7\% & 55.0\% & 0.0\% \\
+    Llama-3.1-8B   & 96.7\% (290/300) & 10.5\% & 45.6\% & 56.1\% & 0.0\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{Primary content-sensitivity estimate}
 
