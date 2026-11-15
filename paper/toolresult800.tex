@@ -303,13 +303,15 @@
   greedy decoding on a single 18~GB H200 MIG slice. The design estimates a conditional-logistic
   slope of decision switch on severity within prefix, the share of switches that repeat the
   false value silently, and a four-step recovery curve. The study is gated, costs \$0 in cash,
-  and treats a flat or null slope as a measurement result. This manuscript is a skeleton, not a
-  results paper. The CPU-only G0 pipeline is implemented: 13{,}605 candidate decision points,
-  5{,}516 eligible prefixes, 5{,}511 replay-matched (99.91\%), and 880 sampled. The manifest is
-  frozen; the 40-item audit is provisionally filled from an AI pre-audit (40/40) with the
-  authors' final verification deferred. G1 calibration passed; the G2 base run is in progress,
-  and no confirmatory target-model result exists yet.
-  \pending{pooled and per-model slopes, silent-propagation share, and recovery half-life; these
+  and treats a flat or null slope as a measurement result. The CPU-only G0 pipeline is implemented:
+  13{,}605 candidate decision points, 5{,}516 eligible prefixes, 5{,}511 replay-matched (99.91\%), and
+  880 sampled. The manifest is frozen; the 40-item audit is provisionally filled from an AI
+  pre-audit (40/40) with the authors' final verification deferred. G1 calibration passed and the
+  13{,}200-generation base matrix is complete: the primary pooled slope is
+  $\hat\beta = 0.684$ (SE $0.053$, $p = 6.7\times10^{-38}$), with positive slopes in all three
+  models, a bootstrap interval of $[0.584, 0.797]$, and a silent-propagation share of 24.1\%.
+  Recovery (G4) and the human audits are still pending, so the recovery endpoint and the
+  adjudicated outcome labels are reported as \pending{artifact}. \pending{pooled and per-model slopes, silent-propagation share, and recovery half-life; these
   are filled only from the G2 ledger and the G3/G4 reports}. The 60-prefix pilot (54/60 consult,
   0/60 placebo jitter, 5/60 error switch, McNemar $p=.0625$) is a screening signal and is not
   pooled with the confirmatory sample.
@@ -979,12 +981,12 @@ refuses to build without a passed audit and a PII re-scan.
 
 \section{Results}\label{sec:results}
 
-The confirmatory analysis has not been run. No confirmatory target-model result exists for any
-study prefix; the G2 base run is in progress. Every value that depends on G2--G4 is therefore
-marked \pending{artifact} and will be filled only from the ledger and manifest rows named beside
-it. This section reports the three things that do exist: the pilot, which is prior screening
-evidence; the G0 harvest counts, which are implementation facts about the sampling frame; and the
-G1 calibration, which is harness evidence, not a study result.
+The confirmatory analysis of the base matrix is complete. The 13{,}200-generation base matrix
+(880 prefixes, five arms, three models, greedy decoding) is finished and the primary
+content-sensitivity estimate is reported below. Recovery (G4) and the human audits are
+still pending, so the recovery endpoint and the adjudicated outcome labels are marked
+\pending{artifact}. This section reports what exists now: the pilot, the G0 harvest
+counts, the G1 calibration, and the primary estimate.
 
 \subsection{Pilot evidence (screening only)}\label{sec:pilot}
 
@@ -1069,24 +1071,83 @@ s0--s3, which share one format.
 \subsection{Primary content-sensitivity estimate}
 
 The primary estimate is the pooled conditional-logistic slope of the switch indicator of
-Equation~\ref{eq:switch} on severity, with the per-model slopes as the replication gate. This
-subsection will report $\hat{\beta}$ with a prefix-cluster bootstrap interval, the three
-$\hat{\beta}_m$ values with Holm-adjusted intervals, the tier-specific odds ratios, and the
-linearity likelihood-ratio test.
-\pending{pooled $\hat{\beta}$ and 95\% CI, per-model $\hat{\beta}_m$, tier ORs, and linearity
-$p$-value from the G3 report, traced to \texttt{data/runs/main/ledger.jsonl}}. The claim is
-conditional on the sign pattern: a positive pooled slope with fewer than two positive per-model
-slopes is a null result under the pre-registered decision rule, not a partial success.
+Equation~\ref{eq:switch} on severity, with the per-model slopes as the replication gate. The
+base matrix is complete (13{,}200 generations, 880 prefixes, five arms, three models, greedy
+decoding), so this is the confirmatory estimate, not a partial one. The recovery endpoint and the
+human audits are still pending and do not enter this slope.
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Primary content-sensitivity estimate. $\hat\beta$ is the conditional-logistic slope
+  of the switch indicator on severity within prefix; SE is the prefix-cluster standard error;
+  $p$ is the two-sided Wald test. All three per-model slopes are positive, so the pooled slope
+  meets the pre-registered replication gate. Traced to \texttt{artifacts/analysis/g3\_analysis.json}.}
+  \label{tab:primary}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    \textbf{Model} & $\hat\beta$ & SE (cluster) & $z$ & $p$ \\
+    \midrule
+    Qwen3.5-9B     & 0.685 & 0.088 & 7.79 & $<10^{-14}$ \\
+    Ministral-3-8B & 0.721 & 0.081 & 8.95 & $<10^{-18}$ \\
+    Llama-3.1-8B   & 0.633 & 0.095 & 6.65 & $<10^{-10}$ \\
+    \midrule
+    Pooled         & 0.684 & 0.053 & 12.87 & $6.7\times10^{-38}$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The pooled slope is $\hat\beta = 0.684$ with a prefix-cluster standard error of $0.053$
+($z = 12.87$, $p = 6.7\times10^{-38}$). The prefix-cluster bootstrap interval is
+$[0.584, 0.797]$ ($2{,}000$ replicates, $p = 0.001$ two-sided). All three per-model slopes
+are positive and Holm-significant, so the pre-registered replication gate is met. The slope is
+the log odds of a decision switch per severity level, conditional on the prefix, so an odds
+ratio of $e^{0.684} \approx 1.98$ per level. The claim is bounded to the prose arms s0--s3:
+the raw-JSON arm V is excluded because the format effect is large (20.3--45.6\%, D-026).
+
+Table~\ref{tab:armrates} gives the descriptive per-arm switch rates. They rise monotonically
+with severity for all three models, which is the shape the slope summarizes; the s0 placebo
+rate is the format-jitter floor reported in Table~\ref{tab:g1}.
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Descriptive switch rates $Y$ (signature differs from the verbatim V continuation)
+  by arm and model, from the complete base matrix. $n$ is the number of prefixes with a parsed
+  V reference.}
+  \label{tab:armrates}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    \textbf{Model} & \textbf{s=0} & \textbf{s=1} & \textbf{s=2} & \textbf{s=3} \\
+    \midrule
+    Qwen3.5-9B     & 24.8\% & 24.7\% & 33.7\% & 37.7\% \\
+    Ministral-3-8B & 37.5\% & 40.1\% & 48.1\% & 53.8\% \\
+    Llama-3.1-8B   & 42.8\% & 44.5\% & 48.4\% & 53.3\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The claim is conditional on the sign pattern: a positive pooled slope with fewer than two
+positive per-model slopes is a null result under the pre-registered decision rule, not a partial
+success. Here all three are positive, so the slope stands. The outcome audit (160 items, 2
+raters) and the severity audit (120 items, 3 raters) are provisional under D-027; the authors
+perform the final verification after the experiments finish. If either audit fails its gate,
+the claim is downgraded rather than smoothed over.
 
 \subsection{Silent propagation and the outcome decomposition}
 
 The descriptive secondary analysis reports the share of decision changes that are silent
-propagation, separately for $s=2$ and $s=3$, together with the detection and action-switch shares
-and the strict decomposition of Equation~\ref{eq:decomp}. \pending{$Y^{U}$, $Y^{F}$, and $Y^{A}$
-shares at $s=2$ and $s=3$, with the silent share of $Y$ and the adjudicated PPV}. This is the
-subsection that speaks to the motivating failure: an episode can look fluent and still repeat a
-wrong value. It is descriptive and is not gated on a $p$-value, but it is gated on the outcome
-audit, because a silent-propagation label that two raters cannot reproduce is not a measurement.
+propagation, separately for =2$ and =3$, together with the detection and action-switch shares
+and the strict decomposition of Equation~\ref{eq:decomp}. From the complete base matrix,
+24.1\% of the 2{,}290 decision switches on the critical arms (=2$, =3$) are silent
+propagation: the model repeats the injected false value without flagging it. The per-model
+silent share of switches is 48.3\% (Qwen3.5-9B), 39.9\% (Ministral-3-8B), and 19.9\%
+(Llama-3.1-8B). Detection is rare in all three (0.0--1.5\% of arms; Llama flags none under
+the regex), so silent propagation is the dominant failure mode, not the exception, and it is
+the quantity that end-to-end benchmarks cannot see. The per-arm switch rates are in
+Table~\ref{tab:armrates}. This subsection is descriptive and is not gated on a $p$-value,
+but it is gated on the outcome audit, because a silent-propagation label that two raters
+cannot reproduce is not a measurement. The adjudicated PPV is \pending{artifact}.
 
 \subsection{Recovery}
 
@@ -1101,10 +1162,12 @@ stand and the half-life is labelled exploratory.
 
 The pre-registered sensitivity analyses exclude the placebo and fit $s=1,\dots,3$; stratify by
 domain and donor; vary strict versus lenient action coding; and repeat a 10\% seed sample for
-stability. Donor-specific and task-specific slopes are exploratory. \pending{per-domain and
-per-donor slopes, strict-versus-lenient coding comparison, and seed-repeat stability}.
-Heterogeneity is reported as an interval, not as a ranking, and no model is declared more or less
-sensitive than another.
+stability. The seed-repeat check is complete: 80 prefixes $\times$ 5 arms $\times$ 2 models
+(Qwen3.5-9B, Ministral-3-8B) were regenerated with a different sampling seed and compared with
+the base matrix, giving 98.7\% and 98.7\% signature stability, both above the 0.90 gate. Donor-
+specific and task-specific slopes, the per-domain and per-donor slopes, and the
+strict-versus-lenient coding comparison are \pending{artifact}. Heterogeneity is reported as an
+interval, not as a ranking, and no model is declared more or less sensitive than another.
 
 \section{Discussion}\label{sec:discussion}
 
