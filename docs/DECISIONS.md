@@ -19,9 +19,10 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   becomes `""`, each historical tool call becomes a deterministic
   `<tool_call>{"name": ..., "arguments": ...}</tool_call>` text block with arguments parsed from
   JSON strings, and each tool result becomes a user turn with a `[tool result: name]` marker.
-  The `tool_calls`/`tool_call_id` fields are removed so no template-specific tool grammar is
-  used. The prompt version becomes **`toolresult-next-decision-v2`**; the parser is unchanged.
-  The frozen prefix payload and the arm manipulation are untouched.
+  The six historical assistant turns with empty content and no tool call are dropped. The
+  `tool_calls`/`tool_call_id` fields are removed so no template-specific tool grammar is used.
+  The prompt version becomes **`toolresult-next-decision-v2`**; the parser is unchanged. The
+  frozen prefix payload and the arm manipulation are untouched.
 - **Consequences:** All three families see the same valid plain-text transcript, and the prompt
   renders on every pinned tokenizer. This was verified on a prefix with non-null tool-call ids,
   which Ministral's validator rejects in the original structured form. The system instruction,

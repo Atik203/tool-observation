@@ -110,6 +110,17 @@ def test_normalize_messages_renders_tool_calls_as_text() -> None:
     assert messages[2]["role"] == "tool"
 
 
+def test_normalize_messages_drops_empty_assistant_turn() -> None:
+    normalized = normalize_messages(
+        [
+            {"role": "user", "content": "hi"},
+            {"role": "assistant", "content": None},
+            {"role": "user", "content": "again"},
+        ]
+    )
+    assert [message["role"] for message in normalized] == ["user", "user"]
+
+
 def test_signature_hash_is_key_order_independent() -> None:
     left = parse_decision('{"tool": "f", "arguments": {"b": 2, "a": 1}}')
     right = parse_decision('{"tool": "f", "arguments": {"a": 1, "b": 2}}')

@@ -54,6 +54,11 @@ def normalize_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for message in copy.deepcopy(messages):
         content = message.get("content")
         message["content"] = "" if content is None else content
+        calls = message.pop("tool_calls", None) or []
+        if message.get("role") == "assistant" and not message["content"].strip() and not calls:
+            # Six historical assistant turns are empty; they carry no information
+            # and Mistral's tokenizer rejects them.
+            continue
         if message.get("role") == "tool":
             name = str(message.get("name") or "")
             marker = f"[tool result: {name}]" if name else "[tool result]"
@@ -61,7 +66,6 @@ def normalize_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
             message["content"] = f"{marker}\n{message['content']}"
             message.pop("name", None)
             message.pop("tool_call_id", None)
-        calls = message.pop("tool_calls", None) or []
         if calls:
             blocks: list[str] = []
             for call in calls:
