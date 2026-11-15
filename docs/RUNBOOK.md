@@ -106,21 +106,38 @@ The fit check uses a generic non-study prompt and writes
 python scripts/09_run.py --stage calibration --all-models --backend vllm
 ```
 
-Acceptance: parse ≥95%, jitter ≤20%, s=3 switch 10–80%, refusal <5% per model. No main-run
-start before this passes.
+Acceptance: parse ≥95%, negative-control jitter (s0 vs s1) ≤20%, s=3 switch 10–80%, refusal <5%
+per model. V-vs-s0 format jitter is reported, not gated (D-026). No main-run start before this
+passes.
+
+`09_run.py --all-models` refuses with the vLLM backend (D-022): vLLM cannot unload a model inside
+one process. Use the orchestrator, which starts one process per model:
+
+```powershell
+python scripts/09a_run_all.py --stage calibration --backend vllm
+```
+
+Re-score an existing ledger after a parser change without regenerating outputs:
+
+```powershell
+python scripts/09c_rescore.py --input data/runs/calibration/<model>/ledger.jsonl `
+  --output data/runs/calibration_v3/<model>/ledger.jsonl --force
+python scripts/09a_run_all.py --stage calibration --score-only `
+  --ledger-root data/runs/calibration_v3 --report artifacts/audit/g1_calibration_v3.json
+```
 
 ---
 
 ## 4. Main run
 
 ```powershell
-python scripts/09_run.py --stage main --all-models --backend vllm
+python scripts/09a_run_all.py --stage main --backend vllm --resume
 ```
 
-**Status (pre-G1):** this command currently covers the base matrix only (4,400 rendered arms × 3
-models). The transient/persistent recovery shards (21,600 generations) and the jitter repeats
-(1,200) are not implemented yet. Do not start G2 until those runners exist and are CPU-tested;
-the full envelope is 34,800 generations.
+**Status:** the base matrix (4,400 rendered arms × 3 models = 13,200 generations) is implemented.
+`scripts/09b_recovery.py` implements the transient and persistent H=4 recovery shards and is
+CPU-tested; the 1,200 jitter repeats are still not implemented. Full envelope: 34,800
+generations.
 
 - 34,800-generation envelope; sharded by model and domain.
 - Checkpoint every 40 prefixes; one ledger row per generation.
@@ -134,6 +151,35 @@ is corrupt, stop and restore from the last shard checkpoint; do not fabricate mi
 **Stop procedure:** flush the ledger, write `artifacts/cost/main_cost.json` with cumulative
 GPU-hours, storage, completed prefixes, and reason. Analyze only completed cells and disclose the
 gap.
+
+### Paused state — 2026-11-15 (resume here)
+
+The GPU is idle and no tmux session is running. Everything below was copied to the local
+checkout and verified by SHA-256.
+
+| Item | State |
+|---|---|
+| G0 freeze | complete; manifest SHA-256 `d6e034d7…`, frozen prefixes present |
+| G1 calibration | **pass**, all three models; report `artifacts/audit/g1_calibration_v3.json` |
+| G1 ledgers | `data/runs/calibration/<model>/ledger.jsonl` (300 rows each, parser v2 raw) |
+| G1 rescored | `data/runs/calibration_v3/<model>/ledger.jsonl` (300 rows each, parser v3) |
+| G2 base | **partial**: Qwen 2,704 / 4,400 rows; Ministral and Llama not started |
+| G2 recovery | runner written and CPU-tested; **not run** |
+| G2 jitter | **not implemented** |
+
+Resume the base matrix on the H200:
+
+```bash
+cd /home/mnh/tool-observation
+export PYTHONPATH=/home/mnh/tool-observation/.deps/pyheaders \
+       CPATH=/home/mnh/tool-observation/.deps/pyheaders/include \
+       C_INCLUDE_PATH=/home/mnh/tool-observation/.deps/pyheaders/include
+tmux new -s g2base -d \
+  '.venv/bin/python scripts/09a_run_all.py --stage main --backend vllm --resume \
+   > artifacts/audit/g2_base.log 2>&1'
+```
+
+`--resume` keeps the 2,704 existing Qwen rows and starts Ministral and Llama from row 0.
 
 ---
 
