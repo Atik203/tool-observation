@@ -182,6 +182,48 @@ class _BatchRecordingBackend:
         return [Generation(text='{"final_answer": "ok"}') for _ in prompts]
 
 
+def test_runner_resumes_without_duplicating(tmp_path) -> None:
+    def row(prefix_id: str, arm: str) -> dict:
+        return {
+            "prefix_id": prefix_id,
+            "domain": "airline",
+            "arm": arm,
+            "messages_json": canonical_json(
+                [
+                    {"role": "system", "content": "policy"},
+                    {"role": "tool", "name": "get_reservation_details", "content": "{}"},
+                ]
+            ),
+        }
+
+    rows = [row("airline-a", "V"), row("airline-a", "s0"), row("airline-b", "V")]
+    ledger = tmp_path / "ledger.jsonl"
+    backend = FakeBackend('{"final_answer": "ok"}')
+    common = dict(
+        backend=backend,
+        model_id="qwen",
+        run_id="run-3",
+        stage="calibration",
+        manifest_hash="m" * 64,
+        ledger_path=ledger,
+        tools_by_domain={"airline": TOOLS},
+    )
+    first = run_rendered_rows(rows[:2], **common)
+    assert first.total == 2
+    completed = {
+        (stored.prefix_id, stored.arm, stored.step) for stored in read_ledger(ledger)
+    }
+    resumed = run_rendered_rows(rows, skip_completed=completed, **common)
+    assert resumed.total == 1
+    stored = read_ledger(ledger)
+    assert len(stored) == 3
+    assert sorted((item.prefix_id, item.arm) for item in stored) == [
+        ("airline-a", "V"),
+        ("airline-a", "s0"),
+        ("airline-b", "V"),
+    ]
+
+
 def test_runner_batches_same_domain_rows(tmp_path) -> None:
     def row(prefix_id: str, arm: str) -> dict:
         return {

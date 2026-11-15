@@ -71,6 +71,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--ledger", default=None)
     parser.add_argument("--manifest", default=str(MANIFEST_DIR / "toolresult800_v1.json"))
     parser.add_argument("--limit", type=int, default=0)
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Append to an existing ledger, skipping completed (prefix, arm, step) rows.",
+    )
     parser.add_argument("--fake-response", default='{"tool": "get_reservation_details", "arguments": {"reservation_id": "TEST"}}')
     parser.add_argument("--report", default=str(ARTIFACTS_DIR / "audit" / "g1_calibration.json"))
     args = parser.parse_args(argv)
@@ -98,12 +103,19 @@ def main(argv: list[str] | None = None) -> int:
             args.ledger
             or (RUNS_DIR / args.stage / model_id / "ledger.jsonl")
         )
-        if ledger_path.exists() and not args.ledger:
-            print(
-                f"[09_run] FAIL: ledger already exists at {ledger_path}; "
-                "move it or pass an explicit --ledger for a smoke run"
-            )
-            return 1
+        completed: set[tuple[str, str, int]] = set()
+        if ledger_path.exists():
+            existing = read_ledger(ledger_path)
+            model_rows = [row for row in existing if row.model_id == model_id]
+            if model_rows and not args.resume:
+                print(
+                    f"[09_run] FAIL: ledger already has {len(model_rows)} rows for "
+                    f"{model_id} at {ledger_path}; pass --resume to continue it, or "
+                    "move it / pass a new --ledger"
+                )
+                return 1
+            if args.resume:
+                completed = {(row.prefix_id, row.arm, row.step) for row in model_rows}
         if args.backend == "fake":
             backend = FakeBackend(args.fake_response)
         else:
@@ -127,6 +139,7 @@ def main(argv: list[str] | None = None) -> int:
             prompt_version=str(calibration["prompt_version"]),
             parser_version=str(calibration["parser_version"]),
             batch_size=int(load_config("models.yaml")["serving"]["batch_size"]),
+            skip_completed=completed,
         )
         ledgers[model_id] = ledger_path
         print(f"[09_run] {model_id} {stats.as_dict()}")

@@ -116,14 +116,18 @@ def run_rendered_rows(
     parser_version: str = PARSER_VERSION,
     step: int = 0,
     batch_size: int = 1,
+    skip_completed: set[tuple[str, str, int]] | None = None,
 ) -> RunStats:
     """Run one model over rendered arms and append one ledger row per generation.
 
     Rows are grouped into same-domain batches of at most ``batch_size`` so the
     vLLM backend can use continuous batching. The ledger order is unchanged.
+    ``skip_completed`` holds ``(prefix_id, arm, step)`` keys already present in
+    the ledger, so an interrupted run resumes without duplicating rows.
     """
     if batch_size < 1:
         raise ValueError("batch_size must be >= 1")
+    completed = skip_completed or set()
     stats = RunStats()
     tools_cache = dict(tools_by_domain or {})
     pending: list[tuple[dict[str, Any], list[dict[str, Any]], str, str]] = []
@@ -176,6 +180,8 @@ def run_rendered_rows(
         pending_domain = None
 
     for row in rows:
+        if (str(row["prefix_id"]), str(row["arm"]), step) in completed:
+            continue
         domain = _domain_for(row)
         if domain not in tools_cache:
             if upstream_dir is None:

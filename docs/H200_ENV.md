@@ -56,6 +56,20 @@ The configured context is **24,576 tokens**. The prompt-length audit
 | Ministral-3-8B-2512-AWQ | 51.7 s | four `ready` |
 | Llama-3.1-8B-Instruct-AWQ-INT4 | 41.0 s | four `Ready.` |
 
+### Long-prompt fit
+
+Two synthetic ~20k-token prompts per model, batch 2, 16 output tokens:
+
+| Model | Prompt tokens | Generation | Status |
+|---|---|---:|---|
+| Qwen3.5-9B-AWQ | 20,002 | 4.30 s | ok |
+| Ministral-3-8B-2512-AWQ | 20,001 | 5.17 s | ok |
+| Llama-3.1-8B-Instruct-AWQ-INT4 | 20,025 | 5.46 s | ok |
+
+The synthetic text is a repeated pangram, so the outputs are not study outputs. Ministral emitted
+empty strings on this repetitive prompt; that is model behavior to watch in G1, not a load
+failure. The test confirms that a 20k prompt fits and runs at the configured 24k context.
+
 Notes:
 
 - Qwen3.5-9B is a Mamba-hybrid model. The default `max_num_seqs=256` exceeds its Mamba cache
