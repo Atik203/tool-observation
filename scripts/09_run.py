@@ -126,6 +126,7 @@ def main(argv: list[str] | None = None) -> int:
             upstream_dir=resolve_repo_path("data/upstream/tau-bench"),
             prompt_version=str(calibration["prompt_version"]),
             parser_version=str(calibration["parser_version"]),
+            batch_size=int(load_config("models.yaml")["serving"]["batch_size"]),
         )
         ledgers[model_id] = ledger_path
         print(f"[09_run] {model_id} {stats.as_dict()}")

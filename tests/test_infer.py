@@ -10,7 +10,7 @@ from toolobs.infer.parse_output import (
     signature_hash,
 )
 from toolobs.infer.prompt import build_prompt_messages
-from toolobs.infer.runner import FakeBackend, run_rendered_rows
+from toolobs.infer.runner import FakeBackend, Generation, run_rendered_rows
 from toolobs.infer.vllm_backend import chat_template_kwargs
 
 TOOLS = [
@@ -126,3 +126,45 @@ def test_fake_runner_writes_ledger(tmp_path) -> None:
     assert stored[0].parser_status == "ok"
     assert stored[0].signature_hash
     assert stored[0].manifest_hash == "m" * 64
+
+
+class _BatchRecordingBackend:
+    def __init__(self) -> None:
+        self.batch_sizes: list[int] = []
+
+    def generate(self, prompts, **kwargs):
+        self.batch_sizes.append(len(prompts))
+        return [Generation(text='{"final_answer": "ok"}') for _ in prompts]
+
+
+def test_runner_batches_same_domain_rows(tmp_path) -> None:
+    def row(prefix_id: str, arm: str) -> dict:
+        return {
+            "prefix_id": prefix_id,
+            "domain": "airline",
+            "arm": arm,
+            "messages_json": canonical_json(
+                [
+                    {"role": "system", "content": "policy"},
+                    {"role": "tool", "name": "get_reservation_details", "content": "{}"},
+                ]
+            ),
+        }
+
+    rows = [row("airline-a", "V"), row("airline-a", "s0"), row("airline-b", "V")]
+    backend = _BatchRecordingBackend()
+    ledger = tmp_path / "ledger.jsonl"
+    stats = run_rendered_rows(
+        rows,
+        backend=backend,
+        model_id="qwen",
+        run_id="run-2",
+        stage="calibration",
+        manifest_hash="m" * 64,
+        ledger_path=ledger,
+        tools_by_domain={"airline": TOOLS},
+        batch_size=2,
+    )
+    assert backend.batch_sizes == [2, 1]
+    assert stats.total == 3
+    assert len(read_ledger(ledger)) == 3

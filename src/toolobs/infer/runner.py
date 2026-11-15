@@ -115,51 +115,79 @@ def run_rendered_rows(
     prompt_version: str = PROMPT_VERSION,
     parser_version: str = PARSER_VERSION,
     step: int = 0,
+    batch_size: int = 1,
 ) -> RunStats:
-    """Run one model over rendered arms and append one ledger row per generation."""
+    """Run one model over rendered arms and append one ledger row per generation.
+
+    Rows are grouped into same-domain batches of at most ``batch_size`` so the
+    vLLM backend can use continuous batching. The ledger order is unchanged.
+    """
+    if batch_size < 1:
+        raise ValueError("batch_size must be >= 1")
     stats = RunStats()
     tools_cache = dict(tools_by_domain or {})
+    pending: list[tuple[dict[str, Any], list[dict[str, Any]], str, str]] = []
+    pending_domain: str | None = None
+
+    def flush() -> None:
+        nonlocal pending, pending_domain
+        if not pending:
+            return
+        generations = backend.generate([item[1] for item in pending])
+        if len(generations) != len(pending):
+            raise RuntimeError(
+                f"backend returned {len(generations)} generations for {len(pending)} prompts"
+            )
+        for (row, _messages, prompt_digest, domain), generation in zip(
+            pending, generations, strict=True
+        ):
+            parsed = parse_decision(generation.text)
+            stats.total += 1
+            stats.latency_ms += generation.latency_ms
+            stats.by_arm[row["arm"]] = stats.by_arm.get(row["arm"], 0) + 1
+            stats.by_domain[domain] = stats.by_domain.get(domain, 0) + 1
+            _count_status(stats, parsed)
+            append_ledger_row(
+                ledger_path,
+                LedgerRow(
+                    run_id=run_id,
+                    model_id=model_id,
+                    prefix_id=str(row["prefix_id"]),
+                    arm=str(row["arm"]),
+                    step=step,
+                    prompt_hash=prompt_digest,
+                    output_text=generation.text,
+                    parsed=parsed.parsed,
+                    latency_ms=generation.latency_ms,
+                    cost_usd=0.0,
+                    timestamp_utc=utc_now(),
+                    stage=stage,
+                    gpu_hours=0.0,
+                    storage_gb=0.0,
+                    parser_version=parser_version,
+                    parser_status=parsed.status,
+                    signature_hash=signature_hash(parsed) if parsed.parsed else "",
+                    decision_json=signature_json(parsed) if parsed.parsed else "",
+                    prompt_version=prompt_version,
+                    manifest_hash=manifest_hash,
+                ),
+            )
+        pending = []
+        pending_domain = None
+
     for row in rows:
         domain = _domain_for(row)
         if domain not in tools_cache:
             if upstream_dir is None:
                 raise ValueError(f"no tools for domain {domain!r}")
             tools_cache[domain] = load_domain_tools(upstream_dir, domain)
+        if pending and (domain != pending_domain or len(pending) >= batch_size):
+            flush()
         messages = json.loads(row["messages_json"])
         prompt_messages = build_prompt_messages(messages, tools_cache[domain])
-        prompt_digest = prompt_hash(prompt_messages)
-        generation = backend.generate([prompt_messages])[0]
-        parsed = parse_decision(generation.text)
-        stats.total += 1
-        stats.latency_ms += generation.latency_ms
-        stats.by_arm[row["arm"]] = stats.by_arm.get(row["arm"], 0) + 1
-        stats.by_domain[domain] = stats.by_domain.get(domain, 0) + 1
-        _count_status(stats, parsed)
-        append_ledger_row(
-            ledger_path,
-            LedgerRow(
-                run_id=run_id,
-                model_id=model_id,
-                prefix_id=str(row["prefix_id"]),
-                arm=str(row["arm"]),
-                step=step,
-                prompt_hash=prompt_digest,
-                output_text=generation.text,
-                parsed=parsed.parsed,
-                latency_ms=generation.latency_ms,
-                cost_usd=0.0,
-                timestamp_utc=utc_now(),
-                stage=stage,
-                gpu_hours=0.0,
-                storage_gb=0.0,
-                parser_version=parser_version,
-                parser_status=parsed.status,
-                signature_hash=signature_hash(parsed) if parsed.parsed else "",
-                decision_json=signature_json(parsed) if parsed.parsed else "",
-                prompt_version=prompt_version,
-                manifest_hash=manifest_hash,
-            ),
-        )
+        pending.append((row, prompt_messages, prompt_hash(prompt_messages), domain))
+        pending_domain = domain
+    flush()
     return stats
 
 
