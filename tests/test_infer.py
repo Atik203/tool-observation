@@ -102,9 +102,12 @@ def test_normalize_messages_renders_tool_calls_as_text() -> None:
     assert '"user_id":"user_abc"' in normalized[1]["content"]
     assert "tool_calls" not in normalized[1]
     assert "tool_call_id" not in normalized[1]
+    assert normalized[2]["role"] == "user"
+    assert normalized[2]["content"].startswith("[tool result]")
     # The frozen input is not mutated.
     assert messages[1]["content"] is None
     assert messages[1]["tool_calls"]
+    assert messages[2]["role"] == "tool"
 
 
 def test_signature_hash_is_key_order_independent() -> None:

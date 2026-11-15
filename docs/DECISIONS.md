@@ -16,15 +16,18 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   null content, and Ministral's backend silently drops `tool_calls`. A family-specific template
   fix would give each model a different view of the same history.
 - **Decision:** `build_prompt_messages` normalizes every message before templating: null content
-  becomes `""`, and each historical tool call becomes a deterministic
+  becomes `""`, each historical tool call becomes a deterministic
   `<tool_call>{"name": ..., "arguments": ...}</tool_call>` text block with arguments parsed from
-  JSON strings. The `tool_calls` field is removed so no template-specific tool grammar is used.
-  The prompt version becomes **`toolresult-next-decision-v2`**; the parser is unchanged. The
-  frozen prefix payload and the arm manipulation are untouched.
-- **Consequences:** All three families see the same textual history, and the prompt renders on
-  every pinned tokenizer. The system instruction, tool schemas, decoding, and 256-token budget
-  are unchanged. Because no study generation exists, this is a pre-freeze implementation change,
-  not a prereg amendment; the fixed-version requirement is satisfied by v2.
+  JSON strings, and each tool result becomes a user turn with a `[tool result: name]` marker.
+  The `tool_calls`/`tool_call_id` fields are removed so no template-specific tool grammar is
+  used. The prompt version becomes **`toolresult-next-decision-v2`**; the parser is unchanged.
+  The frozen prefix payload and the arm manipulation are untouched.
+- **Consequences:** All three families see the same valid plain-text transcript, and the prompt
+  renders on every pinned tokenizer. This was verified on a prefix with non-null tool-call ids,
+  which Ministral's validator rejects in the original structured form. The system instruction,
+  tool schemas, decoding, and 256-token budget are unchanged. Because no study generation
+  exists, this is a pre-freeze implementation change, not a prereg amendment; the fixed-version
+  requirement is satisfied by v2.
 
 ---
 

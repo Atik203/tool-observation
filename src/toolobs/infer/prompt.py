@@ -41,18 +41,26 @@ def _canonical_arguments(raw: Any) -> Any:
 
 
 def normalize_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Make historical tool calls plain text so every chat template renders them.
+    """Render historical tool calls and results as a plain chat transcript.
 
     τ-bench histories use OpenAI-style assistant ``tool_calls`` with JSON-string
     arguments and sometimes ``content: null``. Qwen's template expects a mapping,
-    Llama's expects string content, and Ministral's backend drops the field
-    silently. Rendering each call as a canonical text block gives all three
-    families the same history without template-specific tool-call handling.
+    Llama's expects string content, and Ministral's validator rejects the
+    original tool-call ids. Rendering calls as canonical text blocks and tool
+    results as user turns with a ``[tool result: name]`` marker gives all three
+    families the same valid transcript without template-specific tool grammar.
     """
     normalized: list[dict[str, Any]] = []
     for message in copy.deepcopy(messages):
         content = message.get("content")
         message["content"] = "" if content is None else content
+        if message.get("role") == "tool":
+            name = str(message.get("name") or "")
+            marker = f"[tool result: {name}]" if name else "[tool result]"
+            message["role"] = "user"
+            message["content"] = f"{marker}\n{message['content']}"
+            message.pop("name", None)
+            message.pop("tool_call_id", None)
         calls = message.pop("tool_calls", None) or []
         if calls:
             blocks: list[str] = []
