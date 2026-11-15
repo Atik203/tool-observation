@@ -38,16 +38,16 @@ triggers an automatic production deployment.
 - **Freeze dry-run:** manifest shape validates; final freeze is blocked on the human audit.
 - **Inference/analysis core:** next-decision prompt, parser, ledger, fake backend, lazy vLLM
   adapter, conditional-logit slope with prefix-cluster bootstrap, and recovery estimators are
-  implemented and CPU-tested. No GPU model has been loaded.
+  implemented and CPU-tested. No study prefix has been run on GPU.
 - **Frozen payload/release:** 880 scrubbed prefixes with five arm observations are built
   (preview); the release packager verifies hashes and PII and refuses without a passed audit.
-- **GPU:** vLLM 0.33.0 / torch 2.14.0 installed in the project venv. The updated trio (Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ) passed non-study fit
-  checks at 0.85/24k/batch 4; Qwen3.5 runs with its thinking block disabled. No study workload
-  has run.
+- **GPU:** vLLM 0.33.0 / torch 2.14.0 installed in the project venv. The updated trio
+  (Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ) passed non-study fit checks at
+  0.85/24k/batch 4; Qwen3.5 runs with its thinking block disabled. No study workload has run.
 - **Audit:** an AI pre-audit passes 40/40 mechanical checks; the official human sheet remains
   blank and the gate is not claimed.
-- **Pending:** human 40-item audit (≥36/40), model-fit completion, and the frozen
-  `toolresult800_v1` manifest.
+- **Pending:** human 40-item audit (≥36/40) and the frozen `toolresult800_v1` manifest; G1
+  calibration starts only after both pass.
 
 ## The question
 
