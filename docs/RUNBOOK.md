@@ -135,9 +135,16 @@ python scripts/09a_run_all.py --stage main --backend vllm --resume
 ```
 
 **Status:** the base matrix (4,400 rendered arms × 3 models = 13,200 generations) is implemented.
-`scripts/09b_recovery.py` implements the transient and persistent H=4 recovery shards and is
-CPU-tested; the 1,200 jitter repeats are still not implemented. Full envelope: 34,800
-generations.
+`scripts/09b_recovery.py` implements the transient and persistent H=4 recovery shards and
+`scripts/09d_jitter.py` the 1,200 seed-repeat generations; both are CPU-tested. Full envelope:
+34,800 generations.
+
+Run the two extra shards after the base matrix finishes (they read the base ledger):
+
+```powershell
+python scripts/09d_jitter.py --model-id <model> --backend vllm
+python scripts/09b_recovery.py --model-id <model> --regime both
+```
 
 - 34,800-generation envelope; sharded by model and domain.
 - Checkpoint every 40 prefixes; one ledger row per generation.
