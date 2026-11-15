@@ -21,7 +21,8 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   The prompt version becomes **`toolresult-next-decision-v3`**. The system instruction, tool
   schemas, parser, and 256-token budget are unchanged.
 - **Evidence:** A synthetic airline tool-call history generated valid parsed JSON on all three
-  models (`artifacts/env/v3_smoke.log`). Ministral produced empty output under v2 and valid JSON
+  models through the real `VLLMBackend` (`artifacts/env/v3_smoke.log` and
+  `artifacts/env/backend_v3_smoke.log`). Ministral produced empty output under v2 and valid JSON
   under v3. No study prefix was used.
 - **Consequences:** This supersedes the rendering detail of D-018; v2 was never used for a
   study generation. The extra instruction turn adds about 15 tokens, which still fits the 24k

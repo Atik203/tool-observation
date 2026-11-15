@@ -70,6 +70,16 @@ The synthetic text is a repeated pangram, so the outputs are not study outputs. 
 empty strings on this repetitive prompt; that is model behavior to watch in G1, not a load
 failure. The test confirms that a 20k prompt fits and runs at the configured 24k context.
 
+### Backend smoke (non-study)
+
+A synthetic airline tool-call history (system policy, user request, one historical call, one tool
+result) was sent through `VLLMBackend` on all three models with prompt v3. Each produced parsed
+JSON: Qwen3.5 a `final_answer`, Ministral a `get_user_details` call, and Llama a
+`list_all_airports` call. Under prompt v2, Ministral returned an empty completion when the last
+turn was a bare tool result; v3 adds a final instruction turn and renders the call history as
+plain text (D-020). Evidence: `artifacts/env/v3_smoke.log` and
+`artifacts/env/backend_v3_smoke.log`.
+
 Notes:
 
 - Qwen3.5-9B is a Mamba-hybrid model. The default `max_num_seqs=256` exceeds its Mamba cache
