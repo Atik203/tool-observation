@@ -26,7 +26,7 @@
 | Freeze dry-run | **DONE** | Manifest shape validates: 800+80, 4,400 arms, 2,640 perturbations, 60 calibration; `artifacts/audit/freeze_dry_run.json` |
 | Inference core | **DONE (CPU)** | Next-decision prompt, JSON parser, ledger, fake backend, lazy vLLM adapter; calibration gate evaluator; CPU tests pass |
 | Prompt rendering | **DONE (pre-freeze)** | Prompt v3 renders plain-text call history and a final instruction turn; valid JSON on all three models; D-020 |
-| Context + length audit | **DONE** | Longest prompt 20,848 tokens + 256 decision; 24k context adopted; synthetic 2×20k prompts pass on all three; D-019 |
+| Context + length audit | **DONE** | Longest prompt 20,682 tokens + 1,024 decision; 24k context adopted; synthetic 2×20k prompts pass on all three; D-019 |
 | Batched generation | **DONE (CPU)** | Same-domain batches of 8 through the backend; test asserts batch sizes; shared calibration ledgers deduplicated |
 | Analysis core | **DONE (CPU)** | Outcome labels, pure-Python conditional-logit slope with prefix-cluster bootstrap, recovery/KM/RMST/Weibull; synthetic tests pass |
 | Cross-platform reproduction | **DONE** | Local and H200 normalized hashes match for sample, rendered arms, perturbations, and calibration |

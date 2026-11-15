@@ -6,7 +6,7 @@
 # not publish an official AWQ artifact. The Llama build is the high-download
 # hugging-quants AWQ conversion of the official Llama-3.1-8B-Instruct weights.
 # Fit checks are recorded in docs/H200_ENV.md. The context is 24,576 tokens
-# because the longest real prompt is 20,848 tokens plus the 1,024-token decision;
+# because the longest real prompt is 20,682 tokens plus the 1,024-token decision;
 # an 8k context would reject 107-237 of the 880 frozen prefixes.
 models:
   - id: qwen3_5_9b_instruct_awq

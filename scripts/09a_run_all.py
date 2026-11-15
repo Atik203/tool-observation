@@ -53,6 +53,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--manifest", default=str(MANIFEST_DIR / "toolresult800_v1.json"))
     parser.add_argument("--rendered", default=None)
     parser.add_argument(
+        "--ledger-root",
+        default=None,
+        help="Root containing <stage>/<model>/ledger.jsonl; defaults to data/runs.",
+    )
+    parser.add_argument(
+        "--score-only",
+        action="store_true",
+        help="Skip generation and score the existing ledgers under --ledger-root.",
+    )
+    parser.add_argument(
         "--report", default=str(ARTIFACTS_DIR / "audit" / "g1_calibration.json")
     )
     args = parser.parse_args(argv)
@@ -63,17 +73,25 @@ def main(argv: list[str] | None = None) -> int:
     model_ids = [str(model["id"]) for model in models]
     started = time.perf_counter()
     temp_report = ARTIFACTS_DIR / "audit" / "_per_model_calibration.json"
-    rendered_path = resolve_repo_path(
-        args.rendered
-        or (
-            INTERIM_DIR
-            / ("calibration_rendered.jsonl" if args.stage == "calibration" else "rendered.jsonl")
-        )
+    ledger_root = (
+        resolve_repo_path(args.ledger_root) if args.ledger_root else RUNS_DIR
     )
-    expected_rows = args.limit or len(read_jsonl_dicts(rendered_path))
+    if not args.score_only:
+        rendered_path = resolve_repo_path(
+            args.rendered
+            or (
+                INTERIM_DIR
+                / (
+                    "calibration_rendered.jsonl"
+                    if args.stage == "calibration"
+                    else "rendered.jsonl"
+                )
+            )
+        )
+        expected_rows = args.limit or len(read_jsonl_dicts(rendered_path))
 
-    for model_id in model_ids:
-        ledger_path = RUNS_DIR / args.stage / model_id / "ledger.jsonl"
+    for model_id in (model_ids if not args.score_only else []):
+        ledger_path = ledger_root / args.stage / model_id / "ledger.jsonl"
         if ledger_path.exists() and len(read_ledger(ledger_path)) >= expected_rows:
             print(f"[09a_run_all] {model_id}: ledger complete, skipping", flush=True)
             continue
@@ -119,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
     rows = []
     ledgers = {}
     for model_id in model_ids:
-        path = RUNS_DIR / args.stage / model_id / "ledger.jsonl"
+        path = ledger_root / args.stage / model_id / "ledger.jsonl"
         ledgers[model_id] = str(path)
         rows.extend(read_ledger(path))
     report = evaluate_all_models(

@@ -6,10 +6,30 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
-## D-024 — Parser v2: final-answer signatures use status/action slots
+## D-025 — Parser v3: action-verb slots and ledger re-scoring
 
 - **Date:** 2026-11-15
 - **Status:** accepted (G1 calibration fix; no target outcomes analyzed)
+- **Context:** Parser v2's status set still included generic terms (`succeed`, `fail`, `change`,
+  `update`, `cannot`, `unable`, `not possible`). Qwen's placebo jitter fell from 42.4% to 23.7%,
+  still above the 20% gate. Restricting the slot set to decision verbs gives 13.3%.
+- **Decision:** A final answer hashes to the sorted set of decision verbs it asserts
+  (`cancel`, `book`, `modify`, `confirm`, `deny`, `refund`, `transfer`, `upgrade`, `downgrade`,
+  `exchange`, `return`, `keep`) plus the first such verb as the action. Generic status words,
+  numbers, dates, and identifiers are not slots; `Y^U` still checks the false value against the
+  full output. Parser version becomes **`toolresult-parser-v3`**. Existing G1 ledgers are
+  re-scored with `scripts/09c_rescore.py` and the gate is evaluated with
+  `scripts/09a_run_all.py --score-only`; the stored `output_text` is never changed.
+- **Consequences:** G1 is re-evaluated without regenerating 900 outputs. The main run uses
+  parser v3 directly. The primary Y is decision-level for final answers; value-level silent
+  propagation remains a separate reported outcome.
+
+---
+
+## D-024 — Parser v2: final-answer signatures use status/action slots
+
+- **Date:** 2026-11-15
+- **Status:** superseded by D-025 (parser v3; v2 was never used for a target outcome)
 - **Context:** Qwen's first fixed-harness calibration had 42.4% placebo jitter. The differences
   were almost entirely paraphrased `final_answer` text; action-level differences were 10%.
   The preregistration specifies the final answer's normalized action verb plus decision-critical

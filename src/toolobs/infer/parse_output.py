@@ -23,30 +23,10 @@ _REFUSAL = re.compile(
 )
 _FENCE = re.compile(r"```(?:json)?\s*(.*?)```", re.DOTALL | re.IGNORECASE)
 
-# Decision-critical status slots for a final answer. Stems match inflections
-# ("cancel" matches "cancelled"); numbers, IDs, and dates are not slots because
-# silent propagation (Y^U) checks the false value against the full output.
-_STATUS_TERMS = (
-    "cancel",
-    "book",
-    "modify",
-    "confirm",
-    "deny",
-    "refund",
-    "transfer",
-    "upgrade",
-    "downgrade",
-    "exchange",
-    "return",
-    "keep",
-    "cannot",
-    "unable",
-    "not possible",
-    "succeed",
-    "fail",
-    "change",
-    "update",
-)
+# Decision-critical status slots for a final answer: the action verbs the answer
+# asserts. Stems match inflections ("cancel" matches "cancelled"). Numbers, IDs,
+# dates, and generic words such as "succeed" are not slots; silent propagation
+# (Y^U) checks the false value against the full output.
 _ACTION_TERMS = (
     "cancel",
     "book",
@@ -61,6 +41,7 @@ _ACTION_TERMS = (
     "return",
     "keep",
 )
+_STATUS_TERMS = _ACTION_TERMS
 
 
 def final_answer_slots(text: str) -> tuple[dict[str, Any], str]:

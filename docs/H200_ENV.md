@@ -46,7 +46,7 @@ All three pinned models load and generate at 8,192- and 24,576-token context, ba
 | Llama-3.1-8B-Instruct-AWQ-INT4 | 5.58 GiB | 8.38 GiB (68,640 tokens) | 8.38× | 210.6 s (incl. download) | 0.11 s | four `Ready.` |
 
 The configured context is **24,576 tokens**. The prompt-length audit
-(`artifacts/env/prompt_lengths.json`) found a maximum prompt of 20,848 tokens plus the
+(`artifacts/env/prompt_lengths.json`) found a maximum prompt of 20,682 tokens plus the
 256-token decision; an 8k context would have rejected 107–237 of the 880 frozen prefixes. The
 24k fit reruns all passed:
 

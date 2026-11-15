@@ -151,6 +151,9 @@ paper/*.log
 paper/*.out
 paper/*.toc
 paper/*.synctex.gz
+paper/*.abs
+paper/*.fls
+paper/*.fdb_latexmk
 release/CTO-800-*/
 release/*.zip
 release/*.tar.gz
