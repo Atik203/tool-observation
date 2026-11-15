@@ -53,7 +53,7 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 ## D-018 — Historical tool calls are rendered as canonical text; prompt v2
 
 - **Date:** 2026-11-15
-- **Status:** accepted (pre-freeze; no study generation has run)
+- **Status:** superseded by D-020 (pre-freeze; v2 was never used for a study generation)
 - **Context:** The τ-bench prefixes carry OpenAI-style assistant `tool_calls` with JSON-string
   arguments and sometimes `content: null`. Rendering the real prefixes exposed three failures:
   Qwen3.5's template requires `arguments` to be a mapping, Llama's template calls `len()` on a
