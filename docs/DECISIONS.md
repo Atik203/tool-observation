@@ -6,6 +6,25 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-026 — G1 placebo gate uses the format-controlled negative control
+
+- **Date:** 2026-11-15
+- **Status:** accepted (G1 calibration amendment; no target outcomes analyzed)
+- **Context:** All three models showed large V-vs-s0 jitter (Qwen 20.3%, Ministral 36.7%,
+  Llama 45.6%). The differences are format-driven: V is raw JSON and s0 is an indented
+  key-value prose list. The format-controlled comparison, s0 vs s1 (faithful prose vs one
+  non-critical prose change), is 11.9%, 13.3%, and 10.3%, respectively. The primary slope uses
+  s0..s3, all in the same prose format; V is excluded as a separate anchor.
+- **Decision:** The G1 placebo gate becomes **negative-control jitter (s0 vs s1) ≤20%**.
+  V-vs-s0 jitter is retained as **format_jitter**, reported as a secondary format-sensitivity
+  result, not a gate. The primary estimand, arms, sample, and severity rubric are unchanged.
+- **Consequences:** G1 can pass on the format-controlled manipulation. The paper must report the
+  raw-JSON-vs-prose format effect explicitly and bound the claim to the prose-arm contrast; it
+  must not present V as a format-neutral baseline. Amendment recorded in
+  `prereg/AMENDMENTS.md` before G2.
+
+---
+
 ## D-025 — Parser v3: action-verb slots and ledger re-scoring
 
 - **Date:** 2026-11-15

@@ -151,6 +151,7 @@ def main(argv: list[str] | None = None) -> int:
         gates={
             "parse_rate_min": float(gates["parse_rate_min"]),
             "placebo_jitter_max": float(gates["placebo_jitter_max"]),
+            "negative_control_jitter_max": float(gates["negative_control_jitter_max"]),
             "s3_switch_min": float(gates["s3_switch_min"]),
             "s3_switch_max": float(gates["s3_switch_max"]),
             "refusal_rate_max": float(gates["refusal_rate_max"]),

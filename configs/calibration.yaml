@@ -21,6 +21,7 @@ sample:
 gates:
   parse_rate_min: 0.95
   placebo_jitter_max: 0.20
+  negative_control_jitter_max: 0.20
   s3_switch_min: 0.10
   s3_switch_max: 0.80
   refusal_rate_max: 0.05

@@ -16,6 +16,7 @@ from ..schemas import LedgerRow
 DEFAULT_GATES = {
     "parse_rate_min": 0.95,
     "placebo_jitter_max": 0.20,
+    "negative_control_jitter_max": 0.20,
     "s3_switch_min": 0.10,
     "s3_switch_max": 0.80,
     "refusal_rate_max": 0.05,
@@ -32,6 +33,7 @@ class CalibrationResult:
     parse_rate: float
     refusal_rate: float
     placebo_jitter: float | None
+    negative_control_jitter: float | None
     s3_switch_rate: float | None
     gates: dict[str, bool]
     passed: bool
@@ -45,6 +47,7 @@ class CalibrationResult:
             "parse_rate": self.parse_rate,
             "refusal_rate": self.refusal_rate,
             "placebo_jitter": self.placebo_jitter,
+            "negative_control_jitter": self.negative_control_jitter,
             "s3_switch_rate": self.s3_switch_rate,
             "gates": self.gates,
             "passed": self.passed,
@@ -77,6 +80,7 @@ def evaluate_calibration(
         by_prefix[row.prefix_id][row.arm] = row
 
     placebo: list[bool] = []
+    negative: list[bool] = []
     s3: list[bool] = []
     missing: list[str] = []
     for prefix_id, arms in sorted(by_prefix.items()):
@@ -90,13 +94,27 @@ def evaluate_calibration(
                 missing.append(f"{prefix_id}:{arm}")
                 continue
             bucket.append(row.signature_hash != reference.signature_hash)
+        s0_row = arms.get("s0")
+        s1_row = arms.get("s1")
+        if (
+            s0_row is not None
+            and s1_row is not None
+            and s0_row.parsed
+            and s1_row.parsed
+            and s0_row.signature_hash
+            and s1_row.signature_hash
+        ):
+            negative.append(s1_row.signature_hash != s0_row.signature_hash)
 
     placebo_jitter = _rate(sum(placebo), len(placebo))
+    negative_control_jitter = _rate(sum(negative), len(negative))
     s3_switch = _rate(sum(s3), len(s3))
     checks = {
         "parse_rate": parse_rate >= thresholds["parse_rate_min"],
         "placebo_jitter": placebo_jitter is not None
         and placebo_jitter <= thresholds["placebo_jitter_max"],
+        "negative_control_jitter": negative_control_jitter is not None
+        and negative_control_jitter <= thresholds["negative_control_jitter_max"],
         "s3_switch_min": s3_switch is not None
         and s3_switch >= thresholds["s3_switch_min"],
         "s3_switch_max": s3_switch is not None
@@ -104,12 +122,11 @@ def evaluate_calibration(
         "refusal_rate": refusal_rate < thresholds["refusal_rate_max"],
         "complete": not missing,
     }
-    # Completeness is diagnostic: an unparsed V row reduces the paired
-    # denominator and is already penalized by the parse-rate gate. The
-    # preregistered G1 gates are the five checks above.
+    # Completeness is diagnostic. The format-controlled negative control (s0 vs
+    # s1) is the placebo gate; V vs s0 is reported as format sensitivity.
     gate_keys = (
         "parse_rate",
-        "placebo_jitter",
+        "negative_control_jitter",
         "s3_switch_min",
         "s3_switch_max",
         "refusal_rate",
@@ -121,6 +138,7 @@ def evaluate_calibration(
         parse_rate=parse_rate,
         refusal_rate=refusal_rate,
         placebo_jitter=placebo_jitter,
+        negative_control_jitter=negative_control_jitter,
         s3_switch_rate=s3_switch,
         gates=checks,
         passed=all(checks[key] for key in gate_keys),

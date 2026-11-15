@@ -163,6 +163,9 @@ def main(argv: list[str] | None = None) -> int:
             gates={
                 "parse_rate_min": float(calibration_gates["parse_rate_min"]),
                 "placebo_jitter_max": float(calibration_gates["placebo_jitter_max"]),
+                "negative_control_jitter_max": float(
+                    calibration_gates["negative_control_jitter_max"]
+                ),
                 "s3_switch_min": float(calibration_gates["s3_switch_min"]),
                 "s3_switch_max": float(calibration_gates["s3_switch_max"]),
                 "refusal_rate_max": float(calibration_gates["refusal_rate_max"]),

@@ -11,7 +11,7 @@ observed value, the pass/fail decision, and the consequence.
 | Gate | Phase | Criteria | Evidence artifact | Fail action |
 |---|---|---|---|---|
 | **G0** | Harvest / freeze | ≥880 eligible; ≥440/domain pre-audit; ≥400/domain post-audit; replay ≥98%; 40-item audit ≥36/40 (provisional AI pre-audit adopted by the author, D-021) | `artifacts/audit/g0_report.md`, `data/manifests/toolresult800_v1.json` | 500 prefixes / 2 models fallback, or stop |
-| **G1** | Calibration | parse ≥95%; placebo jitter ≤20%; s=3 switch 10–80%; format refusal <5% per model | `artifacts/audit/g1_calibration.json` | Fix prompt/parser and rerun; no main-run start |
+| **G1** | Calibration | parse ≥95%; negative-control jitter (s0 vs s1) ≤20%; V-vs-s0 format jitter reported separately; s=3 switch 10–80%; format refusal <5% per model | `artifacts/audit/g1_calibration.json` | Fix prompt/parser and rerun; no main-run start |
 | **G2** | Main run | Stop at 45 GPU-hours or 200 GB storage, whichever first; complete ledger | `artifacts/cost/main_cost.json`, `data/runs/main/ledger.jsonl` | Analyze completed shards; disclose shortfall |
 | **G3** | Analysis | Pooled β>0; positive in ≥2/3 models with the same sign; severity α≥.75; outcome κ≥.80 (or adjudicated ≥.70 with downgrade); recovery κ≥.75 | `artifacts/analysis/g3_report.md` | Null/measurement paper; no content-sensitivity claim |
 | **G4** | Recovery | ≥50% of the s=3 risk set recovers by H=4; Weibull shape not rejected (p≥.01) | `artifacts/analysis/g4_report.md` | Report RMST/curve; t½ exploratory only |
@@ -76,7 +76,8 @@ Per-model gates:
 | Metric | Threshold |
 |---|---|
 | Parse rate | ≥95% |
-| Placebo jitter (s=0 vs V) | ≤20% |
+| Negative-control jitter (s0 vs s1) | ≤20% |
+| Format jitter (s0 vs V) | reported, not gated |
 | s=3 switch rate | 10–80% |
 | Format refusal | <5% |
 

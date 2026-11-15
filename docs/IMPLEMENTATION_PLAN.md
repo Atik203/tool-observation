@@ -160,7 +160,7 @@ detection, jitter estimation, and a first look at whether s=3 is a ceiling.
 Gates, per model:
 
 - parse rate **≥95%**;
-- placebo jitter (s=0 vs V) **≤20%**;
+- negative-control jitter (s0 vs s1) **≤20%**; V-vs-s0 format jitter is reported separately;
 - s=3 switch rate **10–80%**;
 - format refusal **<5%**.
 

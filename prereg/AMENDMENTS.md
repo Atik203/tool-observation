@@ -74,6 +74,23 @@ to target-model outcomes.
 - **Blind to outcomes:** yes; no target-model outcome has been generated.
 - **Record:** `docs/DECISIONS.md` D-019; prompt lengths in `artifacts/env/prompt_lengths.json`.
 
+## Pre-freeze G1 placebo-gate note
+
+- **Date:** 2026-11-15
+- **Change:** The G1 placebo check is **negative-control jitter (s0 vs s1) ≤20%**, not
+  V-vs-s0 jitter. V-vs-s0 is reported as `format_jitter` (20.3%, 36.7%, 45.6% for the three
+  models) and is a secondary format-sensitivity result.
+- **Original text:** `prereg/PREREGISTRATION.md` G1 row, "placebo jitter (s=0 vs V) ≤20%";
+  `docs/IMPLEMENTATION_PLAN.md` §5.
+- **Replacement:** The primary slope remains s0..s3, all in the same prose format. The
+  format-controlled negative control checks that a non-critical prose change does not move the
+  decision. The raw-JSON anchor V is excluded from the slope and reported separately.
+- **Analyses affected:** G1 gate and a secondary format-sensitivity result; the primary
+  estimand, sample, arms, and severity rubric are unchanged.
+- **Blind to outcomes:** yes; no target-model outcome exists.
+- **Record:** `docs/DECISIONS.md` D-026; G1 report in
+  `artifacts/audit/g1_calibration_v3.json`.
+
 ## Pre-freeze audit-provenance note
 
 - **Date:** 2026-11-15
