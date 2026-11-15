@@ -98,6 +98,8 @@ def test_missing_reference_arm_fails_completeness() -> None:
     result = evaluate_calibration(rows, "qwen")
     assert "p0:V" in result.missing
     assert result.gates["complete"] is False
+    # Completeness is diagnostic; the preregistered gates still pass.
+    assert result.passed is True
 
 
 def test_evaluate_all_models_requires_every_model() -> None:

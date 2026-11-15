@@ -6,6 +6,28 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-024 — Parser v2: final-answer signatures use status/action slots
+
+- **Date:** 2026-11-15
+- **Status:** accepted (G1 calibration fix; no target outcomes analyzed)
+- **Context:** Qwen's first fixed-harness calibration had 42.4% placebo jitter. The differences
+  were almost entirely paraphrased `final_answer` text; action-level differences were 10%.
+  The preregistration specifies the final answer's normalized action verb plus decision-critical
+  slots, not the full answer string, so the parser was too strict.
+- **Decision:** A final answer now hashes to an action verb plus a sorted set of status slots
+  (`cancel`, `book`, `modify`, `confirm`, `deny`, `refund`, `transfer`, `upgrade`, `downgrade`,
+  `exchange`, `return`, `keep`, `cannot`, `unable`, `not possible`, `succeed`, `fail`, `change`,
+  `update`). Numbers, dates, and identifiers are not signature slots; silent propagation
+  (`Y^U`) still checks the perturbation's false value against the full output. Parser version
+  becomes **`toolresult-parser-v2`**. Completeness is diagnostic, not one of the five
+  preregistered G1 gates; an unparsed V row reduces the paired denominator and is penalized by
+  the parse-rate gate.
+- **Consequences:** G1 is rerun. The primary Y is decision-level for final answers, while Y^U
+  captures value-level silent propagation; both are reported. The frozen data, sample, arms,
+  and estimand are unchanged.
+
+---
+
 ## D-023 — G1 harness fix: exclude `think`, constrain JSON, 1,024-token budget
 
 - **Date:** 2026-11-15

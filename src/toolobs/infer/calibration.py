@@ -104,6 +104,16 @@ def evaluate_calibration(
         "refusal_rate": refusal_rate < thresholds["refusal_rate_max"],
         "complete": not missing,
     }
+    # Completeness is diagnostic: an unparsed V row reduces the paired
+    # denominator and is already penalized by the parse-rate gate. The
+    # preregistered G1 gates are the five checks above.
+    gate_keys = (
+        "parse_rate",
+        "placebo_jitter",
+        "s3_switch_min",
+        "s3_switch_max",
+        "refusal_rate",
+    )
     return CalibrationResult(
         model_id=model_id,
         total=total,
@@ -113,7 +123,7 @@ def evaluate_calibration(
         placebo_jitter=placebo_jitter,
         s3_switch_rate=s3_switch,
         gates=checks,
-        passed=all(checks.values()),
+        passed=all(checks[key] for key in gate_keys),
         missing=missing[:20],
     )
 

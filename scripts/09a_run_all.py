@@ -100,8 +100,15 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[09a_run_all] {model_id}: {' '.join(command[2:])}", flush=True)
         completed = subprocess.run(command, cwd=REPO_ROOT, check=False)
         if completed.returncode != 0:
-            print(f"[09a_run_all] FAIL: {model_id} exited {completed.returncode}")
-            return completed.returncode
+            if ledger_path.exists() and len(read_ledger(ledger_path)) >= expected_rows:
+                print(
+                    f"[09a_run_all] {model_id}: completed but per-model gate failed; "
+                    "continuing to combine the report",
+                    flush=True,
+                )
+            else:
+                print(f"[09a_run_all] FAIL: {model_id} exited {completed.returncode}")
+                return completed.returncode
 
     if args.stage != "calibration":
         print(f"[09a_run_all] main stage wall_seconds {time.perf_counter() - started:.1f}")

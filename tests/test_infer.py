@@ -140,6 +140,23 @@ def test_normalize_messages_drops_empty_assistant_turn() -> None:
     assert [message["role"] for message in normalized] == ["user", "user"]
 
 
+def test_final_answer_signature_uses_status_slots() -> None:
+    cancelled = parse_decision('{"final_answer": "The reservation was cancelled and refunded."}')
+    cancelled_paraphrase = parse_decision(
+        '{"final_answer": "Cancelled; the refund is on its way."}'
+    )
+    assert signature_hash(cancelled) == signature_hash(cancelled_paraphrase)
+
+    modified = parse_decision('{"final_answer": "The reservation was modified."}')
+    assert signature_hash(cancelled) != signature_hash(modified)
+
+    # Amounts are not status slots; Y^U checks the false value against the full
+    # output, so a changed refund amount is still caught as silent propagation.
+    refund_100 = parse_decision('{"final_answer": "Refunded $100."}')
+    refund_200 = parse_decision('{"final_answer": "Refunded $200."}')
+    assert signature_hash(refund_100) == signature_hash(refund_200)
+
+
 def test_signature_hash_is_key_order_independent() -> None:
     left = parse_decision('{"tool": "f", "arguments": {"b": 2, "a": 1}}')
     right = parse_decision('{"tool": "f", "arguments": {"a": 1, "b": 2}}')
