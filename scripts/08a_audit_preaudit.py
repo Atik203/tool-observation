@@ -234,6 +234,45 @@ def main(argv: list[str] | None = None) -> int:
             f"{row['pii_pass']} | {row['relevance_pass']} | {row['replay_pass']} | "
             f"{row['confidence']} | {row['notes']} |"
         )
+    packet_by_id = {row["item_id"]: row for row in packet}
+    lines.extend(["", "## Item detail", ""])
+    for row in rows:
+        packet_row = packet_by_id.get(row["item_id"], {})
+        observation = str(packet_row.get("observation_text", ""))[:4000]
+        continuation = str(packet_row.get("continuation_text", ""))[:4000]
+        used_fields = str(packet_row.get("used_fields", ""))
+        lines.extend(
+            [
+                f"<details><summary><strong>{row['item_id']}</strong> · "
+                f"{row['domain']} · {packet_row.get('tool_name', '')} · "
+                f"AI {row['confidence']}</summary>",
+                "",
+                "**Observation**",
+                "",
+                "```json",
+                observation,
+                "```",
+                "",
+                "**Donor continuation**",
+                "",
+                "```text",
+                continuation,
+                "```",
+                "",
+                f"**Used fields:** `{used_fields}`",
+                "",
+                f"**AI checks:** eligibility {row['eligibility_pass']} · "
+                f"PII {row['pii_pass']} · relevance {row['relevance_pass']} · "
+                f"replay {row['replay_pass']}",
+                "",
+                f"**Notes:** {row['notes'] or 'none'}",
+                "",
+                "**Author check:** [ ] eligibility  [ ] PII  [ ] relevance  [ ] replay",
+                "",
+                "</details>",
+                "",
+            ]
+        )
     markdown_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     write_json(
         ARTIFACTS_DIR / "audit" / "g0_audit_ai_preaudit.json",
