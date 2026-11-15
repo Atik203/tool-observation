@@ -140,6 +140,12 @@ def test_normalize_messages_drops_empty_assistant_turn() -> None:
     assert [message["role"] for message in normalized] == ["user", "user"]
 
 
+def test_parse_literal_newline_inside_json_string() -> None:
+    parsed = parse_decision('{"final_answer": "line one\nline two"}')
+    assert parsed.status == "ok"
+    assert "line one" in parsed.final_answer
+
+
 def test_final_answer_signature_uses_status_slots() -> None:
     cancelled = parse_decision('{"final_answer": "The reservation was cancelled and refunded."}')
     cancelled_paraphrase = parse_decision(

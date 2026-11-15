@@ -95,14 +95,14 @@ def _json_object(text: str) -> dict[str, Any] | None:
     if fenced:
         candidate = fenced.group(1).strip()
     try:
-        payload = json.loads(candidate)
+        payload = json.loads(candidate, strict=False)
     except json.JSONDecodeError:
         start = candidate.find("{")
         end = candidate.rfind("}")
         if start < 0 or end <= start:
             return None
         try:
-            payload = json.loads(candidate[start : end + 1])
+            payload = json.loads(candidate[start : end + 1], strict=False)
         except json.JSONDecodeError:
             return None
     return payload if isinstance(payload, dict) else None

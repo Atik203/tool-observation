@@ -60,7 +60,12 @@ models:
     dtype: float16
     max_model_len: 24576
     gpu_memory_utilization: 0.85
-    enforce_eager: false
+    # 24k + batch 8 OOM'd during G1 at row 80 (CUDA OOM in a compiled
+    # activation). Eager mode, 4 sequences, and 4k chunked prefill keep the
+    # long-prompt activation peak inside 18 GB.
+    enforce_eager: true
+    max_num_seqs: 4
+    max_num_batched_tokens: 4096
 
 decoding:
   temperature: 0.0
