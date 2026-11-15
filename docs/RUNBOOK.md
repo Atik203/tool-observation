@@ -188,6 +188,24 @@ tmux new -s g2base -d \
 
 `--resume` keeps the 2,704 existing Qwen rows and starts Ministral and Llama from row 0.
 
+### Syncing completed shards to the local checkout
+
+The server is the execution host; the local checkout is the analysis host. Completed
+shards are pulled every 30 minutes by a watchdog-adjacent loop that:
+
+1. streams `tar czf - data/runs artifacts` over SSH,
+2. validates every JSONL ledger line and drops a trailing partially-written line,
+3. copies a file only when the remote copy is newer/longer, never deleting local files.
+
+Log: `artifacts/server_sync/sync.log`. To run it once:
+
+```powershell
+python <sync-script>   # writes to artifacts/server_sync/sync.log
+```
+
+The confirmatory analysis (stage 13) is run on the local copy **after** the sync has
+delivered a complete ledger; never analyze a ledger that is still growing.
+
 ---
 
 ## 5. Analysis
