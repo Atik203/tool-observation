@@ -9,7 +9,7 @@ from toolobs.infer.parse_output import (
     parse_decision,
     signature_hash,
 )
-from toolobs.infer.prompt import build_prompt_messages
+from toolobs.infer.prompt import build_prompt_messages, normalize_messages
 from toolobs.infer.runner import FakeBackend, Generation, run_rendered_rows
 from toolobs.infer.vllm_backend import chat_template_kwargs
 
@@ -74,6 +74,37 @@ def test_parse_refusal_and_empty() -> None:
     assert parse_decision("I cannot comply with that request.").status == "refusal"
     assert parse_decision("   ").status == "empty"
     assert parse_decision("not json").status == "parse_error"
+
+
+def test_normalize_messages_renders_tool_calls_as_text() -> None:
+    messages = [
+        {"role": "system", "content": "policy"},
+        {
+            "role": "assistant",
+            "content": None,
+            "tool_calls": [
+                {
+                    "function": {
+                        "name": "get_user_details",
+                        "arguments": '{"user_id": "user_abc"}',
+                    },
+                    "id": "call_1",
+                    "type": "function",
+                }
+            ],
+        },
+        {"role": "tool", "content": "{}"},
+    ]
+    normalized = normalize_messages(messages)
+    assert normalized[0]["content"] == "policy"
+    assert normalized[1]["content"].startswith("<tool_call>")
+    assert '"name":"get_user_details"' in normalized[1]["content"]
+    assert '"user_id":"user_abc"' in normalized[1]["content"]
+    assert "tool_calls" not in normalized[1]
+    assert "tool_call_id" not in normalized[1]
+    # The frozen input is not mutated.
+    assert messages[1]["content"] is None
+    assert messages[1]["tool_calls"]
 
 
 def test_signature_hash_is_key_order_independent() -> None:

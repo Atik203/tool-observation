@@ -9,11 +9,12 @@ no model-specific tool-call grammar is required.
 from __future__ import annotations
 
 import copy
+import json
 from typing import Any
 
 from ..hashing import canonical_json, sha256_text
 
-PROMPT_VERSION = "toolresult-next-decision-v1"
+PROMPT_VERSION = "toolresult-next-decision-v2"
 
 
 def _instruction(tools_info: list[dict[str, Any]]) -> str:
@@ -30,12 +31,53 @@ def _instruction(tools_info: list[dict[str, Any]]) -> str:
     )
 
 
+def _canonical_arguments(raw: Any) -> Any:
+    if isinstance(raw, str):
+        try:
+            return json.loads(raw)
+        except json.JSONDecodeError:
+            return raw
+    return raw
+
+
+def normalize_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Make historical tool calls plain text so every chat template renders them.
+
+    τ-bench histories use OpenAI-style assistant ``tool_calls`` with JSON-string
+    arguments and sometimes ``content: null``. Qwen's template expects a mapping,
+    Llama's expects string content, and Ministral's backend drops the field
+    silently. Rendering each call as a canonical text block gives all three
+    families the same history without template-specific tool-call handling.
+    """
+    normalized: list[dict[str, Any]] = []
+    for message in copy.deepcopy(messages):
+        content = message.get("content")
+        message["content"] = "" if content is None else content
+        calls = message.pop("tool_calls", None) or []
+        if calls:
+            blocks: list[str] = []
+            for call in calls:
+                function = call.get("function") or {}
+                name = function.get("name") or call.get("name") or ""
+                arguments = _canonical_arguments(
+                    function.get("arguments", call.get("arguments", {}))
+                )
+                payload = canonical_json({"name": name, "arguments": arguments})
+                blocks.append(f"<tool_call>\n{payload}\n</tool_call>")
+            body = message["content"].rstrip()
+            message["content"] = "\n\n".join(part for part in (body, *blocks) if part)
+        if message.get("tool_call_id") is None:
+            message.pop("tool_call_id", None)
+        normalized.append(message)
+    return normalized
+
+
 def build_prompt_messages(
     messages: list[dict[str, Any]],
     tools_info: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     """Append the next-decision instruction to the prefix's system message."""
-    updated = copy.deepcopy(messages)
+    updated = normalize_messages(messages)
     instruction = _instruction(tools_info)
     if updated and updated[0].get("role") == "system":
         content = updated[0].get("content")

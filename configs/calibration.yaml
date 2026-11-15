@@ -7,7 +7,7 @@ calibration:
   generations: 900
   decoding: greedy
   seed: 20261108
-  prompt_version: toolresult-next-decision-v1
+  prompt_version: toolresult-next-decision-v2
   parser_version: toolresult-parser-v1
 
 sample:

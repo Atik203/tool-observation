@@ -6,6 +6,46 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-018 — Historical tool calls are rendered as canonical text; prompt v2
+
+- **Date:** 2026-11-15
+- **Status:** accepted (pre-freeze; no study generation has run)
+- **Context:** The τ-bench prefixes carry OpenAI-style assistant `tool_calls` with JSON-string
+  arguments and sometimes `content: null`. Rendering the real prefixes exposed three failures:
+  Qwen3.5's template requires `arguments` to be a mapping, Llama's template calls `len()` on a
+  null content, and Ministral's backend silently drops `tool_calls`. A family-specific template
+  fix would give each model a different view of the same history.
+- **Decision:** `build_prompt_messages` normalizes every message before templating: null content
+  becomes `""`, and each historical tool call becomes a deterministic
+  `<tool_call>{"name": ..., "arguments": ...}</tool_call>` text block with arguments parsed from
+  JSON strings. The `tool_calls` field is removed so no template-specific tool grammar is used.
+  The prompt version becomes **`toolresult-next-decision-v2`**; the parser is unchanged. The
+  frozen prefix payload and the arm manipulation are untouched.
+- **Consequences:** All three families see the same textual history, and the prompt renders on
+  every pinned tokenizer. The system instruction, tool schemas, decoding, and 256-token budget
+  are unchanged. Because no study generation exists, this is a pre-freeze implementation change,
+  not a prereg amendment; the fixed-version requirement is satisfied by v2.
+
+---
+
+## D-017 — Reasoning models run with thinking disabled
+
+- **Date:** 2026-11-15
+- **Status:** accepted (pre-freeze)
+- **Context:** Qwen3.5-9B is a reasoning model. With its stock chat template the fit prompt
+  produced `Thinking Process:\n1. **` and exhausted the token budget before any decision. The
+  study measures the *next decision* under a fixed 256-token budget, so a hidden reasoning block
+  would confound cross-family comparison and could turn valid decisions into parse errors.
+- **Decision:** Set `chat_template_kwargs: {enable_thinking: false}` on the Qwen3.5 entry in
+  `configs/models.yaml`; `VLLMBackend` and the fit checker pass these kwargs to
+  `apply_chat_template`. Ministral and Llama declare no template kwargs. The prompt instruction
+  and 256-token budget are unchanged for all three families.
+- **Consequences:** All families receive the same "single JSON decision, no preamble" contract.
+  The fit rerun emitted `ready` for all four prompts. If a future model ignores the switch, its
+  parse failures are reported as parse failures; the prompt is not tuned per family.
+
+---
+
 ## D-016 — Updated 8–9B model trio pinned; all three fit checks pass
 
 - **Date:** 2026-11-15
@@ -32,24 +72,6 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   paper, data card, site, and prereg model table are updated from 7–8B/Qwen2.5 to 8–9B/updated
   trio before G1. If a model fails during G1, fall back to the previous family with a logged
   decision; do not select after seeing outcomes.
-
----
-
-## D-017 — Reasoning models run with thinking disabled
-
-- **Date:** 2026-11-15
-- **Status:** accepted (pre-freeze)
-- **Context:** Qwen3.5-9B is a reasoning model. With its stock chat template the fit prompt
-  produced `Thinking Process:\n1. **` and exhausted the token budget before any decision. The
-  study measures the *next decision* under a fixed 256-token budget, so a hidden reasoning block
-  would confound cross-family comparison and could turn valid decisions into parse errors.
-- **Decision:** Set `chat_template_kwargs: {enable_thinking: false}` on the Qwen3.5 entry in
-  `configs/models.yaml`; `VLLMBackend` and the fit checker pass these kwargs to
-  `apply_chat_template`. Ministral and Llama declare no template kwargs. The prompt instruction
-  and 256-token budget are unchanged for all three families.
-- **Consequences:** All families receive the same "single JSON decision, no preamble" contract.
-  The fit rerun emitted `ready` for all four prompts. If a future model ignores the switch, its
-  parse failures are reported as parse failures; the prompt is not tuned per family.
 
 ---
 
