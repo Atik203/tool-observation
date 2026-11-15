@@ -80,6 +80,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--report", default=str(ARTIFACTS_DIR / "audit" / "g1_calibration.json"))
     args = parser.parse_args(argv)
 
+    if args.all_models and args.backend == "vllm":
+        raise SystemExit(
+            "vLLM keeps GPU memory per process; use scripts/09a_run_all.py "
+            "to run one model per process"
+        )
+
     calibration_config = load_config("calibration.yaml")
     calibration = calibration_config["calibration"]
     calibration_gates = calibration_config["gates"]
