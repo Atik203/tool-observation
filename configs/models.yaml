@@ -38,7 +38,12 @@ models:
     dtype: float16
     max_model_len: 24576
     gpu_memory_utilization: 0.85
-    enforce_eager: false
+    # 24k + batch 8 OOM'd during G1 at row 96 (CUDA_ERROR_OUT_OF_MEMORY
+    # loading a compiled kernel). Eager mode, 4 sequences, and 4k chunked
+    # prefill keep the long-prompt activation peak inside 18 GB.
+    enforce_eager: true
+    max_num_seqs: 4
+    max_num_batched_tokens: 4096
   - id: llama_3_1_8b_instruct_awq
     repo_id: hugging-quants/Meta-Llama-3.1-8B-Instruct-AWQ-INT4
     revision: db1f81ad4b8c7e39777509fac66c652eb0a52f91

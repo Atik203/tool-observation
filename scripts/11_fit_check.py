@@ -61,6 +61,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--gpu-memory-utilization", type=float, default=0.90)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--max-num-seqs", type=int, default=8)
+    parser.add_argument("--max-num-batched-tokens", type=int, default=0)
     parser.add_argument("--max-tokens", type=int, default=8)
     parser.add_argument(
         "--prompt-tokens",
@@ -121,6 +122,8 @@ def main(argv: list[str] | None = None) -> int:
             "tensor_parallel_size": 1,
             "max_num_seqs": args.max_num_seqs,
         }
+        if args.max_num_batched_tokens:
+            llm_kwargs["max_num_batched_tokens"] = args.max_num_batched_tokens
         if quantization not in {"", "auto", "none"}:
             llm_kwargs["quantization"] = quantization
         llm = LLM(**llm_kwargs)

@@ -58,8 +58,10 @@ class VLLMBackend:
             "gpu_memory_utilization": float(model_config.get("gpu_memory_utilization", 0.85)),
             "enforce_eager": bool(model_config.get("enforce_eager", False)),
             "tensor_parallel_size": int(model_config.get("tensor_parallel", 1)),
-            "max_num_seqs": max_num_seqs,
+            "max_num_seqs": int(model_config.get("max_num_seqs", max_num_seqs)),
         }
+        if "max_num_batched_tokens" in model_config:
+            kwargs["max_num_batched_tokens"] = int(model_config["max_num_batched_tokens"])
         if quantization not in {"", "auto", "none"}:
             kwargs["quantization"] = quantization
         self.llm = LLM(**kwargs)

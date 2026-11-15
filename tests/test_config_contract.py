@@ -51,6 +51,15 @@ def test_contract_catches_generation_drift() -> None:
     assert any("generation_budget" in error for error in errors)
 
 
+def test_ministral_uses_conservative_serving() -> None:
+    configs = load_all_configs()
+    models = {model["id"]: model for model in configs["models.yaml"]["models"]}
+    model = models["ministral_3_8b_instruct_2512_awq"]
+    assert model["enforce_eager"] is True
+    assert model["max_num_seqs"] == 4
+    assert model["max_num_batched_tokens"] == 4096
+
+
 def test_config_hash_changes_when_value_changes() -> None:
     configs = load_all_configs()
     before = config_hash(configs["main.yaml"])
