@@ -6,6 +6,27 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-027 — Deferred human verification of the audit gates
+
+- **Date:** 2026-11-15
+- **Status:** accepted (audit provenance; no outcome data affected)
+- **Context:** The preregistration requires human ratings for the severity audit
+  (120 items, 3 raters), the outcome audit (160 items, 2 raters), and the recovery
+  audit (80 sequences, 2 raters). The G0 gate was already filled from an AI
+  pre-audit under D-021 with verification deferred. The remaining audit gates would
+  otherwise block the confirmatory analysis until the authors are available.
+- **Decision:** The agent prepares the audit packets and the AI pre-audit drafts for
+  all three gates, and records `label_source=ai_preaudit_deferred_human` with notes
+  on every row. The authors perform the final verification after the experiments
+  finish. No gate is claimed as human-verified before that point.
+- **Consequences:** G3/G4 results may be computed and reported as provisional until
+  the authors verify. Any disagreement found at verification must be logged in
+  `prereg/AMENDMENTS.md` before the claim is finalized; if verification fails a gate,
+  the manuscript must state the failure rather than smooth it over. The pilot and
+  G0 figures are unaffected.
+
+---
+
 ## D-026 — G1 placebo gate uses the format-controlled negative control
 
 - **Date:** 2026-11-15
