@@ -83,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
         lengths: list[int] = []
         over_context = 0
         over_budget = 0
-        for (prefix_id, _domain), prompt in prompt_cache.items():
+        for (_prefix_id, _domain), prompt in prompt_cache.items():
             text = tokenizer.apply_chat_template(
                 prompt,
                 tokenize=False,
