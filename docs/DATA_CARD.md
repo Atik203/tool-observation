@@ -43,7 +43,7 @@ the confirmatory analysis is frozen.
 | Retail primary | 400 | τ-bench retail prefixes |
 | Reserve | 80 | held out; not in primary analysis |
 | Arms per prefix | 5 | V, s=0, s=1, s=2, s=3 |
-| Models | 3 | Qwen2.5-7B-Instruct-AWQ, Mistral-7B-Instruct-v0.3-AWQ, Llama-3.1-8B-Instruct-AWQ (greedy) |
+| Models | 3 | Qwen3.5-9B-AWQ, Ministral-3-8B-Instruct-2512-AWQ, Llama-3.1-8B-Instruct-AWQ-INT4 (greedy) |
 | Base generations | 12,000 | 800 × 5 × 3 |
 | Recovery generations | 21,600 | 19,200 transient + 2,400 persistent |
 | Jitter generations | 1,200 | 80 × 5 × 3 |
@@ -107,14 +107,14 @@ See `DATA_LICENSE.md`.
 ## 8. Intended use
 
 Research on tool-result errors, silent propagation, agent recovery, and
-reproducible evaluation of open-weight 7–8B models. Suitable for secondary analysis of
+reproducible evaluation of open-weight 8–9B models. Suitable for secondary analysis of
 within-prefix contrasts and for benchmarking detection/flagging behavior.
 
 ## 9. Limitations
 
 - τ-bench tasks are public and may be in target-model training data; baseline reliance may be
   inflated.
-- Only three 7–8B model families; no frontier or API models.
+- Only three 8–9B model families; no frontier or API models.
 - Two domains, one renderer, one severity rubric.
 - Mock/deterministic benchmark tools, not live APIs.
 - Donor prefixes come from gpt-4o/sonnet; target models continue off-policy histories.

@@ -6,10 +6,10 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
-## D-016 — Updated 8–9B model trio pinned; fit checks in progress
+## D-016 — Updated 8–9B model trio pinned; all three fit checks pass
 
 - **Date:** 2026-11-15
-- **Status:** provisional (pre-freeze; fit checks pending)
+- **Status:** accepted (pre-freeze; fit checks complete)
 - **Context:** The user asked to use updated, high-download community AWQ builds that fit the
   18 GB slice. Official AWQ artifacts do not exist for Qwen3.5-9B or Ministral-3-8B; the
   selected builds are public and Apache-2.0. The Llama build is the high-download hugging-quants
@@ -20,13 +20,36 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   - `hugging-quants/Meta-Llama-3.1-8B-Instruct-AWQ-INT4` @ `db1f81ad4b8c7e39777509fac66c652eb0a52f91`
   The study size class becomes **8–9B** (from 7–8B). Qwen2.5-7B remains only as a completed
   environment fit check; it is not the confirmatory Qwen model.
-- **Fit status:** Qwen2.5-7B-AWQ passed at 0.85/8k/batch 4 (5.38 GiB weights, 7.76 GiB KV).
-  Qwen3.5-9B loaded (8.37 GiB weights, 73k-token KV) but needs `max_num_seqs=8` because of its
-  Mamba cache; the rerun is pending. Ministral-3-8B and Llama-3.1-8B fit checks are pending.
+- **Fit status (2026-11-15):** All three pass at 8k context, batch 4,
+  `gpu_memory_utilization=0.85`, `max_num_seqs=8`:
+  - Qwen3.5-9B: 8.37 GiB weights, 4.63 GiB KV (89,770 tokens; 10.96× at 8k), 59.6 s load.
+  - Ministral-3-8B: 7.03 GiB weights, 7.15 GiB KV (55,104 tokens; 6.73× at 8k), 359.7 s load
+    including download.
+  - Llama-3.1-8B: 5.58 GiB weights, 8.38 GiB KV (68,640 tokens; 8.38× at 8k), 210.6 s load
+    including download.
+  Qwen2.5-7B-AWQ passed earlier at 5.38 GiB weights / 7.76 GiB KV; that is historical evidence.
 - **Consequences:** This is a pre-freeze model-family amendment; no target outcomes exist. The
-  paper, data card, and prereg model table must be updated from 7–8B/Qwen2.5 to 8–9B/updated trio
-  before G1. If a new model fails to load or fit, fall back to the previous family with a logged
+  paper, data card, site, and prereg model table are updated from 7–8B/Qwen2.5 to 8–9B/updated
+  trio before G1. If a model fails during G1, fall back to the previous family with a logged
   decision; do not select after seeing outcomes.
+
+---
+
+## D-017 — Reasoning models run with thinking disabled
+
+- **Date:** 2026-11-15
+- **Status:** accepted (pre-freeze)
+- **Context:** Qwen3.5-9B is a reasoning model. With its stock chat template the fit prompt
+  produced `Thinking Process:\n1. **` and exhausted the token budget before any decision. The
+  study measures the *next decision* under a fixed 256-token budget, so a hidden reasoning block
+  would confound cross-family comparison and could turn valid decisions into parse errors.
+- **Decision:** Set `chat_template_kwargs: {enable_thinking: false}` on the Qwen3.5 entry in
+  `configs/models.yaml`; `VLLMBackend` and the fit checker pass these kwargs to
+  `apply_chat_template`. Ministral and Llama declare no template kwargs. The prompt instruction
+  and 256-token budget are unchanged for all three families.
+- **Consequences:** All families receive the same "single JSON decision, no preamble" contract.
+  The fit rerun emitted `ready` for all four prompts. If a future model ignores the switch, its
+  parse failures are reported as parse failures; the prompt is not tuned per family.
 
 ---
 

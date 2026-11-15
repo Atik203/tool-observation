@@ -41,9 +41,9 @@ triggers an automatic production deployment.
   implemented and CPU-tested. No GPU model has been loaded.
 - **Frozen payload/release:** 880 scrubbed prefixes with five arm observations are built
   (preview); the release packager verifies hashes and PII and refuses without a passed audit.
-- **GPU:** vLLM 0.33.0 / torch 2.14.0 installed in the project venv. Qwen2.5-7B-AWQ passed a
-  non-study fit check at 0.85/8k/batch 4; the updated trio (Qwen3.5-9B, Ministral-3-8B,
-  Llama-3.1-8B AWQ) is pinned and its fit checks are in progress. No study workload has run.
+- **GPU:** vLLM 0.33.0 / torch 2.14.0 installed in the project venv. The updated trio (Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ) passed non-study fit
+  checks at 0.85/8k/batch 4; Qwen3.5 runs with its thinking block disabled. No study workload
+  has run.
 - **Audit:** an AI pre-audit passes 40/40 mechanical checks; the official human sheet remains
   blank and the gate is not claimed.
 - **Pending:** human 40-item audit (≥36/40), model-fit completion, and the frozen
@@ -85,7 +85,7 @@ a graded law from a handful of flips. **It is a screening signal, not a dose-res
 |---|---|
 | Sample | **800 real τ-bench prefixes**: 400 airline + 400 retail; 80 held in reserve |
 | Arms | **V** verbatim JSON anchor · **s=0** faithful prose · **s=1** non-critical change · **s=2** critical wrong value · **s=3** critical + contradiction |
-| Models | Qwen2.5-7B-Instruct-AWQ · Mistral-7B-Instruct-v0.3-AWQ · Llama-3.1-8B-Instruct-AWQ (4-bit, greedy) |
+| Models | Qwen3.5-9B-AWQ · Ministral-3-8B-Instruct-2512-AWQ · Llama-3.1-8B-Instruct-AWQ-INT4 (4-bit, greedy) |
 | Pairing | Every arm is generated from the same frozen prefix; target models never generate the prefix |
 | Recovery | **H=4** steps; transient injection primary, persistent injection on 25%; R1 correct decision, R2 detection |
 | Generation envelope | **34,800** generations (12,000 base + 19,200 transient recovery + 2,400 persistent + 1,200 jitter repeats) |
@@ -100,7 +100,7 @@ The full design and stop rules are in [`docs/PROTOCOL.md`](docs/PROTOCOL.md) and
 ### Claim boundary
 
 If the gates pass, the paper claims a **bounded content-sensitivity and recovery result for three
-open-weight 7–8B model families on τ-bench airline and retail**, estimated within-prefix. It does
+open-weight 8–9B model families on τ-bench airline and retail**, estimated within-prefix. It does
 **not** claim a universal law, a model ranking, invariance across tasks or domains, transfer to
 frontier models, or end-to-end task-success effects. A null or flat slope is a publishable
 measurement result and will be reported as such.

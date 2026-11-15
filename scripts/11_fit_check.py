@@ -39,7 +39,7 @@ def _gpu_memory() -> str:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--model-id", default="qwen2_5_7b_instruct_awq")
+    parser.add_argument("--model-id", default="qwen3_5_9b_instruct_awq")
     parser.add_argument("--max-model-len", type=int, default=8192)
     parser.add_argument("--gpu-memory-utilization", type=float, default=0.90)
     parser.add_argument("--batch-size", type=int, default=4)

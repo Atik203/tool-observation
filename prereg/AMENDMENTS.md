@@ -52,10 +52,12 @@ to target-model outcomes.
   becomes **8–9B**.
 - **Original text:** `prereg/PREREGISTRATION.md` §3 model row and the "7–8B" claim boundary.
 - **Replacement:** The claim is bounded to three open-weight **8–9B** families; the estimand,
-  severity levels, outcome labels, and analysis plan are unchanged.
+  severity levels, outcome labels, and analysis plan are unchanged. All three pass the H200
+  8k/batch-4 fit check, and Qwen3.5 runs with its thinking block disabled so every family gets
+  the same 256-token decision contract.
 - **Analyses affected:** none beyond the model-family description. No target outcomes exist.
 - **Blind to outcomes:** yes; only non-study fit checks have run.
-- **Record:** `docs/DECISIONS.md` D-016; fit evidence in `docs/H200_ENV.md`.
+- **Record:** `docs/DECISIONS.md` D-016 and D-017; fit evidence in `docs/H200_ENV.md`.
 
 ## Status
 

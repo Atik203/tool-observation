@@ -37,9 +37,9 @@ export const planned = {
   reserve: 80,
   domains: { airline: 400, retail: 400 },
   models: [
-    { name: "Qwen2.5-7B-Instruct-AWQ", family: "Qwen", params: "7B" },
-    { name: "Mistral-7B-Instruct-v0.3-AWQ", family: "Mistral", params: "7B" },
-    { name: "Llama-3.1-8B-Instruct-AWQ", family: "Llama", params: "8B" },
+    { name: "Qwen3.5-9B-AWQ", family: "Qwen", params: "9B" },
+    { name: "Ministral-3-8B-Instruct-2512-AWQ", family: "Mistral", params: "8B" },
+    { name: "Llama-3.1-8B-Instruct-AWQ-INT4", family: "Llama", params: "8B" },
   ],
   arms: [
     { id: "V", level: "anchor", change: "Exact real observation, raw JSON.", role: "Format/jitter anchor" },

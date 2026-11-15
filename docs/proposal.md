@@ -16,7 +16,7 @@ An LLM agent calls a tool, reads the observation, and decides what to do next. I
 
 This study isolates the moment after the observation. We freeze a real τ-bench conversation immediately after a real tool output, keep the prefix identical, and vary only the observation's content across five arms. Each prefix is its own control. We then follow the episode for four steps to estimate recovery.
 
-The sample is **800 real τ-bench prefixes** (400 airline, 400 retail), plus 80 reserve, tested on three open-weight 7–8B model families with greedy decoding. The main run is 34,800 generations on the university H200 1g.18gb slice (18 GB VRAM).
+The sample is **800 real τ-bench prefixes** (400 airline, 400 retail), plus 80 reserve, tested on three open-weight 8–9B model families with greedy decoding. The main run is 34,800 generations on the university H200 1g.18gb slice (18 GB VRAM).
 The primary analysis is a conditional logistic regression (a within-prefix comparison) of a decision switch on severity, with prefix fixed effects and standard errors clustered by prefix. Recovery uses a discrete-time survival model, an exponential half-life, a Weibull shape check, and an RMST fallback (average recovery time).
 
 The study is pre-registered and gated (G0–G4); a null is a measurement result.
@@ -181,13 +181,13 @@ The source is the public **τ-bench** historical trajectories (MIT): gpt-4o airl
 
 | Model | Parameters | Licence | Role |
 |---|---:|---|---|
-| Qwen2.5-7B-Instruct-AWQ | 7B | Apache 2.0 | Primary family |
-| Mistral-7B-Instruct-v0.3-AWQ | 7B | Apache 2.0 | Second family |
-| Llama-3.1-8B-Instruct-AWQ | 8B | Llama 3.1 Community | Third family |
+| Qwen3.5-9B-AWQ | 9B | Apache 2.0 | Primary family |
+| Ministral-3-8B-Instruct-2512-AWQ | 8B | Apache 2.0 | Second family |
+| Llama-3.1-8B-Instruct-AWQ-INT4 | 8B | Llama 3.1 Community | Third family |
 
 If Llama-3.1 access fails, the pre-registered substitutes are InternLM2.5-7B-Chat or Yi-1.5-9B-Chat, logged before calibration and never chosen after seeing outcomes.
 
-Serving uses **vLLM** (an inference server), **AWQ 4-bit** weights (compression that fits a 7-8B model in 18 GB with the pinned 8k context; verify fit before G1/G2), and **greedy decoding** (always pick the most likely next token). Batch 8-16, 8k context, fixed seed, pinned revisions. The local RTX 3060 (6 GB) is only for smoke tests, renderer checks, and tiny forward passes. The models are open-weight, reproducible, fit the H200 1g.18gb slice, and come from distinct families; the design tests whether a result is family-specific.
+Serving uses **vLLM** (an inference server), **AWQ 4-bit** weights (compression that fits an 8–9B model in 18 GB with the pinned 8k context; all three passed fit checks before G1), and **greedy decoding** (always pick the most likely next token). Batch 8, 8k context, fixed seed, pinned revisions. The local RTX 3060 (6 GB) is only for smoke tests, renderer checks, and tiny forward passes. The models are open-weight, reproducible, fit the H200 1g.18gb slice, and come from distinct families; the design tests whether a result is family-specific.
 
 ---
 
@@ -285,7 +285,7 @@ The study is designed to estimate, not to confirm the pilot. If the direction su
 | **Null-result value** | A well-powered flat slope bounds how much observation content matters; the dataset still enables replication. |
 | **Paper target** | An empirical NLP or agent-evaluation venue, selected after G3/G4 because the claim's strength depends on the gates. |
 
-The claim is bounded: three open-weight 7–8B families, τ-bench airline and retail, one renderer, four severity levels, four recovery steps. It is not a universal law, model ranking, frontier result, or end-to-end success claim.
+The claim is bounded: three open-weight 8–9B families, τ-bench airline and retail, one renderer, four severity levels, four recovery steps. It is not a universal law, model ranking, frontier result, or end-to-end success claim.
 
 ---
 

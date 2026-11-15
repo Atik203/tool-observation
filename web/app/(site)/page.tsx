@@ -130,7 +130,7 @@ export default function Home() {
           <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground animate-rise [animation-delay:240ms]">
             {[
               `${planned.prefixes} real τ-bench prefixes planned`,
-              "3 open-weight 7–8B families",
+              "3 open-weight 8–9B families",
               `Pilot N=${pilot.n} · screening only`,
             ].map((t) => (
               <li key={t} className="inline-flex items-center gap-1.5">
@@ -267,7 +267,7 @@ export default function Home() {
             {[
               { icon: Database, label: "800 + 80", sub: "primary + reserve prefixes" },
               { icon: GitBranch, label: "400 / 400", sub: "airline / retail" },
-              { icon: Wrench, label: "3 families", sub: "open-weight 7–8B, AWQ" },
+              { icon: Wrench, label: "3 families", sub: "open-weight 8–9B, AWQ" },
               { icon: Workflow, label: "34,800", sub: "generations in the envelope" },
             ].map((item) => {
               const Icon = item.icon;
@@ -402,7 +402,7 @@ export default function Home() {
         <div className="grid sm:grid-cols-3 gap-3">
           {[
             { icon: Database, title: "ToolResult-800", body: "800 real τ-bench prefixes, 400 airline + 400 retail, plus 80 reserve. Frozen before any target-model outcome." },
-            { icon: Wrench, title: "3 model families", body: "Qwen2.5-7B, Mistral-7B-v0.3, and Llama-3.1-8B, 4-bit AWQ, greedy decoding." },
+            { icon: Wrench, title: "3 model families", body: "Qwen3.5-9B, Ministral-3-8B, and Llama-3.1-8B, 4-bit AWQ, greedy decoding." },
             { icon: Gauge, title: "34,800 generations", body: "12,000 base + 19,200 transient recovery + 2,400 persistent + 1,200 jitter repeats." },
           ].map((item) => {
             const Icon = item.icon;
@@ -462,7 +462,7 @@ export default function Home() {
           </div>
           <div className="space-y-3">
             {[
-              "Three open-weight 7–8B families, two domains, one renderer, deterministic tools.",
+              "Three open-weight 8–9B families, two domains, one renderer, deterministic tools.",
               "Recovery is observed for four steps; longer horizons are censored.",
               "No universal law, model ranking, frontier transfer, or end-to-end task-success claim.",
             ].map((text) => (

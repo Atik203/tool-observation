@@ -87,19 +87,22 @@ storage_gb=...
 6. Download the three pinned models once. Verify revision hashes against
    `data/manifests/model_pins.json`. Do not accept a floating `main`.
 7. **Fit check:** the slice has 18 GB VRAM. Verify the pinned AWQ model, 8k context, and batch
-   fit. Lower batch or context if OOM; log any reduction in `docs/DECISIONS.md`.
+   fit. All three pinned models pass at `gpu_memory_utilization=0.85`, 8k context, batch 4, and
+   `max_num_seqs=8`. Qwen3.5 needs the cap because its Mamba cache cannot serve the default 256
+   sequences; it also runs with thinking disabled. On the H200 host, export the project-local
+   headers first (`PYTHONPATH=.deps/pyheaders`, `CPATH=.deps/pyheaders/include`,
+   `C_INCLUDE_PATH=.deps/pyheaders/include`).
 
 ```powershell
-python scripts/11_fit_check.py --model-id qwen2_5_7b_instruct_awq --batch-size 4
+python scripts/11_fit_check.py --model-id qwen3_5_9b_instruct_awq --batch-size 4 `
+  --gpu-memory-utilization 0.85 --max-num-seqs 8
 ```
 
 The fit check uses a generic non-study prompt and writes
-`artifacts/env/qwen_fit_check.json`; it is environment evidence, not a study result.
+`artifacts/env/<model>_fit_check.json`; it is environment evidence, not a study result.
 8. Run the 60-prefix calibration before the main run.
 
 ```powershell
-python scripts/09_run.py --stage calibration --model-id qwen2_5_7b_instruct_awq --backend vllm
-# or, once all three revisions are pinned:
 python scripts/09_run.py --stage calibration --all-models --backend vllm
 ```
 
@@ -111,7 +114,7 @@ start before this passes.
 ## 4. Main run
 
 ```powershell
-python scripts/09_run.py --stage main --model-id qwen2_5_7b_instruct_awq --backend vllm
+python scripts/09_run.py --stage main --all-models --backend vllm
 ```
 
 - 34,800-generation envelope; sharded by model and domain.

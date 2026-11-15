@@ -1,7 +1,7 @@
 # Roadmap - Tool-Result Errors in Language-Model Agents
 
 **Status:** pre-confirmatory scaffold, v0.1.0 (2026-11-09).
-**Scope:** open-weight 7–8B models, τ-bench airline and retail, next-decision sensitivity, and
+**Scope:** open-weight 8–9B models, τ-bench airline and retail, next-decision sensitivity, and
 4-step recovery. Thirty-five to forty-five GPU-hours on the university H200 1g.18gb slice
 (18 GB VRAM).
 **Cash:** $0; the university provides the GPU. No paid API, no second GPU. Operational stop:
@@ -29,11 +29,11 @@
 | Cross-platform reproduction | **DONE** | Local and H200 normalized hashes match for sample, rendered arms, perturbations, and calibration |
 | Frozen prefix payload | **DONE (preview)** | 880 scrubbed prefixes, 23 MB, five arm observations; hash recorded in dry-run |
 | Release packager | **DONE (gated)** | `10_release.py` verifies manifest/payload hashes and PII, then copies only scrubbed derived data; refuses without a passed audit |
-| Model trio update | **IN PROGRESS** | Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ pinned; Qwen2.5 fit passed; Qwen3.5 fit needs `max_num_seqs=8`; Ministral/Llama fit pending |
+| Model trio update | **DONE** | Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ pinned and fit-checked at 0.85/8k/batch 4 with `max_num_seqs=8`; Qwen3.5 thinking disabled |
 | AI pre-audit | **DONE (draft)** | 40/40 mechanical checks pass; official human sheet remains blank; no gate claim |
 | Human audit | **PENDING** | 40-item packet and blank sheet generated; gate ≥36/40; `artifacts/audit/g0_audit_packet.csv` |
 | Freeze | **PENDING** | Blocked on audit; no `toolresult800_v1.json` yet; no target output generated |
-| H200 environment | **IN PROGRESS** | project clone + CPU venv + tests pass; Qwen AWQ pinned; vLLM 0.33.0 / torch 2.14.0 installing; fit check pending; no study workload |
+| H200 environment | **DONE** | project clone + CPU venv + tests pass; vLLM 0.33.0 / torch 2.14.0; all three pinned models pass the 8k/batch-4 fit check; no study workload |
 
 The ten-day table below is the original plan. Intermediate files are now JSONL rather than
 parquet, and the 6,500/1,500 relevance figures are planning inputs, not G0 gates; the
@@ -46,7 +46,7 @@ authoritative floor is ≥880 eligible and ≥440/domain (`docs/GATES.md`).
 ### What we intend to claim, if every gate passes
 
 A **bounded causal result**: within a frozen real τ-bench prefix, changing the content of the
-tool observation changes the probability that an open-weight 7–8B agent's next decision departs
+tool observation changes the probability that an open-weight 8–9B agent's next decision departs
 from its verbatim-observation continuation, and the change is ordered by the pre-specified
 severity level. The study also estimates a pooled recovery half-life over four steps for a
 transient injection, with a Weibull shape check. The result is conditional on three model
@@ -56,7 +56,7 @@ families, two τ-bench domains, and the exact renderer and perturbation rubric f
 
 - A universal constant or "law" that holds for all models, tasks, or tool formats.
 - A ranking of models by sensitivity or recovery speed. The design is not powered for that.
-- Transfer to frontier or API models; we test open-weight 7–8B families only.
+- Transfer to frontier or API models; we test open-weight 8–9B families only.
 - An effect on end-to-end task success or on the extensive margin of tool use.
 - External validity to live web/API tools. τ-bench observations are deterministic benchmark
   outputs, not live services.

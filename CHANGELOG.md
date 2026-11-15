@@ -37,18 +37,16 @@ the v1.0 dataset and paper release.
 - Frozen scrubbed prefix payload (880 prefixes, five arm observations) and a release packager
   that verifies manifest/payload hashes and PII before copying.
 - AI pre-audit helper for the 40-item G0 packet; the official human sheet remains blank.
-- Updated 8–9B model trio pinned (Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ); fit checks are
-  in progress and no study workload has run.
+- Updated 8–9B model trio pinned (Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ); all three pass
+  non-study 8k/batch-4 fit checks on the H200 slice, and Qwen3.5 runs with thinking disabled. No
+  study workload has run.
 - Contract tests for hashing, schemas, config invariants, paths, CLI, field registry, pinning,
   parsing, relevance, scrubbing, replay comparison, sampling, rendering, inference, calibration,
   outcomes, slope, and recovery.
 
 ### Planned
 
-- G0 harvest implementation and frozen ToolResult-800 v1 manifest.
-- Replay harness against the τ-bench task databases.
-- Deterministic prose renderer and perturbation generator.
-- G1 calibration harness for three 7–8B AWQ models.
+- G1 calibration and G2 main run after the G0 human audit and freeze.
 
 ## [0.1.0] - 2026-11-09
 

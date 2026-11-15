@@ -395,7 +395,7 @@ function DatasetSlide({ data, index, total }: SlideProps) {
         items={[
           { value: `${data.planned.prefixes}`, label: "primary prefixes", color: TEAL, sub: "400 / 400" },
           { value: `${data.planned.reserve}`, label: "reserve", color: ACCENT, sub: "40 / 40" },
-          { value: "3", label: "model families", color: AMBER, sub: "7–8B, AWQ" },
+          { value: "3", label: "model families", color: AMBER, sub: "8–9B, AWQ" },
           { value: "98%", label: "replay match", color: ROSE, sub: "not relaxed" },
         ]}
       />

@@ -330,10 +330,10 @@ although the item arrived three days ago. A careful reader can detect the contra
 expected behaviour is to flag the conflict or verify the value.
 
 \subsection{Models and inference}
-The confirmatory run uses three open-weight model families: Qwen2.5-7B-Instruct-AWQ,
-Mistral-7B-Instruct-v0.3-AWQ, and Llama-3.1-8B-Instruct-AWQ. All are 4-bit AWQ quantized and served
-one at a time under greedy decoding on a single H200 1g.18gb slice (18~GB VRAM), with batch sizes
-of 8--16 and a pinned 8k context. The 18~GB slice is below the older 24~GB assumption; verify the
+The confirmatory run uses three open-weight 8--9B model families: Qwen3.5-9B-AWQ,
+Ministral-3-8B-Instruct-2512-AWQ, and Llama-3.1-8B-Instruct-AWQ-INT4. All are 4-bit AWQ quantized
+and served one at a time under greedy decoding on a single H200 1g.18gb slice (18~GB VRAM), with
+batch size 8 and a pinned 8k context; all three passed non-study fit checks before G1. The 18~GB slice is below the older 24~GB assumption; verify the
 pinned model, 8k context, and batch fit before G1/G2. The local RTX 3060 (6~GB) is used only for
 imports, smoke tests,
 renderer checks, and tiny forward passes. Model revisions are pinned before calibration. If

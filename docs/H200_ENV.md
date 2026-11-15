@@ -34,16 +34,34 @@ The 0.90 setting requested 16.02 GiB but only 15.36 GiB was free, so 0.85 is the
 reduction. The slice is 18 GB nominal; another process or allocator overhead can reduce free
 memory at startup, so `0.85` is the operating point.
 
-## Updated-trio fit status (paused 2026-11-15)
+## Updated-trio fit results (2026-11-15)
 
-- **Qwen3.5-9B-AWQ:** weights load (8.37 GiB) and the 8k KV cache fits (73,045 tokens), but the
-  default `max_num_seqs=256` exceeds the Mamba cache blocks (214). The fit check is capped at
-  `max_num_seqs=8` and must be rerun. No generation was produced.
-- **Ministral-3-8B-Instruct-2512-AWQ:** fit check pending.
-- **Llama-3.1-8B-Instruct-AWQ-INT4:** fit check pending.
+All three pinned models load and generate at 8,192-token context, batch 4,
+`gpu_memory_utilization=0.85`, and `max_num_seqs=8` on the 18 GB slice.
 
-The Qwen2.5-7B check above is historical environment evidence; it is not the confirmatory Qwen
-model after D-016.
+| Model | Weights | KV cache | Concurrency at 8k | Load | Batch gen | Outputs |
+|---|---|---|---|---|---|---|
+| Qwen3.5-9B-AWQ | 8.37 GiB | 4.63 GiB (89,770 tokens) | 10.96× | 59.6 s | 0.16 s | four `ready` |
+| Ministral-3-8B-2512-AWQ | 7.03 GiB | 7.15 GiB (55,104 tokens) | 6.73× | 359.7 s (incl. download) | 0.08 s | four `ready` |
+| Llama-3.1-8B-Instruct-AWQ-INT4 | 5.58 GiB | 8.38 GiB (68,640 tokens) | 8.38× | 210.6 s (incl. download) | 0.11 s | four `Ready.` |
+
+Notes:
+
+- Qwen3.5-9B is a Mamba-hybrid model. The default `max_num_seqs=256` exceeds its Mamba cache
+  blocks (214), so the runner pins `max_num_seqs=8`. The first fit attempt failed at engine
+  init with that error; the capped rerun passed.
+- Qwen3.5-9B is also a reasoning model. With the stock template it emitted
+  `Thinking Process:\n1. **`, which would spend the 256-token decision budget on reasoning.
+  `configs/models.yaml` sets `chat_template_kwargs: {enable_thinking: false}`; the rerun emitted
+  `ready`. The backend passes these kwargs to `apply_chat_template` for every model.
+- Ministral has the tightest KV headroom (6.73× at 8k), so a batch of 8 full-length 8k prefixes
+  would queue rather than run concurrently. Actual prefix lengths are much shorter; the runner
+  keeps `max_num_seqs=8` and lets vLLM schedule.
+- `peak_torch_allocated_gb` reads 0.00 because vLLM v1 runs the engine in a subprocess; the
+  in-process CUDA allocator counter is not meaningful. Per-model `gpu_after` and vLLM's own
+  KV-cache report are the evidence.
+- The Qwen2.5-7B check above is historical environment evidence; it is not the confirmatory
+  Qwen model after D-016.
 
 ## Project-local Python headers
 
@@ -56,5 +74,4 @@ or shared library was changed.
 ## Scope
 
 This record is environment evidence, not a study result. Calibration and the main run remain
-blocked until the G0 human audit and freeze pass. Model revisions for Mistral and Llama remain
-TBD.
+blocked until the G0 human audit and freeze pass.

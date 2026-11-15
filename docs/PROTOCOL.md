@@ -30,7 +30,7 @@ from the primary slope.
 Y^A; the paired s=3 vs s=1 contrast; the recovery half-life under a discrete-time exponential
 model for the transient s=3 injection; persistent-injection recovery as a secondary contrast.
 
-**Claim boundary.** Bounded to three open-weight 7–8B families, τ-bench airline and retail, one
+**Claim boundary.** Bounded to three open-weight 8–9B families, τ-bench airline and retail, one
 frozen renderer, and the pre-specified severity rubric. No universal law, model ranking, frontier
 transfer, end-to-end success, or live-API claim.
 
@@ -48,12 +48,12 @@ transfer, end-to-end success, or live-API claim.
 | Seed | 20261108 |
 | Arms | V, s=0, s=1, s=2, s=3 |
 | Pairing | All arms generated from the same frozen prefix |
-| Models | Qwen2.5-7B-Instruct-AWQ, Mistral-7B-Instruct-v0.3-AWQ, Llama-3.1-8B-Instruct-AWQ |
+| Models | Qwen3.5-9B-AWQ, Ministral-3-8B-Instruct-2512-AWQ, Llama-3.1-8B-Instruct-AWQ-INT4 |
 | Decoding | greedy, T=0, fixed seed, one model at a time |
 | Recovery | H=4 steps; transient primary, persistent on 25% |
 
 Donors are the public gpt-4o and claude-3.5-sonnet τ-bench historical trajectories. The target
-models are open-weight 7–8B models and never generate the prefix, which avoids donor–target
+models are open-weight 8–9B models and never generate the prefix, which avoids donor–target
 circularity.
 
 The airline arm is the binding supply constraint. The eligible pool is 6,554 value-used
