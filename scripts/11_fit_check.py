@@ -103,12 +103,18 @@ def main(argv: list[str] | None = None) -> int:
         llm = LLM(**llm_kwargs)
         load_seconds = time.perf_counter() - started
         tokenizer = llm.get_tokenizer()
+        template_kwargs = dict(config.get("chat_template_kwargs") or {})
         messages = [
             {"role": "user", "content": "Reply with the single word: ready."}
             for _ in range(args.batch_size)
         ]
         prompts = [
-            tokenizer.apply_chat_template([message], tokenize=False, add_generation_prompt=True)
+            tokenizer.apply_chat_template(
+                [message],
+                tokenize=False,
+                add_generation_prompt=True,
+                **template_kwargs,
+            )
             for message in messages
         ]
         sampling = SamplingParams(temperature=0.0, top_p=1.0, max_tokens=args.max_tokens)

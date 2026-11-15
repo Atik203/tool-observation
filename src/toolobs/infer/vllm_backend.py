@@ -12,6 +12,19 @@ from typing import Any
 from .runner import Generation
 
 
+def chat_template_kwargs(model_config: dict[str, Any]) -> dict[str, Any]:
+    """Return tokenizer chat-template kwargs declared by the model config.
+
+    Reasoning models such as Qwen3.5 emit a thinking block by default, which
+    would consume the decision-token budget. The model config disables it
+    explicitly so every family sees the same "answer only" contract.
+    """
+    raw = model_config.get("chat_template_kwargs") or {}
+    if not isinstance(raw, dict):
+        raise TypeError("chat_template_kwargs must be a mapping")
+    return {str(key): value for key, value in raw.items()}
+
+
 class VLLMBackend:
     """Batch chat-generation backend using vLLM."""
 
@@ -51,6 +64,7 @@ class VLLMBackend:
             kwargs["quantization"] = quantization
         self.llm = LLM(**kwargs)
         self.tokenizer = self.llm.get_tokenizer()
+        self.template_kwargs = chat_template_kwargs(model_config)
         self.sampling = SamplingParams(
             temperature=0.0,
             top_p=1.0,
@@ -65,6 +79,7 @@ class VLLMBackend:
                 prompt,
                 tokenize=False,
                 add_generation_prompt=True,
+                **self.template_kwargs,
             )
             for prompt in prompts
         ]

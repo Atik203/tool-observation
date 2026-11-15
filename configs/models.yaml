@@ -20,6 +20,10 @@ models:
     max_model_len: 8192
     gpu_memory_utilization: 0.85
     enforce_eager: false
+    # Qwen3.5 is a reasoning model; disable the thinking block so the 256-token
+    # decision budget is spent on the single JSON decision, as for the others.
+    chat_template_kwargs:
+      enable_thinking: false
   - id: ministral_3_8b_instruct_2512_awq
     repo_id: cyankiwi/Ministral-3-8B-Instruct-2512-AWQ-4bit
     revision: 563842192acb68a00b8864e3bfa5a3e740ece90c

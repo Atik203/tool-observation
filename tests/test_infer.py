@@ -11,6 +11,7 @@ from toolobs.infer.parse_output import (
 )
 from toolobs.infer.prompt import build_prompt_messages
 from toolobs.infer.runner import FakeBackend, run_rendered_rows
+from toolobs.infer.vllm_backend import chat_template_kwargs
 
 TOOLS = [
     {
@@ -79,6 +80,13 @@ def test_signature_hash_is_key_order_independent() -> None:
     left = parse_decision('{"tool": "f", "arguments": {"b": 2, "a": 1}}')
     right = parse_decision('{"tool": "f", "arguments": {"a": 1, "b": 2}}')
     assert signature_hash(left) == signature_hash(right)
+
+
+def test_chat_template_kwargs_default_and_passthrough() -> None:
+    assert chat_template_kwargs({}) == {}
+    assert chat_template_kwargs({"chat_template_kwargs": {"enable_thinking": False}}) == {
+        "enable_thinking": False
+    }
 
 
 def test_fake_runner_writes_ledger(tmp_path) -> None:
