@@ -21,7 +21,7 @@ from .ledger import append_ledger_row
 from .parse_output import ParsedDecision, parse_decision, signature_hash, signature_json
 from .prompt import PROMPT_VERSION, build_prompt_messages, prompt_hash
 
-PARSER_VERSION = "toolresult-parser-v2"
+PARSER_VERSION = "toolresult-parser-v3"
 
 
 def response_regex_for_tools(tools: Iterable[dict[str, Any]]) -> str | None:
