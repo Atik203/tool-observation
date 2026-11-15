@@ -37,7 +37,7 @@
 | Human audit | **PROVISIONAL** | Author adopted the 40/40 AI pre-audit; final verification deferred until after experiments (D-021) |
 | Freeze | **DONE** | `data/manifests/toolresult800_v1.json` + SHA-256 sidecar; 800+80, 4,400 arms, 2,640 perturbations, 60 calibration |
 | G1 calibration | **DONE (pass)** | Qwen parse 98.3%, negative-control jitter 11.9%, s3 35.6%; Ministral 100%, 13.3%, 55.0%; Llama 96.7%, 10.5%, 56.1%; V/s0 format jitter 20.3/36.7/45.6% reported separately (D-026) |
-| G2 base run | **IN PROGRESS** | 4,400 rendered arms × 3 models on the H200; recovery and jitter shards still to implement |
+| G2 base run | **DONE** | 4,400 rendered arms × 3 models (13,200 generations) complete; parse 96.3/96.8/97.6%; refusal 4.5/1.2/0.0%; recovery 7,211 rows; jitter 1,200 rows (98.7% stability) |
 | H200 environment | **DONE** | vLLM 0.33.0 / torch 2.14.0; all three pass the 24k fit check; G1 complete; G2 base running |
 
 The ten-day table below is the original plan. Intermediate files are now JSONL rather than
