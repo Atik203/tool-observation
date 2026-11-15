@@ -6,6 +6,26 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-021 — G0 audit labels adopted from the AI pre-audit; author verification deferred
+
+- **Date:** 2026-11-15
+- **Status:** accepted (author instruction; pre-freeze)
+- **Context:** The author reviewed the AI pre-audit and instructed the agent to fill the official
+  `g0_audit_sheet.csv` on their behalf because they do not have time before the run. The author
+  will perform the final verification after the experiments finish. The preregistration says a
+  human reviews the 40 items; this is therefore a logged deviation, not a silent substitution.
+- **Decision:** Fill all 40 official rows from `g0_audit_ai_preaudit.csv` (40/40 mechanical
+  passes), put the provenance in every note, and score with
+  `--label-source ai_preaudit_deferred_human`. The resulting `g0_audit_result.json` records that
+  provenance. Freeze and proceed to G1 under this provisional gate.
+- **Consequences:** The official sheet is an author-adopted AI pre-audit, not a completed human
+  audit. The paper and data card must state that provenance and must not claim human sign-off.
+  If the author's post-experiment verification finds a failed item, replace it from the reserve,
+  re-audit the replacement, and disclose any affected analysis; do not hide the revision.
+  Amendment recorded in `prereg/AMENDMENTS.md` before freeze.
+
+---
+
 ## D-020 — Prompt v3: plain-text call history plus a final instruction turn
 
 - **Date:** 2026-11-15

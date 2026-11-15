@@ -74,6 +74,22 @@ to target-model outcomes.
 - **Blind to outcomes:** yes; no target-model outcome has been generated.
 - **Record:** `docs/DECISIONS.md` D-019; prompt lengths in `artifacts/env/prompt_lengths.json`.
 
+## Pre-freeze audit-provenance note
+
+- **Date:** 2026-11-15
+- **Change:** The 40-item G0 audit is filled from the AI pre-audit under the author's explicit
+  instruction, with the author's final verification deferred until after the experiments. The
+  sheet notes and `g0_audit_result.json` record `label_source=ai_preaudit_deferred_human`.
+- **Original text:** `prereg/PREREGISTRATION.md`, "Audit 40 random prefixes blind ... Pass
+  ≥36/40"; `docs/GATES.md` G0, "A human reviews 40 random prefixes."
+- **Replacement:** The provisional G0 gate uses the AI pre-audit labels (40/40). The author
+  performs the final verification after the experiments; failures trigger reserve replacement,
+  re-audit, and disclosure of affected analyses.
+- **Analyses affected:** G0 gate provenance only; no target outcome exists at freeze.
+- **Blind to outcomes:** yes; no target-model generation has run.
+- **Record:** `docs/DECISIONS.md` D-021; sheet provenance in
+  `artifacts/audit/g0_audit_sheet.csv`.
+
 ## Status
 
 - **Frozen version:** TBD (tag `prereg-freeze-v1`, commit SHA + SHA-256 recorded at G0).

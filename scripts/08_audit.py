@@ -99,7 +99,7 @@ def _write_csv(path: Path, columns, rows) -> None:
             writer.writerow({key: row.get(key, "") for key in columns})
 
 
-def _score(path: Path, minimum: int = 36) -> int:
+def _score(path: Path, minimum: int = 36, label_source: str = "human") -> int:
     with path.open("r", encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
     if len(rows) != 40:
@@ -121,6 +121,7 @@ def _score(path: Path, minimum: int = 36) -> int:
         "passed": passed,
         "minimum": minimum,
         "gate_pass": passed >= minimum,
+        "label_source": label_source,
     }
     write_json(ARTIFACTS_DIR / "audit" / "g0_audit_result.json", result)
     print(f"[08_audit] scored {len(rows)} items; passed {passed}; minimum {minimum}")
@@ -139,10 +140,19 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--score", default=None)
     parser.add_argument("--minimum", type=int, default=36)
+    parser.add_argument(
+        "--label-source",
+        default="human",
+        help="Provenance recorded in the score result, e.g. human or ai_preaudit_deferred_human.",
+    )
     args = parser.parse_args(argv)
 
     if args.score:
-        return _score(resolve_repo_path(args.score), minimum=args.minimum)
+        return _score(
+            resolve_repo_path(args.score),
+            minimum=args.minimum,
+            label_source=args.label_source,
+        )
 
     sample_path = resolve_repo_path(args.sample)
     packet_path = resolve_repo_path(args.packet)

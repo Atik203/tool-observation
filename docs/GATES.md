@@ -10,7 +10,7 @@ observed value, the pass/fail decision, and the consequence.
 
 | Gate | Phase | Criteria | Evidence artifact | Fail action |
 |---|---|---|---|---|
-| **G0** | Harvest / freeze | ≥880 eligible; ≥440/domain pre-audit; ≥400/domain post-audit; replay ≥98%; 40-item audit ≥36/40 | `artifacts/audit/g0_report.md`, `data/manifests/toolresult800_v1.json` | 500 prefixes / 2 models fallback, or stop |
+| **G0** | Harvest / freeze | ≥880 eligible; ≥440/domain pre-audit; ≥400/domain post-audit; replay ≥98%; 40-item audit ≥36/40 (provisional AI pre-audit adopted by the author, D-021) | `artifacts/audit/g0_report.md`, `data/manifests/toolresult800_v1.json` | 500 prefixes / 2 models fallback, or stop |
 | **G1** | Calibration | parse ≥95%; placebo jitter ≤20%; s=3 switch 10–80%; format refusal <5% per model | `artifacts/audit/g1_calibration.json` | Fix prompt/parser and rerun; no main-run start |
 | **G2** | Main run | Stop at 45 GPU-hours or 200 GB storage, whichever first; complete ledger | `artifacts/cost/main_cost.json`, `data/runs/main/ledger.jsonl` | Analyze completed shards; disclose shortfall |
 | **G3** | Analysis | Pooled β>0; positive in ≥2/3 models with the same sign; severity α≥.75; outcome κ≥.80 (or adjudicated ≥.70 with downgrade); recovery κ≥.75 | `artifacts/analysis/g3_report.md` | Null/measurement paper; no content-sensitivity claim |
@@ -28,6 +28,8 @@ Checks:
 2. **Domain balance.** ≥440 airline and ≥440 retail before audit; ≥400 each after audit.
 3. **Replay.** ≥98% normalized match between replayed and historical observations.
 4. **Audit.** A human reviews 40 random prefixes on eligibility, PII, relevance, and replay;
+   the sheet is provisionally filled from the AI pre-audit under D-021, with the author's final
+   verification deferred until after the experiments.
    pass at ≥36/40 (90%).
 5. **Freeze integrity.** Message hashes, observation hashes, perturbation records, renderer
    version, field-registry hash, and prereg hash recorded.
@@ -46,8 +48,8 @@ JSON-parseable, 6,554 eligible value-used, 1,646 at a 10/task cap.
 | Cap-10 supply | airline 442; retail 1,144 | pass ≥440/domain, airline margin 2 |
 | Sample | 800 primary (400/400) + 80 reserve (40/40) | pass |
 | Render | 4,400 arms; 2,640 perturbations; 100% s=0 value-set equality | pass |
-| Human audit | 40-item packet generated; sheet unfilled | **pending** |
-| Freeze | `toolresult800_v1.json` not written | **pending** |
+| G0 audit | AI pre-audit 40/40 adopted by the author; final verification deferred (D-021) | **provisional** |
+| Freeze | `toolresult800_v1.json` pending this step | **pending** |
 
 The observed 5,516 eligible is below the 6,554 planning figure because the operational
 value-used rule is stricter (normalized token matching; incidental scrubbed PII is allowed, but
