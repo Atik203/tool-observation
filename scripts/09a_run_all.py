@@ -76,6 +76,11 @@ def main(argv: list[str] | None = None) -> int:
     ledger_root = (
         resolve_repo_path(args.ledger_root) if args.ledger_root else RUNS_DIR
     )
+    stage_root = (
+        ledger_root
+        if (args.score_only and args.ledger_root)
+        else ledger_root / args.stage
+    )
     if not args.score_only:
         rendered_path = resolve_repo_path(
             args.rendered
@@ -91,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
         expected_rows = args.limit or len(read_jsonl_dicts(rendered_path))
 
     for model_id in (model_ids if not args.score_only else []):
-        ledger_path = ledger_root / args.stage / model_id / "ledger.jsonl"
+        ledger_path = stage_root / model_id / "ledger.jsonl"
         if ledger_path.exists() and len(read_ledger(ledger_path)) >= expected_rows:
             print(f"[09a_run_all] {model_id}: ledger complete, skipping", flush=True)
             continue
@@ -137,7 +142,7 @@ def main(argv: list[str] | None = None) -> int:
     rows = []
     ledgers = {}
     for model_id in model_ids:
-        path = ledger_root / args.stage / model_id / "ledger.jsonl"
+        path = stage_root / model_id / "ledger.jsonl"
         ledgers[model_id] = str(path)
         rows.extend(read_ledger(path))
     report = evaluate_all_models(
