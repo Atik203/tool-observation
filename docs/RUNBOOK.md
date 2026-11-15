@@ -117,6 +117,11 @@ start before this passes.
 python scripts/09_run.py --stage main --all-models --backend vllm
 ```
 
+**Status (pre-G1):** this command currently covers the base matrix only (4,400 rendered arms × 3
+models). The transient/persistent recovery shards (21,600 generations) and the jitter repeats
+(1,200) are not implemented yet. Do not start G2 until those runners exist and are CPU-tested;
+the full envelope is 34,800 generations.
+
 - 34,800-generation envelope; sharded by model and domain.
 - Checkpoint every 40 prefixes; one ledger row per generation.
 - Stop at 45 GPU-hours or 200 GB storage, whichever first.
