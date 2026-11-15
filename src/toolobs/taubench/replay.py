@@ -235,6 +235,30 @@ class TauBenchReplay:
     def replay_record(self, record: PrefixRecord, messages: list[dict[str, Any]]) -> ReplayResult:
         return self.replay_messages(messages, record.raw_observation)
 
+    def prepare_state(self, messages: list[dict[str, Any]]) -> Any:
+        """Replay the prefix calls and return the mutable task database state."""
+        data = self._load_data()
+        calls, _ = extract_tool_calls(messages)
+        for name, kwargs in calls:
+            tool = self._tools.get(name)
+            if tool is None:
+                continue
+            try:
+                tool.invoke(data=data, **kwargs)
+            except Exception:  # noqa: BLE001 - τ-bench wraps tool errors as observations
+                continue
+        return data
+
+    def invoke(self, data: Any, name: str, arguments: dict[str, Any]) -> str:
+        """Invoke one model-chosen tool on an existing task database state."""
+        tool = self._tools.get(name)
+        if tool is None:
+            return f"Unknown action {name}"
+        try:
+            return tool.invoke(data=data, **arguments)
+        except Exception as exc:  # noqa: BLE001 - return the environment error as observation
+            return f"Error: {exc}"
+
 
 def replay_candidates(
     records: Iterable[PrefixRecord],
