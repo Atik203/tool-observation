@@ -58,6 +58,7 @@ def test_ministral_uses_conservative_serving() -> None:
     assert model["enforce_eager"] is True
     assert model["max_num_seqs"] == 4
     assert model["max_num_batched_tokens"] == 4096
+    assert model["chat_template_kwargs"] == {"reasoning_effort": "none"}
 
 
 def test_config_hash_changes_when_value_changes() -> None:
