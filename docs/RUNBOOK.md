@@ -86,8 +86,8 @@ storage_gb=...
 
 6. Download the three pinned models once. Verify revision hashes against
    `data/manifests/model_pins.json`. Do not accept a floating `main`.
-7. **Fit check:** the slice has 18 GB VRAM. Verify the pinned AWQ model, 8k context, and batch
-   fit. All three pinned models pass at `gpu_memory_utilization=0.85`, 8k context, batch 4, and
+7. **Fit check:** the slice has 18 GB VRAM. Verify the pinned AWQ model, 24k context, and batch
+   fit. All three pinned models pass at `gpu_memory_utilization=0.85`, 24k context, batch 4, and
    `max_num_seqs=8`. Qwen3.5 needs the cap because its Mamba cache cannot serve the default 256
    sequences; it also runs with thinking disabled. On the H200 host, export the project-local
    headers first (`PYTHONPATH=.deps/pyheaders`, `CPATH=.deps/pyheaders/include`,
@@ -171,7 +171,7 @@ G0 audit and a frozen manifest.
 | `toolobs validate` missing PyYAML | Minimal environment | `pip install pyyaml`; CI intentionally does not need it |
 | `pytest` import error | Package not installed | `pip install -e .` or use `python -m pytest` after editable install |
 | Replay mismatch spike | Task DB version or tool schema drift | Check pin; rebuild harness; do not lower the 98% threshold |
-| vLLM OOM at 8k context on 18 GB | Batch too large, context too long, or KV cache | Lower `batch_size` to 8, `max_num_seqs` to 8, `gpu_memory_utilization` to 0.85; lower context if needed; log the reduction |
+| vLLM OOM at 24k context on 18 GB | Batch too large, context too long, or KV cache | Lower `batch_size` to 8, `max_num_seqs` to 8, `gpu_memory_utilization` to 0.85; lower context if needed; log the reduction |
 | AWQ load failure | Wheel/CUDA mismatch | Regenerate the GPU lock on the host; do not reuse a CPU lock; do not reinstall the driver or CUDA |
 | Refusal rate >5% | Prompt/format mismatch | Fix the prompt at G1; do not coerce at analysis time |
 | Parser failures >5% | Model output drift | Stop the shard; inspect examples; fix parser and re-calibrate |

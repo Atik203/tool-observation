@@ -36,7 +36,7 @@ memory at startup, so `0.85` is the operating point.
 
 ## Updated-trio fit results (2026-11-15)
 
-All three pinned models load and generate at 8,192-token context, batch 4,
+All three pinned models load and generate at 8,192- and 24,576-token context, batch 4,
 `gpu_memory_utilization=0.85`, and `max_num_seqs=8` on the 18 GB slice.
 
 | Model | Weights | KV cache | Concurrency at 8k | Load | Batch gen | Outputs |
@@ -44,6 +44,17 @@ All three pinned models load and generate at 8,192-token context, batch 4,
 | Qwen3.5-9B-AWQ | 8.37 GiB | 4.63 GiB (89,770 tokens) | 10.96× | 59.6 s | 0.16 s | four `ready` |
 | Ministral-3-8B-2512-AWQ | 7.03 GiB | 7.15 GiB (55,104 tokens) | 6.73× | 359.7 s (incl. download) | 0.08 s | four `ready` |
 | Llama-3.1-8B-Instruct-AWQ-INT4 | 5.58 GiB | 8.38 GiB (68,640 tokens) | 8.38× | 210.6 s (incl. download) | 0.11 s | four `Ready.` |
+
+The configured context is **24,576 tokens**. The prompt-length audit
+(`artifacts/env/prompt_lengths.json`) found a maximum prompt of 20,848 tokens plus the
+256-token decision; an 8k context would have rejected 107–237 of the 880 frozen prefixes. The
+24k fit reruns all passed:
+
+| Model | 24k load | Outputs |
+|---|---|---|
+| Qwen3.5-9B-AWQ | 94.7 s | four `ready` |
+| Ministral-3-8B-2512-AWQ | 51.7 s | four `ready` |
+| Llama-3.1-8B-Instruct-AWQ-INT4 | 41.0 s | four `Ready.` |
 
 Notes:
 
@@ -54,9 +65,10 @@ Notes:
   `Thinking Process:\n1. **`, which would spend the 256-token decision budget on reasoning.
   `configs/models.yaml` sets `chat_template_kwargs: {enable_thinking: false}`; the rerun emitted
   `ready`. The backend passes these kwargs to `apply_chat_template` for every model.
-- Ministral has the tightest KV headroom (6.73× at 8k), so a batch of 8 full-length 8k prefixes
-  would queue rather than run concurrently. Actual prefix lengths are much shorter; the runner
-  keeps `max_num_seqs=8` and lets vLLM schedule.
+- Ministral has the tightest KV headroom (6.73× at 8k, about 2.2× at 24k), so a batch of 8
+  full-length 24k prefixes would queue rather than run concurrently. Actual prompts have a
+  median of 6.7k tokens; the runner keeps `max_num_seqs=8` and lets vLLM schedule with chunked
+  prefill.
 - `peak_torch_allocated_gb` reads 0.00 because vLLM v1 runs the engine in a subprocess; the
   in-process CUDA allocator counter is not meaningful. Per-model `gpu_after` and vLLM's own
   KV-cache report are the evidence.

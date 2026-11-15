@@ -2,7 +2,7 @@
 """Non-study H200 fit check for one pinned AWQ model.
 
 This script does not read a study prefix and does not write a generation ledger.
-It verifies that the model, 8k context, and a small batch fit in 18 GB and
+It verifies that the model, 24k context, and a small batch fit in 18 GB and
 records the environment evidence under `artifacts/env/`.
 """
 
@@ -40,11 +40,17 @@ def _gpu_memory() -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--model-id", default="qwen3_5_9b_instruct_awq")
-    parser.add_argument("--max-model-len", type=int, default=8192)
+    parser.add_argument("--max-model-len", type=int, default=24576)
     parser.add_argument("--gpu-memory-utilization", type=float, default=0.90)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--max-num-seqs", type=int, default=8)
     parser.add_argument("--max-tokens", type=int, default=8)
+    parser.add_argument(
+        "--prompt-tokens",
+        type=int,
+        default=0,
+        help="If >0, use a synthetic prompt of about this many tokens instead of 'ready'.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--out", default=str(ARTIFACTS_DIR / "env" / "qwen_fit_check.json"))
     args = parser.parse_args(argv)
@@ -104,8 +110,13 @@ def main(argv: list[str] | None = None) -> int:
         load_seconds = time.perf_counter() - started
         tokenizer = llm.get_tokenizer()
         template_kwargs = dict(config.get("chat_template_kwargs") or {})
+        if args.prompt_tokens > 0:
+            filler = "The quick brown fox jumps over the lazy dog. "
+            content = filler * (args.prompt_tokens // 8 + 1)
+        else:
+            content = "Reply with the single word: ready."
         messages = [
-            {"role": "user", "content": "Reply with the single word: ready."}
+            {"role": "user", "content": content}
             for _ in range(args.batch_size)
         ]
         prompts = [
@@ -117,6 +128,11 @@ def main(argv: list[str] | None = None) -> int:
             )
             for message in messages
         ]
+        prompt_token_counts = [
+            len(tokenizer(prompt, add_special_tokens=False)["input_ids"])
+            for prompt in prompts
+        ]
+        record["prompt_tokens"] = prompt_token_counts
         sampling = SamplingParams(temperature=0.0, top_p=1.0, max_tokens=args.max_tokens)
         generation_started = time.perf_counter()
         outputs = llm.generate(prompts, sampling)

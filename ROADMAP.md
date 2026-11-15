@@ -29,11 +29,11 @@
 | Cross-platform reproduction | **DONE** | Local and H200 normalized hashes match for sample, rendered arms, perturbations, and calibration |
 | Frozen prefix payload | **DONE (preview)** | 880 scrubbed prefixes, 23 MB, five arm observations; hash recorded in dry-run |
 | Release packager | **DONE (gated)** | `10_release.py` verifies manifest/payload hashes and PII, then copies only scrubbed derived data; refuses without a passed audit |
-| Model trio update | **DONE** | Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ pinned and fit-checked at 0.85/8k/batch 4 with `max_num_seqs=8`; Qwen3.5 thinking disabled |
+| Model trio update | **DONE** | Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ pinned and fit-checked at 0.85/24k/batch 4 with `max_num_seqs=8`; Qwen3.5 thinking disabled |
 | AI pre-audit | **DONE (draft)** | 40/40 mechanical checks pass; official human sheet remains blank; no gate claim |
 | Human audit | **PENDING** | 40-item packet and blank sheet generated; gate ≥36/40; `artifacts/audit/g0_audit_packet.csv` |
 | Freeze | **PENDING** | Blocked on audit; no `toolresult800_v1.json` yet; no target output generated |
-| H200 environment | **DONE** | project clone + CPU venv + tests pass; vLLM 0.33.0 / torch 2.14.0; all three pinned models pass the 8k/batch-4 fit check; no study workload |
+| H200 environment | **DONE** | project clone + CPU venv + tests pass; vLLM 0.33.0 / torch 2.14.0; all three pinned models pass the 24k/batch-4 fit check; no study workload |
 
 The ten-day table below is the original plan. Intermediate files are now JSONL rather than
 parquet, and the 6,500/1,500 relevance figures are planning inputs, not G0 gates; the
@@ -166,7 +166,7 @@ G3/G4 are analysis gates and cannot be re-run on a different sample without a pr
 
 The stop line is 45 GPU-hours or 200 GB storage, not a cash cap. There is no second GPU and no
 paid API fallback. The 18 GB slice is below the older 24 GB assumption; verify the pinned model,
-8k context, and batch fit before G1/G2.
+24k context, and batch fit before G1/G2.
 
 ---
 

@@ -5,7 +5,9 @@
 # community AWQ/compressed-tensors builds because the upstream repositories do
 # not publish an official AWQ artifact. The Llama build is the high-download
 # hugging-quants AWQ conversion of the official Llama-3.1-8B-Instruct weights.
-# Fit checks are recorded in docs/H200_ENV.md.
+# Fit checks are recorded in docs/H200_ENV.md. The context is 24,576 tokens
+# because the longest real prompt is 20,848 tokens plus the 256-token decision;
+# an 8k context would reject 107-237 of the 880 frozen prefixes.
 models:
   - id: qwen3_5_9b_instruct_awq
     repo_id: cyankiwi/Qwen3.5-9B-AWQ-4bit
@@ -17,7 +19,7 @@ models:
     role: primary_family
     family: qwen
     dtype: float16
-    max_model_len: 8192
+    max_model_len: 24576
     gpu_memory_utilization: 0.85
     enforce_eager: false
     # Qwen3.5 is a reasoning model; disable the thinking block so the 256-token
@@ -34,7 +36,7 @@ models:
     role: second_family
     family: mistral
     dtype: float16
-    max_model_len: 8192
+    max_model_len: 24576
     gpu_memory_utilization: 0.85
     enforce_eager: false
   - id: llama_3_1_8b_instruct_awq
@@ -47,7 +49,7 @@ models:
     role: third_family
     family: llama
     dtype: float16
-    max_model_len: 8192
+    max_model_len: 24576
     gpu_memory_utilization: 0.85
     enforce_eager: false
 

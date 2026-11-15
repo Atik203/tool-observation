@@ -54,7 +54,7 @@ class VLLMBackend:
             "model": str(model_config["repo_id"]),
             "revision": revision,
             "dtype": str(model_config.get("dtype", "float16")),
-            "max_model_len": int(model_config.get("max_model_len", 8192)),
+            "max_model_len": int(model_config.get("max_model_len", 24576)),
             "gpu_memory_utilization": float(model_config.get("gpu_memory_utilization", 0.85)),
             "enforce_eager": bool(model_config.get("enforce_eager", False)),
             "tensor_parallel_size": int(model_config.get("tensor_parallel", 1)),

@@ -42,7 +42,7 @@ triggers an automatic production deployment.
 - **Frozen payload/release:** 880 scrubbed prefixes with five arm observations are built
   (preview); the release packager verifies hashes and PII and refuses without a passed audit.
 - **GPU:** vLLM 0.33.0 / torch 2.14.0 installed in the project venv. The updated trio (Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ) passed non-study fit
-  checks at 0.85/8k/batch 4; Qwen3.5 runs with its thinking block disabled. No study workload
+  checks at 0.85/24k/batch 4; Qwen3.5 runs with its thinking block disabled. No study workload
   has run.
 - **Audit:** an AI pre-audit passes 40/40 mechanical checks; the official human sheet remains
   blank and the gate is not claimed.

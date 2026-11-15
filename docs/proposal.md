@@ -187,7 +187,7 @@ The source is the public **τ-bench** historical trajectories (MIT): gpt-4o airl
 
 If Llama-3.1 access fails, the pre-registered substitutes are InternLM2.5-7B-Chat or Yi-1.5-9B-Chat, logged before calibration and never chosen after seeing outcomes.
 
-Serving uses **vLLM** (an inference server), **AWQ 4-bit** weights (compression that fits an 8–9B model in 18 GB with the pinned 8k context; all three passed fit checks before G1), and **greedy decoding** (always pick the most likely next token). Batch 8, 8k context, fixed seed, pinned revisions. The local RTX 3060 (6 GB) is only for smoke tests, renderer checks, and tiny forward passes. The models are open-weight, reproducible, fit the H200 1g.18gb slice, and come from distinct families; the design tests whether a result is family-specific.
+Serving uses **vLLM** (an inference server), **AWQ 4-bit** weights (compression that fits an 8–9B model in 18 GB with the pinned 24k context; all three passed fit checks before G1), and **greedy decoding** (always pick the most likely next token). Batch 8, 24k context, fixed seed, pinned revisions. The local RTX 3060 (6 GB) is only for smoke tests, renderer checks, and tiny forward passes. The models are open-weight, reproducible, fit the H200 1g.18gb slice, and come from distinct families; the design tests whether a result is family-specific.
 
 ---
 
@@ -321,7 +321,7 @@ P0 harvests, replays, samples, and freezes. P1 runs 60 prefixes × 5 arms × 3 m
 | Local CPU | Harvest, replay, analysis, writing: 20–30 h | **$0** |
 | Paid API | None | **$0** |
 
-The H200 slice provides 18 GB VRAM, 200 GB project storage, driver 580.178.04, and CUDA 13.5. Access is only via `uiu-h200`; the Python environment is project-local; use `tmux` or `screen`; do not change the driver, CUDA, MIG settings, clocks, power limits, or system libraries. Verify the pinned AWQ model, 8k context, and batch fit before G1/G2. The run stops at **45 GPU-hours or 200 GB storage**; no second GPU and no paid API. If the slice is unavailable or the fit fails, reduce batch/context first; if still infeasible, reduce N or drop persistent with a logged decision/amendment. Do not book a paid rental without a new decision.
+The H200 slice provides 18 GB VRAM, 200 GB project storage, driver 580.178.04, and CUDA 13.5. Access is only via `uiu-h200`; the Python environment is project-local; use `tmux` or `screen`; do not change the driver, CUDA, MIG settings, clocks, power limits, or system libraries. Verify the pinned AWQ model, 24k context, and batch fit before G1/G2. The run stops at **45 GPU-hours or 200 GB storage**; no second GPU and no paid API. If the slice is unavailable or the fit fails, reduce batch/context first; if still infeasible, reduce N or drop persistent with a logged decision/amendment. Do not book a paid rental without a new decision.
 
 ---
 

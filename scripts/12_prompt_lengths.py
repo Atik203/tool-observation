@@ -2,7 +2,7 @@
 """Stage 12 — non-study prompt-length audit for the rendered V arms.
 
 Checks that the frozen prefix, the next-decision instruction, and the domain tool
-schemas fit the pinned 8k context with room for the 256-token decision. This is
+schemas fit the pinned 24k context with room for the 256-token decision. This is
 environment evidence, not a study run: it loads tokenizers only and generates
 nothing.
 """
@@ -47,7 +47,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--rendered", default=str(INTERIM_DIR / "rendered.jsonl"))
     parser.add_argument("--upstream", default="data/upstream/tau-bench")
-    parser.add_argument("--context", type=int, default=8192)
+    parser.add_argument("--context", type=int, default=24576)
     parser.add_argument("--max-tokens", type=int, default=256)
     parser.add_argument("--out", default=str(ARTIFACTS_DIR / "env" / "prompt_lengths.json"))
     args = parser.parse_args(argv)

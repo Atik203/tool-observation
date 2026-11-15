@@ -53,11 +53,26 @@ to target-model outcomes.
 - **Original text:** `prereg/PREREGISTRATION.md` §3 model row and the "7–8B" claim boundary.
 - **Replacement:** The claim is bounded to three open-weight **8–9B** families; the estimand,
   severity levels, outcome labels, and analysis plan are unchanged. All three pass the H200
-  8k/batch-4 fit check, and Qwen3.5 runs with its thinking block disabled so every family gets
-  the same 256-token decision contract.
+  8k and 24k / batch-4 fit checks, and Qwen3.5 runs with its thinking block disabled so every
+  family gets the same 256-token decision contract.
 - **Analyses affected:** none beyond the model-family description. No target outcomes exist.
 - **Blind to outcomes:** yes; only non-study fit checks have run.
 - **Record:** `docs/DECISIONS.md` D-016 and D-017; fit evidence in `docs/H200_ENV.md`.
+
+## Pre-freeze context note
+
+- **Date:** 2026-11-15
+- **Change:** The pinned context is raised from **8k to 24,576 tokens**. The prompt-length audit
+  found a maximum of 20,848 tokens plus the 256-token decision; 107–237 of 880 prefixes exceed
+  8k. No prefix is truncated, dropped, or re-sampled.
+- **Original text:** `prereg/PREREGISTRATION.md` §7, "verify the pinned model, 8k context, and
+  batch fit before G1/G2."
+- **Replacement:** All three models load and generate at 24k on the 18 GB slice; batch 8,
+  `max_num_seqs=8`, and the 256-token decision budget are unchanged.
+- **Analyses affected:** none; the estimand, sample, arms, and analysis plan are unchanged.
+  Throughput is lower at 24k and the 45 GPU-hour stop rule still applies.
+- **Blind to outcomes:** yes; no target-model outcome has been generated.
+- **Record:** `docs/DECISIONS.md` D-019; prompt lengths in `artifacts/env/prompt_lengths.json`.
 
 ## Status
 

@@ -180,7 +180,7 @@ recovery. No prefix is dropped after seeing target-model outcomes without a logg
 35–45 GPU-hours on the university H200 1g.18gb slice at **$0 cash**; storage stays within the
 200 GB project allocation; no paid API, no second GPU, no paid annotation. Local CPU 20–30 hours
 for harvest, replay, analysis, and writing. The 18 GB slice is below the older 24 GB assumption;
-verify the pinned model, 8k context, and batch fit before G1/G2.
+verify the pinned model, 24k context, and batch fit before G1/G2.
 
 ## 11. Deviations, reporting, and availability
 

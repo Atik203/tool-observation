@@ -73,13 +73,13 @@ traceable to a manifest row and a ledger row.
 
 Local work uses Python 3.12 at `C:\ProgramData\anaconda3\python.exe`, the `tool-observation`
 conda environment, and an RTX 3060 6 GB. The 3060 is for imports, smoke tests, renderer checks,
-and tiny forward passes only. It cannot host an 8–9B AWQ model with an 8k context at the batch
+and tiny forward passes only. It cannot host an 8–9B AWQ model with a 24k context at the batch
 sizes the study needs.
 
 The main run uses the approved university **H200 MIG 1g.18gb** slice (18 GB VRAM) via the
-`uiu-h200` SSH alias, with vLLM, AWQ 4-bit, batch 8, 8k context, greedy decoding, and one model
+`uiu-h200` SSH alias, with vLLM, AWQ 4-bit, batch 8, 24k context, greedy decoding, and one model
 loaded at a time. The 18 GB slice is below the older 24 GB assumption, so verify that the pinned
-AWQ model, 8k context, and batch fit before G1/G2. Any reduction in batch, context, sample, or
+AWQ model, 24k context, and batch fit before G1/G2. Any reduction in batch, context, sample, or
 model set is logged in `docs/DECISIONS.md` and, if it affects the analysis, in
 `prereg/AMENDMENTS.md`.
 

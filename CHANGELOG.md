@@ -38,7 +38,7 @@ the v1.0 dataset and paper release.
   that verifies manifest/payload hashes and PII before copying.
 - AI pre-audit helper for the 40-item G0 packet; the official human sheet remains blank.
 - Updated 8–9B model trio pinned (Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ); all three pass
-  non-study 8k/batch-4 fit checks on the H200 slice, and Qwen3.5 runs with thinking disabled. No
+  non-study 24k/batch-4 fit checks on the H200 slice, and Qwen3.5 runs with thinking disabled. No
   study workload has run.
 - Contract tests for hashing, schemas, config invariants, paths, CLI, field registry, pinning,
   parsing, relevance, scrubbing, replay comparison, sampling, rendering, inference, calibration,

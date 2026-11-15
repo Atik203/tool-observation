@@ -6,6 +6,26 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-019 — Context raised to 24,576 tokens for the frozen prefixes
+
+- **Date:** 2026-11-15
+- **Status:** accepted (pre-freeze; no study generation has run)
+- **Context:** The prompt-length audit (`scripts/12_prompt_lengths.py`) measured every rendered V
+  arm with the pinned tokenizers. Median prompts are 5.8k–6.7k tokens, but the maximum is
+  20,848 tokens and 107–237 of the 880 prefixes exceed an 8k context once the 256-token decision
+  is reserved. Dropping or truncating those prefixes would change the frozen sample or discard
+  real history.
+- **Decision:** Set `max_model_len: 24576` for all three models. All three load and generate at
+  24k on the 18 GB slice (Qwen3.5 94.7 s, Ministral 51.7 s, Llama 41.0 s; four `ready` outputs
+  each). No prefix is truncated, dropped, or re-sampled. Batch remains 8, `max_num_seqs=8`,
+  `gpu_memory_utilization=0.85`, and the 256-token decision budget is unchanged.
+- **Consequences:** This is a pre-freeze serving amendment: the prereg's 8k context becomes
+  24k. KV headroom falls (Ministral supports about 2.2 full-length 24k sequences), so long
+  prompts queue and throughput is lower than an 8k run; the 45 GPU-hour stop rule still applies.
+  The estimand, sample, arms, and analysis plan are unchanged.
+
+---
+
 ## D-018 — Historical tool calls are rendered as canonical text; prompt v2
 
 - **Date:** 2026-11-15
@@ -64,7 +84,7 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   - `hugging-quants/Meta-Llama-3.1-8B-Instruct-AWQ-INT4` @ `db1f81ad4b8c7e39777509fac66c652eb0a52f91`
   The study size class becomes **8–9B** (from 7–8B). Qwen2.5-7B remains only as a completed
   environment fit check; it is not the confirmatory Qwen model.
-- **Fit status (2026-11-15):** All three pass at 8k context, batch 4,
+- **Fit status (2026-11-15):** All three pass at 8k and 24k context, batch 4,
   `gpu_memory_utilization=0.85`, `max_num_seqs=8`:
   - Qwen3.5-9B: 8.37 GiB weights, 4.63 GiB KV (89,770 tokens; 10.96× at 8k), 59.6 s load.
   - Ministral-3-8B: 7.03 GiB weights, 7.15 GiB KV (55,104 tokens; 6.73× at 8k), 359.7 s load
