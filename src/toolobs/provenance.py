@@ -72,10 +72,8 @@ def write_json(path: str | Path, data: Any) -> Path:
     """Write deterministic JSON to a path, creating parents."""
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(
-        json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    with target.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
     return target
 
 
