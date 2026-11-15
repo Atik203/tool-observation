@@ -225,6 +225,10 @@ def main(argv: list[str] | None = None) -> int:
         "This sheet is a screening aid. The official `g0_audit_sheet.csv` remains blank and the",
         "G0 audit gate remains pending human sign-off.",
         "",
+        "Donor continuations are historical next messages, not target outputs. They may be natural",
+        "language or provider-specific tool syntax and are not expected to parse as JSON; only",
+        "target-model generations use the JSON contract.",
+        "",
         "| Item | Domain | Eligibility | PII | Relevance | Replay | Confidence | Notes |",
         "|---|---|---|---|---|---|---|---|",
     ]

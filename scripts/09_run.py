@@ -134,7 +134,7 @@ def main(argv: list[str] | None = None) -> int:
     elapsed = time.perf_counter() - started
     if args.stage == "calibration":
         all_rows = []
-        for path in ledgers.values():
+        for path in dict.fromkeys(ledgers.values()):
             all_rows.extend(read_ledger(path))
         report = evaluate_all_models(
             all_rows,
