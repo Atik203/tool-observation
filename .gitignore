@@ -181,3 +181,6 @@ scratch/
 !.gitkeep
 # Project-local toolchain headers and scratch dependencies
 .deps/
+
+.vercel
+.env*
