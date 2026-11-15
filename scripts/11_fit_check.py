@@ -37,6 +37,23 @@ def _gpu_memory() -> str:
         return "unknown"
 
 
+def _filler_text(tokenizer, target_tokens: int) -> str:
+    """Return repeated neutral text whose token count is at most ``target_tokens``."""
+    filler = "The quick brown fox jumps over the lazy dog. "
+    low, high = 1, max(1, target_tokens)
+    best = filler
+    while low <= high:
+        mid = (low + high) // 2
+        text = filler * mid
+        count = len(tokenizer(text, add_special_tokens=False)["input_ids"])
+        if count <= target_tokens:
+            best = text
+            low = mid + 1
+        else:
+            high = mid - 1
+    return best
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--model-id", default="qwen3_5_9b_instruct_awq")
@@ -111,8 +128,7 @@ def main(argv: list[str] | None = None) -> int:
         tokenizer = llm.get_tokenizer()
         template_kwargs = dict(config.get("chat_template_kwargs") or {})
         if args.prompt_tokens > 0:
-            filler = "The quick brown fox jumps over the lazy dog. "
-            content = filler * (args.prompt_tokens // 8 + 1)
+            content = _filler_text(tokenizer, args.prompt_tokens)
         else:
             content = "Reply with the single word: ready."
         messages = [
