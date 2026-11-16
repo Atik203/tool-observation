@@ -38,6 +38,8 @@
 | Freeze | **DONE** | `data/manifests/toolresult800_v1.json` + SHA-256 sidecar; 800+80, 4,400 arms, 2,640 perturbations, 60 calibration |
 | G1 calibration | **DONE (pass)** | Qwen parse 98.3%, negative-control jitter 11.9%, s3 35.6%; Ministral 100%, 13.3%, 55.0%; Llama 96.7%, 10.5%, 56.1%; V/s0 format jitter 20.3/36.7/45.6% reported separately (D-026) |
 | G2 base run | **DONE** | 4,400 rendered arms × 3 models (13,200 generations) complete; parse 96.3/96.8/97.6%; refusal 4.5/1.2/0.0%; recovery 7,211 rows; jitter 1,200 rows (98.7% stability) |
+| G3 analysis | **DONE (partial)** | Pooled beta 0.684 (SE 0.053, p=6.7e-38); all three models positive; bootstrap CI [0.584, 0.797]; silent share 24.1%; outcome/severity audits provisional (D-027) |
+| G4 recovery | **DONE (gate fail)** | Recovery by H=4: 23.1/33.4/18.4% (Qwen/Ministral/Llama); below 50% gate; Weibull rejects for 2/3 models; half-life labelled exploratory |
 | H200 environment | **DONE** | vLLM 0.33.0 / torch 2.14.0; all three pass the 24k fit check; G1 complete; G2 base running |
 
 The ten-day table below is the original plan. Intermediate files are now JSONL rather than
