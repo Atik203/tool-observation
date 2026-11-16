@@ -157,6 +157,7 @@ paper/*.fdb_latexmk
 release/CTO-800-*/
 release/*.zip
 release/*.tar.gz
+release/toolresult800-v1/
 
 # ---------------------------------------------------------------------------
 # OS / editor
