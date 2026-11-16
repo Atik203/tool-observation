@@ -6,6 +6,7 @@ import {
   Braces,
   CalendarDays,
   CheckCircle2,
+  CircleCheck,
   FileText,
   Gauge,
   GitBranch,
@@ -37,7 +38,7 @@ import {
   SlideTable,
   TEAL,
 } from "@/components/slides/primitives";
-import { gates, outcomes, pilot, pilotTable, planned } from "@/lib/pilot-data";
+import { gates, outcomes, pilot, pilotTable, planned, results } from "@/lib/pilot-data";
 
 export interface SlideData {
   pilot: typeof pilot;
@@ -45,6 +46,7 @@ export interface SlideData {
   outcomes: typeof outcomes;
   gates: typeof gates;
   pilotTable: typeof pilotTable;
+  results: typeof results;
 }
 
 type SlideProps = { data: SlideData; index: number; total: number };
@@ -542,6 +544,85 @@ function AnalysisSlide({ data, index, total }: SlideProps) {
   );
 }
 
+/* ------------------------------------------------------------------ 13b - Results */
+
+function ResultsSlide({ data, index, total }: SlideProps) {
+  const r = data.results;
+  return (
+    <SlideFrame {...BADGE_RESULTS} title="The base matrix is complete. The recovery gate fails." subtitle="13,200 base generations, three 8-9B families, greedy decoding. Primary result below." index={index} total={total}>
+      <div className="grid min-h-0 flex-1 grid-cols-[1.05fr_0.95fr] gap-[2cqw]">
+        <div className="flex flex-col gap-[1.2cqh]">
+          <Card icon={<BarChart3 size="2.8cqh" />} title="Primary slope" color={ROSE} fill="#fff1f2">
+            <div className="font-mono text-[2.2cqh] font-extrabold" style={{ color: NEAR_BLACK }}>
+              beta_hat = 0.684 (SE 0.053, p = 6.7e-38)
+            </div>
+            <div className="mt-[0.6cqh] text-[1.9cqh] font-semibold" style={{ color: SLATE }}>
+              Bootstrap 95% CI [0.584, 0.797]. All three per-model slopes positive and Holm-significant.
+            </div>
+            <div className="mt-[0.8cqh] grid grid-cols-3 gap-[0.6cqw] text-[1.7cqh]">
+              {r.primary.perModel.map((m) => (
+                <div key={m.model} className="surface-inset rounded-lg p-[0.6cqw] text-center">
+                  <div className="font-mono font-bold" style={{ color: NEAR_BLACK }}>{m.beta.toFixed(3)}</div>
+                  <div className="text-[1.3cqh] text-muted-foreground">{m.model}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+          <Card icon={<AlertTriangle size="2.8cqh" />} title="Silent propagation" color={AMBER} fill="#fffbeb">
+            <div className="font-mono text-[2.2cqh] font-extrabold" style={{ color: NEAR_BLACK }}>
+              24.1% of switches are silent
+            </div>
+            <div className="mt-[0.6cqh] text-[1.9cqh] font-semibold" style={{ color: SLATE }}>
+              552 of 2,290 switches on s=2/s=3. Detection is 0.0-1.5%. Dominant failure mode.
+            </div>
+          </Card>
+          <Card icon={<Timer size="2.8cqh" />} title="Recovery (G4 fails)" color={ROSE} fill="#fff1f2">
+            <div className="font-mono text-[2.2cqh] font-extrabold" style={{ color: NEAR_BLACK }}>
+              18.4% - 33.4% recover by H=4
+            </div>
+            <div className="mt-[0.6cqh] text-[1.9cqh] font-semibold" style={{ color: SLATE }}>
+              Qwen 23.1%, Ministral 33.4%, Llama 18.4%. Weibull shape rejects for 2 of 3.
+            </div>
+          </Card>
+        </div>
+        <div className="flex flex-col gap-[1.2cqh]">
+          <Card icon={<CircleCheck size="2.8cqh" />} title="Jitter stability" color={TEAL} fill="#f0fdfa">
+            <div className="font-mono text-[2.2cqh] font-extrabold" style={{ color: NEAR_BLACK }}>
+              98.7% / 98.7% / 100%
+            </div>
+            <div className="mt-[0.6cqh] text-[1.9cqh] font-semibold" style={{ color: SLATE }}>
+              Signature stability across a re-run with a different seed. Gate is 90%.
+            </div>
+          </Card>
+          <Card icon={<Gauge size="2.8cqh" />} title="G1 calibration" color={ACCENT} fill="#eef2ff">
+            <div className="grid grid-cols-3 gap-[0.6cqw] text-[1.7cqh]">
+              <div className="surface-inset rounded-lg p-[0.6cqw] text-center">
+                <div className="font-mono font-bold" style={{ color: NEAR_BLACK }}>98.3%</div>
+                <div className="text-[1.3cqh] text-muted-foreground">Qwen parse</div>
+              </div>
+              <div className="surface-inset rounded-lg p-[0.6cqw] text-center">
+                <div className="font-mono font-bold" style={{ color: NEAR_BLACK }}>100%</div>
+                <div className="text-[1.3cqh] text-muted-foreground">Ministral parse</div>
+              </div>
+              <div className="surface-inset rounded-lg p-[0.6cqw] text-center">
+                <div className="font-mono font-bold" style={{ color: NEAR_BLACK }}>96.7%</div>
+                <div className="text-[1.3cqh] text-muted-foreground">Llama parse</div>
+              </div>
+            </div>
+            <div className="mt-[0.8cqh] text-[1.9cqh] font-semibold" style={{ color: SLATE }}>
+              All three pass the negative-control jitter gate (10.5-13.3%).
+            </div>
+          </Card>
+          <div className="mt-[0.6cqh] rounded-lg px-[1.6cqw] py-[1.1cqh] text-[2.05cqh] font-bold" style={{ background: "#f1f5f9", color: DEEP_INK }}>
+            A null or failed gate is reported as such. No model is declared more sensitive than another.
+          </div>
+        </div>
+      </div>
+    </SlideFrame>
+  );
+}
+
+
 /* ───────────────────────────── 14 · Expected outcome and limits ───── */
 
 function ConclusionSlide({ index, total }: SlideProps) {
@@ -639,6 +720,7 @@ export const SLIDES: Array<(props: SlideProps) => ReactElement> = [
   ManipulationSlide,
   OutcomesSlide,
   AnalysisSlide,
+  ResultsSlide,
   ConclusionSlide,
   ThankYouSlide,
 ];

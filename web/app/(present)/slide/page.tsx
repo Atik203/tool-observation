@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SlideDeck } from "@/components/slides/deck";
-import { gates, outcomes, pilot, pilotTable, planned } from "@/lib/pilot-data";
+import { gates, outcomes, pilot, pilotTable, planned, results } from "@/lib/pilot-data";
 
 export const metadata: Metadata = {
   title: "Slides",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function SlidePage() {
-  return <SlideDeck data={{ pilot, planned, outcomes, gates, pilotTable }} />;
+  return <SlideDeck data={{ pilot, planned, outcomes, gates, pilotTable, results }} />;
 }

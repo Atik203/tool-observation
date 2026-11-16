@@ -24,7 +24,7 @@ import {
   Wrench,
   XCircle,
 } from "lucide-react";
-import { outcomes, phases, pilot, pilotTable, planned } from "@/lib/pilot-data";
+import { outcomes, phases, pilot, pilotTable, planned, results } from "@/lib/pilot-data";
 
 function SectionHeading({
   eyebrow,
@@ -129,7 +129,7 @@ export default function Home() {
           </div>
           <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground animate-rise [animation-delay:240ms]">
             {[
-              `${planned.prefixes} real τ-bench prefixes planned`,
+              `${planned.prefixes} real τ-bench prefixes (complete)`,
               "3 open-weight 8–9B families",
               `Pilot N=${pilot.n} · screening only`,
             ].map((t) => (
@@ -346,6 +346,99 @@ export default function Home() {
                 ))}
               </ul>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Confirmatory results */}
+      <section id="results" className="space-y-6">
+        <SectionHeading
+          eyebrow="Confirmatory results"
+          title="The base matrix is complete."
+          description="13,200 generations over 880 prefixes, five arms, three models, greedy decoding. Recovery and the human audits are pending."
+        />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            { value: results.primary.pooledBeta.toFixed(3), label: "Pooled β", sub: `SE ${results.primary.pooledSe.toFixed(3)} · p ${results.primary.pooledP.toExponential(1)}` },
+            { value: `${(results.primary.silentShare * 100).toFixed(1)}%`, label: "Silent propagation", sub: `${results.primary.silentN} of ${results.primary.switchedN} switches` },
+            { value: `${(results.recovery.byModel.reduce((a, b) => a + b.recovered, 0) / results.recovery.byModel.length * 100).toFixed(1)}%`, label: "Recovery (avg)", sub: "G4 gate fails (<50%)" },
+            { value: `${results.totalGenerations.toLocaleString()}`, label: "Generations", sub: "base + jitter + recovery" },
+          ].map((item) => (
+            <div key={item.label} className="glass-panel rounded-2xl p-5 space-y-1.5">
+              <div className="text-3xl md:text-4xl font-extrabold font-mono tnum tracking-tight">{item.value}</div>
+              <div className="text-base font-semibold">{item.label}</div>
+              <div className="text-xs text-muted-foreground">{item.sub}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="glass-panel rounded-2xl p-5 md:p-6 space-y-4">
+          <h3 className="text-base font-bold">Primary content-sensitivity estimate</h3>
+          <div className="overflow-hidden rounded-xl border border-border">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="bg-secondary/70">
+                  <th className="text-left px-3 py-2 font-semibold">Model</th>
+                  <th className="text-right px-3 py-2 font-semibold">β̂</th>
+                  <th className="text-right px-3 py-2 font-semibold">SE</th>
+                  <th className="text-right px-3 py-2 font-semibold">p</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.primary.perModel.map((m) => (
+                  <tr key={m.model} className="border-t border-border/70">
+                    <td className="px-3 py-2 text-muted-foreground">{m.model}</td>
+                    <td className="px-3 py-2 text-right font-mono tnum font-semibold">{m.beta.toFixed(3)}</td>
+                    <td className="px-3 py-2 text-right font-mono tnum">{m.se.toFixed(3)}</td>
+                    <td className="px-3 py-2 text-right font-mono tnum">{m.p.toExponential(1)}</td>
+                  </tr>
+                ))}
+                <tr className="border-t border-border/70 bg-secondary/40">
+                  <td className="px-3 py-2 font-semibold">Pooled</td>
+                  <td className="px-3 py-2 text-right font-mono tnum font-bold">{results.primary.pooledBeta.toFixed(3)}</td>
+                  <td className="px-3 py-2 text-right font-mono tnum font-bold">{results.primary.pooledSe.toFixed(3)}</td>
+                  <td className="px-3 py-2 text-right font-mono tnum font-bold">{results.primary.pooledP.toExponential(1)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Bootstrap 95% CI [{results.primary.bootstrapCi[0].toFixed(3)}, {results.primary.bootstrapCi[1].toFixed(3)}]
+            (2,000 replicates, p = {results.primary.bootstrapP}). All three per-model slopes
+            positive and Holm-significant. Traced to artifacts/analysis/g3_analysis.json.
+          </p>
+        </div>
+
+        <div className="glass-panel rounded-2xl p-5 md:p-6 space-y-3">
+          <h3 className="text-base font-bold">Recovery (G4 — does not pass)</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Only 18.4%–33.4% of the s=3 risk set recovers by H=4. Half-lives are long (6.7–13.4
+            steps). The Weibull shape rejects the exponential assumption for two of three models.
+            Reported as a failed gate; the curve and RMST stand.
+          </p>
+          <div className="overflow-hidden rounded-xl border border-border">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="bg-secondary/70">
+                  <th className="text-left px-3 py-2 font-semibold">Model</th>
+                  <th className="text-right px-3 py-2 font-semibold">n</th>
+                  <th className="text-right px-3 py-2 font-semibold">Recovered</th>
+                  <th className="text-right px-3 py-2 font-semibold">RMST</th>
+                  <th className="text-right px-3 py-2 font-semibold">Half-life</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.recovery.byModel.map((m) => (
+                  <tr key={m.model} className="border-t border-border/70">
+                    <td className="px-3 py-2 text-muted-foreground">{m.model}</td>
+                    <td className="px-3 py-2 text-right font-mono tnum">{m.n}</td>
+                    <td className="px-3 py-2 text-right font-mono tnum font-semibold">{(m.recovered * 100).toFixed(1)}%</td>
+                    <td className="px-3 py-2 text-right font-mono tnum">{m.rmst.toFixed(2)}</td>
+                    <td className="px-3 py-2 text-right font-mono tnum">{m.halfLife.toFixed(1)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

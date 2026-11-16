@@ -128,6 +128,58 @@ export const phases = [
   { id: "P5", name: "Release", weeks: "15–18", gate: "Release checklist" },
 ] as const;
 
+export const results = {
+  status: "base matrix complete; recovery complete",
+  baseGenerations: 13_200,
+  jitterGenerations: 1_200,
+  recoveryGenerations: 7_211,
+  totalGenerations: 21_611,
+  primary: {
+    pooledBeta: 0.684,
+    pooledSe: 0.053,
+    pooledP: 6.7e-38,
+    bootstrapCi: [0.584, 0.797] as const,
+    bootstrapP: 0.001,
+    perModel: [
+      { model: "Qwen3.5-9B", beta: 0.685, se: 0.088, p: 6.85e-15 },
+      { model: "Ministral-3-8B", beta: 0.721, se: 0.081, p: 3.59e-19 },
+      { model: "Llama-3.1-8B", beta: 0.633, se: 0.095, p: 2.92e-11 },
+    ],
+    silentShare: 0.241,
+    silentN: 552,
+    switchedN: 2_290,
+    armRates: [
+      { model: "Qwen3.5-9B", s0: 0.248, s1: 0.247, s2: 0.337, s3: 0.377 },
+      { model: "Ministral-3-8B", s0: 0.375, s1: 0.401, s2: 0.481, s3: 0.538 },
+      { model: "Llama-3.1-8B", s0: 0.428, s1: 0.445, s2: 0.484, s3: 0.533 },
+    ],
+    source: "artifacts/analysis/g3_analysis.json",
+  },
+  g1: {
+    parse: { qwen: 0.983, ministral: 1.0, llama: 0.967 },
+    negControlJitter: { qwen: 0.119, ministral: 0.133, llama: 0.105 },
+    formatJitter: { qwen: 0.203, ministral: 0.367, llama: 0.456 },
+    s3Switch: { qwen: 0.356, ministral: 0.55, llama: 0.561 },
+    refusal: { qwen: 0.017, ministral: 0.0, llama: 0.0 },
+    source: "artifacts/audit/g1_calibration_v3.json",
+  },
+  jitter: {
+    stability: { qwen: 0.9867, ministral: 0.9869, llama: 1.0 },
+    gate: 0.9,
+    source: "artifacts/analysis/jitter_stability_*.json",
+  },
+  recovery: {
+    passed: false,
+    byModel: [
+      { model: "Qwen3.5-9B", n: 299, recovered: 0.231, rmst: 3.26, halfLife: 10.1 },
+      { model: "Ministral-3-8B", n: 446, recovered: 0.334, rmst: 3.04, halfLife: 6.7 },
+      { model: "Llama-3.1-8B", n: 450, recovered: 0.184, rmst: 3.47, halfLife: 13.4 },
+    ],
+    source: "artifacts/analysis/g4_recovery.json",
+  },
+  source: "G3 analysis + G4 recovery reports, synced 2026-11-16",
+} as const;
+
 export const pilotTable = [
   { quantity: "Consult rate", value: "54/60 = 90.0%" },
   { quantity: "Placebo jitter", value: "0/60 = 0%" },
