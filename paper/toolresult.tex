@@ -1,16 +1,3 @@
-% ===========================================================================
-% ToolResult-800 manuscript skeleton (CAS single-column).
-%
-% STATUS: pre-confirmatory. No confirmatory value exists. The CPU-only G0
-% pipeline is implemented; the 40-item human audit and the frozen manifest are
-% pending; G1 (calibration) is in progress and the main run has not started. Every number
-% that depends on G1-G4 is marked [PENDING: ...] and must be filled from a
-% ledger row or manifest row before submission. Do not replace a marker with a
-% plausible value.
-%
-% Format follows G:\HaluRISC\Journal_Paper\halurisc.tex (cas-sc, natbib
-% numbers, booktabs, elsarticle-num).
-% ===========================================================================
 \documentclass[a4paper,fleqn]{cas-sc}
 
 \usepackage{float}
@@ -396,7 +383,7 @@ experiments, and the structure of the results that will replace the markers.
 
 \section{Conventional Method}\label{sec:conventional}
 
-\noindent\textbf{Agent and tool-use benchmarks}.\ 
+\noindent\textbf{Agent and tool-use benchmarks}.\
 
 $\tau$-bench is the closest source of material because it ships historical trajectories with
 tool calls and task databases \cite{taubench}. Its airline and retail domains contain the
@@ -409,7 +396,7 @@ capability that matters for agents. None of them holds one real observation fixe
 counterfactual variants of its content, so none separates noticing a wrong value from copying
 it.
 
-\noindent\textbf{Observation content as a causal variable}.\ 
+\noindent\textbf{Observation content as a causal variable}.\
 
 The observation is a message like any other, and message content is known to move model
 behaviour. Lost-in-the-middle shows that the position of relevant text changes recall
@@ -422,7 +409,7 @@ observation that the donor agent used, how much does a plausible factual error c
 decision, and does the change scale with severity? The distinction matters for practice, because
 a guardrail aimed at injections does not necessarily catch a wrong refund amount.
 
-\noindent\textbf{Counterfactual and paired designs}.\ 
+\noindent\textbf{Counterfactual and paired designs}.\
 
 The design is a within-unit causal contrast \cite{causal}. Because every arm shares the prefix,
 task difficulty, domain, donor style, and conversation history are held constant, and the
@@ -432,7 +419,7 @@ switch can be attributed to the observation's content rather than to a change of
 verbatim arm is a separate anchor: it differs in format as well as content, so it is excluded
 from the primary slope and used to measure format and decoding jitter.
 
-\noindent\textbf{Error propagation, detection, and recovery}.\ 
+\noindent\textbf{Error propagation, detection, and recovery}.\
 
 Silent propagation is the failure mode in which the false value appears in the next decision
 without an explicit flag. It is invisible to a task-success metric when the episode still ends
@@ -445,7 +432,7 @@ model fit, and treats the exponential half-life as estimable only when the gates
 
 \section{Proposed Method}\label{sec:method}
 
-\noindent\textbf{Unit and donors}.\ 
+\noindent\textbf{Unit and donors}.\
 
 The unit is a frozen message prefix that ends immediately after a real $\tau$-bench tool
 observation. The prefix contains the system policy, the user turns, the donor assistant turns,
@@ -598,7 +585,7 @@ the $s=2$ versus $s=3$ contrast is always reported separately because $s=3$ is i
 compound. A quadratic term and a categorical-severity likelihood-ratio test are pre-registered
 diagnostics.
 
-\noindent\textbf{Audits, blinding, and PII}.\ 
+\noindent\textbf{Audits, blinding, and PII}.\
 
 Raw $\tau$-bench trajectories may contain names, emails, addresses, phone numbers, and payment
 identifiers. Profile tools are excluded, direct identifiers become stable synthetic tokens, and a
@@ -639,7 +626,7 @@ would measure compliance with an instruction rather than sensitivity to content.
 parser versions are frozen at G0 and recorded in the manifest; a change after freeze is a
 prereg amendment.
 
-\noindent\textbf{Parser and canonicalization}.\ 
+\noindent\textbf{Parser and canonicalization}.\
 
 The parser reads the JSON decision and canonicalizes it before comparison. Canonicalization sorts
 keys, normalizes numbers, converts dates to ISO form, lower-cases entities, and collapses
@@ -649,7 +636,7 @@ generation with a parser failure is retained in the ledger and reported; it is n
 dropped. A parser-error rate above 5\% in a shard fails fast rather than burning GPU hours, and
 the overall parser failure must stay below 1\% for G3.
 
-\noindent\textbf{Context and length envelope}.\ 
+\noindent\textbf{Context and length envelope}.\
 
 The longest observed prompt is 20{,}682 tokens, and the decision budget is 1{,}024 tokens. The
 study therefore adopts a 24{,}576-token context. The choice was audited in D-019: two synthetic
@@ -658,7 +645,7 @@ trimmed; a prefix whose prompt did not fit would be excluded before freeze, but 
 24k context is also the constraint that drives the batch-size fit check in
 Section~\ref{sec:experiment}.
 
-\noindent\textbf{Serving stack and the model trio}.\ 
+\noindent\textbf{Serving stack and the model trio}.\
 
 All three models are 4-bit AWQ quantized \cite{awq} and served one at a time with vLLM 0.33.0
 \cite{vllm} and torch 2.14.0 on the approved H200 MIG 1g.18gb slice: 18~GB of VRAM, driver
@@ -729,7 +716,7 @@ The decomposition is
 The strict form matters because a model that re-queries the tool and also repeats the wrong value
 is not the same failure as one that quietly repeats it.
 
-\noindent\textbf{Primary estimand}.\ 
+\noindent\textbf{Primary estimand}.\
 
 The primary model is a conditional (fixed-effects) logistic regression stratified by prefix:
 \begin{equation}
@@ -745,7 +732,7 @@ $H_1:\beta>0$ at $\alpha=.05$, reported two-sided for completeness. H1 is suppor
 pooled slope is positive and the per-model slope is positive in at least two of three models with
 the same sign. The second condition is a replication gate, not a model ranking.
 
-\noindent\textbf{Linearity and multiplicity}.\ 
+\noindent\textbf{Linearity and multiplicity}.\
 
 The slope assumes equal spacing of $s=0,\dots,3$. A categorical-severity likelihood-ratio test
 and a quadratic term are pre-registered diagnostics. If linearity is rejected, the paper reports
@@ -758,7 +745,7 @@ exact McNemar contrast \cite{mcnemar1947}, donor-specific and task-specific slop
 exploratory model $\times$ severity and task $\times$ severity interactions. Bootstrap intervals
 use 2{,}000 replicates clustered by prefix.
 
-\noindent\textbf{Recovery}.\ 
+\noindent\textbf{Recovery}.\
 
 Recovery uses the risk set of prefixes whose decision moved at the injected step ($Y^{U}=1$ or
 $Y^{A}=1$) and did not flag there, separately for $s=2$ and $s=3$. Prefixes that flagged at
@@ -786,7 +773,7 @@ $t_{1/2}$ is labelled exploratory and the curve and RMST are the result. Transie
 primary; persistent injection corrupts the same field on 25\% of prefixes and requires the model
 to flag or work around the corruption rather than merely re-query for truth.
 
-\noindent\textbf{Agreement and audit statistics}.\ 
+\noindent\textbf{Agreement and audit statistics}.\
 
 Agreement is reported with Krippendorff's $\alpha$ for the ordinal severity rating
 \cite{krippendorff} and Cohen's $\kappa$ for the categorical outcome label \cite{cohen1960}.
@@ -796,7 +783,7 @@ statistics gate the claim rather than decorate it: a low $\kappa$ downgrades the
 action-level $Y^{A}$, and a low $\alpha$ invalidates the dose interpretation even if the slope is
 positive.
 
-\noindent\textbf{Power}.\ 
+\noindent\textbf{Power}.\
 
 The design assumes a 4\% placebo switch rate and a random prefix intercept with standard
 deviation 1.0. At $N=800$ the per-model minimum detectable effect is 0.203 logit per level (odds
@@ -820,7 +807,7 @@ model.
 
 \section{Experiment}\label{sec:experiment}
 
-\noindent\textbf{Why sequential gates}.\ 
+\noindent\textbf{Why sequential gates}.\
 
 Gates are sequential and frozen before the main run. A gate cannot be skipped, relaxed after
 seeing data, or re-run on a different sample without a logged amendment. Each gate report states
@@ -848,7 +835,7 @@ G0 through G4.
   \end{tabular}
 \end{table}
 
-\noindent\textbf{G0: harvest and freeze}.\ 
+\noindent\textbf{G0: harvest and freeze}.\
 
 G0 is CPU-only and costs \$0. It has five checks: supply of at least 880 eligible prefixes;
 domain balance of at least 440 per domain before audit and 400 after audit; replay of at least
@@ -868,7 +855,7 @@ authors' final verification deferred; the preregistration requires a human audit
 freeze remains open until that verification is recorded. No target-model output exists for any
 study prefix.
 
-\noindent\textbf{G1: calibration}.\ 
+\noindent\textbf{G1: calibration}.\
 
 G1 is a harness check, not a result. It uses 60 prefixes (30 per domain), five arms, and three
 models, for 900 generations, and the calibration prefixes are disjoint from the main 800 and stay
@@ -880,7 +867,7 @@ fixed with a prompt or grammar change; if it still refuses, it is excluded and t
 policy applies under a prereg amendment recorded before calibration results are used. No
 main-run spend occurs before G1 passes. G1 passed on all three models (Table~\ref{tab:g1}).
 
-\noindent\textbf{G2 to G4}.\ 
+\noindent\textbf{G2 to G4}.\
 
 G2 is an operational stop rather than a scientific test. The runner checks cumulative GPU-hours
 and storage after every shard and every 40 prefixes; on reaching 45 GPU-hours or 200~GB it stops
@@ -891,7 +878,7 @@ run.
 
 
 
-\noindent\textbf{Environment}.\ 
+\noindent\textbf{Environment}.\
 
 All confirmatory inference runs on the approved university H200 MIG 1g.18gb slice: 18~GB of
 VRAM, driver 580.178.04, CUDA 13.5, vLLM 0.33.0, and torch 2.14.0, in a project-local
@@ -931,7 +918,7 @@ rental.
   \end{tabular}
 \end{table}
 
-\noindent\textbf{Generation envelope}.\ 
+\noindent\textbf{Generation envelope}.\
 
 The main run is fully crossed: 800 prefixes $\times$ 5 arms $\times$ 3 models for the base matrix,
 plus recovery and jitter. Table~\ref{tab:envelope} gives the arithmetic. The base matrix yields
@@ -962,7 +949,7 @@ noise; they do not add power to the primary estimate.
   \end{tabular}
 \end{table}
 
-\noindent\textbf{Execution, ledger, and stop rules}.\ 
+\noindent\textbf{Execution, ledger, and stop rules}.\
 
 Execution is sharded by model and domain. Each shard checkpoints every 40 prefixes and appends
 one ledger row per generation: run ID, model, prefix, arm, step, prompt hash, output, parse
@@ -973,7 +960,7 @@ run stops at 45 GPU-hours or 200~GB storage, whichever comes first; if the stop 
 mid-envelope, the analysis uses completed shards and the paper discloses the shortfall. No
 imputation is used for missing arms, and the missingness rate is reported.
 
-\noindent\textbf{Analysis software and reproducibility}.\ 
+\noindent\textbf{Analysis software and reproducibility}.\
 
 The analysis code is versioned and records the preregistration hash and the configuration hash
 with every run. The primary conditional-logit fit, the prefix-cluster bootstrap, and the
@@ -1032,7 +1019,7 @@ coarse action coding, and no recovery data, and it cannot distinguish a graded l
 of flips. Its role is to show that the manipulation is runnable and that the confirmatory design
 is worth the GPU time.
 
-\noindent\textbf{G0 harvest and freeze status}.\ 
+\noindent\textbf{G0 harvest and freeze status}.\
 
 The G0 implementation counts are in Table~\ref{tab:supply}. Supply, domain balance, replay, and
 rendering meet their thresholds. The manifest is frozen at
@@ -1044,7 +1031,7 @@ the preregistration requires a human audit at 36/40 or better. The audit deviati
 here rather than in a footnote, because a reader should be able to see exactly how the gate was
 filled. \pending{final author verification date and any replacement rows if verification fails}.
 
-\noindent\textbf{G1 calibration}.\ 
+\noindent\textbf{G1 calibration}.\
 
 G1 is running under the fixed harness: \texttt{think} is excluded, decoding is constrained to a
 valid tool-or-final-answer JSON object, the decision budget is 1{,}024 tokens, and each model runs
@@ -1140,7 +1127,7 @@ raters) and the severity audit (120 items, 3 raters) are provisional under D-027
 perform the final verification after the experiments finish. If either audit fails its gate,
 the claim is downgraded rather than smoothed over.
 
-\noindent\textbf{Silent propagation and the outcome decomposition}.\ 
+\noindent\textbf{Silent propagation and the outcome decomposition}.\
 
 The descriptive secondary analysis reports the share of decision changes that are silent
 propagation, separately for =2$ and =3$, together with the detection and action-switch shares
@@ -1155,7 +1142,7 @@ Table~\ref{tab:armrates}. This subsection is descriptive and is not gated on a $
 but it is gated on the outcome audit, because a silent-propagation label that two raters
 cannot reproduce is not a measurement. The adjudicated PPV is \pending{artifact}.
 
-\noindent\textbf{Recovery}.\ 
+\noindent\textbf{Recovery}.\
 
 Recovery will be reported as a Kaplan--Meier curve, RMST over the four-step horizon, and an
 exponential half-life only if G4 passes. The primary risk set is the transient $s=3$ set;
@@ -1164,7 +1151,7 @@ $H=4$, Kaplan--Meier curve, RMST, $\hat{\mu}$, $t_{1/2}$ with interval, and the 
 $p$-value from the G4 report}. If fewer than 50\% of the risk set recovers, the curve and RMST
 stand and the half-life is labelled exploratory.
 
-\noindent\textbf{Sensitivity and heterogeneity}.\ 
+\noindent\textbf{Sensitivity and heterogeneity}.\
 
 The pre-registered sensitivity analyses exclude the placebo and fit $s=1,\dots,3$; stratify by
 domain and donor; vary strict versus lenient action coding; and repeat a 10\% seed sample for
@@ -1177,7 +1164,7 @@ interval, not as a ranking, and no model is declared more or less sensitive than
 
 
 
-\noindent\textbf{Conditional interpretation}.\ 
+\noindent\textbf{Conditional interpretation}.\
 
 The study is designed to answer one question at one level of resolution: within a frozen real
 prefix, does changing the content of a tool observation change the next decision, and is the
@@ -1203,7 +1190,7 @@ a state corruption than to a momentary lapse. The four-step horizon is short, an
 say so; a censored curve is a lower bound on persistence, not a claim that the agent never
 recovers.
 
-\noindent\textbf{Engineering implications}.\ 
+\noindent\textbf{Engineering implications}.\
 
 The result will inform choices at the observation boundary. If wrong content moves decisions and
 silent propagation is common, builders should add verification for critical fields, require a
@@ -1214,7 +1201,7 @@ change; it estimates the size of the problem and the conditions under which it a
 distinction between transient and persistent injection matters here, because a re-query fixes a
 transient corruption and does nothing against a persistent one.
 
-\noindent\textbf{Evaluation practice}.\ 
+\noindent\textbf{Evaluation practice}.\
 
 End-to-end success is a useful but coarse metric. Two agents with the same task score can differ
 sharply in whether they notice a wrong observation. An observation-level sensitivity metric
@@ -1224,7 +1211,7 @@ applied to new models without re-harvesting trajectories, which makes comparison
 families more interpretable than a single aggregate score. The dataset is also a null-result
 asset: a well-powered flat slope is evidence about where reliability effort does not pay off.
 
-\noindent\textbf{What would change the claim}.\ 
+\noindent\textbf{What would change the claim}.\
 
 Four outcomes would change the claim rather than weaken it. A pooled slope at or below 0.1 logit
 per level, or a negative slope, converts the paper to a measurement result. Placebo jitter above
