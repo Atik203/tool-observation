@@ -156,9 +156,97 @@ def _ai_severity_fill(item: dict) -> dict[str, str]:
     }
 
 
-# ---------------------------------------------------------------------------
-# Outcome audit
-# ---------------------------------------------------------------------------
+RECOVERY_RATERS = 2
+
+
+RECOVERY_PACKET_COLUMNS = (
+    "item_id",
+    "prefix_id",
+    "model_id",
+    "regime",
+    "severity",
+    "horizon",
+    "automatic_recovered_step",
+    "automatic_endpoint",
+    "automatic_censored",
+)
+
+RECOVERY_SHEET_COLUMNS = (
+    "item_id",
+    "rater1_recovery_step",
+    "rater1_endpoint",
+    "rater2_recovery_step",
+    "rater2_endpoint",
+    "notes",
+)
+
+
+def build_recovery_packet(
+    event_root: Path, n_items: int = 80
+) -> tuple[list[dict], list]:
+    """Select n_items recovery sequences balanced across models and regimes."""
+    events: list[dict] = []
+    if event_root.exists():
+        for model_dir in sorted(event_root.iterdir()):
+            if not model_dir.is_dir():
+                continue
+            for regime_file in sorted(model_dir.glob("*.jsonl")):
+                regime = regime_file.stem
+                with regime_file.open(encoding="utf-8") as handle:
+                    for line in handle:
+                        if not line.strip():
+                            continue
+                        payload = json.loads(line)
+                        payload["_model_id"] = model_dir.name
+                        payload["_regime_file"] = regime
+                        events.append(payload)
+
+    # Balance across models and regimes.
+    by_cell: dict[tuple[str, str], list[dict]] = {}
+    for event in events:
+        by_cell.setdefault((event["_model_id"], event["_regime_file"]), []).append(event)
+
+    selected: list[dict] = []
+    cells = sorted(by_cell)
+    per_cell = n_items // len(cells) if cells else 0
+    for cell in cells:
+        pool = sorted(by_cell[cell], key=lambda item: item.get("prefix_id", ""))
+        random.Random(f"{SEED}|recovery|{cell}").shuffle(pool)
+        selected.extend(pool[:per_cell])
+
+    if len(selected) < n_items:
+        remaining = [e for e in events if e not in selected]
+        random.Random(f"{SEED}|recovery|topup").shuffle(remaining)
+        selected.extend(remaining[: n_items - len(selected)])
+
+    packet: list[dict] = []
+    for index, event in enumerate(selected[:n_items], start=1):
+        recovered = event.get("recovered_step")
+        packet.append(
+            {
+                "item_id": f"REC-{index:03d}",
+                "prefix_id": event.get("prefix_id", ""),
+                "model_id": event.get("_model_id", ""),
+                "regime": event.get("_regime_file", ""),
+                "severity": event.get("severity", ""),
+                "horizon": event.get("horizon", 4),
+                "automatic_recovered_step": "" if recovered is None else recovered,
+                "automatic_endpoint": event.get("endpoint", ""),
+                "automatic_censored": bool(event.get("censored", False)),
+            }
+        )
+    return packet, selected
+
+
+def _ai_recovery_fill(item: dict) -> dict[str, str]:
+    step = item.get("automatic_recovered_step", "")
+    endpoint = item.get("automatic_endpoint", "censored")
+    return {
+        "rater1_recovery_step": str(step) if step != "" else "4",
+        "rater1_endpoint": endpoint,
+        "rater2_recovery_step": str(step) if step != "" else "4",
+        "rater2_endpoint": endpoint,
+    }
 
 
 def build_outcome_packet(
@@ -280,11 +368,6 @@ def _ai_outcome_fill(item: dict) -> dict[str, str]:
     }
 
 
-def build_recovery_packet(n_items: int = 80) -> list[dict]:
-    """Placeholder: recovery audit needs completed recovery events."""
-    return []
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--perturbations", default=str(MANIFEST_DIR / "perturbations.jsonl"))
@@ -292,6 +375,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--audit-dir", default=str(ARTIFACTS_DIR / "audit"))
     parser.add_argument("--severity-items", type=int, default=120)
     parser.add_argument("--outcome-items", type=int, default=160)
+    parser.add_argument("--recovery-items", type=int, default=80)
+    parser.add_argument("--recovery-root", default=str(RUNS_DIR / "main" / "recovery"))
     args = parser.parse_args(argv)
 
     audit_dir = resolve_repo_path(args.audit_dir)
@@ -351,6 +436,30 @@ def main(argv: list[str] | None = None) -> int:
             outcome_sheet_rows,
         )
 
+    # --- Recovery audit (only if recovery events exist) ---
+    recovery_root = resolve_repo_path(args.recovery_root)
+    if recovery_root.exists():
+        recovery_packet, _ = build_recovery_packet(
+            recovery_root, n_items=args.recovery_items
+        )
+        if recovery_packet:
+            _write_csv(
+                audit_dir / "recovery_audit_packet.csv",
+                RECOVERY_PACKET_COLUMNS,
+                recovery_packet,
+            )
+            recovery_sheet_rows = []
+            for item in recovery_packet:
+                row = {"item_id": item["item_id"]}
+                row.update(_ai_recovery_fill(item))
+                row["notes"] = "ai_preaudit_deferred_human"
+                recovery_sheet_rows.append(row)
+            _write_csv(
+                audit_dir / "recovery_audit_sheet.csv",
+                RECOVERY_SHEET_COLUMNS,
+                recovery_sheet_rows,
+            )
+
     write_json(
         audit_dir / "audit_packets_result.json",
         {
@@ -359,6 +468,7 @@ def main(argv: list[str] | None = None) -> int:
             "git_commit": git_commit(),
             "severity_items": len(severity_packet),
             "outcome_items": len(outcome_packet) if ledgers else 0,
+            "recovery_items": len(recovery_packet) if recovery_root.exists() else 0,
             "models_with_ledgers": sorted(ledgers),
             "label_source": "ai_preaudit_deferred_human",
         },

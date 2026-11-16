@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import importlib.util
 import subprocess
 import sys
@@ -101,7 +102,6 @@ def test_build_outcome_packet_selects_requested_count() -> None:
     assert all(item["item_id"].startswith("OUT-") for item in packet)
     assert {item["model_id"] for item in packet} <= {"m0", "m1"}
 
-
 def test_cli_generates_packets(tmp_path) -> None:
     audit_dir = tmp_path / "audit"
     result = subprocess.run(
@@ -127,9 +127,32 @@ def test_cli_generates_packets(tmp_path) -> None:
     assert (audit_dir / "severity_audit_sheet.csv").exists()
     assert (audit_dir / "outcome_audit_packet.csv").exists()
     assert (audit_dir / "outcome_audit_sheet.csv").exists()
-    import csv
-
     severity_rows = list(csv.DictReader((audit_dir / "severity_audit_sheet.csv").open()))
     assert len(severity_rows) == 12
     outcome_rows = list(csv.DictReader((audit_dir / "outcome_audit_sheet.csv").open()))
     assert len(outcome_rows) == 8
+
+
+def test_cli_generates_recovery_packet(tmp_path) -> None:
+    audit_dir = tmp_path / "audit"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(_SCRIPT),
+            "--perturbations",
+            str(REPO_ROOT / "data" / "manifests" / "perturbations.jsonl"),
+            "--ledger-root",
+            str(REPO_ROOT / "data" / "runs" / "main"),
+            "--audit-dir",
+            str(audit_dir),
+            "--recovery-items",
+            "8",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (audit_dir / "recovery_audit_packet.csv").exists()
+    assert (audit_dir / "recovery_audit_sheet.csv").exists()
+    rows = list(csv.DictReader((audit_dir / "recovery_audit_sheet.csv").open()))
+    assert len(rows) == 8
