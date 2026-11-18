@@ -1,8 +1,8 @@
 # `paper/` — manuscript
 
 Manuscript source, CAS class files, bibliography, and generated figures. The
-confirmatory results are still pending, so the manuscript is a **skeleton with explicit
-`[PENDING: ...]` markers**; no result has been invented.
+confirmatory results are written from the frozen ledgers and analysis artifacts; every number
+cites a ledger, manifest, or artifact.
 
 ## Files
 
@@ -34,14 +34,19 @@ pdflatex -output-directory=out toolresult800.tex
 pdflatex -output-directory=out toolresult800.tex
 ```
 
+The checked-in `out/toolresult800.pdf` predates the results update; rebuild it where TeX Live is
+available before submission.
+
 ## Status
 
 | Milestone | Status |
 |---|---|
 | Proposal | drafted 2026-11-11 (`proposal.tex`) |
 | Manuscript skeleton | complete; 16 pages with figures, 0 undefined citations/references |
-| G1 calibration | in progress |
-| Results draft | blocked on G1/G2 |
+| G1 calibration | passed (D-026) |
+| G2 main run | complete (13,200 generations + recovery + seed-repeat) |
+| Results draft | written from `artifacts/analysis/` (G3 partial, G4 fail; both disclosed) |
+| Audit verification | author-verified 2026-11-18 (D-035); G0/D-021 still deferred |
 | Internal review | not started |
 | Submission | not started |
 
