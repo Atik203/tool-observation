@@ -272,31 +272,22 @@
 % Abstract. Design numbers are sourced from README.md, ROADMAP.md,
 % docs/PROTOCOL.md, and docs/DATA_CARD.md. Confirmatory values do not exist.
 \begin{abstract}
-  Agents read tool outputs and act on them, but end-to-end benchmarks score the finished
-  episode and cannot show whether an agent noticed a wrong price, date, or policy. This paper
-  reports a pre-registered, fixed-prefix causal study of that moment. ToolResult-800 selects 800
-  real $\tau$-bench conversation prefixes (400 airline, 400 retail), each ending immediately
-  after a tool observation, and varies only the observation's content across five arms: verbatim
-  JSON, faithful prose, one non-critical change, one plausible critical error, and a critical error
-  plus a second contradiction. Three open-weight 8--9B model families answer every arm under
-  greedy decoding on a single 18~GB H200 MIG slice. The design estimates a conditional-logistic
-  slope of decision switch on severity within prefix, the share of switches that repeat the
-  false value silently, and a four-step recovery curve. The study is gated, costs \$0 in cash,
-  and treats a flat or null slope as a measurement result. The CPU-only G0 pipeline is implemented:
-  13{,}605 candidate decision points, 5{,}516 eligible prefixes, 5{,}511 replay-matched (99.91\%), and
-  880 sampled. The manifest is frozen; the 40-item audit is provisionally filled from an AI
-  pre-audit (40/40) with the authors' final verification deferred. G1 calibration passed and the
-  13{,}200-generation base matrix is complete: the primary pooled slope is
-  $\hat\beta = 0.877$ (SE $0.059$, $p = 2.3\times10^{-49}$), with positive slopes in all three
-  models, a bootstrap interval of $[0.770, 0.998]$, and a silent-propagation share of 21.3\%.
-  A blind audit of the automatic labels identified and corrected a labeling defect before the
-  final analysis (silent-propagation PPV rose from .76 to 1.00). Recovery (G4) does not pass on
-  the primary set: 32.4\%--47.6\% of the $s=3$ risk set recovers by $H=4$, and the Weibull shape
-  rejects the exponential assumption for two of three models. The severity, outcome, and recovery audits were
-  blind-rated in a label-free round; the G3 parser-failure criterion fails at 1.55\% against the
-  1\% threshold. Both failed criteria are reported as failures. The 60-prefix pilot (54/60 consult, 0/60 placebo jitter,
-  5/60 error switch, McNemar $p=.0625$) is a screening signal and is not pooled with the
-  confirmatory sample.
+  Tool-using language-model agents read tool outputs and act on them, but end-to-end benchmarks
+  score the finished episode and cannot show whether an agent noticed a wrong price, date, or
+  identifier. We report a frozen fixed-prefix study of that moment: 800 real $\tau$-bench prefixes
+  (400 airline, 400 retail), each ending after a tool observation, with the observation varied
+  across four prose arms---faithful paraphrase, one non-critical change, one plausible critical
+  error, and a critical error with a second contradiction. Three open-weight 8--9B models answer
+  every arm greedily on an 18~GB H200 slice. Critical errors move the next decision: tier odds
+  ratios against the placebo are 1.27 (non-critical), 4.60 (critical), and 11.21 (critical plus
+  contradiction). Linearity is rejected, so the slope (0.877; 95\% CI 0.770--0.998) is a summary
+  of a threshold, not a per-level law. Of 1{,}964 critical-arm switches, 21.3\% silently repeat
+  the injected value, and identifiers and money carry most of that propagation; status fields
+  almost never do. Fewer than half of corrupted episodes recover within four steps
+  (32.4--47.6\%). Re-serializing the same observation already moves 20--46\% of decisions. The
+  pre-registered parser-failure criterion failed (1.55\% vs <1\%), so the paper reports a
+  measurement estimate, not a confirmed content-sensitivity claim; recovery also missed its 50\%
+  gate. Audits were blind-rated in a label-free round.
 \end{abstract}
 
 % Keywords. Each keyword is separated by \sep
@@ -801,7 +792,10 @@ invalidates the dose interpretation even if the slope is positive.
 The design assumes a 4\% placebo switch rate and a random prefix intercept with standard
 deviation 1.0. At $N=800$ the per-model minimum detectable effect is 0.203 logit per level (odds
 ratio 1.22) at 80\% power and $\alpha=.05$ two-sided; the pooled minimum detectable effect is at
-most 0.15. The pilot-implied value of about 0.8 is roughly four times the per-model MDE, so power
+most 0.15. The observed $s0$ switch rate is 30.1\%, far above the 4\% design assumption, so the
+design MDE is not the realized precision: at the analyzed sample and observed cluster SE the
+realized pooled MDE is 0.166 logit/level (OR 1.18, 80\% power), and realized power at the observed
+effect is 1.0. The pilot-implied value of about 0.8 is roughly four times the per-model MDE, so power
 is not the binding constraint. Construct validity is. The recovery half-life has wider
 uncertainty: with 160--240 $s=3$ switchers, the per-model interval is about $\pm16$--20\% and the
 pooled interval about $\pm9$--11\%, while between-model and between-severity differences need
@@ -1122,7 +1116,9 @@ The pooled slope is $\hat\beta = 0.877$ with a prefix-cluster standard error of 
 $[0.770, 0.998]$ ($2{,}000$ replicates, $p = 0.001$ two-sided). All three per-model slopes
 are positive and Holm-significant, so the pre-registered replication gate is met. The slope is
 the log odds of a decision switch per severity level, conditional on the prefix, so an odds
-ratio of $e^{0.877} \approx 2.40$ per level. The estimate uses 617 prefix$\times$model strata
+ratio of $e^{0.877} \approx 2.40$ per level, but that summary hides the shape: the tier odds
+ratios against $s0$ are 1.27 (s1), 4.60 (s2), and 11.21 (s3), and the pre-registered linearity
+diagnostics reject a constant gradient. The estimate uses 617 prefix$\times$model strata
 (423 unique prefixes) and 2{,}458 slope rows from the 800 primary prefixes; the 80 reserve
 prefixes are excluded. Of the 9{,}075 labelled prose-arm cells, 2{,}297 form prefix$\times$model
 strata and 617 vary across arms; the conditional logit drops the 1{,}680 concordant strata, which
@@ -1143,6 +1139,22 @@ The G3 gate did not pass: its parser-failure criterion is 1.55\% (205/13{,}200; 
 refusals) against the 1\% threshold. Under the gate's fail action the paper reports the slope as a
 pre-registered measurement estimate and makes no content-sensitivity claim; the estimate is not a
 confirmed effect.
+
+\noindent\textbf{Pre-registered diagnostics}.\
+
+The categorical-vs-linear likelihood-ratio test rejects linearity pooled
+($\chi^2(2) = 25.03$, $p = 3.7\times10^{-6}$; Qwen $p = 1.0\times10^{-4}$, Ministral $p=.017$,
+Llama $p=.274$), and the quadratic term is positive ($b = 0.143$, cluster SE $0.036$,
+$p = 7.4\times10^{-5}$). Tier odds ratios against $s0$ are 1.27 [1.04, 1.55] (s1), 4.60
+[3.58, 5.99] (s2), and 11.21 [8.38, 15.30] (s3). The $s2$-vs-$s3$ McNemar test is
+$p = 2.1\times10^{-20}$ pooled (per model $1.1\times10^{-7}$, $2.6\times10^{-10}$,
+$5.8\times10^{-5}$). The pattern is a threshold at $s2$, not a graded per-level law. Domain
+slopes are 0.74 [0.59, 0.93] (airline) and 0.99 [0.83, 1.17] (retail); the domain interaction is
+$p=.035$ (exploratory, driven by Ministral) and the donor interaction is null ($p=.61$). Under
+lenient tool-or-verb coding the pooled slope is 0.43 [0.30, 0.57] versus 0.88 [0.77, 1.00] under
+the strict signature: coding changes the magnitude, not the sign. Excluding the placebo,
+$\hat\beta = 1.03$ [0.88, 1.19]. At the analyzed sample the realized pooled MDE is 0.166
+logit/level (OR 1.18, 80\% power), and realized power at the observed effect is 1.0.
 
 Table~\ref{tab:armrates} gives the descriptive per-arm switch rates. They rise monotonically
 with severity for all three models, which is the shape the slope summarizes; the s0 placebo
@@ -1258,8 +1270,11 @@ near-inert (the re-applied false value recurred in only a handful of steps, and 
 byte-identical to the transient arm for 97--100\% of shared steps), so those groups are
 descriptive and not a persistence contrast. The Weibull shape rejects the exponential assumption
 for two of three primary groups, and the fitted half-lives (4.3--8.0 steps) exceed the horizon in
-every group. Under the alternative convention that censors at $H=4$, the primary rates fall to
-27.3/34.7/27.2\%. The gate fails on every point estimate of the primary set, but the margin is
+every group. Endpoint composition differs by model: 108/112 Llama recoveries are R1 (signature
+reversion), 56/72 Qwen, but only 56/141 Ministral---most Ministral recoveries are explicit flags
+(85), not reversion. Log-rank tests find no difference between the transient and persistent curves
+(pooled $p=.49$) or between $s2$ and $s3$ ($p=.52$). Under the alternative convention that
+censors at $H=4$, the primary rates fall to 27.3/34.7/27.2\%. The gate fails on every point estimate of the primary set, but the margin is
 convention-dependent and Ministral is close to the threshold. The curve and RMST stand; the
 half-life is labelled exploratory.
 
@@ -1311,18 +1326,15 @@ half-life is labelled exploratory.
 
 The pre-registered sensitivity analyses exclude the placebo and fit $s=1,\dots,3$; stratify by
 domain and donor; vary strict versus lenient action coding; and repeat a 10\% seed sample for
-stability. The seed-repeat check is complete: 80 prefixes $\times$ 5 arms $\times$ 3 models
-were regenerated with a different sampling seed and compared with the base matrix, giving 100.0\%
-(Llama-3.1-8B), 98.95\% (Ministral-3-8B), and 98.94\% (Qwen3.5-9B) signature stability, all above
-the 0.90 gate. The denominators are 385/381/376 of 400 repeated generations; unparsed generations
-are excluded. Donor-specific and task-specific slopes, the per-domain and per-donor slopes, and
-the strict-versus-lenient coding comparison are \pending{artifact}. Two further checks are
-complete. Task-clustered resampling (tasks, not prefixes) leaves the pooled estimate essentially
-unchanged (95\% CI [0.758, 0.996] versus [0.770, 0.998]), so prefix clustering does not hide
-task-level dependence. The 80 held-out reserve prefixes give $\hat\beta = 0.781$ [0.443, 1.194]:
-the same sign and rough magnitude on data excluded from the primary estimate, with the expected
-loss of precision. Heterogeneity is reported as an interval, not as a ranking, and no model is
-declared more or less sensitive than another.
+stability. The pre-registered sensitivity analyses are complete. The seed-repeat check: 80
+prefixes $\times$ 5 arms $\times$ 3 models were regenerated with a different sampling seed and
+compared with the base matrix, giving 100.0\% (Llama-3.1-8B), 98.95\% (Ministral-3-8B), and 98.94\%
+(Qwen3.5-9B) signature stability, all above the 0.90 gate. The denominators are 385/381/376 of 400
+repeated generations; unparsed generations are excluded. The placebo-excluded slope is 1.03
+[0.88, 1.19]; task-clustered resampling leaves the pooled interval essentially unchanged
+[0.758, 0.996]; the held-out reserve gives $\hat\beta = 0.781$ [0.443, 1.194]. Domain and donor
+strata are reported with the diagnostics. Heterogeneity is reported as an interval, not as a
+ranking, and no model is declared more or less sensitive than another.
 
 
 

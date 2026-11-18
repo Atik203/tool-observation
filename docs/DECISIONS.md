@@ -6,6 +6,21 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-042 - Pre-registered secondary analyses completed; linearity rejected
+
+- **Date:** 2026-11-19
+- **Status:** accepted (pre-registered diagnostics; interpretation update)
+- **Context:** The pre-registered linearity LRT/quadratic term, tier ORs, s2-vs-s3 McNemar,
+  domain/donor strata, strict-vs-lenient coding, and realized MDE were missing from the paper.
+- **Decision:** Report them: pooled categorical LRT χ²(2)=25.03, p=3.7e-6; quadratic b=0.143
+  (SE 0.036), p=7.4e-5; tier ORs 1.27 / 4.60 / 11.21; s2-vs-s3 McNemar p=2.1e-20 pooled;
+  domain interaction p=.035 (exploratory, unadjusted); donor p=.61; strict 0.876 [0.768, 0.996]
+  vs lenient 0.434 [0.296, 0.574]; realized MDE 0.166; placebo-excluded β 1.031 [0.881, 1.193].
+- **Consequences:** The slope is reported as a summary of a threshold at s2, not a per-level law;
+  the abstract and results are reworded. No criterion changed.
+
+---
+
 ---
 
 ## D-041 - Gate-record corrections: G1 amendment timing and G0 provisional flag
