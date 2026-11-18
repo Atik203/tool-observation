@@ -101,3 +101,73 @@ def test_analysis_script_reports_slope(tmp_path) -> None:
     assert report["pooled"]["p_value"] < 0.05
     assert report["silent_propagation"]["silent_share_of_switch"] is not None
     assert report["bootstrap"]["ci_low"] < report["bootstrap"]["ci_high"]
+
+
+def test_reserve_prefixes_are_excluded_by_default(tmp_path) -> None:
+    ledger_root = tmp_path / "runs"
+    model_dir = ledger_root / "qwen"
+    model_dir.mkdir(parents=True)
+    ledger = model_dir / "ledger.jsonl"
+    prefixes = ("p0", "p1", "p2", "p3")  # p3 is the reserve prefix
+    for prefix in prefixes:
+        for arm in ("V", "s0", "s1"):
+            append_ledger_row(ledger, _row("qwen", prefix, arm, _REFERENCE))
+        for arm in ("s2", "s3"):
+            text = _REFERENCE if prefix == "p0" else _SWITCHED
+            append_ledger_row(ledger, _row("qwen", prefix, arm, text))
+
+    perturbations = tmp_path / "perturbations.jsonl"
+    with perturbations.open("w", encoding="utf-8") as handle:
+        for prefix in prefixes:
+            for arm, severity in (("s1", 1), ("s2", 2), ("s3", 3)):
+                record = PerturbationRecord(
+                    prefix_id=prefix,
+                    arm=arm,
+                    severity=severity,
+                    json_path="$.x",
+                    true_value=1,
+                    false_value=2,
+                    criticality="critical" if severity >= 2 else "noncritical",
+                    expected_action_change=True,
+                    renderer_version="test",
+                )
+                handle.write(json.dumps(record.to_dict()) + "\n")
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"reserve_ids": ["p3"]}), encoding="utf-8")
+
+    def _run(out: Path, *extra: str) -> dict:
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(REPO_ROOT / "scripts" / "13_analyze.py"),
+                "--models",
+                "qwen",
+                "--ledger-root",
+                str(ledger_root),
+                "--perturbations",
+                str(perturbations),
+                "--manifest",
+                str(manifest),
+                "--expected-rows",
+                "20",
+                "--bootstrap",
+                "20",
+                "--out",
+                str(out),
+                *extra,
+            ],
+            capture_output=True,
+            text=True,
+            cwd=str(REPO_ROOT),
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        return json.loads(out.read_text(encoding="utf-8"))
+
+    default = _run(tmp_path / "default.json")
+    assert default["analysis_prefixes"] == 3
+    assert default["reserve_ids"] == 1
+    assert default["n_slope_rows"] == 12  # 3 prefixes x 4 non-V arms
+
+    with_reserve = _run(tmp_path / "with_reserve.json", "--include-reserve")
+    assert with_reserve["analysis_prefixes"] == 4
+    assert with_reserve["n_slope_rows"] == 16

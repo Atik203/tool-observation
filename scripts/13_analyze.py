@@ -14,6 +14,7 @@ as incomplete and excluded unless --allow-partial is passed.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -58,8 +59,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--models", nargs="*", default=None)
     parser.add_argument("--ledger-root", default=str(RUNS_DIR / "main"))
+    parser.add_argument("--perturbations", default=str(MANIFEST_DIR / "perturbations.jsonl"))
+    parser.add_argument("--manifest", default=str(MANIFEST_DIR / "toolresult800_v1.json"))
     parser.add_argument(
-        "--perturbations", default=str(MANIFEST_DIR / "perturbations.jsonl")
+        "--include-reserve",
+        action="store_true",
+        help="include the 80 reserve prefixes (not the preregistered analysis sample)",
     )
     parser.add_argument("--expected-rows", type=int, default=EXPECTED_ROWS)
     parser.add_argument("--allow-partial", action="store_true")
@@ -71,6 +76,8 @@ def main(argv: list[str] | None = None) -> int:
     configured = [str(model["id"]) for model in load_config("models.yaml")["models"]]
     model_ids = args.models or configured
     ledger_root = resolve_repo_path(args.ledger_root)
+    manifest = json.loads(resolve_repo_path(args.manifest).read_text(encoding="utf-8"))
+    reserve_ids = set(manifest.get("reserve_ids", []))
 
     rows = []
     coverage: dict[str, dict[str, object]] = {}
@@ -94,6 +101,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if not used:
         raise SystemExit("no complete ledger to analyze; pass --allow-partial to override")
+
+    if not args.include_reserve and reserve_ids:
+        rows = [row for row in rows if row.prefix_id not in reserve_ids]
 
     perturbations = [
         PerturbationRecord.from_dict(item)
@@ -126,6 +136,9 @@ def main(argv: list[str] | None = None) -> int:
         "coverage": coverage,
         "expected_rows": args.expected_rows,
         "allow_partial": bool(args.allow_partial),
+        "include_reserve": bool(args.include_reserve),
+        "reserve_ids": len(reserve_ids),
+        "analysis_prefixes": len({row.prefix_id for row in rows}),
         "n_labels": len(labels),
         "n_slope_rows": len(slope_rows),
         "arm_table": _arm_table(counts),

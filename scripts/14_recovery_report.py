@@ -14,6 +14,7 @@ Gates:
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -22,7 +23,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from toolobs.analysis.recovery import recovery_report  # noqa: E402
 from toolobs.config import load_config  # noqa: E402
-from toolobs.paths import ARTIFACTS_DIR, RUNS_DIR, resolve_repo_path  # noqa: E402
+from toolobs.paths import ARTIFACTS_DIR, MANIFEST_DIR, RUNS_DIR, resolve_repo_path  # noqa: E402
 from toolobs.provenance import git_commit, utc_now, write_json  # noqa: E402
 from toolobs.schemas import RecoveryEvent  # noqa: E402
 
@@ -99,6 +100,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--models", nargs="*", default=None)
     parser.add_argument("--event-root", default=str(RUNS_DIR / "main" / "recovery"))
+    parser.add_argument("--manifest", default=str(MANIFEST_DIR / "toolresult800_v1.json"))
+    parser.add_argument("--include-reserve", action="store_true", help="include reserve prefixes")
     parser.add_argument("--horizon", type=int, default=4)
     parser.add_argument("--out", default=None)
     args = parser.parse_args(argv)
@@ -106,11 +109,19 @@ def main(argv: list[str] | None = None) -> int:
     configured = [str(model["id"]) for model in load_config("models.yaml")["models"]]
     model_ids = args.models or configured
     event_root = resolve_repo_path(args.event_root)
+    manifest = json.loads(resolve_repo_path(args.manifest).read_text(encoding="utf-8"))
+    reserve_ids = set() if args.include_reserve else set(manifest.get("reserve_ids", []))
 
     groups: dict[str, dict[str, object]] = {}
     for model_id in model_ids:
-        transient = _read_events(event_root / model_id / "transient.jsonl")
-        persistent = _read_events(event_root / model_id / "persistent.jsonl")
+        transient = [
+            e for e in _read_events(event_root / model_id / "transient.jsonl")
+            if e.prefix_id not in reserve_ids
+        ]
+        persistent = [
+            e for e in _read_events(event_root / model_id / "persistent.jsonl")
+            if e.prefix_id not in reserve_ids
+        ]
         for label, events, severity in (
             ("transient_s3", [e for e in transient if e.severity == 3], 3),
             ("transient_s2", [e for e in transient if e.severity == 2], 2),
