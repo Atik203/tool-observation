@@ -112,6 +112,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--audit-dir", default=str(ARTIFACTS_DIR / "audit"))
     parser.add_argument("--blind-dir", default=str(ARTIFACTS_DIR / "audit" / "blind"))
     parser.add_argument("--jitter-dir", default=str(ARTIFACTS_DIR / "analysis"))
+    parser.add_argument(
+        "--rater-suffix",
+        default="",
+        help="suffix for rater answer files (e.g. _unlabeled); packets keep their names",
+    )
     parser.add_argument("--out", default=None)
     args = parser.parse_args(argv)
 
@@ -129,7 +134,10 @@ def main(argv: list[str] | None = None) -> int:
     severity_raters = {}
     for number in (1, 2, 3):
         rows = _validate(
-            blind_dir / f"rater{number}_severity.csv", severity_ids, "severity", {"0", "1", "2", "3"}
+            blind_dir / f"rater{number}_severity{args.rater_suffix}.csv",
+            severity_ids,
+            "severity",
+            {"0", "1", "2", "3"},
         )
         for row in rows:
             for field in ("decision_changing", "absurd"):
@@ -140,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
 
     outcome_raters = {}
     for number in (1, 2):
-        rows = _validate(blind_dir / f"rater{number}_outcome.csv", outcome_ids, "Y", {"0", "1"})
+        rows = _validate(blind_dir / f"rater{number}_outcome{args.rater_suffix}.csv", outcome_ids, "Y", {"0", "1"})
         for row in rows:
             for field in ("YA", "YF", "YU"):
                 if str(row[field]).strip() not in {"0", "1"}:
@@ -152,7 +160,7 @@ def main(argv: list[str] | None = None) -> int:
     recovery_raters = {}
     for number in (1, 2):
         rows = _validate(
-            blind_dir / f"rater{number}_recovery.csv",
+            blind_dir / f"rater{number}_recovery{args.rater_suffix}.csv",
             recovery_ids,
             "recovery_step",
             {"1", "2", "3", "4"},
@@ -469,13 +477,22 @@ def main(argv: list[str] | None = None) -> int:
     }
     if verification_path.exists():
         payload = json.loads(verification_path.read_text(encoding="utf-8"))
-        human_verification = {
-            "status": "verified",
-            "verifier": payload.get("verifier"),
-            "recorded_utc": payload.get("recorded_utc"),
-            "verdict": payload.get("verdict"),
-            "record": "artifacts/audit/human_verification.json",
-        }
+        if payload.get("status", "verified") == "verified":
+            human_verification = {
+                "status": "verified",
+                "verifier": payload.get("verifier"),
+                "recorded_utc": payload.get("recorded_utc"),
+                "verdict": payload.get("verdict"),
+                "record": "artifacts/audit/human_verification.json",
+            }
+        else:
+            human_verification = {
+                "status": "pending",
+                "note": payload.get(
+                    "superseded_note", "the recorded verification does not cover the current sheets"
+                ),
+                "record": "artifacts/audit/human_verification.json",
+            }
 
     def _write_sheet(path: Path, columns, rows) -> None:
         with path.open("w", encoding="utf-8", newline="") as handle:

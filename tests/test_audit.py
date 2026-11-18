@@ -224,3 +224,64 @@ def test_blind_audit_score_end_to_end(tmp_path) -> None:
     assert (audit_dir / "severity_audit_sheet.csv").exists()
     assert (audit_dir / "outcome_audit_sheet.csv").exists()
     assert (audit_dir / "recovery_audit_sheet.csv").exists()
+
+    # Rater files with a suffix are read when requested (label-free round).
+    import shutil
+
+    for name in (
+        "rater1_severity.csv",
+        "rater2_severity.csv",
+        "rater3_severity.csv",
+        "rater1_outcome.csv",
+        "rater2_outcome.csv",
+        "rater1_recovery.csv",
+        "rater2_recovery.csv",
+    ):
+        shutil.copy(blind_dir / name, blind_dir / name.replace(".csv", "_x.csv"))
+    out_suffix = tmp_path / "result_suffix.json"
+    result = module.main(
+        [
+            "--audit-dir",
+            str(audit_dir),
+            "--blind-dir",
+            str(blind_dir),
+            "--jitter-dir",
+            str(jitter_dir),
+            "--rater-suffix",
+            "_x",
+            "--out",
+            str(out_suffix),
+        ]
+    )
+    assert result == 0
+    suffixed = json.loads(out_suffix.read_text(encoding="utf-8"))
+    assert suffixed["outcome"]["passed"] is True
+
+    # A superseded verification record must not be reported as verified.
+    (audit_dir / "human_verification.json").write_text(
+        json.dumps(
+            {
+                "verifier": "author",
+                "verdict": "accepted",
+                "status": "superseded",
+                "superseded_note": "test",
+            }
+        ),
+        encoding="utf-8",
+    )
+    out_pending = tmp_path / "result_pending.json"
+    result = module.main(
+        [
+            "--audit-dir",
+            str(audit_dir),
+            "--blind-dir",
+            str(blind_dir),
+            "--jitter-dir",
+            str(jitter_dir),
+            "--out",
+            str(out_pending),
+        ]
+    )
+    assert result == 0
+    pending = json.loads(out_pending.read_text(encoding="utf-8"))
+    assert pending["human_verification"]["status"] == "pending"
