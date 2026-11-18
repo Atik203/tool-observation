@@ -94,9 +94,9 @@ def main(argv: list[str] | None = None) -> int:
                         changed += 1
                 continue
             if args.backup_suffix:
-                backup = event_path.with_name(
-                    f"{event_path.stem}_{args.backup_suffix}{event_path.suffix}"
-                )
+                backup_dir = event_path.parent / "_backup"
+                backup_dir.mkdir(parents=True, exist_ok=True)
+                backup = backup_dir / f"{event_path.stem}_{args.backup_suffix}{event_path.suffix}"
                 if not backup.exists():
                     backup.write_bytes(event_path.read_bytes())
             event_path.parent.mkdir(parents=True, exist_ok=True)
