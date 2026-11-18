@@ -707,22 +707,26 @@ $\operatorname{sig}_{V}(p)$ is the verbatim-observation continuation. This indic
 outcome of the primary model in Equation~\ref{eq:primary}. The outcome labels are
 \begin{itemize}
   \setlength{\itemsep}{0pt}
-  \item $Y$: any sensitivity; the signature differs from the verbatim V continuation.
-  \item $Y^{U}$: silent propagation; the false value of a critical field appears in decision
-  content or arguments, with no flag. Not scored for $s=1$.
+  \item $Y$: any sensitivity; the decision signature differs from the verbatim V continuation.
+  \item $Y^{A}$: action switch; the tool name differs (tool calls) or the action verb differs
+  (final answers). Argument-value changes alone are not an action switch.
   \item $Y^{F}$: detection; an explicit flag, doubt, ``inconsistent'', ``verify'', or ``cannot
   trust''.
-  \item $Y^{A}$: action switch; the tool name or canonicalized arguments differ from V.
+  \item $Y^{U}$: silent propagation; the decision changes ($Y=1$), the injected false value is
+  asserted by the model's decision and absent from the reference decision, and there is no action
+  switch and no flag. Not scored for $s=1$.
+  \item $Y^{O}$: any other signature change not explained by $Y^{A}$, $Y^{F}$, or $Y^{U}$
+  (for example, a model-introduced value difference that is not the injected false value).
 \end{itemize}
-The decomposition is
+The decomposition is exhaustive by construction,
 \begin{equation}
-  Y = Y^{A} \lor Y^{F} \lor Y^{U},
+  Y = Y^{A} \lor Y^{F} \lor Y^{U} \lor Y^{O},
   \qquad
   \text{strict silent propagation} = Y^{U} \land \neg Y^{A} \land \neg Y^{F}.
   \label{eq:decomp}
 \end{equation}
-The strict form matters because a model that re-queries the tool and also repeats the wrong value
-is not the same failure as one that quietly repeats it.
+The strict form makes the silent-propagation requirement explicit: a model that re-queries the
+tool and also repeats the wrong value is not the same failure as one that quietly repeats it.
 
 \noindent\textbf{Primary estimand}.\
 
@@ -778,8 +782,10 @@ with $d_i$ events and $n_i$ at risk at step $i$. Kaplan--Meier and RMST are repo
 of the fit \cite{kaplan1958}. A Weibull shape likelihood-ratio test at $p<.01$ checks the
 exponential assumption. If the shape rejects, or if fewer than 50\% of the risk set recovers by $H=4$,
 $t_{1/2}$ is labelled exploratory and the curve and RMST are the result. Transient injection is
-primary; persistent injection corrupts the same field on 25\% of prefixes and requires the model
-to flag or work around the corruption rather than merely re-query for truth.
+the primary regime. The persistent regime was designed to re-apply the false value to each new
+observation on 25\% of prefixes; in execution the corrupted path recurred rarely, so the step
+prompts are byte-identical to the transient regime for 97--100\% of shared steps and the regime
+contrast is reported as uninformative (Section~\ref{sec:results}).
 
 \noindent\textbf{Agreement and audit statistics}.\
 
@@ -874,7 +880,9 @@ below 5\%. The gate also inspects the parser failure taxonomy, prompt truncation
 latency, and whether $s=3$ is a ceiling. A model that refuses the forced next-decision format is
 fixed with a prompt or grammar change; if it still refuses, it is excluded and the substitution
 policy applies under a prereg amendment recorded before calibration results are used. No
-main-run spend occurs before G1 passes. G1 passed on all three models (Table~\ref{tab:g1}).
+main-run spend occurs before G1 passes. G1 passed on all three models under the amended
+negative-control criterion (A-004; $s0$ vs $s1$ jitter 10.5--13.3\%); the original V-vs-$s0$
+format-jitter criterion failed at 20.3--45.6\% and is reported separately (Table~\ref{tab:g1}).
 
 \noindent\textbf{G2 to G4}.\
 
@@ -931,10 +939,12 @@ booking a paid rental.
 The main run is fully crossed: 800 prefixes $\times$ 5 arms $\times$ 3 models for the base matrix,
 plus recovery and jitter. Table~\ref{tab:envelope} gives the arithmetic. The base matrix yields
 12{,}000 decisions. Recovery is injected at $s=2$ and $s=3$ for every prefix under the transient
-regime, with four continuation steps. The persistent regime corrupts the same field on 25\% of
-prefixes (200) at $s=3$ and requires the model to flag or work around it rather than re-query for
-truth. Jitter repeats use 80 prefixes across all five arms to estimate decoding and prompt-format
-noise; they do not add power to the primary estimate.
+regime, with four continuation steps. The persistent regime was designed to corrupt the same field
+on 25\% of prefixes (200) at $s=3$; in the executed runs the re-application found the corrupted
+path in only a handful of steps, so the persistent prompts are byte-identical to transient for
+97--100\% of shared steps and those groups are descriptive only. Jitter repeats use 80 prefixes
+across all five arms to estimate decoding and prompt-format noise; they do not add power to the
+primary estimate.
 
 \begin{table}[pos=htbp]
   \centering
@@ -1068,19 +1078,19 @@ s0--s3, which share one format.
   \end{tabular}
 \end{table}
 
-\subsection{Primary content-sensitivity estimate}
+\subsection{Primary severity--switch estimate}
 
 
 
 The primary estimate is the pooled conditional-logistic slope of the switch indicator of
 Equation~\ref{eq:switch} on severity, with the per-model slopes as the replication gate. The
 base matrix is complete (13{,}200 generations, 880 prefixes, five arms, three models, greedy
-decoding), so this is the confirmatory estimate, not a partial one. The recovery endpoint is
+decoding), so this is the pre-registered estimate, not a partial one. The recovery endpoint is
 reported separately; the audits gate the label-based decomposition, not the switch indicator.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Primary content-sensitivity estimate. $\hat\beta$ is the conditional-logistic slope
+  \caption{Primary severity--switch estimate. $\hat\beta$ is the conditional-logistic slope
   of the switch indicator on severity within prefix; SE is the prefix-cluster standard error;
   $p$ is the two-sided Wald test. All three per-model slopes are positive, so the pooled slope
   meets the pre-registered replication gate. Traced to \texttt{artifacts/analysis/g3\_analysis.json}.}
@@ -1105,12 +1115,25 @@ $[0.770, 0.998]$ ($2{,}000$ replicates, $p = 0.001$ two-sided). All three per-mo
 are positive and Holm-significant, so the pre-registered replication gate is met. The slope is
 the log odds of a decision switch per severity level, conditional on the prefix, so an odds
 ratio of $e^{0.877} \approx 2.40$ per level. The estimate uses 617 prefix clusters and 2{,}458
-slope rows from the 800 primary prefixes; the 80 reserve prefixes are excluded. The claim is
-bounded to the prose arms s0--s3: the raw-JSON arm V is excluded because the format effect is
-large (20.3--45.6\%, D-026). An earlier analysis under the pre-fix automatic coder gave
-$\hat\beta = 0.684$ [0.584, 0.797]; the blind audit then found and corrected a labeling defect
-(D-028, A-002), and the estimate above is the corrected one. Both are positive and both are
-reported.
+slope rows from the 800 primary prefixes; the 80 reserve prefixes are excluded. Of the 9{,}075
+labelled prose-arm cells, 2{,}297 form prefix$\times$model strata and 617 vary across arms; the
+conditional logit drops the 1{,}680 concordant strata, which contribute no information, so the
+estimate is a within-stratum effect identified from prefixes whose decision varies across arms.
+The switch typology is reported separately (\texttt{artifacts/analysis/switch\_typology.json}):
+47.8\% of strata never switch, 23.9\% switch in every arm, 19.0\% are dose-responsive
+($s0=s1=0$, $s2$ or $s3=1$), and 9.3\% are placebo switchers. The claim is bounded to the prose
+arms s0--s3: the raw-JSON arm V is excluded because the format effect is large (20.3--45.6\%,
+D-026). An earlier analysis under the pre-fix automatic coder gave $\hat\beta = 0.684$
+[0.584, 0.797]; the same post-fix coder on all 880 prefixes gives 0.867 [0.760, 0.988]
+(\texttt{g3\_analysis\_all880.json}), so the coder change accounts for most of the movement and
+the reserve exclusion for the remainder. The blind audit then found and corrected the labeling
+defect (D-028, A-006), and the estimate above is the corrected one. All three are positive and all
+are reported.
+
+The G3 gate did not pass: its parser-failure criterion is 1.55\% (205/13{,}200; 3.45\% including
+refusals) against the 1\% threshold. Under the gate's fail action the paper reports the slope as a
+pre-registered measurement estimate and makes no content-sensitivity claim; the estimate is not a
+confirmed effect.
 
 Table~\ref{tab:armrates} gives the descriptive per-arm switch rates. They rise monotonically
 with severity for all three models, which is the shape the slope summarizes; the s0 placebo
@@ -1146,12 +1169,14 @@ over.
 
 The descriptive secondary analysis reports the share of decision changes that are silent
 propagation, separately for $s=2$ and $s=3$, together with the detection and action-switch shares
-and the strict decomposition of Equation~\ref{eq:decomp}. From the complete base matrix, 21.3\%
-of the 1{,}964 decision switches on the critical arms ($s=2$, $s=3$) are silent propagation: the
-model repeats the injected false value without flagging it. The per-model silent share of
-switches is 24.4\% (Qwen3.5-9B), 23.3\% (Ministral-3-8B), and 17.2\% (Llama-3.1-8B). Detection
-is rare in all three (0.1--1.9\% of critical-arm rows), so silent propagation is the dominant
-failure mode, not the exception, and it is the quantity that end-to-end benchmarks cannot see.
+and the strict decomposition of Equation~\ref{eq:decomp}. Of the 1{,}964 decision switches on the
+critical arms ($s=2$, $s=3$), 42.7\% are action switches, 1.5\% carry a flag without an action
+switch, 21.3\% are silent propagation (the model repeats the injected false value without flagging
+it), and 34.4\% are other value-level changes not attributable to the injected false value
+($Y^{O}$). The per-model silent share of switches is 24.4\% (Qwen3.5-9B), 23.3\%
+(Ministral-3-8B), and 17.2\% (Llama-3.1-8B). Detection is rare in all three (0.1--1.9\% of
+critical-arm rows), so silent propagation is the dominant \emph{identified} failure mode, not the
+majority of switches; it is the quantity that end-to-end benchmarks cannot see.
 The per-arm switch rates are in Table~\ref{tab:armrates}. This subsection is descriptive and is
 not gated on a $p$-value, but it is gated on the outcome audit. Before the conformance fix the
 automatic silent labels had a PPV of .76 (13/17); the audit found that the coder fired on outputs
@@ -1162,11 +1187,16 @@ labels.
 \noindent\textbf{Recovery}.\
 
 Recovery is reported as a Kaplan--Meier curve, RMST over the four-step horizon, and an
-exponential half-life only if G4 passes. The primary risk set is the transient $s=3$ set;
-secondary sets are R2 detection, persistent injection, and $s=2$. G4 does not pass: only
-27.2\%--34.7\% of the $s=3$ risk set recovers by $H=4$ (Qwen 27.3\%, Ministral 34.7\%, Llama
-27.2\%), and the Weibull shape rejects the exponential assumption for two of three models. The
-curve and RMST stand; the half-life is labelled exploratory.
+exponential half-life only if G4 passes. G4 does not pass: only 27.2\%--34.7\% of the transient
+$s=3$ risk set recovers by $H=4$ (Qwen 27.3\%, Ministral 34.7\%, Llama 27.2\%; pooled 30.0\%
+[27.3, 32.8]). The persistent arm is near-inert: the re-applied false value recurred in only a
+handful of steps, and the prompts are byte-identical to the transient arm for 97--100\% of shared
+steps, so the persistent groups are descriptive and not a persistence contrast. The Weibull shape
+rejects the exponential assumption for two of three models, and the fitted half-lives (6.2--8.4
+steps) exceed the horizon in every group. The censoring convention matters: censoring at the last
+observed step raises Ministral to 47.6\% [41.3, 54.0] (the only interval touching 50\%) and the
+pooled rate to 34.9\%; the gate fails on every point estimate, but the margin is
+convention-dependent. The curve and RMST stand; the half-life is labelled exploratory.
 
 \begin{table}[pos=htbp]
   \centering
@@ -1180,6 +1210,25 @@ curve and RMST stand; the half-life is labelled exploratory.
     Qwen3.5-9B     & 264 & 27.3\% & 3.10 & 0.084 & 8.23 & 0.228 \\
     Ministral-3-8B & 406 & 34.7\% & 2.96 & 0.111 & 6.24 & $2.1\times10^{-4}$ \\
     Llama-3.1-8B   & 412 & 27.2\% & 3.18 & 0.082 & 8.45 & 0.0026 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Recovery by $H=4$ across the nine model--risk-set groups (800 primary prefixes).
+  Cells show the recovered share and the risk-set size. The persistent groups are near-inert
+  (prompts byte-identical to transient for 97--100\% of shared steps) and are shown for
+  completeness only.}
+  \label{tab:recovery_all}
+  \small
+  \begin{tabular}{lrrr}
+    \toprule
+    \textbf{Model} & \textbf{Transient $s=2$} & \textbf{Transient $s=3$} & \textbf{Persistent $s=3$} \\
+    \midrule
+    Qwen3.5-9B     & 29.7\% (239) & 27.3\% (264) & 30.1\% (73) \\
+    Ministral-3-8B & 35.8\% (366) & 34.7\% (406) & 37.1\% (97) \\
+    Llama-3.1-8B   & 27.9\% (376) & 27.2\% (412) & 30.0\% (100) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1202,13 +1251,14 @@ an interval, not as a ranking, and no model is declared more or less sensitive t
 The study is designed to answer one question at one level of resolution: within a frozen real
 prefix, does changing the content of a tool observation change the next decision, and is the
 change ordered by severity? If the pooled slope is positive and at least two of three models
-replicate the sign, the result is a bounded content-sensitivity estimate for three open-weight
+replicate the sign, the result is a bounded estimate of switch-on-severity for three open-weight
 8--9B families on $\tau$-bench airline and retail, under one renderer and one severity rubric. It
-is not a universal constant. If the slope is flat, the result is a measurement: at the achieved
-precision, plausible content errors of this kind did not move the next decision in this sample.
-Both outcomes are informative, and the second is the one that practitioners are most likely to
-misread, because a flat slope bounds how much observation-level checking is worth relative to
-tool selection, planning, or policy adherence.
+is not a universal constant, and because the G3 parser-failure criterion did not pass, it is not
+stated as a content-sensitivity claim. If the slope is flat, the result is a measurement: at the
+achieved precision, plausible content errors of this kind did not move the next decision in this
+sample. Both outcomes are informative, and the second is the one that practitioners are most
+likely to misread, because a flat slope bounds how much observation-level checking is worth
+relative to tool selection, planning, or policy adherence.
 
 The decomposition changes the interpretation of a positive slope. A slope driven by detection is
 a slope in which the agent notices the conflict; a slope driven by silent propagation is a slope
@@ -1231,8 +1281,10 @@ second tool call before acting on a suspicious value, surface a confidence flag,
 high-stakes actions to human approval. If the slope is flat, those checks may be less urgent than
 tool selection, planning, or policy adherence. The study does not recommend a specific product
 change; it estimates the size of the problem and the conditions under which it appears. The
-distinction between transient and persistent injection matters here, because a re-query fixes a
-transient corruption and does nothing against a persistent one.
+transient/persistent contrast was the design's route to the persistence question, but the
+persistent re-application was near-inert in execution: the corrupted field rarely recurred in
+later observations, so the contrast is not identified here and is left to future work with a
+state-aware re-injection.
 
 \noindent\textbf{Evaluation practice}.\
 
@@ -1291,7 +1343,8 @@ complete; the pooled slope is $0.877$ [0.770, 0.998], positive in all three mode
 critical-arm switches are silent propagation. Two gate criteria failed: the parser-failure rate
 (1.55\% against 1\%) and recovery (27.2--34.7\% against 50\%); both are reported as failures. The
 contribution is the dataset, the within-prefix design, the audit procedure that caught a labeling
-defect before analysis, and a bounded content-sensitivity estimate with its measured limits. \printcredits \section*{Declarations}
+defect before analysis, and a bounded switch-on-severity estimate with its measured limits; the
+failed G3 parser-failure criterion is reported, so no content-sensitivity claim is made. \section*{Declarations}
 \begin{itemize}
   \setlength{\itemsep}{0pt}
   \setlength{\parsep}{0pt}

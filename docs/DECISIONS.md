@@ -88,9 +88,9 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 - **Date:** 2026-11-18
 - **Status:** accepted (gate result; claim boundary)
-- **Context:** G3 criteria: pooled β > 0 (pass, β 0.867, 95% CI [0.760, 0.988]); per-model slopes
+- **Context:** G3 criteria: pooled β > 0 (pass, β 0.877, 95% CI [0.770, 0.998]); per-model slopes
   positive in ≥2/3 (pass, 3/3); severity α ≥ .75 (pass, .9185); outcome κ ≥ .80 (pass, .9748);
-  recovery κ ≥ .75 (pass, .832/.806); silent PPV ≥ .90 (pass, 1.000); **parser failure <1% (fail:
+  recovery κ ≥ .75 (pass, .787/.787); silent PPV ≥ .90 (pass, 1.000); **parser failure <1% (fail:
   205/13,200 = 1.55% hard parse errors; 3.45% including refusals 250/13,200)**. Evidence:
   `artifacts/analysis/g3_report.md`, `artifacts/audit/blind_audit_result.json`.
 - **Decision:** Report the parser-failure criterion as failed. Per `docs/GATES.md` the G3 fail

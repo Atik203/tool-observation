@@ -22,7 +22,7 @@ to target-model outcomes.
 - **Blind to outcomes:** yes; no target-model outcomes have been generated.
 - **Record:** `docs/DECISIONS.md` D-007 and D-008.
 
-## Pre-freeze harvest and renderability note
+## A-001 — Harvest and renderability (pre-freeze)
 
 - **Date:** 2026-11-15
 - **Change:** The operational value-used rule yields **5,516 eligible** observations (airline
@@ -42,7 +42,7 @@ to target-model outcomes.
 - **Blind to outcomes:** yes; no target-model outcomes have been generated.
 - **Record:** `docs/DECISIONS.md` D-009, D-010, D-011, D-013.
 
-## Pre-freeze model-trio note
+## A-002 — Model trio (pre-freeze)
 
 - **Date:** 2026-11-15
 - **Change:** The target trio is updated from Qwen2.5-7B / Mistral-7B-v0.3 / Llama-3.1-8B to
@@ -59,7 +59,7 @@ to target-model outcomes.
 - **Blind to outcomes:** yes; only non-study fit checks have run.
 - **Record:** `docs/DECISIONS.md` D-016 and D-017; fit evidence in `docs/H200_ENV.md`.
 
-## Pre-freeze context note
+## A-003 — Context window (pre-freeze)
 
 - **Date:** 2026-11-15
 - **Change:** The pinned context is raised from **8k to 24,576 tokens**. The prompt-length audit
@@ -74,7 +74,7 @@ to target-model outcomes.
 - **Blind to outcomes:** yes; no target-model outcome has been generated.
 - **Record:** `docs/DECISIONS.md` D-019; prompt lengths in `artifacts/env/prompt_lengths.json`.
 
-## Pre-freeze G1 placebo-gate note
+## A-004 — G1 placebo gate (pre-freeze)
 
 - **Date:** 2026-11-15
 - **Change:** The G1 placebo check is **negative-control jitter (s0 vs s1) ≤20%**, not
@@ -91,7 +91,7 @@ to target-model outcomes.
 - **Record:** `docs/DECISIONS.md` D-026; G1 report in
   `artifacts/audit/g1_calibration_v3.json`.
 
-## Pre-freeze audit-provenance note
+## A-005 — G0 audit provenance (pre-freeze)
 
 - **Date:** 2026-11-15
 - **Change:** The 40-item G0 audit is filled from the AI pre-audit under the author's explicit
@@ -107,7 +107,7 @@ to target-model outcomes.
 - **Record:** `docs/DECISIONS.md` D-021; sheet provenance in
   `artifacts/audit/g0_audit_sheet.csv`.
 
-## Measurement-conformance fix (pre-analysis)
+## A-006 — Measurement-conformance fix (post-freeze, pre-analysis)
 
 - **Date:** 2026-11-18
 - **Change:** The automatic outcome coder is brought into line with the preregistered
@@ -136,8 +136,8 @@ to target-model outcomes.
 
 ## Status
 
-- **Frozen version:** TBD (tag `prereg-freeze-v1`, commit SHA + SHA-256 recorded at G0).
-- **Amendments since freeze:** none (the signature-conformance fix above is pre-analysis).
+- **Frozen version:** commit `1673856` (2026-11-15), tag `prereg-freeze-v1`, prereg_hash `e0d107c6…`. The document header still reads DRAFT and its hash line says TBD; the recorded hash is authoritative. No external registry.
+- **Amendments since freeze:** A-006 (measurement-conformance fix, post-freeze and pre-analysis).
 
 ## Format
 
