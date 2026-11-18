@@ -284,10 +284,12 @@
   of a threshold, not a per-level law. Of 1{,}964 critical-arm switches, 21.3\% silently repeat
   the injected value, and identifiers and money carry most of that propagation; status fields
   almost never do. Fewer than half of corrupted episodes recover within four steps
-  (32.4--47.6\%). Re-serializing the same observation already moves 20--46\% of decisions. The
-  pre-registered parser-failure criterion failed (1.55\% vs <1\%), so the paper reports a
-  measurement estimate, not a confirmed content-sensitivity claim; recovery also missed its 50\%
-  gate. Audits were blind-rated in a label-free round.
+  (32.4--47.6\%). Re-serializing the same observation already moves 20--46\% of decisions. Three
+  pre-registered criteria failed: the parser-failure rate (1.55\% vs <1\%), the severity audit's
+  $s2/s3$ decision-changing share (88.3\% vs $\ge90\%$), and recovery (32.4--47.6\% vs
+  $\ge50\%$). The paper therefore reports a measurement estimate, not a confirmed
+  content-sensitivity claim. Audits were blind-rated label-free and checked by an agent
+  verification panel.
 \end{abstract}
 
 % Keywords. Each keyword is separated by \sep
@@ -581,18 +583,26 @@ diagnostics.
 
 Raw $\tau$-bench trajectories may contain names, emails, addresses, phone numbers, and payment
 identifiers. Profile tools are excluded, direct identifiers become stable synthetic tokens, and a
-prefix is excluded if decision-relevant content is itself PII. A 40-item human audit checks
-eligibility, PII, relevance, and replay before freeze; a separate re-scan runs before release.
+prefix is excluded if decision-relevant content is itself PII. A 40-item audit checks
+eligibility, PII, relevance, and replay before freeze; in this run the sheet was filled by an
+AI-assisted mechanical pre-audit (D-021), and the human verification required by the
+preregistration is reported as a deviation rather than as passed. A separate re-scan runs before
+release.
 Raw trajectories, weights, caches, credentials, and run logs never enter the repository.
 
 Automatic labels are primary and are validated by blind audits. The severity audit uses 120
-observations (30 per level) rated by three independent blind rater sessions; the outcome audit
+observations (30 per level) rated by three separate blind rater sessions; the outcome audit
 uses 160 responses rated by two; the recovery audit uses 80 sequences rated by two from per-step
 evidence, where each step's parsed decision and flag bit are given. The reported round is
 label-free: the packets exclude the mechanical reference labels and every automatic answer, and
-each rater sees only the evidence. A first round was label-visible; the author accepted it under
-D-035, and it is archived as a sensitivity. Verification of the label-free sheets is pending
-(D-039); its record will replace \texttt{artifacts/audit/human\_verification.json} when complete.
+each rater sees only the evidence. The severity packet shows both changed leaves for compound
+perturbations, in shuffled item order, and excludes arm-derived annotations; the outcome packet
+includes the injected true/false values; the recovery packet includes the per-step evidence. A
+first round was label-visible; the author accepted it under
+D-035, and it is archived as a sensitivity. The label-free sheets were checked by an independent
+verification panel (one verifier per audit, plus a second-rater pair on a stratified 120-item
+subset); the panel is recorded under D-043. Its ratings are agent-produced and share one model
+family, so they establish reproducibility rather than human independence.
 The ratings were produced by blind rater sessions operated with an AI agent. The severity gate
 requires Krippendorff's $\alpha \ge .75$ \cite{krippendorff}, a Jonckheere--Terpstra trend test at
 $p<.01$ \cite{jonckheere1954}, at least 90\% of $s=1$ items rated non-decision-changing, at least
@@ -987,10 +997,11 @@ The confirmatory analysis of the base matrix is complete. The run generated the 
 matrix (13,200 base generations, five arms, three models, greedy decoding); the confirmatory
 analysis uses the 800 primary prefixes and excludes the 80 reserve prefixes, as pre-registered.
 The recovery sequences and the 10\% seed-repeat shard are collected, and the blind audits are
-complete in a label-free round; author verification of that round is pending. This section reports
-the pilot, the G0 harvest counts, the G1 calibration, the
+complete in a label-free round; an agent verification panel re-derived the ratings (D-043). This
+section reports the pilot, the G0 harvest counts, the G1 calibration, the
 primary estimate, silent propagation, recovery, and sensitivity. Results are reported as
-measured; the two failed gate criteria (G3 parser failure, G4 recovery) are stated as failures.
+measured; the three failed gate criteria (parser failure, severity $s2/s3$ decision share, and
+recovery) are stated as failures.
 
 \noindent\textbf{Pilot evidence (screening only)}.\ \label{sec:pilot}
 
@@ -1156,6 +1167,35 @@ the strict signature: coding changes the magnitude, not the sign. Excluding the 
 $\hat\beta = 1.03$ [0.88, 1.19]. At the analyzed sample the realized pooled MDE is 0.166
 logit/level (OR 1.18, 80\% power), and realized power at the observed effect is 1.0.
 
+\noindent\textbf{Missingness and the population-average contrast}.\
+
+Cell loss is 5.47\% (525/9{,}600 prose-arm cells); per arm, 97.0--98.6\% of parsed rows enter the
+analysis, and 2.3--4.9\% of prefixes lack a parsed V reference (Table~\ref{tab:missing}). The
+conditional slope is identified from the 617 strata that vary across arms (28.3\% of the 2{,}297
+strata); 47.8\% never switch and 23.9\% switch in every arm, including the placebo. The
+population-average paired contrasts over all labels are +10.2 points for $s2$ vs $s0$
+[8.7, 11.7], +16.3 for $s3$ vs $s0$ [14.5, 18.0], and +6.2 for $s3$ vs $s2$ [4.9, 7.6]. The
+conditional slope and the marginal contrast therefore agree on direction and on the threshold
+shape; the slope should be read as a within-stratum (mover) effect, not a population-average
+effect.
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Analysis coverage by model and arm (800 primary prefixes per arm). Cells show the
+  labeled share of parsed rows; V-unparsed is the share of prefixes without a parsed V reference.}
+  \label{tab:missing}
+  \small
+  \begin{tabular}{lccccr}
+    \toprule
+    \textbf{Model} & \textbf{s0} & \textbf{s1} & \textbf{s2} & \textbf{s3} & \textbf{V-unparsed} \\
+    \midrule
+    Qwen3.5-9B     & 97.4\% & 97.4\% & 97.1\% & 97.0\% & 4.9\% \\
+    Ministral-3-8B & 98.0\% & 97.8\% & 97.8\% & 97.8\% & 3.4\% \\
+    Llama-3.1-8B   & 98.6\% & 98.6\% & 98.5\% & 98.3\% & 2.3\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 Table~\ref{tab:armrates} gives the descriptive per-arm switch rates. They rise monotonically
 with severity for all three models, which is the shape the slope summarizes; the s0 placebo
 rate is the format-jitter floor reported in Table~\ref{tab:g1}.
@@ -1190,12 +1230,47 @@ rate is the format-jitter floor reported in Table~\ref{tab:g1}.
 The claim is conditional on the sign pattern: a positive pooled slope with fewer than two
 positive per-model slopes is a null result under the pre-registered decision rule, not a partial
 success. Here all three are positive, so the slope stands. The severity, outcome, and recovery
-The audits were re-run label-free (D-039): severity $\alpha = .957$ (nominal; interval .981),
+audits were re-run label-free (D-039): severity $\alpha = .911$ (nominal; interval .959),
 outcome $\kappa = .987$, silent-propagation PPV $= 1.00$ (9/9; exact 95\% lower bound .66) with
-silent recall $.75$ (the coder misses three rater-confirmed silent items), and recovery
-$\kappa = .920$ (step) and $.917$ (endpoint). The earlier label-visible round ($\alpha = .919$,
-$\kappa = .975$, PPV $= 1.00$, recovery $.787$) is archived as a sensitivity. If an audit had
-failed its gate, the claim would be downgraded rather than smoothed over.
+silent recall $.75$ (the coder misses three panel-confirmed silent items), and recovery
+$\kappa = .920$ (step) and $.917$ (endpoint). The severity audit misses one of its five criteria: 88.3\% of
+the design's $s2/s3$ items are rated decision-changing against the 90\% threshold (seven items,
+listed in \texttt{artifacts/audit/blind\_audit\_result.json}); the other severity criteria pass
+(Jonckheere--Terpstra $p<10^{-4}$, $s1$ non-decision-changing 90.0\%, $s3$ absurd 3.3\%). The
+earlier label-visible round ($\alpha = .919$, $\kappa = .975$, PPV $= 1.00$, recovery $.787$) is
+archived as a sensitivity. An audit criterion did fail, and the claim is downgraded accordingly
+rather than smoothed over.
+
+The miss is concentrated at $s2$: 25/30 $s2$ items are rated decision-changing (83.3\%) against
+28/30 at $s3$ (93.3\%). The seven items are ones the donor continuation never reads: a flight
+status, four route leaves, a cabin, two payment-type leaves, and insurance. The sheet-visible
+verifier adds four more (two at $s2$, two at $s3$), all redundant route echoes or category words.
+In at least
+three, the design's automatic usage test matched a short token in prose (``business'' in
+``business days'', ``no'' in ``no additional charge'') or a route summary that restates an
+unchanged top-level field. The same test flags three $s1$ items as decision-changing (the
+verifier keeps one), so the noise runs both ways. Because the misclassified share is larger at
+$s2$ (7/30 under the verifier) than at $s3$ (4/30), correcting the
+assigned doses would if anything steepen the $s1$--$s2$ contrast; the observed threshold is not an
+artifact of this audit failure, but the per-level magnitudes are attenuated and are read as
+descriptive rather than as a calibrated dose--response function.
+
+An agent verification panel re-derived the ratings from the same packets (D-043). On outcome, the
+verifier agreed with the blind majority on 158/160 items and confirmed the silent-propagation PPV
+(9/9 automatic flags); it identified three further silent items the coder missed (OUT-029, OUT-078,
+OUT-156), so silent recall is .75. On recovery, the verifier agreed with the majority on 66/80,
+but all 14 differences were rater over-credits, and it reproduced the automatic endpoint and step
+on 80/80 sequences. On severity, a sheet-visible pass agreed on 114/120 and a fully blind pass on
+108/120; the two passes agree with each other on 112/120, and both place the $s2/s3$
+decision-changing share below the gate (81.7\% and 73.3\%), with the disagreement concentrated at
+the 1-vs-2 usage boundary (redundant route leaves, category words, unselected options). The
+pre-registered gate remains the blind majority's 88.3\% and fails; the panel does not overturn it.
+Two second raters independently re-rated a stratified 120-item subset from the same packets and
+agreed at $\alpha = .917$ (severity), $\kappa = .942$ (outcome), and $\kappa = .918$ / $.907$
+(recovery endpoint / step); against the primary severity consensus, $\alpha = .946$. The sessions
+share one underlying model family, and two of the three severity sessions are identical on
+116/120 items, so $\alpha = .911$ is consistency among near-duplicate readings, not independent
+human reliability.
 
 \noindent\textbf{Silent propagation and the outcome decomposition}.\
 
@@ -1219,8 +1294,8 @@ labels.
 \noindent\textbf{Which fields propagate silently}.\
 
 An exploratory breakdown of the $s=2$ switches by perturbed field class
-(Table~\ref{tab:fieldtypes}; \texttt{artifacts/analysis/field\_taxonomy.json}) shows that
-identifiers and money are the silent-propagation engines: 45.0\% and 45.6\% of their switches are
+(Table~\ref{tab:fieldtypes}; \texttt{artifacts/\allowbreak analysis/\allowbreak
+field\_taxonomy.json}) shows that identifiers and money are the silent-propagation engines: 45.0\% and 45.6\% of their switches are
 unflagged, action-preserving copies of the false value, versus 6.9\% (entity) and 6.6\% (status).
 Entity and status fields instead flip the action in about half of their switches. The clearest
 single path is the reservation identifier: 58.2\% of its $s=2$ perturbations move the decision and
@@ -1414,13 +1489,16 @@ four-step horizon. It does not claim end-to-end task success, frontier-model beh
 validity, or a universal law. The tools are benchmark implementations against a pinned database,
 not live services, so a wrong observation here is a controlled counterfactual rather than a
 production incident. The annotation was produced by blind rater sessions operated with an AI
-agent; the reported round is label-free and its author verification is pending, and the audit was
-not performed by an external vendor. That limits the independence of the audit and is stated in
-the declarations. The 18~GB slice runs at batch 4
-rather than the planned batch 8; the G2 cap was not approached (about 8.9 GPU-hours of the
-45-hour budget), so the sample is complete. Two gate criteria failed and are reported as
+agent; the reported round is label-free and was checked by an agent verification panel, not by
+human coauthors or an external vendor. That limits the independence of the audit and is stated in
+the declarations. Agreement statistics measure consistency among sessions, not correctness: the
+recovery panel found 14/80 rater over-credits while reproducing the automatic coding on 80/80
+sequences, and two severity sessions were identical on 116/120 items. The 18~GB slice runs at
+batch 4 rather than the planned batch 8; the G2 cap was not approached (about 8.9 GPU-hours of the
+45-hour budget), so the sample is complete. Three gate criteria failed and are reported as
 failures: the G3 parser-failure rate is 1.55\% against the 1\% threshold (3.45\% if refusals are
-counted), and G4 recovery is 32.4--47.6\% against the 50\% threshold. The automatic labeling was
+counted), the severity audit's $s2/s3$ decision-changing share is 88.3\% against 90\%, and G4
+recovery is 32.4--47.6\% against the 50\% threshold. The automatic labeling was
 corrected once, after the blind audit found a defect; the pre-fix analysis is also reported
 above, and no threshold was changed.
 
@@ -1433,8 +1511,9 @@ five arms, and estimates a within-prefix conditional-logistic slope with a silen
 decomposition and a four-step recovery curve. The study is pre-registered, gated, and ran at \$0
 cash on a university H200 slice. The base matrix, recovery sequences, and seed-repeat shard are
 complete; the pooled slope is $0.877$ [0.770, 0.998], positive in all three models, and 21.3\% of
-critical-arm switches are silent propagation. Two gate criteria failed: the parser-failure rate
-(1.55\% against 1\%) and recovery (32.4--47.6\% against 50\%); both are reported as failures. The
+critical-arm switches are silent propagation. Three gate criteria failed: the parser-failure rate
+(1.55\% against 1\%), the severity audit's $s2/s3$ decision-changing share (88.3\% against 90\%),
+and recovery (32.4--47.6\% against 50\%); all are reported as failures. The
 contribution is the dataset, the within-prefix design, the audit procedure that caught a labeling
 defect before analysis, and a bounded switch-on-severity estimate with its measured limits; the
 failed G3 parser-failure criterion is reported, so no content-sensitivity claim is made. \section*{Declarations}
@@ -1460,18 +1539,19 @@ failed G3 parser-failure criterion is reported, so no content-sensitivity claim 
   by S.A.S. and M.M.A.; supervision, validation, and writing (review and editing) by O.T. The
   CRediT allocation is carried over from the companion manuscript and must be confirmed by every
   author before submission.   \item \textbf{Use of AI-assisted tooling:} Blind rating sessions were operated with an AI agent
-  (three sessions for the severity audit, two each for the outcome and recovery audits), and an
-  AI-assisted mechanical pre-audit was used for the 40-item G0 check under D-021. The first,
-  label-visible round was accepted by the author on 2026-11-18 (D-035); the reported label-free
-  round is pending author verification (D-039;
-  \texttt{artifacts/audit/human\_verification.json}). The authors remain responsible for every
-  label, every gate decision, and every claim in this paper.
-  \pending{the journal-required AI-use statement}.
+  (three sessions for the severity audit, two each for the outcome and recovery audits); an agent
+  verification panel re-derived every rating (one verifier per audit), and a second-rater pair
+  re-rated a stratified 120-item subset. An AI-assisted mechanical pre-audit was used for the
+  40-item G0 check under D-021. The first, label-visible round was accepted by the author on
+  2026-11-18 (D-035); the reported label-free round and its panel record are documented under
+  D-043 (\texttt{artifacts/audit/verification/panel\_record.json}). All sessions share one
+  underlying model family, so their agreement is reproducibility evidence, not human
+  independence. The authors remain responsible for every label, every gate decision, and every
+  claim in this paper.
 \end{itemize} \section*{Acknowledgements}
 The authors thank the curators of $\tau$-bench for releasing the trajectories, task databases, and
 harness that make a replayed fixed-prefix design possible, and the university high-performance
-computing staff for the H200 MIG allocation. The authors also thank the members of the annotation
-team who will complete the severity, outcome, and recovery audits. \hbadness=10000
+computing staff for the H200 MIG allocation. \hbadness=10000
 \sloppy
 \setlength{\bibsep}{0pt}
 \renewcommand{\bibfont}{\fontsize{8.5pt}{9pt}\selectfont}

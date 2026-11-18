@@ -438,8 +438,9 @@ placeholders below; the rows are retained as the pre-run checklist. Headline val
 to its artifact: pooled β 0.877 (SE 0.059, p = 2.3e-49, 95% CI [0.770, 0.998]; 617 clusters,
 2,458 rows; `artifacts/analysis/g3_analysis.json`); per-model β 0.649 / 0.915 / 1.079; silent
 share 419/1,964 = 21.3% (`g3_analysis.json`); recovery 32.4 / 47.6 / 28.2% (n = 264 / 406 / 412;
-`artifacts/analysis/g4_recovery.json`); severity α .919, outcome κ .975, silent PPV 1.00,
-recovery κ .787 (`artifacts/audit/blind_audit_result.json`); seed-repeat stability
+`artifacts/analysis/g4_recovery.json`); severity α .911 (label-free; the s2/s3 decision-changing
+criterion fails at 88.3%), outcome κ .987, silent PPV 1.00, recovery κ .920/.917
+(`artifacts/audit/blind_audit_result.json`); seed-repeat stability
 1.000 / 98.95 / 98.94% (`artifacts/analysis/jitter_stability_*.json`); parser failure 1.55%
 (205/13,200; ledger statuses). The analysis sample is the **800 primary prefixes**; the 80
 reserve prefixes are excluded (D-036).
@@ -557,17 +558,17 @@ the source for the gate verdict.
 
 | # | Quantity | Cardinality | Placeholder | Fill from |
 |---|---|---:|---|---|
-| 78 | Severity Krippendorff α | 1 | `[PENDING: severity_alpha]` | severity audit |
-| 79 | Severity Jonckheere–Terpstra p | 1 | `[PENDING: severity_jt_p]` | severity audit |
-| 80 | Share of s=1 rated non-decision-changing | 1 | `[PENDING: s1_nondc_share]` | severity audit |
-| 81 | Share of s=2 rated decision-changing | 1 | `[PENDING: s2_dc_share]` | severity audit |
-| 82 | Share of s=3 rated decision-changing | 1 | `[PENDING: s3_dc_share]` | severity audit |
-| 83 | Share of s=3 rated absurd | 1 | `[PENDING: s3_absurd_share]` | severity audit |
-| 84 | Outcome Cohen's κ (4-way) | 1 | `[PENDING: outcome_kappa]` | outcome audit |
-| 85 | Outcome-audit parser-failure rate | 1 | `[PENDING: audit_parse_failure]` | outcome audit |
-| 86 | Recovery κ (3-way) | 1 | `[PENDING: recovery_kappa]` | recovery audit |
-| 87 | Adjudicated disagreements | 1 | `[PENDING: adjudications]` | audit log |
-| 88 | G3 audit pass/fail | 1 | `[PENDING: g3_audit_verdict]` | `artifacts/analysis/g3_report.md` |
+| 78 | Severity Krippendorff α | 1 | .911 nominal / .959 interval | `blind_audit_result.json` |
+| 79 | Severity Jonckheere–Terpstra p | 1 | p < 1e-4 (J=5192, z=11.69) | `blind_audit_result.json` |
+| 80 | Share of s=1 rated non-decision-changing | 1 | 27/30 = .900 | `blind_audit_result.json` |
+| 81 | Share of s=2 rated decision-changing | 1 | 25/30 = .833 | `blind_audit_result.json` |
+| 82 | Share of s=3 rated decision-changing | 1 | 28/30 = .933 | `blind_audit_result.json` |
+| 83 | Share of s=3 rated absurd | 1 | 1/30 = .033 | `blind_audit_result.json` |
+| 84 | Outcome Cohen's κ (4-way) | 1 | .987 | `blind_audit_result.json` |
+| 85 | Outcome-audit parser-failure rate | 1 | 3/160 = .01875 | `outcome_audit_packet.csv` |
+| 86 | Recovery κ (3-way) | 1 | .920 step / .917 endpoint | `blind_audit_result.json` |
+| 87 | Adjudicated disagreements | 1 | 22 (6 severity + 2 outcome + 14 recovery; blind severity pass adds 6) | `verification/panel_record.json` |
+| 88 | G3 audit pass/fail | 1 | FAIL (severity s2/s3 88.3%; parser 1.55%) | `artifacts/analysis/g3_report.md` |
 
 ### 4.7 G0 final verification (D-021)
 

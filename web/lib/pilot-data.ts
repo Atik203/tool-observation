@@ -130,7 +130,7 @@ export const phases = [
 
 export const results = {
   status:
-    "base matrix, recovery, and seed-repeat complete; label-free audits scored, author verification pending",
+    "base matrix, recovery, and seed-repeat complete; label-free audits scored and checked by an agent verification panel (D-043); severity s2/s3 criterion fails",
   baseGenerations: 13_200,
   jitterGenerations: 1_200,
   recoveryGenerations: 7_211,

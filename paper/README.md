@@ -42,11 +42,11 @@ The checked-in `out/toolresult800.pdf` was rebuilt from the current source on 20
 | Milestone | Status |
 |---|---|
 | Proposal | drafted 2026-11-11 (`proposal.tex`) |
-| Manuscript skeleton | complete; 16 pages with figures, 0 undefined citations/references |
+| Manuscript skeleton | complete; 20 pages with figures, 0 undefined citations/references |
 | G1 calibration | passed (D-026) |
 | G2 main run | complete (13,200 generations + recovery + seed-repeat) |
-| Results draft | written from `artifacts/analysis/` (G3 partial, G4 fail; both disclosed) |
-| Audit verification | author-verified 2026-11-18 (D-035); G0/D-021 still deferred |
+| Results draft | written from `artifacts/analysis/` (G3 slope passes; parser, severity s2/s3, and G4 fail; all disclosed) |
+| Audit verification | agent panel 2026-11-19 (D-043); G0/D-021 still deferred |
 | Internal review | not started |
 | Submission | not started |
 

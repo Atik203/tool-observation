@@ -6,6 +6,43 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-043 - Agent verification panel; final label-free audit numbers
+
+- **Date:** 2026-11-19
+- **Status:** accepted (verification record; supersedes D-039's interim numbers)
+- **Context:** The label-free sheets were re-rated after the first label-free round because the
+  severity packet carried design-order and arm-derived annotations and showed only the first
+  changed leaf. The packet was rebuilt four times (leak removal, shuffled order, second leaf,
+  donor continuation); the final round is the fourth version and the first three are archived.
+  The author declined human-coauthor verification, because the team has no independent domain
+  rater, and asked for a multi-role agent panel. D-039 left verification pending.
+- **Decision:** Use a verification panel, not human coauthors: one independent verifier per audit
+  (severity, outcome, recovery) and two second raters on a stratified 120-item subset (40/40/20).
+  The verifiers re-derived codes from the same label-free evidence; severity was verified twice
+  (sheet-visible and fully blind). Corrections are recorded in
+  `artifacts/audit/verification/panel_record.json`; the sheets keep the blind rater columns and
+  the pre-registered gates remain on the rater majority. Provenance is "multi-role agent panel,
+  author-overseen"; it is not human verification.
+- **Findings:** Outcome 158/160 agree (2 corrections; PPV 1.00, recall .75, with OUT-029/078/156
+  the three missed silent items); recovery 66/80 agree, all 14 corrections toward the automatic
+  coding, and the verifier reproduces the automatic endpoint and step 80/80; severity 114/120
+  (sheet-visible) and 108/120 (blind), s2/s3 decision-changing 81.7% and 73.3%. Second raters:
+  severity α .917, outcome κ .942, recovery κ .918/.907; against the primary severity consensus,
+  α .946.
+- **Final severity round:** α .911 nominal/.959 interval; s2/s3 53/60 = 88.3% (FAIL); s1 27/30
+  non-decision; s3 absurd 1/30; Jonckheere-Terpstra p < 1e-4. The three passes flag 7 (majority),
+  11 (sheet-visible verifier), and 16 (blind verifier) of the 60 s2/s3 items as donor-unused.
+- **Consequences:** D-039's interim α .957/.981 is superseded. The paper reports three failed
+  criteria (parser, severity s2/s3, recovery), the stimulus-classification diagnosis (short-token
+  and redundant-route usage false positives; about one in four critical-arm stimuli is
+  donor-unused under the blind verifier), and the independence limits (shared model family; two
+  severity sessions identical on 116/120 items; the final sessions had seen earlier packet
+  versions). Per-level dose magnitudes are descriptive; the threshold reading is retained because
+  correcting the misclassification would steepen the s1-s2 contrast. No threshold, sample, model,
+  or analysis rule changed.
+
+---
+
 ## D-042 - Pre-registered secondary analyses completed; linearity rejected
 
 - **Date:** 2026-11-19
@@ -55,7 +92,7 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 ## D-039 - Label-free audit re-rating (supersedes the label-visible round)
 
 - **Date:** 2026-11-18
-- **Status:** accepted (validity fix; label-free verification pending)
+- **Status:** accepted (validity fix; final numbers and verification in D-043)
 
 - **Context:** The first audit round used packets that still carried the mechanical reference
   labels (design level, criticality, automatic labels). Review identified this as a validity
@@ -64,12 +101,13 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   manipulation evidence (injected values for outcomes, per-step decisions for recovery), and
   re-rate with independent sessions: three severity, two outcome, two recovery. The label-visible
   round is archived (`artifacts/audit/blind/_labelvisible_round/`) and reported as a sensitivity.
-  Author verification of the label-free sheets is pending; its record will replace
-  `artifacts/audit/human_verification.json`.
-- **Consequences:** Label-free results: severity α .957/.981, outcome κ .987, silent PPV 1.00
-  (9/9; exact 95% lower bound .66) with silent recall .75, recovery κ .920/.917. Gates pass; the
-  PPV's small denominator and the recall shortfall are reported as limitations. The earlier
-  round's α .919/κ .975/PPV 1.00/recovery .787 are retained as the sensitivity.
+  Verification of the label-free sheets is recorded in D-043.
+- **Consequences:** Final label-free round: severity α .911 nominal / .959 interval, with the
+  s2/s3 decision-changing criterion failing at 88.3%; outcome κ .987; silent PPV 1.00 (9/9;
+  exact 95% lower bound .66) with silent recall .75; recovery κ .920/.917. The earlier
+  α .957/.981 figures came from the annotated, level-ordered severity packet and are archived,
+  not reported (D-043). The label-visible round's α .919/κ .975/PPV 1.00/recovery .787 are
+  retained as the sensitivity.
 
 ---
 
@@ -147,8 +185,8 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   (REC-028/040/054/067 = R1, REC-037/038/043 = censored, REC-045/079 = R2, REC-073 = R2); the 4
   agreed corrections (REC-034/051/064/068) stand.
 - **Consequences:** The severity, outcome, and recovery audit gates were author-verified for the
-  label-visible round; that round is superseded by D-039, and the reported label-free round
-  awaits verification. The sheets keep the blind rater columns; adjudications are recorded in
+  label-visible round; that round is superseded by D-039, and the reported label-free round is
+  verified under D-043. The sheets keep the blind rater columns; adjudications are recorded in
   `artifacts/audit/human_verification.json`. The G0 sheet verification (D-021) remains deferred.
 
 ---
@@ -198,7 +236,9 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   the slope as a preregistered measurement estimate with the gate failure disclosed and makes no
   law or unqualified content-sensitivity claim.
 - **Consequences:** The README claim boundary stays conservative; the abstract and limitations
-  state the G3 parser-rate failure and the G4 recovery failure. No threshold is relaxed.
+  state the G3 parser-rate failure and the G4 recovery failure. No threshold is relaxed. The
+  agreement figures in this entry are from the pre-D-039 round; the final label-free values and
+  the severity $s2/s3$ failure are in D-043.
 
 ---
 
@@ -236,7 +276,7 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 ## D-029 - Blind-rater audits and per-row rater provenance
 
 - **Date:** 2026-11-18
-- **Status:** accepted (audit provenance; author-verified 2026-11-18 under D-035)
+- **Status:** accepted (audit provenance; label-visible round checked under D-035, superseded by D-039/D-043)
 - **Context:** The how-to previously prescribed `label_source=ai_preaudit_deferred_human` on every
   sheet row. The authors asked for meaningful row notes that name who rated the item.
 - **Decision:** Run three blind rater sessions (severity 3 raters; outcome and recovery 2 raters

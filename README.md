@@ -10,12 +10,12 @@
 > The G0 pipeline and freeze are complete: 13,605 candidates → 5,516 eligible → 5,511
 > replay-matched → 880 sampled (800 primary + 80 reserve). The three-model main run
 > (13,200 generations), the 10% seed-repeat shard, and the recovery sequences are complete.
-> The preregistered G3 slope passes (pooled beta 0.867, 95% CI [0.760, 0.988]); the G3
+> The preregistered G3 slope passes (pooled beta 0.877, 95% CI [0.770, 0.998]); the G3
 > parser-failure criterion (1.55% vs <1%) and the G4 recovery gate (32–48% vs ≥50%) fail and
-> are reported as failures. The audit gates were blind-rated in a label-free round; the author's
-> verification of that round is pending (D-039), and the G0 sheet verification remains deferred
-> (D-021). The 60-prefix pilot
-> remains a screening signal, **not** a dose-response law.
+> are reported as failures. The audit gates were blind-rated in a label-free round and checked
+> by an agent verification panel (D-043); the severity audit's s2/s3 decision-changing criterion
+> also fails (88.3% vs ≥90%). The G0 sheet verification remains deferred (D-021). The 60-prefix
+> pilot remains a screening signal, **not** a dose-response law.
 
 ## Live site
 

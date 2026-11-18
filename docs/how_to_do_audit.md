@@ -96,57 +96,56 @@ Files: `severity_audit_packet.csv`, `severity_audit_sheet.csv`, `severity_audit_
 
 ### 5.1 What the packet shows
 
-Each row is one perturbation:
+Each row is one perturbation, with the design labels removed:
 
-- `item_id` (SEV-001 .. SEV-120)
+- `item_id` (SEV-001 .. SEV-120, in shuffled order)
 - `domain` (airline or retail)
-- `severity_level` (0 = no change, 1 = non-decision, 2 = one critical error, 3 = critical
-  error plus contradiction)
-- `json_path` (the field that was changed)
-- `true_value` (the original value)
-- `false_value` (the injected value)
-- `criticality` (critical / noncritical)
-- `expected_action_change` (True/False)
-- `plausibility_checks` (automated plausibility flags)
+- `json_path`, `true_value`, `false_value` (the changed leaf)
+- `json_path_2`, `true_value_2`, `false_value_2` (the second changed leaf for compound
+  perturbations; blank otherwise)
+- `observation_excerpt` (the perturbed observation, truncated to 900 characters)
+- `donor_continuation` (the next assistant message the severity construct is defined on,
+  truncated to 500 characters)
 - `prefix_id`
+
+The packet deliberately omits `severity_level`, `criticality`, `expected_action_change`, and
+`plausibility_checks`; the design dose is joined after scoring from
+`severity_audit_packet.csv`. Showing the donor continuation is what makes the preregistered
+"field is used in the donor continuation" test applicable.
 
 ### 5.2 What the sheet asks for
 
 For each item, three raters each record:
 
-- `raterN_severity`: 0, 1, 2, or 3
-- `raterN_decision_changing`: 1 if the false value would change the correct next decision,
-  0 otherwise
-- `raterN_absurd`: 1 if the false value is implausible or absurd, 0 otherwise
+- `raterN_severity`: 0 = no change; 1 = the changed field is not used by the donor continuation;
+  2 = the field is used and exactly one leaf changed; 3 = two leaves differ and at least one is
+  used (a single leaf is never 3)
+- `raterN_decision_changing`: 1 if the changed field is used by the donor continuation, 0 otherwise
+- `raterN_absurd`: 1 if the false value is impossible or implausible, 0 otherwise
 
 ### 5.3 Example row
 
 Packet:
 ```
 item_id,SEV-042
-domain,airline
-severity_level,2
+domain,retail
 json_path,$.payment_history[0].amount
 true_value,100
 false_value,155
-criticality,critical
-expected_action_change,True
+json_path_2,
+true_value_2,
+false_value_2,
+observation_excerpt,"... payment_history: [{amount: 155, ...}] ..."
+donor_continuation,"I can refund the $155 to your original payment method."
+prefix_id,retail-...-s002
 ```
 
-Sheet (AI pre-audit fill, to be confirmed or replaced):
+Sheet (one rater's row):
 ```
 item_id,SEV-042
-severity_level,2
 rater1_severity,2
 rater1_decision_changing,1
 rater1_absurd,0
-rater2_severity,2
-rater2_decision_changing,1
-rater2_absurd,0
-rater3_severity,2
-rater3_decision_changing,1
-rater3_absurd,0
-notes,blind_rater_1;blind_rater_2;blind_rater_3
 ```
 
 ### 5.4 Gate
