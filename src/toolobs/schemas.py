@@ -132,7 +132,7 @@ class DecisionSignature(RecordMixin):
     arguments: dict[str, Any]
     final_answer_slots: dict[str, Any] = field(default_factory=dict)
     action_verb: str = ""
-    schema_version: str = "toolresult800-signature-v1"
+    schema_version: str = "toolresult800-signature-v2"
 
     def canonical(self) -> str:
         import json
@@ -165,7 +165,7 @@ class OutcomeLabels(RecordMixin):
     parser_status: str
     adjudicated_label: str | None = None
     rater_ids: list[str] = field(default_factory=list)
-    schema_version: str = "toolresult800-outcome-v1"
+    schema_version: str = "toolresult800-outcome-v2"
 
 
 @dataclass(slots=True)

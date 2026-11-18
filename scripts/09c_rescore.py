@@ -32,10 +32,11 @@ def main(argv: list[str] | None = None) -> int:
     if output_path.exists() and not args.force:
         print(f"[09c_rescore] FAIL: output exists at {output_path}; pass --force")
         return 1
+    # Materialize the input before touching the output so an in-place rescore
+    # (input == output) is safe.
+    rows = read_ledger(input_path)
     if output_path.exists():
         output_path.unlink()
-
-    rows = read_ledger(input_path)
     rescored = rescore_rows(rows)
     for row in rescored:
         append_ledger_row(output_path, row)

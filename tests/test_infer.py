@@ -10,6 +10,7 @@ from toolobs.infer.parse_output import (
     decision_signature,
     parse_decision,
     signature_hash,
+    signatures_differ,
 )
 from toolobs.infer.prompt import build_prompt_messages, normalize_messages
 from toolobs.infer.runner import (
@@ -151,16 +152,45 @@ def test_final_answer_signature_uses_status_slots() -> None:
     cancelled_paraphrase = parse_decision(
         '{"final_answer": "Cancelled; the refund is on its way."}'
     )
-    assert signature_hash(cancelled) == signature_hash(cancelled_paraphrase)
+    # Same decision, different prose: no decision change.
+    assert signatures_differ(decision_signature(cancelled), decision_signature(cancelled_paraphrase)) is False
 
     modified = parse_decision('{"final_answer": "The reservation was modified."}')
-    assert signature_hash(cancelled) != signature_hash(modified)
+    assert signatures_differ(decision_signature(cancelled), decision_signature(modified)) is True
 
-    # Amounts are not status slots; Y^U checks the false value against the full
-    # output, so a changed refund amount is still caught as silent propagation.
+    # Decision-critical amounts are slots: the blind audit showed amount conflicts
+    # (refund/total/price difference) are decision changes, not paraphrase.
     refund_100 = parse_decision('{"final_answer": "Refunded $100."}')
     refund_200 = parse_decision('{"final_answer": "Refunded $200."}')
-    assert signature_hash(refund_100) == signature_hash(refund_200)
+    assert signatures_differ(decision_signature(refund_100), decision_signature(refund_200)) is True
+
+    # Same amount in a different format canonicalizes to the same slot.
+    refund_100_alt = parse_decision('{"final_answer": "Refunded 100 dollars."}')
+    assert signature_hash(refund_100) == signature_hash(refund_100_alt)
+
+    # The action verb is positional (earliest act term), not vocabulary order.
+    keep_note = parse_decision(
+        '{"final_answer": "I have cancelled the booking. Keep the receipt."}'
+    )
+    assert decision_signature(keep_note).action_verb == "cancel"
+
+
+def test_tool_signature_ignores_prose_arguments() -> None:
+    first = parse_decision(
+        '{"tool": "transfer_to_human_agents", "arguments": {"summary": "User wants to cancel insurance, but cannot be done through the system"}}'
+    )
+    second = parse_decision(
+        '{"tool": "transfer_to_human_agents", "arguments": {"summary": "User wants to cancel insurance, but cannot be done through automated means"}}'
+    )
+    assert signature_hash(first) == signature_hash(second)
+
+    left = parse_decision(
+        '{"tool": "book_reservation", "arguments": {"reservation_id": "ABC123", "note": "a long free text note that is not a decision slot at all"}}'
+    )
+    right = parse_decision(
+        '{"tool": "book_reservation", "arguments": {"reservation_id": "XYZ999", "note": "a different long free text note that is not a decision slot"}}'
+    )
+    assert signature_hash(left) != signature_hash(right)
 
 
 def test_signature_hash_is_key_order_independent() -> None:

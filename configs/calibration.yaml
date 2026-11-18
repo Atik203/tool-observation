@@ -8,7 +8,7 @@ calibration:
   decoding: greedy
   seed: 20261108
   prompt_version: toolresult-next-decision-v3
-  parser_version: toolresult-parser-v3
+  parser_version: toolresult-parser-v4
 
 sample:
   stratify_by:

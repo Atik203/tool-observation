@@ -8,12 +8,18 @@ import sys
 from pathlib import Path
 
 from toolobs.infer.ledger import append_ledger_row
+from toolobs.infer.parse_output import parse_decision, signature_hash, signature_json
 from toolobs.schemas import LedgerRow, PerturbationRecord
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
+_REFERENCE = '{"tool": "get_order_details", "arguments": {"order_id": "#W1"}}'
+_SWITCHED = '{"tool": "cancel_order", "arguments": {"order_id": "#W1"}}'
 
-def _row(model: str, prefix: str, arm: str, signature: str) -> LedgerRow:
+
+def _row(model: str, prefix: str, arm: str, decision_text: str) -> LedgerRow:
+    parsed = parse_decision(decision_text)
+    assert parsed.parsed
     return LedgerRow(
         run_id="test",
         model_id=model,
@@ -21,14 +27,15 @@ def _row(model: str, prefix: str, arm: str, signature: str) -> LedgerRow:
         arm=arm,
         step=0,
         prompt_hash="p",
-        output_text="{}",
+        output_text=decision_text,
         parsed=True,
         latency_ms=1.0,
         cost_usd=0.0,
         timestamp_utc="2026-11-15T00:00:00+00:00",
         stage="main",
         parser_status="ok",
-        signature_hash=signature,
+        signature_hash=signature_hash(parsed),
+        decision_json=signature_json(parsed),
     )
 
 
@@ -41,12 +48,10 @@ def test_analysis_script_reports_slope(tmp_path) -> None:
         prefix = f"p{prefix_index}"
         # p0 never switches; the other three switch from s=2 upward.
         for arm in ("V", "s0", "s1"):
-            append_ledger_row(ledger, _row("qwen", prefix, arm, "v"))
-        for arm, signature in (
-            ("s2", "v" if prefix_index == 0 else "x"),
-            ("s3", "v" if prefix_index == 0 else "x"),
-        ):
-            append_ledger_row(ledger, _row("qwen", prefix, arm, signature))
+            append_ledger_row(ledger, _row("qwen", prefix, arm, _REFERENCE))
+        for arm in ("s2", "s3"):
+            text = _REFERENCE if prefix_index == 0 else _SWITCHED
+            append_ledger_row(ledger, _row("qwen", prefix, arm, text))
 
     perturbations = tmp_path / "perturbations.jsonl"
     with perturbations.open("w", encoding="utf-8") as handle:

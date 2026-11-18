@@ -1,25 +1,33 @@
 """Automatic outcome labels from ledger rows and perturbation records.
 
-Y is any signature change from the verbatim V continuation. The decomposition
-uses action switch, explicit flag, and silent propagation. Labels are primary;
-the human audit validates them later.
+Y is a decision-level signature change from the verbatim V continuation:
+a tool/verb switch, a contradictory status claim, or a contradictory
+decision-critical value (money/date/time/identifier). The decomposition is
+action switch (YA), explicit flag (YF), and silent propagation (YU).
+
+YU requires the decision to change AND the injected false value to be
+attributed to the model's decision (present in the model's signature values and
+absent from the reference's), with no action switch and no flag. This matches
+the preregistration and the G3 blind-audit findings.
 """
 
 from __future__ import annotations
 
-import json
 import re
+import unicodedata
 from collections import defaultdict
 from collections.abc import Iterable
+from decimal import Decimal
 from typing import Any
 
-from ..harvest.relevance import normalize_scalar, normalize_text
-from ..schemas import LedgerRow, OutcomeLabels, PerturbationRecord
+from ..infer.parse_output import action_switch, signature_from_json, signatures_differ
+from ..schemas import DecisionSignature, LedgerRow, OutcomeLabels, PerturbationRecord
 
 _FLAG = re.compile(
-    r"\b(?:inconsistent|inconsistency|possible error|looks wrong|looks incorrect|"
+    r"\b(?:inconsistenc(?:y|ies)|discrepanc(?:y|ies)|possible error|looks wrong|looks incorrect|"
     r"verify|re-?check|double[- ]check|cannot trust|can't trust|do not trust|"
-    r"not sure|suspicious|contradict(?:s|ion)?)\b",
+    r"not sure|suspicious|unusual|contradict(?:s|ion)?|"
+    r"(?:don'?t|do not|doesn'?t|does not) see any)\b",
     re.IGNORECASE,
 )
 
@@ -29,26 +37,54 @@ def flag_detected(text: str) -> bool:
     return bool(_FLAG.search(text or ""))
 
 
-def _decision_parts(decision_json: str) -> tuple[str, dict[str, Any]]:
-    try:
-        payload = json.loads(decision_json)
-    except json.JSONDecodeError:
-        return "", {}
-    if not isinstance(payload, dict):
-        return "", {}
-    tool = payload.get("tool")
-    arguments = payload.get("arguments")
-    return (
-        tool if isinstance(tool, str) else "",
-        arguments if isinstance(arguments, dict) else {},
-    )
+def _normalize_scalar(value: Any) -> tuple[str, Any] | None:
+    if isinstance(value, bool):
+        return ("bool", str(value).lower())
+    if isinstance(value, (int, float, Decimal)):
+        return ("num", Decimal(str(value)))
+    if isinstance(value, str):
+        text = unicodedata.normalize("NFKC", value).strip().casefold()
+        return ("str", text) if text else None
+    return None
 
 
-def _contains(text: str, value: Any) -> bool:
-    token = normalize_scalar(value)
-    if token is None or len(token) < 2:
+def _flatten_scalars(value: Any, out: set[tuple[str, Any]]) -> None:
+    if isinstance(value, dict):
+        for child in value.values():
+            _flatten_scalars(child, out)
+    elif isinstance(value, list):
+        for child in value:
+            _flatten_scalars(child, out)
+    else:
+        token = _normalize_scalar(value)
+        if token is not None:
+            out.add(token)
+
+
+def _decision_tokens(signature: DecisionSignature) -> set[tuple[str, Any]]:
+    """Typed values that the decision asserts (no prose)."""
+    tokens: set[tuple[str, Any]] = set()
+    if signature.tool_name:
+        _flatten_scalars(signature.arguments, tokens)
+        return tokens
+    slots = signature.final_answer_slots or {}
+    for status in slots.get("status", []):
+        tokens.add(("str", status))
+    values = slots.get("values", {}) or {}
+    for money in values.get("money", []):
+        tokens.add(("num", Decimal(money)))
+    for kind in ("dates", "times", "ids"):
+        for item in values.get(kind, []):
+            tokens.add(("str", item))
+    return tokens
+
+
+def _attributed(signature: DecisionSignature, false_value: Any) -> bool:
+    """Whether the false value is asserted by this decision."""
+    token = _normalize_scalar(false_value)
+    if token is None:
         return False
-    return token in normalize_text(text)
+    return token in _decision_tokens(signature)
 
 
 def compute_outcomes(
@@ -71,23 +107,28 @@ def compute_outcomes(
         reference = by_key.get((row.prefix_id, row.model_id, "V"))
         if reference is None or not reference.parsed or not row.parsed:
             continue
-        y_any = row.signature_hash != reference.signature_hash
-        tool, arguments = _decision_parts(row.decision_json)
-        ref_tool, ref_arguments = _decision_parts(reference.decision_json)
-        y_action = (tool, arguments) != (ref_tool, ref_arguments)
+        if not reference.decision_json or not row.decision_json:
+            continue
+        ref_signature = signature_from_json(reference.decision_json)
+        cur_signature = signature_from_json(row.decision_json)
         y_flag = flag_detected(row.output_text)
+        # A flag is itself a decision-relevant deviation (the prereg's 4-way
+        # Y/YA/YF/YU taxonomy and the G3 audit rubric both treat YF as Y=1).
+        y_any = signatures_differ(ref_signature, cur_signature) or y_flag
+        y_action = action_switch(ref_signature, cur_signature)
         perturbation = perturbation_by_key.get((row.prefix_id, row.arm))
         y_silent = False
         if (
-            perturbation is not None
+            y_any
+            and perturbation is not None
             and perturbation.severity >= 2
             and perturbation.false_value is not None
             and not y_action
             and not y_flag
         ):
-            y_silent = _contains(row.output_text, perturbation.false_value) or _contains(
-                row.decision_json, perturbation.false_value
-            )
+            y_silent = _attributed(
+                cur_signature, perturbation.false_value
+            ) and not _attributed(ref_signature, perturbation.false_value)
         labels.append(
             OutcomeLabels(
                 prefix_id=row.prefix_id,
