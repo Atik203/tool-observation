@@ -6,6 +6,53 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-034 - GPU-hours reconstruction for the G2 budget record
+
+- **Date:** 2026-11-18
+- **Status:** accepted (budget evidence)
+- **Context:** The ledger `gpu_hours` field is 0.0 on every row, so the 45 GPU-hour cap could not
+  be checked from the ledger.
+- **Decision:** Reconstruct usage from ledger `timestamp_utc` and `latency_ms`: 21,611 generation
+  rows (main 13,200; jitter 1,200; recovery 7,211). Summed generation time **8.82 h**; wall-clock
+  upper bound **≈8.95 h** (stage spans per model). Recorded in `artifacts/cost/main_cost.json`.
+- **Consequences:** The 45 GPU-hour cap is not binding. The ledger cost field remains unreliable
+  for future runs; each GPU shard must state its hours explicitly until it is fixed.
+
+---
+
+## D-033 - G4 recovery gate failed (reported as a failure)
+
+- **Date:** 2026-11-18
+- **Status:** accepted (gate result)
+- **Context:** G4 criteria: ≥50% of the transient s=3 risk set recovers by H=4, and the Weibull
+  shape is not rejected (p ≥ .01). Observed recovery by H=4: 26.4% (Qwen), 35.0% (Ministral),
+  27.3% (Llama); Weibull rejected for 2/3 models (Ministral p=3.3e-5, Llama p=3.7e-3; Qwen
+  p=.151).
+- **Decision:** Report the failed gate and the recovery curves; per `docs/GATES.md` the fail
+  action is to report RMST/curve with the half-life exploratory only. No smoothing.
+- **Consequences:** `artifacts/analysis/g4_recovery.md` is the G4 evidence; the manuscript states
+  the failure in the abstract and limitations.
+
+---
+
+## D-032 - G3 gate outcome: parser-failure criterion failed (reported)
+
+- **Date:** 2026-11-18
+- **Status:** accepted (gate result; claim boundary)
+- **Context:** G3 criteria: pooled β > 0 (pass, β 0.867, 95% CI [0.760, 0.988]); per-model slopes
+  positive in ≥2/3 (pass, 3/3); severity α ≥ .75 (pass, .9185); outcome κ ≥ .80 (pass, .9748);
+  recovery κ ≥ .75 (pass, .832/.806); silent PPV ≥ .90 (pass, 1.000); **parser failure <1% (fail:
+  205/13,200 = 1.55% hard parse errors; 3.45% including refusals 250/13,200)**. Evidence:
+  `artifacts/analysis/g3_report.md`, `artifacts/audit/blind_audit_result.json`.
+- **Decision:** Report the parser-failure criterion as failed. Per `docs/GATES.md` the G3 fail
+  action is a null/measurement report without a content-sensitivity claim; the manuscript reports
+  the slope as a preregistered measurement estimate with the gate failure disclosed and makes no
+  law or unqualified content-sensitivity claim.
+- **Consequences:** The README claim boundary stays conservative; the abstract and limitations
+  state the G3 parser-rate failure and the G4 recovery failure. No threshold is relaxed.
+
+---
+
 ## D-031 - H200 environment check and GPU-hours accounting observation
 
 - **Date:** 2026-11-18
@@ -17,8 +64,7 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   Project space 11 GB + HF cache 26 GB (within the 200 GB cap); vLLM 0.33.0 venv present;
   no tmux/screen jobs. The main ledgers record `gpu_hours = 0.0` on every row.
 - **Decision:** Do not change the driver, CUDA, MIG settings, or system libraries. Record the
-  CUDA-version discrepancy here; verify the G2 cost accounting from the run logs before the next
-  GPU job (the 45 GPU-hour cap is otherwise unverifiable from the ledger field).
+  CUDA-version discrepancy here; the G2 cost accounting was reconstructed separately (D-034).
 - **Consequences:** Any future GPU work states its hours explicitly in the shard report until the
   ledger cost field is confirmed or fixed.
 
@@ -78,6 +124,10 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   (discrepancy/discrepancies, inconsistencies, unusual). Rescore the existing ledgers with stage
   09c (generations unchanged); recompute recovery events with stage 09e; regenerate the audit
   packets and re-score; recompute jitter stability.
+- **Timeline disclosure:** an earlier G3 run under the previous coder had been recorded in
+  `ROADMAP.md` (pooled β 0.684, CI [0.584, 0.797]; artifact not retained). The fix was driven by
+  the label-quality audit, not by the slope; both analyses are positive. The paper reports both
+  numbers and the sequence audit → fix → rescore → analysis.
 - **Consequences:** 27/160 audit automatic labels changed; automatic-YU items 17 -> 9 with PPV
   1.0; seed-repeat stability recomputed (1.000 / .9895 / .9894, all >= .90). Every
   label-derived number (G1 jitter, arm switch/silent rates, G3 slope) is recomputed from the

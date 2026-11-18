@@ -126,11 +126,13 @@ to target-model outcomes.
 - **Analyses affected:** All automatic-label-derived quantities: G3 outcome slope and arm
   rates, G1 jitter stability (recomputed), G4 recovery events and curve (recomputed); the
   audit gates themselves (severity/outcome/recovery) are re-scored against the fixed labels.
-- **Blind to outcomes:** yes — the fix was triggered by the blind audit of label quality, not
-  by estimated treatment effects; no G3/G4 analysis had been run when it was made
-  (`artifacts/analysis` contained only jitter stability reports).
-- **Record:** `docs/DECISIONS.md` D-028, D-029, D-030, D-031; scored audit in
-  `artifacts/audit/blind_audit_result.json`.
+- **Blind to outcomes:** partly. An earlier G3 run under the previous coder was recorded in
+  `ROADMAP.md` (pooled β 0.684, 95% CI [0.584, 0.797]; the artifact was not retained). The
+  conformance fix was triggered by the blind audit of label quality, not by the slope; both
+  analyses are positive and the earlier number is disclosed. The fixed-analysis result does not
+  rely on the slope direction.
+- **Record:** `docs/DECISIONS.md` D-028, D-029, D-030, D-031, D-032, D-033, D-034; scored audit
+  in `artifacts/audit/blind_audit_result.json`.
 
 ## Status
 
