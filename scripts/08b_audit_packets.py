@@ -52,8 +52,12 @@ SEVERITY_PACKET_COLUMNS = (
     "json_path",
     "true_value",
     "false_value",
+    "json_path_2",
+    "true_value_2",
+    "false_value_2",
     "criticality",
     "criticality_2",
+    "contradiction_type",
     "expected_action_change",
     "plausibility_checks",
     "prefix_id",
@@ -96,8 +100,20 @@ def build_severity_packet(perturbations: list[dict], n_per_level: int = 40) -> l
                     "json_path": record["json_path"],
                     "true_value": json.dumps(record.get("true_value"), ensure_ascii=False),
                     "false_value": json.dumps(record.get("false_value"), ensure_ascii=False),
+                    "json_path_2": record.get("json_path_2", ""),
+                    "true_value_2": (
+                        json.dumps(record.get("true_value_2"), ensure_ascii=False)
+                        if record.get("true_value_2") is not None
+                        else ""
+                    ),
+                    "false_value_2": (
+                        json.dumps(record.get("false_value_2"), ensure_ascii=False)
+                        if record.get("false_value_2") is not None
+                        else ""
+                    ),
                     "criticality": record.get("criticality", ""),
                     "criticality_2": record.get("criticality_2", ""),
+                    "contradiction_type": record.get("contradiction_type", ""),
                     "expected_action_change": str(record.get("expected_action_change", "")),
                     "plausibility_checks": json.dumps(
                         record.get("plausibility_checks", []), ensure_ascii=False
@@ -119,8 +135,12 @@ def build_severity_packet(perturbations: list[dict], n_per_level: int = 40) -> l
                 "json_path": "$.created_at",
                 "true_value": '"2024-05-15T15:00:00"',
                 "false_value": '"2024-05-15T15:00:00"',
+                "json_path_2": "",
+                "true_value_2": "",
+                "false_value_2": "",
                 "criticality": "noncritical",
                 "criticality_2": "",
+                "contradiction_type": "",
                 "expected_action_change": "False",
                 "plausibility_checks": "[]",
                 "prefix_id": prefix_id,
@@ -134,6 +154,7 @@ def build_severity_packet(perturbations: list[dict], n_per_level: int = 40) -> l
     final: list[dict] = []
     for level in (0, 1, 2, 3):
         final.extend(by_level_out[level][:n_per_level])
+    random.Random(f"{SEED}|severity|order").shuffle(final)
     for index, item in enumerate(final, start=1):
         item["item_id"] = f"SEV-{index:03d}"
     return final

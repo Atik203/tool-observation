@@ -189,6 +189,7 @@ def test_blind_audit_score_end_to_end(tmp_path) -> None:
         json.dumps(
             {
                 "verifier": "author",
+                "provenance": "author check",
                 "verdict": "accepted",
                 "recorded_utc": "2026-11-18T00:00:00+00:00",
             }
@@ -220,6 +221,7 @@ def test_blind_audit_score_end_to_end(tmp_path) -> None:
     assert payload["outcome"]["passed"] is True
     assert payload["recovery"]["passed"] is True
     assert payload["human_verification"]["status"] == "verified"
+    assert payload["human_verification"]["provenance"] == "author check"
     assert payload["outcome"]["silent_ppv"]["strict_both_raters"] == 1.0
     assert (audit_dir / "severity_audit_sheet.csv").exists()
     assert (audit_dir / "outcome_audit_sheet.csv").exists()

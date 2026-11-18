@@ -481,6 +481,7 @@ def main(argv: list[str] | None = None) -> int:
             human_verification = {
                 "status": "verified",
                 "verifier": payload.get("verifier"),
+                "provenance": payload.get("provenance"),
                 "recorded_utc": payload.get("recorded_utc"),
                 "verdict": payload.get("verdict"),
                 "record": "artifacts/audit/human_verification.json",
@@ -518,7 +519,9 @@ def main(argv: list[str] | None = None) -> int:
             },
             "blinding": "raters saw only artifacts/audit/blind/*_items.jsonl",
             "human_verification": (
-                "author-verified (see artifacts/audit/human_verification.json)"
+                "verified by "
+                + (human_verification.get("provenance") or "the recorded verifier")
+                + " (see artifacts/audit/human_verification.json)"
                 if human_verification["status"] == "verified"
                 else "pending per D-021 / D-027"
             ),
@@ -592,7 +595,9 @@ def main(argv: list[str] | None = None) -> int:
         "caveats": (
             (
                 [
-                    "The blind-rater gates were author-verified (2026-11-18); the sheets keep the blind rater columns and the adjudications are recorded in artifacts/audit/human_verification.json.",
+                    "The blind-rater gates were verified by "
+                    + (human_verification.get("provenance") or "the recorded verifier")
+                    + "; the sheets keep the blind rater columns and the adjudications are recorded in artifacts/audit/human_verification.json.",
                 ]
                 if human_verification["status"] == "verified"
                 else [
