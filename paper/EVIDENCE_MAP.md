@@ -437,7 +437,7 @@ release.
 placeholders below; the rows are retained as the pre-run checklist. Headline values, each traced
 to its artifact: pooled β 0.877 (SE 0.059, p = 2.3e-49, 95% CI [0.770, 0.998]; 617 clusters,
 2,458 rows; `artifacts/analysis/g3_analysis.json`); per-model β 0.649 / 0.915 / 1.079; silent
-share 419/1,964 = 21.3% (`g3_analysis.json`); recovery 27.3 / 34.7 / 27.2% (n = 264 / 406 / 412;
+share 419/1,964 = 21.3% (`g3_analysis.json`); recovery 32.4 / 47.6 / 28.2% (n = 264 / 406 / 412;
 `artifacts/analysis/g4_recovery.json`); severity α .919, outcome κ .975, silent PPV 1.00,
 recovery κ .787 (`artifacts/audit/blind_audit_result.json`); seed-repeat stability
 1.000 / 98.95 / 98.94% (`artifacts/analysis/jitter_stability_*.json`); parser failure 1.55%

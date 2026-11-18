@@ -74,7 +74,7 @@ to target-model outcomes.
 - **Blind to outcomes:** yes; no target-model outcome has been generated.
 - **Record:** `docs/DECISIONS.md` D-019; prompt lengths in `artifacts/env/prompt_lengths.json`.
 
-## A-004 — G1 placebo gate (pre-freeze)
+## A-004 — G1 placebo gate (post-freeze, after G1 calibration)
 
 - **Date:** 2026-11-15
 - **Change:** The G1 placebo check is **negative-control jitter (s0 vs s1) ≤20%**, not
@@ -87,7 +87,8 @@ to target-model outcomes.
   decision. The raw-JSON anchor V is excluded from the slope and reported separately.
 - **Analyses affected:** G1 gate and a secondary format-sensitivity result; the primary
   estimand, sample, arms, and severity rubric are unchanged.
-- **Blind to outcomes:** yes; no target-model outcome exists.
+- **Blind to outcomes:** No — the change followed the G1 calibration run and is not blind to
+  its V-vs-s0 format-jitter values.
 - **Record:** `docs/DECISIONS.md` D-026; G1 report in
   `artifacts/audit/g1_calibration_v3.json`.
 

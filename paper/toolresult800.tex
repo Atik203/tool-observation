@@ -290,10 +290,10 @@
   $\hat\beta = 0.877$ (SE $0.059$, $p = 2.3\times10^{-49}$), with positive slopes in all three
   models, a bootstrap interval of $[0.770, 0.998]$, and a silent-propagation share of 21.3\%.
   A blind audit of the automatic labels identified and corrected a labeling defect before the
-  final analysis (silent-propagation PPV rose from .76 to 1.00). Recovery (G4) does not pass:
-  only 27.2\%--34.7\% of the $s=3$ risk set recovers by $H=4$, and the Weibull shape rejects the
-  exponential assumption for two of three models. The severity, outcome, and recovery audits were
-  blind-rated and author-verified; the G3 parser-failure criterion fails at 1.55\% against the
+  final analysis (silent-propagation PPV rose from .76 to 1.00). Recovery (G4) does not pass on
+  the primary set: 32.4\%--47.6\% of the $s=3$ risk set recovers by $H=4$, and the Weibull shape
+  rejects the exponential assumption for two of three models. The severity, outcome, and recovery audits were
+  blind-rated in a label-free round; the G3 parser-failure criterion fails at 1.55\% against the
   1\% threshold. Both failed criteria are reported as failures. The 60-prefix pilot (54/60 consult, 0/60 placebo jitter,
   5/60 error switch, McNemar $p=.0625$) is a screening signal and is not pooled with the
   confirmatory sample.
@@ -597,21 +597,20 @@ Raw trajectories, weights, caches, credentials, and run logs never enter the rep
 Automatic labels are primary and are validated by blind audits. The severity audit uses 120
 observations (30 per level) rated by three independent blind rater sessions; the outcome audit
 uses 160 responses rated by two; the recovery audit uses 80 sequences rated by two from per-step
-evidence, where each step's parsed decision and flag bit are given. Raters see the packet evidence
-and the mechanical reference labels but not each other's files, the merged sheets, or the run
-data. The severity gate requires Krippendorff's $\alpha \ge .75$ \cite{krippendorff}, a
-Jonckheere--Terpstra trend test at $p<.01$ \cite{jonckheere1954}, at least 90\% of $s=1$ items
-rated non-decision-changing, at least 90\% of $s=2$ and $s=3$ items rated decision-changing, and
-no more than 20\% of $s=3$ items rated absurd. The outcome gate requires Cohen's
-$\kappa \ge .80$ \cite{cohen1960}, silent-propagation positive predictive value at least .90,
-parser failure below 1\%, and seed-repeat stability at least .90. The recovery gate requires
-$\kappa \ge .75$. If outcome $\kappa$ falls below .70 after one rubric revision, the study
-downgrades to action-level $Y^{A}$ only and does not make the content-sensitivity claim. The
-author verified the blind fills on 2026-11-18 (D-035), adjudicating every rater disagreement
-(14 severity items, 2 outcome items, 10 recovery sequences) and confirming the automatic-label
-overrides; the record is
-\texttt{artifacts/audit/human\_verification.json}. The ratings were produced by blind rater
-sessions operated with an AI agent, and the verification scope is stated in the declarations.
+evidence, where each step's parsed decision and flag bit are given. The reported round is
+label-free: the packets exclude the mechanical reference labels and every automatic answer, and
+each rater sees only the evidence. A first round was label-visible; the author accepted it under
+D-035, and it is archived as a sensitivity. Verification of the label-free sheets is pending
+(D-039); its record will replace \texttt{artifacts/audit/human\_verification.json} when complete.
+The ratings were produced by blind rater sessions operated with an AI agent. The severity gate
+requires Krippendorff's $\alpha \ge .75$ \cite{krippendorff}, a Jonckheere--Terpstra trend test at
+$p<.01$ \cite{jonckheere1954}, at least 90\% of $s=1$ items rated non-decision-changing, at least
+90\% of $s=2$ and $s=3$ items rated decision-changing, and no more than 20\% of $s=3$ items rated
+absurd. The outcome gate requires Cohen's $\kappa \ge .80$ \cite{cohen1960}, silent-propagation
+positive predictive value at least .90, parser failure below 1\%, and seed-repeat stability at
+least .90. The recovery gate requires $\kappa \ge .75$. If outcome $\kappa$ falls below .70 after
+one rubric revision, the study downgrades to action-level $Y^{A}$ only and does not make the
+content-sensitivity claim.
 
 
 
@@ -994,7 +993,8 @@ The confirmatory analysis of the base matrix is complete. The run generated the 
 matrix (13,200 base generations, five arms, three models, greedy decoding); the confirmatory
 analysis uses the 800 primary prefixes and excludes the 80 reserve prefixes, as pre-registered.
 The recovery sequences and the 10\% seed-repeat shard are collected, and the blind audits are
-author-verified. This section reports the pilot, the G0 harvest counts, the G1 calibration, the
+complete in a label-free round; author verification of that round is pending. This section reports
+the pilot, the G0 harvest counts, the G1 calibration, the
 primary estimate, silent propagation, recovery, and sensitivity. Results are reported as
 measured; the two failed gate criteria (G3 parser failure, G4 recovery) are stated as failures.
 
@@ -1122,11 +1122,12 @@ The pooled slope is $\hat\beta = 0.877$ with a prefix-cluster standard error of 
 $[0.770, 0.998]$ ($2{,}000$ replicates, $p = 0.001$ two-sided). All three per-model slopes
 are positive and Holm-significant, so the pre-registered replication gate is met. The slope is
 the log odds of a decision switch per severity level, conditional on the prefix, so an odds
-ratio of $e^{0.877} \approx 2.40$ per level. The estimate uses 617 prefix clusters and 2{,}458
-slope rows from the 800 primary prefixes; the 80 reserve prefixes are excluded. Of the 9{,}075
-labelled prose-arm cells, 2{,}297 form prefix$\times$model strata and 617 vary across arms; the
-conditional logit drops the 1{,}680 concordant strata, which contribute no information, so the
-estimate is a within-stratum effect identified from prefixes whose decision varies across arms.
+ratio of $e^{0.877} \approx 2.40$ per level. The estimate uses 617 prefix$\times$model strata
+(423 unique prefixes) and 2{,}458 slope rows from the 800 primary prefixes; the 80 reserve
+prefixes are excluded. Of the 9{,}075 labelled prose-arm cells, 2{,}297 form prefix$\times$model
+strata and 617 vary across arms; the conditional logit drops the 1{,}680 concordant strata, which
+contribute no information, so the estimate is a within-stratum effect identified from prefixes
+whose decision varies across arms.
 The switch typology is reported separately (\texttt{artifacts/analysis/switch\_typology.json}):
 47.8\% of strata never switch, 23.9\% switch in every arm, 19.0\% are dose-responsive
 ($s0=s1=0$, $s2$ or $s3=1$), and 9.3\% are placebo switchers. The claim is bounded to the prose
@@ -1150,8 +1151,8 @@ rate is the format-jitter floor reported in Table~\ref{tab:g1}.
 \begin{table}[pos=htbp]
   \centering
   \caption{Descriptive switch rates $Y$ (signature differs from the verbatim V continuation)
-  by arm and model, from the complete base matrix. $n$ is the number of prefixes with a parsed
-  V reference.}
+  by arm and model, from the complete base matrix. Rates are computed on 741--770 labeled rows per
+  arm; exact denominators are in \texttt{artifacts/analysis/g3\_analysis.json}.}
   \label{tab:armrates}
   \small
   \begin{tabular}{lrrrr}
@@ -1177,10 +1178,12 @@ rate is the format-jitter floor reported in Table~\ref{tab:g1}.
 The claim is conditional on the sign pattern: a positive pooled slope with fewer than two
 positive per-model slopes is a null result under the pre-registered decision rule, not a partial
 success. Here all three are positive, so the slope stands. The severity, outcome, and recovery
-audits are author-verified (D-035): severity $\alpha = .919$ (nominal; interval .977), outcome
-$\kappa = .975$, silent-propagation PPV $= 1.00$, and recovery $\kappa = .787$ (step) and $.787$
-(endpoint). If an audit had failed its gate, the claim would be downgraded rather than smoothed
-over.
+The audits were re-run label-free (D-039): severity $\alpha = .957$ (nominal; interval .981),
+outcome $\kappa = .987$, silent-propagation PPV $= 1.00$ (9/9; exact 95\% lower bound .66) with
+silent recall $.75$ (the coder misses three rater-confirmed silent items), and recovery
+$\kappa = .920$ (step) and $.917$ (endpoint). The earlier label-visible round ($\alpha = .919$,
+$\kappa = .975$, PPV $= 1.00$, recovery $.787$) is archived as a sensitivity. If an audit had
+failed its gate, the claim would be downgraded rather than smoothed over.
 
 \noindent\textbf{Silent propagation and the outcome decomposition}.\
 
@@ -1247,16 +1250,18 @@ informative as the critical/non-critical label.
 \noindent\textbf{Recovery}.\
 
 Recovery is reported as a Kaplan--Meier curve, RMST over the four-step horizon, and an
-exponential half-life only if G4 passes. G4 does not pass: only 27.2\%--34.7\% of the transient
-$s=3$ risk set recovers by $H=4$ (Qwen 27.3\%, Ministral 34.7\%, Llama 27.2\%; pooled 30.0\%
-[27.3, 32.8]). The persistent arm is near-inert: the re-applied false value recurred in only a
-handful of steps, and the prompts are byte-identical to the transient arm for 97--100\% of shared
-steps, so the persistent groups are descriptive and not a persistence contrast. The Weibull shape
-rejects the exponential assumption for two of three models, and the fitted half-lives (6.2--8.4
-steps) exceed the horizon in every group. The censoring convention matters: censoring at the last
-observed step raises Ministral to 47.6\% [41.3, 54.0] (the only interval touching 50\%) and the
-pooled rate to 34.9\%; the gate fails on every point estimate, but the margin is
-convention-dependent. The curve and RMST stand; the half-life is labelled exploratory.
+exponential half-life only if G4 passes. Censoring is at the last observed step. G4 does not
+pass on the primary set: 32.4\%, 47.6\%, and 28.2\% of the transient $s=3$ risk set recover by
+$H=4$ (Qwen, Ministral, Llama). The secondary sets reach 35.0\%--52.1\%: the transient $s=2$ set
+is 35.0/51.4/28.9\% and the persistent $s=3$ set 36.4/52.1/31.0\%. The persistent arm is
+near-inert (the re-applied false value recurred in only a handful of steps, and the prompts are
+byte-identical to the transient arm for 97--100\% of shared steps), so those groups are
+descriptive and not a persistence contrast. The Weibull shape rejects the exponential assumption
+for two of three primary groups, and the fitted half-lives (4.3--8.0 steps) exceed the horizon in
+every group. Under the alternative convention that censors at $H=4$, the primary rates fall to
+27.3/34.7/27.2\%. The gate fails on every point estimate of the primary set, but the margin is
+convention-dependent and Ministral is close to the threshold. The curve and RMST stand; the
+half-life is labelled exploratory.
 
 \begin{table}[pos=htbp]
   \centering
@@ -1267,9 +1272,9 @@ convention-dependent. The curve and RMST stand; the half-life is labelled explor
     \toprule
     \textbf{Model} & $n$ & \textbf{Recovered} & \textbf{RMST} & $\hat\mu$ & $t_{1/2}$ & \textbf{Weibull $p$} \\
     \midrule
-    Qwen3.5-9B     & 264 & 27.3\% & 3.10 & 0.084 & 8.23 & 0.228 \\
-    Ministral-3-8B & 406 & 34.7\% & 2.96 & 0.111 & 6.24 & $2.1\times10^{-4}$ \\
-    Llama-3.1-8B   & 412 & 27.2\% & 3.18 & 0.082 & 8.45 & 0.0026 \\
+    Qwen3.5-9B     & 264 & 32.4\% & 2.97 & 0.109 & 6.39 & 0.013 \\
+    Ministral-3-8B & 406 & 47.6\% & 2.71 & 0.161 & 4.29 & $<10^{-4}$ \\
+    Llama-3.1-8B   & 412 & 28.2\% & 3.16 & 0.086 & 8.02 & 0.0007 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1286,9 +1291,9 @@ convention-dependent. The curve and RMST stand; the half-life is labelled explor
     \toprule
     \textbf{Model} & \textbf{Transient $s=2$} & \textbf{Transient $s=3$} & \textbf{Persistent $s=3$} \\
     \midrule
-    Qwen3.5-9B     & 29.7\% (239) & 27.3\% (264) & 30.1\% (73) \\
-    Ministral-3-8B & 35.8\% (366) & 34.7\% (406) & 37.1\% (97) \\
-    Llama-3.1-8B   & 27.9\% (376) & 27.2\% (412) & 30.0\% (100) \\
+    Qwen3.5-9B     & 35.0\% (239) & 32.4\% (264) & 36.4\% (73) \\
+    Ministral-3-8B & 51.4\% (366) & 47.6\% (406) & 52.1\% (97) \\
+    Llama-3.1-8B   & 28.9\% (376) & 28.2\% (412) & 31.0\% (100) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1309,7 +1314,8 @@ domain and donor; vary strict versus lenient action coding; and repeat a 10\% se
 stability. The seed-repeat check is complete: 80 prefixes $\times$ 5 arms $\times$ 3 models
 were regenerated with a different sampling seed and compared with the base matrix, giving 100.0\%
 (Llama-3.1-8B), 98.95\% (Ministral-3-8B), and 98.94\% (Qwen3.5-9B) signature stability, all above
-the 0.90 gate. Donor-specific and task-specific slopes, the per-domain and per-donor slopes, and
+the 0.90 gate. The denominators are 385/381/376 of 400 repeated generations; unparsed generations
+are excluded. Donor-specific and task-specific slopes, the per-domain and per-donor slopes, and
 the strict-versus-lenient coding comparison are \pending{artifact}. Two further checks are
 complete. Task-clustered resampling (tasks, not prefixes) leaves the pooled estimate essentially
 unchanged (95\% CI [0.758, 0.996] versus [0.770, 0.998]), so prefix clustering does not hide
@@ -1396,12 +1402,13 @@ four-step horizon. It does not claim end-to-end task success, frontier-model beh
 validity, or a universal law. The tools are benchmark implementations against a pinned database,
 not live services, so a wrong observation here is a controlled counterfactual rather than a
 production incident. The annotation was produced by blind rater sessions operated with an AI
-agent and verified by the author, not by an external vendor; that limits the independence of the
-audit even with blinding and is stated in the declarations. The 18~GB slice runs at batch 4
+agent; the reported round is label-free and its author verification is pending, and the audit was
+not performed by an external vendor. That limits the independence of the audit and is stated in
+the declarations. The 18~GB slice runs at batch 4
 rather than the planned batch 8; the G2 cap was not approached (about 8.9 GPU-hours of the
 45-hour budget), so the sample is complete. Two gate criteria failed and are reported as
 failures: the G3 parser-failure rate is 1.55\% against the 1\% threshold (3.45\% if refusals are
-counted), and G4 recovery is 27.2--34.7\% against the 50\% threshold. The automatic labeling was
+counted), and G4 recovery is 32.4--47.6\% against the 50\% threshold. The automatic labeling was
 corrected once, after the blind audit found a defect; the pre-fix analysis is also reported
 above, and no threshold was changed.
 
@@ -1415,7 +1422,7 @@ decomposition and a four-step recovery curve. The study is pre-registered, gated
 cash on a university H200 slice. The base matrix, recovery sequences, and seed-repeat shard are
 complete; the pooled slope is $0.877$ [0.770, 0.998], positive in all three models, and 21.3\% of
 critical-arm switches are silent propagation. Two gate criteria failed: the parser-failure rate
-(1.55\% against 1\%) and recovery (27.2--34.7\% against 50\%); both are reported as failures. The
+(1.55\% against 1\%) and recovery (32.4--47.6\% against 50\%); both are reported as failures. The
 contribution is the dataset, the within-prefix design, the audit procedure that caught a labeling
 defect before analysis, and a bounded switch-on-severity estimate with its measured limits; the
 failed G3 parser-failure criterion is reported, so no content-sensitivity claim is made. \section*{Declarations}
@@ -1442,9 +1449,10 @@ failed G3 parser-failure criterion is reported, so no content-sensitivity claim 
   CRediT allocation is carried over from the companion manuscript and must be confirmed by every
   author before submission.   \item \textbf{Use of AI-assisted tooling:} Blind rating sessions were operated with an AI agent
   (three sessions for the severity audit, two each for the outcome and recovery audits), and an
-  AI-assisted mechanical pre-audit was used for the 40-item G0 check under D-021. The author
-  verified the blind fills on 2026-11-18 (D-035; \texttt{artifacts/audit/human\_verification.json}),
-  including adjudication of every rater disagreement. The authors remain responsible for every
+  AI-assisted mechanical pre-audit was used for the 40-item G0 check under D-021. The first,
+  label-visible round was accepted by the author on 2026-11-18 (D-035); the reported label-free
+  round is pending author verification (D-039;
+  \texttt{artifacts/audit/human\_verification.json}). The authors remain responsible for every
   label, every gate decision, and every claim in this paper.
   \pending{the journal-required AI-use statement}.
 \end{itemize} \section*{Acknowledgements}

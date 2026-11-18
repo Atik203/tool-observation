@@ -129,29 +129,30 @@ export const phases = [
 ] as const;
 
 export const results = {
-  status: "base matrix complete; recovery complete",
+  status:
+    "base matrix, recovery, and seed-repeat complete; label-free audits scored, author verification pending",
   baseGenerations: 13_200,
   jitterGenerations: 1_200,
   recoveryGenerations: 7_211,
   totalGenerations: 21_611,
   primary: {
-    pooledBeta: 0.684,
-    pooledSe: 0.053,
-    pooledP: 6.7e-38,
-    bootstrapCi: [0.584, 0.797] as const,
+    pooledBeta: 0.877,
+    pooledSe: 0.059,
+    pooledP: 2.3e-49,
+    bootstrapCi: [0.770, 0.998] as const,
     bootstrapP: 0.001,
     perModel: [
-      { model: "Qwen3.5-9B", beta: 0.685, se: 0.088, p: 6.85e-15 },
-      { model: "Ministral-3-8B", beta: 0.721, se: 0.081, p: 3.59e-19 },
-      { model: "Llama-3.1-8B", beta: 0.633, se: 0.095, p: 2.92e-11 },
+      { model: "Qwen3.5-9B", beta: 1.079, se: 0.114, p: 3.4e-21 },
+      { model: "Ministral-3-8B", beta: 0.915, se: 0.090, p: 4.7e-24 },
+      { model: "Llama-3.1-8B", beta: 0.649, se: 0.100, p: 1.0e-10 },
     ],
-    silentShare: 0.241,
-    silentN: 552,
-    switchedN: 2_290,
+    silentShare: 0.213,
+    silentN: 419,
+    switchedN: 1_964,
     armRates: [
-      { model: "Qwen3.5-9B", s0: 0.248, s1: 0.247, s2: 0.337, s3: 0.377 },
-      { model: "Ministral-3-8B", s0: 0.375, s1: 0.401, s2: 0.481, s3: 0.538 },
-      { model: "Llama-3.1-8B", s0: 0.428, s1: 0.445, s2: 0.484, s3: 0.533 },
+      { model: "Qwen3.5-9B", s0: 0.198, s1: 0.199, s2: 0.310, s3: 0.384 },
+      { model: "Ministral-3-8B", s0: 0.319, s1: 0.336, s2: 0.444, s3: 0.519 },
+      { model: "Llama-3.1-8B", s0: 0.381, s1: 0.397, s2: 0.448, s3: 0.490 },
     ],
     source: "artifacts/analysis/g3_analysis.json",
   },
@@ -164,20 +165,20 @@ export const results = {
     source: "artifacts/audit/g1_calibration_v3.json",
   },
   jitter: {
-    stability: { qwen: 0.9867, ministral: 0.9869, llama: 1.0 },
+    stability: { qwen: 0.9894, ministral: 0.9895, llama: 1.0 },
     gate: 0.9,
     source: "artifacts/analysis/jitter_stability_*.json",
   },
   recovery: {
     passed: false,
     byModel: [
-      { model: "Qwen3.5-9B", n: 299, recovered: 0.231, rmst: 3.26, halfLife: 10.1 },
-      { model: "Ministral-3-8B", n: 446, recovered: 0.334, rmst: 3.04, halfLife: 6.7 },
-      { model: "Llama-3.1-8B", n: 450, recovered: 0.184, rmst: 3.47, halfLife: 13.4 },
+      { model: "Qwen3.5-9B", n: 264, recovered: 0.324, rmst: 2.97, halfLife: 6.39 },
+      { model: "Ministral-3-8B", n: 406, recovered: 0.476, rmst: 2.71, halfLife: 4.29 },
+      { model: "Llama-3.1-8B", n: 412, recovered: 0.282, rmst: 3.16, halfLife: 8.02 },
     ],
     source: "artifacts/analysis/g4_recovery.json",
   },
-  source: "G3 analysis + G4 recovery reports, synced 2026-11-16",
+  source: "G3 analysis + G4 recovery reports, synced 2026-11-19",
 } as const;
 
 export const pilotTable = [

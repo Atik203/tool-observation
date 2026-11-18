@@ -6,6 +6,60 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+---
+
+## D-041 - Gate-record corrections: G1 amendment timing and G0 provisional flag
+
+- **Date:** 2026-11-19
+- **Status:** accepted (record correction)
+- **Context:** A-004 (the G1 placebo-criterion change) was labeled pre-freeze and "blind to
+  outcomes", but the G1 calibration ran after the manifest freeze and the criterion changed
+  after those format-jitter values were seen. `g0_audit_result.json` carries `gate_pass: true`
+  while the human G0 sheet is blank (the gate is provisional under D-021).
+- **Decision:** A-004 is relabeled post-freeze/after-G1 and not blind to the G1 values. The G0
+  artifact gains provisional and human-verification flags; the paper states that the manifest's
+  `gate_pass` field records the D-021 adoption, not a human pass.
+- **Consequences:** No data or analysis change; the disclosure is accurate.
+
+---
+
+## D-040 - Recovery curves censor at last follow-up (estimator correction)
+
+- **Date:** 2026-11-18
+- **Status:** accepted (estimator correction; pre-submission)
+- **Context:** The Kaplan-Meier, exponential, and Weibull code censored early-terminated
+  episodes at H=4 instead of their last observed step, biasing every recovery curve downward.
+- **Decision:** Recovery events now carry `last_step` (stage 09e), and the estimators censor at
+  the last observed step. Re-estimated transient s3 recovery by H=4: Qwen 32.4%, Ministral
+  47.6%, Llama 28.2% (27.3/34.7/27.2 under H=4 censoring, retained as a sensitivity). Secondary
+  sets reach 35.0-52.1%. G4 still fails on every primary point estimate; Ministral is close to
+  50%.
+- **Consequences:** Paper tables and text updated; half-lives 4.3-8.0 steps; Weibull rejects
+  2/3 primary groups.
+
+## D-039 - Label-free audit re-rating (supersedes the label-visible round)
+
+- **Date:** 2026-11-18
+- **Status:** accepted (validity fix; label-free verification pending)
+
+- **Context:** The first audit round used packets that still carried the mechanical reference
+  labels (design level, criticality, automatic labels). Review identified this as a validity
+  threat: the agreement statistics measured conformance to the anchor.
+- **Decision:** Rebuild all packets without reference labels or automatic answers, keeping the
+  manipulation evidence (injected values for outcomes, per-step decisions for recovery), and
+  re-rate with independent sessions: three severity, two outcome, two recovery. The label-visible
+  round is archived (`artifacts/audit/blind/_labelvisible_round/`) and reported as a sensitivity.
+  Author verification of the label-free sheets is pending; its record will replace
+  `artifacts/audit/human_verification.json`.
+- **Consequences:** Label-free results: severity α .957/.981, outcome κ .987, silent PPV 1.00
+  (9/9; exact 95% lower bound .66) with silent recall .75, recovery κ .920/.917. Gates pass; the
+  PPV's small denominator and the recall shortfall are reported as limitations. The earlier
+  round's α .919/κ .975/PPV 1.00/recovery .787 are retained as the sensitivity.
+
+---
+
+---
+
 ## D-038 - Exploratory additions: field taxonomy, task-clustered inference, held-out reserve
 
 - **Date:** 2026-11-18
@@ -23,6 +77,10 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+---
+
+## D-037 - Exploratory robustness extensions approved (outside the confirmatory run)
+
 - **Date:** 2026-11-18
 - **Status:** accepted (exploratory; no change to the confirmatory claims)
 - **Context:** The confirmatory run used about 8.9 of the 45 GPU-hour cap. The authors approved
@@ -36,6 +94,10 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   confirmatory analysis would require an amendment instead.
 
 ---
+
+---
+
+## D-036 - Confirmatory analysis sample: 800 primary prefixes; reserve excluded
 
 - **Date:** 2026-11-18
 - **Status:** accepted (analysis-sample conformance)
@@ -53,6 +115,10 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+---
+
+## D-035 - Author verification of the blind audits
+
 - **Date:** 2026-11-18
 - **Status:** accepted (verification complete; D-027 closed for the G3/G4 audits)
 - **Context:** The blind fills were presented to the author with the rows that carried risk:
@@ -65,12 +131,16 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   OUT-141 = N; the 10 recovery adjudications follow the recommended calls
   (REC-028/040/054/067 = R1, REC-037/038/043 = censored, REC-045/079 = R2, REC-073 = R2); the 4
   agreed corrections (REC-034/051/064/068) stand.
-- **Consequences:** The severity, outcome, and recovery audit gates are **author-verified**, not
-  provisional. The sheets keep the blind rater columns; adjudications are recorded in
-  `artifacts/audit/human_verification.json`, and stage 08c reports `human_verification.status =
-  verified`. The G0 sheet verification (D-021) remains deferred.
+- **Consequences:** The severity, outcome, and recovery audit gates were author-verified for the
+  label-visible round; that round is superseded by D-039, and the reported label-free round
+  awaits verification. The sheets keep the blind rater columns; adjudications are recorded in
+  `artifacts/audit/human_verification.json`. The G0 sheet verification (D-021) remains deferred.
 
 ---
+
+---
+
+## D-034 - GPU-hours reconstruction for the G2 budget record
 
 - **Date:** 2026-11-18
 - **Status:** accepted (budget evidence)
