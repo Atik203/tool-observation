@@ -6,7 +6,22 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
-## D-037 - Exploratory robustness extensions approved (outside the confirmatory run)
+## D-038 - Exploratory additions: field taxonomy, task-clustered inference, held-out reserve
+
+- **Date:** 2026-11-18
+- **Status:** accepted (exploratory; clearly labeled in the paper)
+- **Context:** Review preparation identified three analyses that add depth without changing the
+  confirmatory estimates: a field-type breakdown of switches and silent propagation; task-level
+  (rather than prefix-level) resampling for the pooled slope; and the 80 reserve prefixes, which
+  were generated but excluded from the primary sample, as a held-out sign check.
+- **Decision:** Report all three as exploratory. Field types are classified by the last json_path
+  token (rules in `artifacts/analysis/field_taxonomy.json`); task clustering uses the task id
+  parsed from the prefix id; the reserve estimate is labeled post-hoc and not pooled.
+- **Consequences:** Findings: identifiers and money carry ~45% silent shares of their switches
+  (status 0/102); task-clustered CI [0.758, 0.996] is essentially unchanged; reserve-only
+  β = 0.781 [0.443, 1.194]. The confirmatory sample and estimates are unchanged.
+
+---
 
 - **Date:** 2026-11-18
 - **Status:** accepted (exploratory; no change to the confirmatory claims)
