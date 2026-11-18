@@ -462,6 +462,21 @@ def main(argv: list[str] | None = None) -> int:
     ]
 
     # ---------------------------------------------------------------- write
+    verification_path = audit_dir / "human_verification.json"
+    human_verification = {
+        "status": "pending",
+        "note": "the authors' verification (D-021/D-027) has not been recorded",
+    }
+    if verification_path.exists():
+        payload = json.loads(verification_path.read_text(encoding="utf-8"))
+        human_verification = {
+            "status": "verified",
+            "verifier": payload.get("verifier"),
+            "recorded_utc": payload.get("recorded_utc"),
+            "verdict": payload.get("verdict"),
+            "record": "artifacts/audit/human_verification.json",
+        }
+
     def _write_sheet(path: Path, columns, rows) -> None:
         with path.open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=columns)
@@ -485,8 +500,13 @@ def main(argv: list[str] | None = None) -> int:
                 "blind_rater_3": "severity only",
             },
             "blinding": "raters saw only artifacts/audit/blind/*_items.jsonl",
-            "human_verification": "pending per D-021 / D-027",
+            "human_verification": (
+                "author-verified (see artifacts/audit/human_verification.json)"
+                if human_verification["status"] == "verified"
+                else "pending per D-021 / D-027"
+            ),
         },
+        "human_verification": human_verification,
         "provenance": {
             "packets": {
                 name: (_sha256(audit_dir / name) if (audit_dir / name).exists() else None)
@@ -552,14 +572,24 @@ def main(argv: list[str] | None = None) -> int:
             "gates": recovery_gates,
             "passed": all(gate["pass"] for gate in recovery_gates),
         },
-        "caveats": [
-            "Ratings come from blind rater sessions (AI subagents); the authors' verification (D-021/D-027) is pending, so every gate result is provisional.",
-            "Sheet notes name the raters per row (blind_rater_1;blind_rater_2;blind_rater_3 for severity; blind_rater_1;blind_rater_2 for outcome and recovery) plus rater_disagree / ref_override markers and per-rater remarks.",
-            "Recovery ratings use the per-step evidence in the packet (steps_json), generated under parser toolresult-parser-v4; the automatic recovery coding is recomputed by stage 09e.",
-            "Seed-repeat stability is read from artifacts/analysis/jitter_stability_*.json (parser v4 rescores of the preregistered 10% jitter shard).",
-            "Outcome items with a blank automatic label have a reference parsed as a refusal; the automatic coder skips them (no imputation), while raters score them from the packet text.",
-            "Recovery flag detection is keyword-based and remains inconsistent at the margin; rated overrides and remaining ambiguities are recorded in the per-rater notes.",
-        ],
+        "caveats": (
+            (
+                [
+                    "The blind-rater gates were author-verified (2026-11-18); the sheets keep the blind rater columns and the adjudications are recorded in artifacts/audit/human_verification.json.",
+                ]
+                if human_verification["status"] == "verified"
+                else [
+                    "Ratings come from blind rater sessions (AI subagents); the authors' verification (D-021/D-027) is pending, so every gate result is provisional.",
+                ]
+            )
+            + [
+                "Sheet notes name the raters per row (blind_rater_1;blind_rater_2;blind_rater_3 for severity; blind_rater_1;blind_rater_2 for outcome and recovery) plus rater_disagree / ref_override markers and per-rater remarks.",
+                "Recovery ratings use the per-step evidence in the packet (steps_json), generated under parser toolresult-parser-v4; the automatic recovery coding is recomputed by stage 09e.",
+                "Seed-repeat stability is read from artifacts/analysis/jitter_stability_*.json (parser v4 rescores of the preregistered 10% jitter shard).",
+                "Outcome items with a blank automatic label have a reference parsed as a refusal; the automatic coder skips them (no imputation), while raters score them from the packet text.",
+                "Recovery flag detection is keyword-based and remains inconsistent at the margin; rated overrides and remaining ambiguities are recorded in the per-rater notes.",
+            ]
+        ),
     }
     write_json(out_path, result)
     print(

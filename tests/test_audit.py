@@ -185,6 +185,16 @@ def test_blind_audit_score_end_to_end(tmp_path) -> None:
         json.dumps({"rate": 0.95, "n": 100, "passed": True, "mode": "report_only"}),
         encoding="utf-8",
     )
+    (audit_dir / "human_verification.json").write_text(
+        json.dumps(
+            {
+                "verifier": "author",
+                "verdict": "accepted",
+                "recorded_utc": "2026-11-18T00:00:00+00:00",
+            }
+        ),
+        encoding="utf-8",
+    )
 
     script = REPO_ROOT / "scripts" / "08c_blind_audit_score.py"
     spec = importlib.util.spec_from_file_location("blind_audit_script", script)
@@ -209,6 +219,7 @@ def test_blind_audit_score_end_to_end(tmp_path) -> None:
     assert payload["severity"]["passed"] is True
     assert payload["outcome"]["passed"] is True
     assert payload["recovery"]["passed"] is True
+    assert payload["human_verification"]["status"] == "verified"
     assert payload["outcome"]["silent_ppv"]["strict_both_raters"] == 1.0
     assert (audit_dir / "severity_audit_sheet.csv").exists()
     assert (audit_dir / "outcome_audit_sheet.csv").exists()
