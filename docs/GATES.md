@@ -49,7 +49,7 @@ JSON-parseable, 6,554 eligible value-used, 1,646 at a 10/task cap.
 | Sample | 800 primary (400/400) + 80 reserve (40/40) | pass |
 | Render | 4,400 arms; 2,640 perturbations; 100% s=0 value-set equality | pass |
 | G0 audit | AI pre-audit 40/40 adopted by the author; final verification deferred (D-021) | **provisional** |
-| Freeze | `toolresult800_v1.json` pending this step | **pending** |
+| Freeze | `toolresult800_v1.json` + SHA-256 sidecar recorded 2026-11-15 | pass (audit provisional, D-021) |
 
 The observed 5,516 eligible is below the 6,554 planning figure because the operational
 value-used rule is stricter (normalized token matching; incidental scrubbed PII is allowed, but

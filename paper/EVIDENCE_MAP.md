@@ -433,6 +433,17 @@ number of distinct values to report; do not collapse cells silently. §4.1 is th
 block; §4.2–4.8 are filled from the main run, the label audits, the G0 re-verification, and the
 release.
 
+**Status (2026-11-18).** The confirmatory numbers are now in the manuscript and replace the
+placeholders below; the rows are retained as the pre-run checklist. Headline values, each traced
+to its artifact: pooled β 0.877 (SE 0.059, p = 2.3e-49, 95% CI [0.770, 0.998]; 617 clusters,
+2,458 rows; `artifacts/analysis/g3_analysis.json`); per-model β 0.649 / 0.915 / 1.079; silent
+share 419/1,964 = 21.3% (`g3_analysis.json`); recovery 27.3 / 34.7 / 27.2% (n = 264 / 406 / 412;
+`artifacts/analysis/g4_recovery.json`); severity α .919, outcome κ .975, silent PPV 1.00,
+recovery κ .787 (`artifacts/audit/blind_audit_result.json`); seed-repeat stability
+1.000 / 98.95 / 98.94% (`artifacts/analysis/jitter_stability_*.json`); parser failure 1.55%
+(205/13,200; ledger statuses). The analysis sample is the **800 primary prefixes**; the 80
+reserve prefixes are excluded (D-036).
+
 ### 4.1 G1 handoff (before G2)
 
 First-attempt and interim G1 values are recorded in §3; the placeholders below are for the final
@@ -589,6 +600,12 @@ pilot numbers, any G1 row, or any number copied from `paper/proposal.tex` withou
 These are not scientific disagreements; they are documents that lag the frozen record. The
 manuscript must use the right-hand value, and the repo docs should be corrected separately. Do not
 edit the frozen manifest.
+
+**Status (2026-11-18):** X-01, X-02, X-03, X-04, X-05, X-10, X-24, and X-25 are resolved in the
+manuscript and the status docs; X-11 is resolved in the paper (the `prompt_lengths.json` artifact
+still records the pre-G1 256-token budget). X-06–X-09, X-12–X-19, and X-20–X-22 remain
+release/archive items (proposal, protocol, environment docs, config snapshots) and do not affect
+the manuscript's reported numbers.
 
 | ID | Location | Current text | Contradicted by | Manuscript action |
 |---|---|---|---|---|
