@@ -6,7 +6,21 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
-## D-036 - Confirmatory analysis sample: 800 primary prefixes; reserve excluded
+## D-037 - Exploratory robustness extensions approved (outside the confirmatory run)
+
+- **Date:** 2026-11-18
+- **Status:** accepted (exploratory; no change to the confirmatory claims)
+- **Context:** The confirmatory run used about 8.9 of the 45 GPU-hour cap. The authors approved
+  additional exploratory robustness work on the same H200 MIG slice (18 GB VRAM).
+- **Decision:** Run (a) recovery continuation to H=8 on the same at-risk sequences, and (b) a
+  decoding-temperature robustness subset if the plumbing is low-risk. Both are labeled
+  exploratory, tracked with their own GPU hours, and never pooled with the pre-registered
+  confirmatory estimates. The 45-hour G2 cap applies to the confirmatory run and is unaffected.
+- **Consequences:** H=8 and decoding results appear only in a clearly marked exploratory section
+  with their own hours; the primary claims stay the H=4/G3 estimates. Any change to the
+  confirmatory analysis would require an amendment instead.
+
+---
 
 - **Date:** 2026-11-18
 - **Status:** accepted (analysis-sample conformance)
