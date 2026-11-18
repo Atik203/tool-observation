@@ -514,7 +514,7 @@ the source for the gate verdict.
 | 46 | Placebo jitter rate (s=0 vs V) | 1 | `[PENDING: placebo_jitter_main]` | G3 analysis |
 | 47 | Realized MDE and power at the analyzed N | 2 | `[PENDING: realized_power]` | G3 analysis |
 | 48 | Missingness rate | 1 | `[PENDING: missingness_rate]` | G3 analysis |
-| 49 | G3 pass/fail | 1 | `[PENDING: g3_verdict]` | `artifacts/analysis/g3_report.md` |
+| 49 | G3 pass/fail | 1 | FAIL (parser 1.55%; severity s2/s3 88.3%; slope passes) | `artifacts/analysis/g3_report.md` |
 
 ### 4.4 Secondary outcomes and sensitivity
 
