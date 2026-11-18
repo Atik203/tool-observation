@@ -12,7 +12,7 @@ from toolobs.analysis.recovery import (
 from toolobs.schemas import RecoveryEvent
 
 
-def _event(step: int | None, censored: bool = False) -> RecoveryEvent:
+def _event(step: int | None, censored: bool = False, last_step: int = 0) -> RecoveryEvent:
     return RecoveryEvent(
         prefix_id="p",
         model_id="qwen",
@@ -22,6 +22,7 @@ def _event(step: int | None, censored: bool = False) -> RecoveryEvent:
         recovered_step=step,
         endpoint="R1",
         censored=censored,
+        last_step=last_step,
     )
 
 
@@ -47,6 +48,21 @@ def test_kaplan_meier_is_monotone() -> None:
     survival = [row["survival"] for row in rows]
     assert survival == sorted(survival, reverse=True)
     assert 0.0 <= survival[-1] <= 1.0
+
+
+def test_censoring_uses_last_follow_up() -> None:
+    """A sequence that ends early must leave the risk set at its last observed step."""
+    events = [
+        _event(1),
+        _event(None, censored=True, last_step=1),
+        _event(None, censored=True, last_step=4),
+    ]
+    rows = kaplan_meier(events)
+    assert rows[0]["at_risk"] == 3
+    assert rows[1]["at_risk"] == 1  # early terminator is no longer at risk
+    assert rows[1]["survival"] == rows[0]["survival"]
+    fit = fit_exponential(events)
+    assert fit.exposure == 1 + 1 + 4
 
 
 def test_rmst_is_finite() -> None:

@@ -39,15 +39,20 @@ class ExponentialFit:
         }
 
 
+def _observation_time(event: RecoveryEvent, horizon: int) -> float:
+    """Time under observation: recovery step, or last follow-up for censored events."""
+    if not event.censored and event.recovered_step is not None:
+        return float(event.recovered_step)
+    last = event.last_step or horizon
+    return float(min(last, horizon))
+
+
 def fit_exponential(events: Iterable[RecoveryEvent], *, horizon: int = 4) -> ExponentialFit:
     """Fit the constant per-step hazard by maximum likelihood."""
     materialized = list(events)
     event_count = sum(1 for event in materialized if not event.censored)
     censored = len(materialized) - event_count
-    exposure = sum(
-        event.recovered_step if not event.censored and event.recovered_step is not None else horizon
-        for event in materialized
-    )
+    exposure = sum(_observation_time(event, horizon) for event in materialized)
     hazard = (event_count / exposure) if exposure > 0 else 0.0
     if hazard <= 0.0:
         mu = 0.0
@@ -76,9 +81,7 @@ def kaplan_meier(events: Iterable[RecoveryEvent], *, horizon: int = 4) -> list[d
         at_risk = 0
         observed = 0
         for event in materialized:
-            end = event.recovered_step if not event.censored else horizon
-            if end is None:
-                end = horizon
+            end = _observation_time(event, horizon)
             if end >= step:
                 at_risk += 1
             if not event.censored and event.recovered_step == step:
@@ -119,10 +122,7 @@ def _weibull_loglik(
 def weibull_lrt(events: Iterable[RecoveryEvent], *, horizon: int = 4) -> dict[str, float]:
     """Grid-search Weibull shape and test shape=1 by likelihood ratio."""
     materialized = list(events)
-    times = [
-        float(event.recovered_step if not event.censored and event.recovered_step else horizon)
-        for event in materialized
-    ]
+    times = [_observation_time(event, horizon) for event in materialized]
     censored = [event.censored for event in materialized]
     if not times:
         return {"shape": 1.0, "scale": 1.0, "lrt": 0.0, "p_value": 1.0}

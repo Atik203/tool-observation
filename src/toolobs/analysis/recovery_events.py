@@ -62,6 +62,7 @@ def replay_recovery_events(
                 endpoint=endpoint,
                 censored=recovered_step is None,
                 state_hash=(state_hashes or {}).get((prefix_id, severity), ""),
+                last_step=steps[-1].step if steps else horizon,
             )
         )
     return events

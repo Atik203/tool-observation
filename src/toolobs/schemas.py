@@ -181,6 +181,7 @@ class RecoveryEvent(RecordMixin):
     endpoint: str
     censored: bool
     state_hash: str = ""
+    last_step: int = 0
     schema_version: str = "toolresult800-recovery-v1"
 
 
