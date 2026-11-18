@@ -34,8 +34,8 @@ pdflatex -output-directory=out toolresult800.tex
 pdflatex -output-directory=out toolresult800.tex
 ```
 
-The checked-in `out/toolresult800.pdf` predates the results update; rebuild it where TeX Live is
-available before submission.
+The checked-in `out/toolresult800.pdf` was rebuilt from the current source on 2026-11-18
+(16 pages, clean build).
 
 ## Status
 
