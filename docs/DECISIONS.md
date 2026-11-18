@@ -6,7 +6,26 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
-## D-034 - GPU-hours reconstruction for the G2 budget record
+## D-035 - Author verification of the blind audits
+
+- **Date:** 2026-11-18
+- **Status:** accepted (verification complete; D-027 closed for the G3/G4 audits)
+- **Context:** The blind fills were presented to the author with the rows that carried risk:
+  14 severity disagreements, 37 outcome rows (9 automatic-YU confirmations, 26 automatic-label
+  overrides, 2 rater disagreements), and 14 recovery rows (10 rater disagreements, 4 agreed
+  corrections).
+- **Decision:** The author accepted the blind ratings: null injections are not absurd and the
+  single-leaf route changes stay at severity 2; all 9 automatic-YU items are silent propagation;
+  the 26 outcome overrides stand; the outcome disagreements resolve to OUT-068 = Y_other and
+  OUT-141 = N; the 10 recovery adjudications follow the recommended calls
+  (REC-028/040/054/067 = R1, REC-037/038/043 = censored, REC-045/079 = R2, REC-073 = R2); the 4
+  agreed corrections (REC-034/051/064/068) stand.
+- **Consequences:** The severity, outcome, and recovery audit gates are **author-verified**, not
+  provisional. The sheets keep the blind rater columns; adjudications are recorded in
+  `artifacts/audit/human_verification.json`, and stage 08c reports `human_verification.status =
+  verified`. The G0 sheet verification (D-021) remains deferred.
+
+---
 
 - **Date:** 2026-11-18
 - **Status:** accepted (budget evidence)
@@ -87,7 +106,7 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 ## D-029 - Blind-rater audits and per-row rater provenance
 
 - **Date:** 2026-11-18
-- **Status:** accepted (audit provenance; human verification still deferred)
+- **Status:** accepted (audit provenance; author-verified 2026-11-18 under D-035)
 - **Context:** The how-to previously prescribed `label_source=ai_preaudit_deferred_human` on every
   sheet row. The authors asked for meaningful row notes that name who rated the item.
 - **Decision:** Run three blind rater sessions (severity 3 raters; outcome and recovery 2 raters

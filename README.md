@@ -12,8 +12,8 @@
 > (13,200 generations), the 10% seed-repeat shard, and the recovery sequences are complete.
 > The preregistered G3 slope passes (pooled beta 0.867, 95% CI [0.760, 0.988]); the G3
 > parser-failure criterion (1.55% vs <1%) and the G4 recovery gate (26–35% vs ≥50%) fail and
-> are reported as failures. The audit gates rest on blind rater fills whose human verification
-> is deferred (D-021, D-027), so every confirmatory number is provisional. The 60-prefix pilot
+> are reported as failures. The audit gates were blind-rated and author-verified on 2026-11-18
+> (D-035); the G0 sheet verification remains deferred (D-021). The 60-prefix pilot
 > remains a screening signal, **not** a dose-response law.
 
 ## Live site

@@ -264,10 +264,10 @@ python scripts/08c_blind_audit_score.py
 ```
 
 Blind raters write their own answer files under `artifacts/audit/blind/`; stage 08c merges them
-into the sheets and names the raters in the `notes` column. The authors perform the final
-verification after the experiments finish (D-021, D-027). If a gate fails at verification, log
-the deviation in `prereg/AMENDMENTS.md` before the claim is finalized; the manuscript must state
-the failure rather than smooth it over.
+into the sheets and names the raters in the `notes` column. The author performed the verification
+on 2026-11-18 (D-035; record in `artifacts/audit/human_verification.json`). If a later verification
+fails a gate, log the deviation in `prereg/AMENDMENTS.md` before the claim is finalized; the
+manuscript must state the failure rather than smooth it over.
 
 ## 9. Regenerating the packets
 
