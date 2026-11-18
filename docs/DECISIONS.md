@@ -6,7 +6,23 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
-## D-035 - Author verification of the blind audits
+## D-036 - Confirmatory analysis sample: 800 primary prefixes; reserve excluded
+
+- **Date:** 2026-11-18
+- **Status:** accepted (analysis-sample conformance)
+- **Context:** The main run generated the full 880-prefix matrix (13,200 base generations) because
+  the frozen payload contains 800 primary plus 80 reserve prefixes. The preregistered analysis
+  sample is the 800 primary; the reserve exists to replace audited failures.
+- **Decision:** Stage 13 excludes the manifest's `reserve_ids` from the confirmatory estimates by
+  default; `--include-reserve` remains for sensitivity only. Re-estimated on the 800 primary
+  prefixes: pooled β 0.877 (SE 0.059, p = 2.3e-49, 95% CI [0.770, 0.998]; 617 prefix clusters,
+  2,458 slope rows; all three models positive; silent propagation 419/1,964 = 21.3%).
+- **Consequences:** The paper reports the run envelope (13,200 base generations) and the analysis
+  sample (800 primary) and states the exclusion. No criterion changed; the exclusion makes the
+  analysis match the preregistration. The audit packets retain reserve items as label-validity
+  evidence; the audit gates do not depend on the analysis sample.
+
+---
 
 - **Date:** 2026-11-18
 - **Status:** accepted (verification complete; D-027 closed for the G3/G4 audits)
@@ -44,9 +60,9 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 - **Date:** 2026-11-18
 - **Status:** accepted (gate result)
 - **Context:** G4 criteria: ≥50% of the transient s=3 risk set recovers by H=4, and the Weibull
-  shape is not rejected (p ≥ .01). Observed recovery by H=4: 26.4% (Qwen), 35.0% (Ministral),
-  27.3% (Llama); Weibull rejected for 2/3 models (Ministral p=3.3e-5, Llama p=3.7e-3; Qwen
-  p=.151).
+  shape is not rejected (p ≥ .01). Observed on the 800 primary prefixes: recovery by H=4: 27.3%
+  (Qwen), 34.7% (Ministral), 27.2% (Llama); Weibull rejected for 2/3 models (Ministral
+  p=2.1e-4, Llama p=2.6e-3; Qwen p=.228).
 - **Decision:** Report the failed gate and the recovery curves; per `docs/GATES.md` the fail
   action is to report RMST/curve with the half-life exploratory only. No smoothing.
 - **Consequences:** `artifacts/analysis/g4_recovery.md` is the G4 evidence; the manuscript states
