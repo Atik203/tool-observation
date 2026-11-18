@@ -1109,6 +1109,14 @@ reported separately; the audits gate the label-based decomposition, not the swit
   \end{tabular}
 \end{table}
 
+\begin{figure}[pos=htbp]
+  \centering
+  \figfile[0.85\linewidth]{figures/result-forest.png}
+  \caption{Per-model and pooled severity slopes with 95\% confidence intervals (prefix-cluster
+  SE). Traced to \texttt{artifacts/analysis/g3\_analysis.json}.}
+  \label{fig:forest}
+\end{figure}
+
 The pooled slope is $\hat\beta = 0.877$ with a prefix-cluster standard error of $0.059$
 ($z = 14.77$, $p = 2.3\times10^{-49}$). The prefix-cluster bootstrap interval is
 $[0.770, 0.998]$ ($2{,}000$ replicates, $p = 0.001$ two-sided). All three per-model slopes
@@ -1156,6 +1164,15 @@ rate is the format-jitter floor reported in Table~\ref{tab:g1}.
     \bottomrule
   \end{tabular}
 \end{table}
+
+\begin{figure}[pos=htbp]
+  \centering
+  \figfile[0.95\linewidth]{figures/result-dose.png}
+  \caption{Switch rates by arm and model with Wilson 95\% confidence intervals (800 primary
+  prefixes). The prose placebo $s0$ and the non-critical change $s1$ are nearly flat; the critical
+  arms move. Traced to \texttt{artifacts/analysis/g3\_analysis.json}.}
+  \label{fig:dose}
+\end{figure}
 
 The claim is conditional on the sign pattern: a positive pooled slope with fewer than two
 positive per-model slopes is a null result under the pre-registered decision rule, not a partial
@@ -1218,6 +1235,15 @@ informative as the critical/non-critical label.
   \end{tabular}
 \end{table}
 
+\begin{figure}[pos=htbp]
+  \centering
+  \figfile[0.9\linewidth]{figures/result-fields.png}
+  \caption{Field-type switch rates and silent shares at $s=2$ (exploratory). Identifiers and
+  money carry the silent propagation; status fields almost never do. Traced to
+  \texttt{artifacts/analysis/field\_taxonomy.json}.}
+  \label{fig:fields}
+\end{figure}
+
 \noindent\textbf{Recovery}.\
 
 Recovery is reported as a Kaplan--Meier curve, RMST over the four-step horizon, and an
@@ -1266,6 +1292,15 @@ convention-dependent. The curve and RMST stand; the half-life is labelled explor
     \bottomrule
   \end{tabular}
 \end{table}
+
+\begin{figure}[pos=htbp]
+  \centering
+  \figfile[0.85\linewidth]{figures/result-recovery.png}
+  \caption{Kaplan--Meier survival on the transient $s=3$ risk set by model (800 primary
+  prefixes). The curves flatten before $H=4$; the gate fails in every group. Traced to
+  \texttt{artifacts/analysis/g4\_recovery.json}.}
+  \label{fig:recovery}
+\end{figure}
 
 \noindent\textbf{Sensitivity and heterogeneity}.\
 
