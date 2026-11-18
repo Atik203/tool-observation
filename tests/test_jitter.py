@@ -57,3 +57,64 @@ def test_stability_counts_signature_matches() -> None:
     assert report["missing_base"] == 1
     assert report["by_arm"]["V"] == {"n": 2, "stable": 1, "rate": 0.5}
     assert report["by_arm"]["s3"] == {"n": 2, "stable": 2, "rate": 1.0}
+
+
+def test_report_only_recomputes_from_existing_ledgers(tmp_path) -> None:
+    import json as _json
+    import subprocess
+    import sys
+
+    from toolobs.infer.ledger import append_ledger_row
+    from toolobs.schemas import LedgerRow
+
+    def _row(prefix: str, arm: str, signature: str) -> LedgerRow:
+        return LedgerRow(
+            run_id="t",
+            model_id="qwen3_5_9b_instruct_awq",
+            prefix_id=prefix,
+            arm=arm,
+            step=0,
+            prompt_hash="p",
+            output_text="{}",
+            parsed=True,
+            latency_ms=1.0,
+            cost_usd=0.0,
+            timestamp_utc="2026-11-15T00:00:00+00:00",
+            stage="main",
+            parser_status="ok",
+            signature_hash=signature,
+        )
+
+    base_path = tmp_path / "base.jsonl"
+    jitter_path = tmp_path / "jitter.jsonl"
+    for prefix, signature in (("p0", "a"), ("p1", "b")):
+        append_ledger_row(base_path, _row(prefix, "V", signature))
+        append_ledger_row(base_path, _row(prefix, "s3", signature))
+    append_ledger_row(jitter_path, _row("p0", "V", "a"))
+    append_ledger_row(jitter_path, _row("p1", "V", "b"))
+    out = tmp_path / "report.json"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(_SCRIPT),
+            "--model-id",
+            "qwen3_5_9b_instruct_awq",
+            "--report-only",
+            "--base-ledger",
+            str(base_path),
+            "--out",
+            str(jitter_path),
+            "--report",
+            str(out),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=str(_SCRIPT.parent.parent),
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    report = _json.loads(out.read_text(encoding="utf-8"))
+    assert report["mode"] == "report_only"
+    assert report["n"] == 2
+    assert report["stable"] == 2
+    assert report["rate"] == 1.0
+    assert report["passed"] is True

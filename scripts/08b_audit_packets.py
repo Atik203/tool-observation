@@ -20,7 +20,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from toolobs.analysis.outcomes import compute_outcomes  # noqa: E402
+from toolobs.analysis.outcomes import compute_outcomes, flag_detected  # noqa: E402
 from toolobs.harvest.parse import read_jsonl_dicts  # noqa: E402
 from toolobs.infer.ledger import read_ledger  # noqa: E402
 from toolobs.paths import ARTIFACTS_DIR, MANIFEST_DIR, RUNS_DIR, resolve_repo_path  # noqa: E402
@@ -169,6 +169,9 @@ RECOVERY_PACKET_COLUMNS = (
     "automatic_recovered_step",
     "automatic_endpoint",
     "automatic_censored",
+    "reference_output",
+    "reference_decision",
+    "steps_json",
 )
 
 RECOVERY_SHEET_COLUMNS = (
@@ -181,8 +184,40 @@ RECOVERY_SHEET_COLUMNS = (
 )
 
 
+def _load_step_evidence(
+    recovery_ledger_root: Path,
+) -> dict[tuple[str, str, str, str], list[dict]]:
+    """Load per-step recovery generations keyed by (model, regime, prefix, arm)."""
+    evidence: dict[tuple[str, str, str, str], list[dict]] = {}
+    if not recovery_ledger_root.exists():
+        return evidence
+    for model_dir in sorted(recovery_ledger_root.iterdir()):
+        if not model_dir.is_dir():
+            continue
+        for regime_file in sorted(model_dir.glob("recovery_*.jsonl")):
+            regime = regime_file.stem.replace("recovery_", "")
+            with regime_file.open(encoding="utf-8") as handle:
+                for line in handle:
+                    if not line.strip():
+                        continue
+                    row = json.loads(line)
+                    key = (
+                        model_dir.name,
+                        regime,
+                        str(row.get("prefix_id", "")),
+                        str(row.get("arm", "")),
+                    )
+                    evidence.setdefault(key, []).append(row)
+    for rows in evidence.values():
+        rows.sort(key=lambda item: int(item.get("step", 0)))
+    return evidence
+
+
 def build_recovery_packet(
-    event_root: Path, n_items: int = 80
+    event_root: Path,
+    n_items: int = 80,
+    evidence: dict[tuple[str, str, str, str], list[dict]] | None = None,
+    v_outputs: dict[tuple[str, str], object] | None = None,
 ) -> tuple[list[dict], list]:
     """Select n_items recovery sequences balanced across models and regimes."""
     events: list[dict] = []
@@ -222,17 +257,39 @@ def build_recovery_packet(
     packet: list[dict] = []
     for index, event in enumerate(selected[:n_items], start=1):
         recovered = event.get("recovered_step")
+        model_id = event.get("_model_id", "")
+        regime = event.get("_regime_file", "")
+        prefix_id = str(event.get("prefix_id", ""))
+        severity = event.get("severity", "")
+        arm = f"s{severity}"
+        reference = (v_outputs or {}).get((model_id, prefix_id))
+        step_rows = (evidence or {}).get((model_id, regime, prefix_id, arm), [])
         packet.append(
             {
                 "item_id": f"REC-{index:03d}",
-                "prefix_id": event.get("prefix_id", ""),
-                "model_id": event.get("_model_id", ""),
-                "regime": event.get("_regime_file", ""),
+                "prefix_id": prefix_id,
+                "model_id": model_id,
+                "regime": regime,
                 "severity": event.get("severity", ""),
                 "horizon": event.get("horizon", 4),
                 "automatic_recovered_step": "" if recovered is None else recovered,
                 "automatic_endpoint": event.get("endpoint", ""),
                 "automatic_censored": bool(event.get("censored", False)),
+                "reference_output": (getattr(reference, "output_text", "") or "")[:400],
+                "reference_decision": (getattr(reference, "decision_json", "") or "")[:400],
+                "steps_json": json.dumps(
+                    [
+                        {
+                            "step": row.get("step"),
+                            "parsed": bool(row.get("parsed")),
+                            "flag": flag_detected(str(row.get("output_text", ""))),
+                            "decision": (str(row.get("decision_json", "")) or "")[:300],
+                            "output": (str(row.get("output_text", "")) or "")[:500],
+                        }
+                        for row in step_rows
+                    ],
+                    ensure_ascii=False,
+                ),
             }
         )
     return packet, selected
@@ -377,6 +434,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--outcome-items", type=int, default=160)
     parser.add_argument("--recovery-items", type=int, default=80)
     parser.add_argument("--recovery-root", default=str(RUNS_DIR / "main" / "recovery"))
+    parser.add_argument("--recovery-ledger-root", default=str(RUNS_DIR / "main"))
     args = parser.parse_args(argv)
 
     audit_dir = resolve_repo_path(args.audit_dir)
@@ -439,8 +497,18 @@ def main(argv: list[str] | None = None) -> int:
     # --- Recovery audit (only if recovery events exist) ---
     recovery_root = resolve_repo_path(args.recovery_root)
     if recovery_root.exists():
+        evidence = _load_step_evidence(resolve_repo_path(args.recovery_ledger_root))
+        v_outputs = {
+            (model_id, row.prefix_id): row
+            for model_id, rows in ledgers.items()
+            for row in rows
+            if row.arm == "V"
+        }
         recovery_packet, _ = build_recovery_packet(
-            recovery_root, n_items=args.recovery_items
+            recovery_root,
+            n_items=args.recovery_items,
+            evidence=evidence,
+            v_outputs=v_outputs,
         )
         if recovery_packet:
             _write_csv(

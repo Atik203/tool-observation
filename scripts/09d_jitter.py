@@ -93,6 +93,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--prefixes", default="data/frozen/prefixes.jsonl")
     parser.add_argument("--rendered", default="data/interim/rendered.jsonl")
     parser.add_argument("--base-ledger", default=None)
+    parser.add_argument(
+        "--report-only",
+        action="store_true",
+        help="recompute the stability report from existing ledgers (no generation)",
+    )
+    parser.add_argument("--report", default=None)
     parser.add_argument("--out", default=None)
     args = parser.parse_args(argv)
 
@@ -130,6 +136,33 @@ def main(argv: list[str] | None = None) -> int:
     ledger_path = resolve_repo_path(
         args.out or (RUNS_DIR / "main" / "jitter" / args.model_id / "ledger.jsonl")
     )
+    if args.report_only:
+        if not ledger_path.exists():
+            raise SystemExit(f"jitter ledger missing: {ledger_path}")
+        jitter_rows = read_ledger(ledger_path)
+        report = stability_report(base_rows, jitter_rows)
+        report.update(
+            {
+                "model_id": args.model_id,
+                "stage": "09d_jitter",
+                "mode": "report_only",
+                "recorded_utc": utc_now(),
+                "git_commit": git_commit(),
+                "manifest_hash": manifest_hash,
+                "jitter_seed": int(calibration["calibration"]["seed"]) + JITTER_SEED_OFFSET,
+                "prefixes": len({row.prefix_id for row in jitter_rows}),
+                "generations": len(jitter_rows),
+                "gate_min": 0.90,
+                "passed": report["rate"] is not None and report["rate"] >= 0.90,
+                "ledger": str(ledger_path),
+            }
+        )
+        report_path = resolve_repo_path(args.report) if args.report else (
+            ARTIFACTS_DIR / "analysis" / f"jitter_stability_{args.model_id}.json"
+        )
+        write_json(report_path, report)
+        print(f"[09d_jitter] report-only {args.model_id} {report['rate']} n={report['n']} -> {report_path}")
+        return 0
     if ledger_path.exists():
         raise SystemExit(f"jitter ledger already exists: {ledger_path}")
 
@@ -175,7 +208,9 @@ def main(argv: list[str] | None = None) -> int:
             "ledger": str(ledger_path),
         }
     )
-    report_path = ARTIFACTS_DIR / "analysis" / f"jitter_stability_{args.model_id}.json"
+    report_path = resolve_repo_path(args.report) if args.report else (
+        ARTIFACTS_DIR / "analysis" / f"jitter_stability_{args.model_id}.json"
+    )
     write_json(report_path, report)
     print(f"[09d_jitter] {args.model_id} {report['rate']} n={report['n']} -> {report_path}")
     return 0

@@ -102,6 +102,47 @@ def test_build_outcome_packet_selects_requested_count() -> None:
     assert all(item["item_id"].startswith("OUT-") for item in packet)
     assert {item["model_id"] for item in packet} <= {"m0", "m1"}
 
+def test_build_recovery_packet_includes_step_evidence(tmp_path) -> None:
+    import json
+
+    from types import SimpleNamespace
+
+    event_root = tmp_path / "events"
+    model_dir = event_root / "m0"
+    model_dir.mkdir(parents=True)
+    event = {
+        "prefix_id": "p0",
+        "model_id": "m0",
+        "regime": "persistent",
+        "severity": 3,
+        "horizon": 4,
+        "recovered_step": 2,
+        "endpoint": "R1",
+        "censored": False,
+        "state_hash": "h",
+    }
+    (model_dir / "persistent.jsonl").write_text(json.dumps(event) + "\n", encoding="utf-8")
+    evidence = {
+        ("m0", "persistent", "p0", "s3"): [
+            {"step": 1, "parsed": True, "decision_json": '{"tool": "x"}', "output_text": "step one"},
+            {"step": 2, "parsed": True, "decision_json": '{"tool": "v"}', "output_text": "step two"},
+        ]
+    }
+    v_outputs = {
+        ("m0", "p0"): SimpleNamespace(output_text="reference answer", decision_json='{"tool": "v"}')
+    }
+    packet, _ = audit_packets.build_recovery_packet(
+        event_root, n_items=1, evidence=evidence, v_outputs=v_outputs
+    )
+    assert len(packet) == 1
+    item = packet[0]
+    assert item["reference_output"] == "reference answer"
+    assert item["reference_decision"] == '{"tool": "v"}'
+    steps = json.loads(item["steps_json"])
+    assert [row["step"] for row in steps] == [1, 2]
+    assert steps[1]["decision"] == '{"tool": "v"}'
+
+
 def test_cli_generates_packets(tmp_path) -> None:
     audit_dir = tmp_path / "audit"
     result = subprocess.run(
