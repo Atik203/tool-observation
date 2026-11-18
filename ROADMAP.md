@@ -10,9 +10,10 @@
 
 ---
 
-## 0. Current progress (2026-11-15)
+## 0. Current progress (2026-11-18)
 
-**Status: G0 implementation complete; human audit and freeze pending. No GPU run has started.**
+**Status: main run complete; blind audits scored (human verification pending, D-021/D-027);
+G3 slope passes, G4 recovery gate fails.**
 
 | G0 stage | Status | Evidence |
 |---|---|---|
@@ -37,10 +38,10 @@
 | Human audit | **PROVISIONAL** | Author adopted the 40/40 AI pre-audit; final verification deferred until after experiments (D-021) |
 | Freeze | **DONE** | `data/manifests/toolresult800_v1.json` + SHA-256 sidecar; 800+80, 4,400 arms, 2,640 perturbations, 60 calibration |
 | G1 calibration | **DONE (pass)** | Qwen parse 98.3%, negative-control jitter 11.9%, s3 35.6%; Ministral 100%, 13.3%, 55.0%; Llama 96.7%, 10.5%, 56.1%; V/s0 format jitter 20.3/36.7/45.6% reported separately (D-026) |
-| G2 base run | **DONE** | 4,400 rendered arms × 3 models (13,200 generations) complete; parse 96.3/96.8/97.6%; refusal 4.5/1.2/0.0%; recovery 7,211 rows; jitter 1,200 rows (98.7% stability) |
-| G3 analysis | **DONE (partial)** | Pooled beta 0.684 (SE 0.053, p=6.7e-38); all three models positive; bootstrap CI [0.584, 0.797]; silent share 24.1%; outcome/severity audits provisional (D-027) |
-| G4 recovery | **DONE (gate fail)** | Recovery by H=4: 23.1/33.4/18.4% (Qwen/Ministral/Llama); below 50% gate; Weibull rejects for 2/3 models; half-life labelled exploratory |
-| H200 environment | **DONE** | vLLM 0.33.0 / torch 2.14.0; all three pass the 24k fit check; G1 complete; G2 base running |
+| G2 base run | **DONE** | 4,400 rendered arms × 3 models (13,200 generations) complete; parse 96.3/96.8/97.6%; refusal 4.5/1.2/0.0%; recovery 7,211 rows; jitter 1,200 rows |
+| G3 analysis | **DONE (partial)** | Pooled beta 0.867 (SE 0.057, p=1.0e-52); all three models positive and Holm-significant; bootstrap CI [0.760, 0.988]; silent share 21.3%; blind audits scored (severity α .92, outcome κ .97, silent PPV 1.0, stability 1.000/.990/.989, D-028); parser failure 1.55% (above the <1% criterion); human verification pending |
+| G4 recovery | **DONE (gate fail)** | Recovery by H=4: 26.4/35.0/27.3% (Qwen/Ministral/Llama, transient s=3); below 50% gate; Weibull rejected for 2/3 models; half-life labelled exploratory (`artifacts/analysis/g4_recovery.md`) |
+| H200 environment | **DONE** | vLLM 0.33.0 / torch 2.14.0; all three pass the 24k fit check; G1 complete; G2 main + recovery + jitter complete; CUDA report discrepancy logged in D-031 |
 
 The ten-day table below is the original plan. Intermediate files are now JSONL rather than
 parquet, and the 6,500/1,500 relevance figures are planning inputs, not G0 gates; the

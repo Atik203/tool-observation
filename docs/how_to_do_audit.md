@@ -27,18 +27,20 @@ artifacts/audit/
   g0_audit_result.json          # scored result
 
   severity_audit_packet.csv      # 120 severity items, evidence
-  severity_audit_sheet.csv      # 120 rows x 3 raters (pre-filled by AI pre-audit)
+  severity_audit_sheet.csv       # 120 rows x 3 raters (blind rater fills)
   severity_audit_instructions.md
 
   outcome_audit_packet.csv       # 160 outcome items, evidence
-  outcome_audit_sheet.csv       # 160 rows x 2 raters (pre-filled by AI pre-audit)
+  outcome_audit_sheet.csv        # 160 rows x 2 raters (blind rater fills)
   outcome_audit_instructions.md
 
-  recovery_audit_packet.csv      # 80 recovery sequences, evidence
-  recovery_audit_sheet.csv       # 80 rows x 2 raters (pre-filled by AI pre-audit)
+  recovery_audit_packet.csv      # 80 recovery sequences, evidence incl. per-step generations
+  recovery_audit_sheet.csv       # 80 rows x 2 raters (blind rater fills)
   recovery_audit_instructions.md
 
-  audit_packets_result.json     # summary of the generated packets
+  audit_packets_result.json      # summary of the generated packets
+  blind_audit_result.json        # scored blind-audit gates (stage 08c)
+  blind/                         # rater-facing packet copies and per-rater answer files
 ```
 
 The manifest and frozen data (do not edit) live in:
@@ -60,9 +62,11 @@ data/manifests/perturbations.jsonl           # 2,640 perturbation records
 5. **Do not look at model outputs before rating the evidence** for that item; rate from the
    packet fields first.
 6. **Blinding:** raters do not see each other's sheets until scoring.
-7. **Provenance:** every sheet is recorded with `label_source=ai_preaudit_deferred_human`
-   until the human verification is complete (D-021, D-027). The authors perform the final
-   verification after the experiments finish.
+7. **Provenance:** each row's `notes` names the raters who produced it
+   (`blind_rater_1;blind_rater_2;blind_rater_3` for severity, `blind_rater_1;blind_rater_2`
+   for outcome and recovery), plus `rater_disagree` / `ref_override` markers and any
+   per-rater remark (`raterN: ...`). The authors' final verification remains deferred
+   (D-021, D-027).
 
 ## 4. G0 harvest audit (already scored 40/40)
 
@@ -142,7 +146,7 @@ rater2_absurd,0
 rater3_severity,2
 rater3_decision_changing,1
 rater3_absurd,0
-notes,ai_preaudit_deferred_human
+notes,blind_rater_1;blind_rater_2;blind_rater_3
 ```
 
 ### 5.4 Gate
@@ -204,14 +208,15 @@ rater2_Y,1
 rater2_YA,1
 rater2_YF,0
 rater2_YU,0
-notes,ai_preaudit_deferred_human
+notes,blind_rater_1;blind_rater_2
 ```
 
 ### 6.4 Gate
 
-- Cohen's kappa >= .80 across the 4-way label (Y, YA, YF, YU).
-- Silent-propagation PPV >= .90 against the adjudicated labels.
-- At least .90 seed-repeat stability.
+- Cohen's kappa >= .80 across the 4-way label (N/YA/YF/YU).
+- Silent-propagation PPV >= .90: automatic-YU items confirmed by both raters.
+- At least .90 seed-repeat stability, computed by rescoring the preregistered 10% jitter shard
+  with the current parser (`artifacts/analysis/jitter_stability_*.json`).
 
 ## 7. Recovery audit (80 sequences, 2 raters)
 
@@ -226,6 +231,9 @@ Each row is one recovery sequence:
 - `automatic_recovered_step` (1-4, or blank if censored)
 - `automatic_endpoint` (R1, R2, or censored)
 - `automatic_censored` (True/False)
+- `reference_output`, `reference_decision`: the verbatim-V continuation and its decision signature
+- `steps_json`: the per-step continuations in order, each with the step number, parse status,
+  flag detection, canonical decision signature, and output text (truncated)
 
 ### 7.2 What the sheet asks for
 
@@ -234,6 +242,9 @@ For each sequence, two raters record:
 - `raterN_recovery_step`: the first step (1-4) at which the sequence recovered, or 4 if censored
 - `raterN_endpoint`: R1 (signature matches the verbatim continuation), R2 (explicit flag),
   or censored
+
+Rate from the per-step evidence (`steps_json`); the automatic coding is a reference to confirm
+or correct, not the answer.
 
 ### 7.3 Gate
 
@@ -247,14 +258,16 @@ After all raters fill their columns, score with the stage scripts:
 # G0
 python scripts/08_audit.py --score artifacts/audit/g0_audit_sheet.csv
 
-# Severity / outcome / recovery: manual scoring against the gates in docs/GATES.md
-# (no single scorer script; compute kappa/alpha in your stats tool of choice)
+# Severity / outcome / recovery: merge the blind rater files and score all gates
+python scripts/08c_blind_audit_score.py
+# writes artifacts/audit/blind_audit_result.json
 ```
 
-The AI pre-audit fills every sheet with `label_source=ai_preaudit_deferred_human`. The authors
-perform the final verification after the experiments finish (D-021, D-027). If a gate fails at
-verification, log the deviation in `prereg/AMENDMENTS.md` before the claim is finalized; the
-manuscript must state the failure rather than smooth it over.
+Blind raters write their own answer files under `artifacts/audit/blind/`; stage 08c merges them
+into the sheets and names the raters in the `notes` column. The authors perform the final
+verification after the experiments finish (D-021, D-027). If a gate fails at verification, log
+the deviation in `prereg/AMENDMENTS.md` before the claim is finalized; the manuscript must state
+the failure rather than smooth it over.
 
 ## 9. Regenerating the packets
 
@@ -265,5 +278,7 @@ python scripts/08_audit.py                          # G0 packet
 python scripts/08b_audit_packets.py                # severity + outcome + recovery packets
 ```
 
-The packets are deterministic given the seed (20261108) and the frozen manifest, so
+The recovery packet embeds per-step generations read from the recovery ledgers
+(`data/runs/main/<model>/recovery_<regime>.jsonl`), so re-run stage 09b first if the recovery
+data changes. The packets are deterministic given the seed (20261108) and the frozen manifest, so
 regeneration should reproduce identical files. If it does not, investigate before proceeding.

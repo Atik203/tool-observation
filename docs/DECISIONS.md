@@ -6,7 +6,86 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
-## D-027 — Deferred human verification of the audit gates
+## D-031 - H200 environment check and GPU-hours accounting observation
+
+- **Date:** 2026-11-18
+- **Status:** observed (no change made; AGENTS.md §2.1 change control)
+- **Context:** Pre-analysis check of the approved `uiu-h200` slice, read-only.
+- **Observed:** GPU idle (H200 MIG 1g.18gb, 18,432 MiB, 1 MiB used, no processes); driver
+  580.178.04 matches AGENTS.md; `nvidia-smi` advertises **CUDA 13.0** while AGENTS.md records
+  CUDA 13.5 (no `nvcc` on PATH; vLLM wheels bundle their runtime, so nothing is blocked).
+  Project space 11 GB + HF cache 26 GB (within the 200 GB cap); vLLM 0.33.0 venv present;
+  no tmux/screen jobs. The main ledgers record `gpu_hours = 0.0` on every row.
+- **Decision:** Do not change the driver, CUDA, MIG settings, or system libraries. Record the
+  CUDA-version discrepancy here; verify the G2 cost accounting from the run logs before the next
+  GPU job (the 45 GPU-hour cap is otherwise unverifiable from the ledger field).
+- **Consequences:** Any future GPU work states its hours explicitly in the shard report until the
+  ledger cost field is confirmed or fixed.
+
+---
+
+## D-030 - Safe in-place rescore in stage 09c
+
+- **Date:** 2026-11-18
+- **Status:** accepted (tooling fix)
+- **Context:** `scripts/09c_rescore.py` removed the output path before reading the input. Running
+  an in-place rescore (`--input ledger.jsonl --output ledger.jsonl --force`) deleted the ledger
+  before reading it. The working ledgers were recovered from the preserved parser-v3 copies.
+- **Decision:** Materialize the input rows before touching the output; add a regression test that
+  runs an in-place rescore end to end.
+- **Consequences:** In-place rescoring is safe; the pre-rescore ledgers remain as
+  `ledger_parser-v3.jsonl` for provenance.
+
+---
+
+## D-029 - Blind-rater audits and per-row rater provenance
+
+- **Date:** 2026-11-18
+- **Status:** accepted (audit provenance; human verification still deferred)
+- **Context:** The how-to previously prescribed `label_source=ai_preaudit_deferred_human` on every
+  sheet row. The authors asked for meaningful row notes that name who rated the item.
+- **Decision:** Run three blind rater sessions (severity 3 raters; outcome and recovery 2 raters
+  each, the recovery round using the per-step evidence), each seeing only the packet copies in
+  `artifacts/audit/blind/`. The sheets' `notes` column names the raters
+  (`blind_rater_1;blind_rater_2;blind_rater_3` for severity, `blind_rater_1;blind_rater_2` for
+  outcome and recovery) plus `rater_disagree` / `ref_override` markers and short remarks. The
+  mechanical pre-fill is preserved in `artifacts/audit/blind/_prefill_backup/` and in the
+  `_parser-v3_snapshot/`. Scoring is stage `scripts/08c_blind_audit_score.py`.
+- **Consequences:** The fills are AI-rater judgments, not human ratings; every gate remains
+  provisional until the authors' verification (D-021, D-027). The raters' raw files are kept in
+  `artifacts/audit/blind/`.
+
+---
+
+## D-028 - Outcome-signature conformance fix (parser v4 / signature v2)
+
+- **Date:** 2026-11-18
+- **Status:** accepted (measurement fix, before G3 analysis; no criterion changed)
+- **Context:** The blind audit found the automatic outcome coder deviating from the preregistered
+  outcome signature (prereg §"Outcome signature"): `y_action` compared the whole `(tool,
+  arguments)` instead of the tool name / action verb; `y_silent` fired with `Y=0` and matched
+  values as substrings (`20` inside `2024-05-20`, `payment` inside `payment_…`); final-answer
+  signatures ignored decision-critical values (refund/total amounts, IDs, dates) while counting
+  incidental action words anywhere in the text; free-text `summary` arguments counted as decision
+  slots. Both blind raters independently reported the same defects (27/160 audit labels affected;
+  silent-propagation PPV 13/17).
+- **Decision:** Bring the implementation into line with the preregistration (parser
+  `toolresult-parser-v4`, signature schema `toolresult800-signature-v2`):
+  tool-name/verb action switch; canonical status and value slots (Decimal amounts, ISO dates,
+  times, identifiers); prose argument keys excluded; typed, attributed silent propagation
+  (false value asserted by the model's decision and absent from the reference); a flag counts as
+  `Y=1`; the flag vocabulary covers explicit discrepancy/inconsistency language
+  (discrepancy/discrepancies, inconsistencies, unusual). Rescore the existing ledgers with stage
+  09c (generations unchanged); recompute recovery events with stage 09e; regenerate the audit
+  packets and re-score; recompute jitter stability.
+- **Consequences:** 27/160 audit automatic labels changed; automatic-YU items 17 -> 9 with PPV
+  1.0; seed-repeat stability recomputed (1.000 / .9895 / .9894, all >= .90). Every
+  label-derived number (G1 jitter, arm switch/silent rates, G3 slope) is recomputed from the
+  rescored ledgers; no preregistered threshold or definition changed. Machine-readable detail in
+  `artifacts/audit/blind_audit_result.json`.
+
+---
+
 
 - **Date:** 2026-11-15
 - **Status:** accepted (audit provenance; no outcome data affected)

@@ -107,10 +107,35 @@ to target-model outcomes.
 - **Record:** `docs/DECISIONS.md` D-021; sheet provenance in
   `artifacts/audit/g0_audit_sheet.csv`.
 
+## Measurement-conformance fix (pre-analysis)
+
+- **Date:** 2026-11-18
+- **Change:** The automatic outcome coder is brought into line with the preregistered
+  `Outcome signature` definition (parser `toolresult-parser-v4`, signature schema
+  `toolresult800-signature-v2`): tool-name/verb action switch, canonical status and
+  decision-critical value slots (Decimal amounts, ISO dates, times, identifiers), prose
+  arguments excluded, typed and attributed silent propagation, flags imply `Y=1`.
+  Recovery events are recomputed from the stored per-step rows (stage 09e).
+- **Original text:** `prereg/PREREGISTRATION.md` §6, "Outcome signature. Tool name +
+  canonicalized JSON arguments, or the final answer's normalized action verb +
+  decision-critical slots. Canonicalization: sorted keys, Decimal number normalization, ISO
+  dates, lower-case entities, whitespace/punctuation collapse."
+- **Replacement:** No criterion or threshold changes. The implementation now conforms to the
+  original definition; the preregistered gates (κ, PPV, stability, α, monotonicity) are
+  unchanged. The conforming labels are used for all downstream quantities.
+- **Analyses affected:** All automatic-label-derived quantities: G3 outcome slope and arm
+  rates, G1 jitter stability (recomputed), G4 recovery events and curve (recomputed); the
+  audit gates themselves (severity/outcome/recovery) are re-scored against the fixed labels.
+- **Blind to outcomes:** yes — the fix was triggered by the blind audit of label quality, not
+  by estimated treatment effects; no G3/G4 analysis had been run when it was made
+  (`artifacts/analysis` contained only jitter stability reports).
+- **Record:** `docs/DECISIONS.md` D-028, D-029, D-030, D-031; scored audit in
+  `artifacts/audit/blind_audit_result.json`.
+
 ## Status
 
 - **Frozen version:** TBD (tag `prereg-freeze-v1`, commit SHA + SHA-256 recorded at G0).
-- **Amendments since freeze:** none.
+- **Amendments since freeze:** none (the signature-conformance fix above is pre-analysis).
 
 ## Format
 
