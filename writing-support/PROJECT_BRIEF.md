@@ -26,8 +26,7 @@ audit of severity, outcome, and recovery coding.
 
 ## 3. Objective
 
-Ship the frozen 6-section manuscript (`paper/toolresult800.tex`, compiled to
-`paper/toolresults.tex` by Task 2) plus figures fig1-fig10, references, and style
+Ship the frozen 6-section manuscript (`paper/toolresults.tex`) plus figures fig1-fig10, references, and style
 files as a 14-file Overleaf zip, with prose polished (Tasks 5-6) but all numbers,
 claims, and citations byte-identical to the frozen artifacts.
 
