@@ -16,7 +16,7 @@ arm count, generation envelope).
 
 Run from the repository root::
 
-    python paper/scripts/make_figures.py
+    python scripts/paper_figures/make_figures.py
 
 Use ``--verify-only`` to re-check DPI and pixel dimensions without redrawing.
 """
