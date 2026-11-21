@@ -480,9 +480,7 @@ limitation, not a fixable defect of the sample. Figure~\ref{fig:design} shows th
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.95\linewidth]{figures/fig1.png}
-  \caption{Fixed-prefix design. Every arm is generated from the same frozen prefix ending
-  immediately after a real $\tau$-bench tool observation; only the observation's content changes.
-  The target model produces the next decision and never generates the prefix.}
+  \caption{Fixed-prefix design: one frozen prefix, five observation arms, and greedy next-decision generation.}
   \label{fig:design}
 \end{figure}
 
@@ -573,10 +571,7 @@ non-profile pool.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Sampling frame and selected sample. Counts are measured from the pinned $\tau$-bench
-  frame and are implementation facts, not confirmatory results. The 6{,}554 planning figure that
-  appears in the proposal is superseded by the stricter operational value-used rule; the
-  authoritative G0 floor is 880 eligible and 440 per domain.}
+  \caption{Sampling frame and selected sample from the pinned $\tau$-bench frame.}
   \label{tab:supply}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{6.6cm}rr}
@@ -618,9 +613,7 @@ and Figure~\ref{fig:arms} shows the construction for one prefix.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Observation arms. All prose arms use the same deterministic template. V is excluded
-  from the primary slope because it differs in format as well as content; it is the anchor for
-  format and decoding jitter.}
+  \caption{Observation arms and their roles in the slope.}
   \label{tab:arms}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{1.3cm}c>{\raggedright\arraybackslash}p{6.3cm}>{\raggedright\arraybackslash}p{4.6cm}c}
@@ -639,9 +632,7 @@ and Figure~\ref{fig:arms} shows the construction for one prefix.
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.95\linewidth]{figures/fig2.png}
-  \caption{Arm construction for one prefix. The worked example is an illustrative construction,
-  not a harvested record: a refund of \$84.50 becomes \$48.50 under $s=2$, and $s=3$ adds a
-  return-window contradiction.}
+  \caption{Arm construction illustrated for one prefix.}
   \label{fig:arms}
 \end{figure}
 
@@ -758,8 +749,7 @@ tiny forward passes; it cannot host an 8--9B AWQ model at a 24k context.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Target model trio. All three are open-weight, 4-bit AWQ quantized, and served one at a
-  time under greedy decoding. Revisions are pinned in \texttt{configs/models.yaml} before G1.}
+  \caption{Target model trio served under greedy decoding.}
   \label{tab:models}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{4.9cm}c>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{5.4cm}}
@@ -776,9 +766,7 @@ tiny forward passes; it cannot host an 8--9B AWQ model at a 24k context.
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.95\linewidth]{figures/fig3.png}
-  \caption{End-to-end pipeline: pin and harvest, scrub and replay, freeze, serve, code, and
-  analyse. One ledger row is appended per generation; the manifest is the reproducibility spine
-  that ties every reported number to a prefix, an arm, and a renderer version.}
+  \caption{End-to-end pipeline from pinned checkout to ledger row.}
   \label{fig:pipeline}
 \end{figure}
 
@@ -1024,11 +1012,11 @@ Gates are sequential and frozen before the main run. A gate cannot be skipped, r
 seeing data, or re-run on a different sample without a logged amendment. Each gate report states
 the criterion, the observed value, the pass/fail decision, and the consequence. A failed gate
 changes the claim, not the data. Table~\ref{tab:gates} lists the criteria and the fail action for
-G0 through G4.
+G0 through G4. G0 guards supply and freeze integrity, G1 the calibration harness, G2 the compute
+budget, and G3 and G4 the slope and recovery claims.
 \begin{table}[pos=htbp]
   \centering
-  \caption{Sequential gates and stop rules. A failed gate changes the claim, not the data; no
-  gate is relaxed after seeing outcomes.}
+  \caption{Sequential gates and stop rules.}
   \label{tab:gates}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
@@ -1137,9 +1125,7 @@ booking a paid rental.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Non-study fit checks on the H200 MIG 1g.18gb slice. The checks verify load, 24k
-  prompt acceptance, and a parseable decision on a synthetic prompt. No study prefix has been
-  generated.}
+  \caption{Non-study fit checks on synthetic prompts; no study prefixes used.}
   \label{tab:fit}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{4.7cm}ccccc>{\raggedright\arraybackslash}p{2.6cm}}
@@ -1190,7 +1176,7 @@ matrix \cite{krippendorff}. Silent-propagation positive predictive value and rec
   \mathrm{Recall}=\frac{TP}{TP+FN},
   \label{eq:ppv}
 \end{equation}
-with $TP$ the automatic silent labels that the blind audit confirms, $FP$ the automatic labels it
+where $TP$ the automatic silent labels that the blind audit confirms, $FP$ the automatic labels it
 rejects, and $FN$ the panel-confirmed silent items the coder misses. Switch-rate intervals use the
 Wilson score interval,
 \begin{equation}
@@ -1199,7 +1185,7 @@ Wilson score interval,
        {1+\frac{z^{2}}{n}},
   \label{eq:wilson}
 \end{equation}
-at $z=1.96$ \cite{wilson1927}. Seed-repeat stability is the share of repeated generations whose decision signature is
+where $z=1.96$ \cite{wilson1927}. Seed-repeat stability is the share of repeated generations whose decision signature is
 unchanged. These statistics gate the claim rather than decorate it: a low $\kappa$ downgrades the
 study to action-level $Y^{A}$, and a low $\alpha$ invalidates the dose interpretation even if the
 slope is positive.
@@ -1212,7 +1198,7 @@ The minimum detectable effect is
   \mathrm{MDE}_{\mathrm{OR}}=e^{\mathrm{MDE}_{\beta}},
   \label{eq:mde}
 \end{equation}
-at $\alpha=.05$ two-sided and $80\%$ power.
+where $\alpha=.05$ is the two-sided level and power is $80\%$.
 
 \noindent\textbf{Generation envelope}.\
 
@@ -1228,9 +1214,7 @@ primary estimate.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Planned generation envelope for the main run. Counts are the planned envelope, not
-  completed generations. The run stops at 45 GPU-hours or 200~GB, whichever comes first; a stop
-  mid-envelope is disclosed as a shortfall.}
+  \caption{Planned generation envelope for the main run.}
   \label{tab:envelope}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{5.2cm}>{\raggedright\arraybackslash}p{6.4cm}r}
@@ -1294,12 +1278,14 @@ design-matched comparison and is marginal at $p=.0625$; the recorded 95\% interv
 Wald interval and is compatible with a 1.3 percentage-point effect. A 12-item human spot-check
 agreed with all 12 labels, but the letter coding missed some silent fact propagation, so 8.3
 percentage points is an action-level lower bound rather than a content-sensitivity estimate.
+The pilot is not evidence for the confirmatory claim. It used one 4B model, synthetic prefixes,
+coarse action coding, and no recovery data, and it cannot distinguish a graded law from a handful
+of flips. Its role is to show that the manipulation is runnable and that the confirmatory design
+is worth the GPU time.
+
 \begin{table}[pos=htbp]
   \centering
-  \caption{Pilot results. The pilot used $N=60$ synthetic WebArena-lite / $\tau$-style prefixes,
-  \texttt{qwen3.5:4b}, greedy decoding, and three collapsed action codes. It is a screening
-  signal, not an estimate of the confirmatory slope, and it is not pooled with the confirmatory
-  sample.}
+  \caption{Pilot results on 60 synthetic prefixes; excluded from confirmatory analysis.}
   \label{tab:pilot}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{7.4cm}r}
@@ -1315,14 +1301,10 @@ percentage points is an action-level lower bound rather than a content-sensitivi
     \bottomrule
   \end{tabular}
 \end{table}
-The pilot is not evidence for the confirmatory claim. It used one 4B model, synthetic prefixes,
-coarse action coding, and no recovery data, and it cannot distinguish a graded law from a handful
-of flips. Its role is to show that the manipulation is runnable and that the confirmatory design
-is worth the GPU time.
-
 \noindent\textbf{G0 harvest and freeze status}.\
 
-The G0 implementation counts are in Table~\ref{tab:supply}. Supply, domain balance, replay, and
+The G0 implementation counts are in Table~\ref{tab:supply}. The 6{,}554 planning figure is
+superseded by the stricter operational value-used rule. Supply, domain balance, replay, and
 rendering meet their thresholds. The manifest is frozen at
 \texttt{data/manifests/toolresult800\_v1.json} (SHA-256 sidecar
 \texttt{toolresult800\_v1.sha256.json}); the frozen prefix payload is
@@ -1334,8 +1316,8 @@ filled. \pending{final author verification date and any replacement rows if veri
 
 \noindent\textbf{G1 calibration}.\
 
-G1 is running under the fixed harness: \texttt{think} is excluded, decoding is constrained to a
-valid tool-or-final-answer JSON object, the decision budget is 1{,}024 tokens, and each model runs
+G1 ran under the fixed harness: \texttt{think} was excluded, decoding was constrained to a
+valid tool-or-final-answer JSON object, the decision budget was 1{,}024 tokens, and each model ran
 in a separate process. All three models passed. Table~\ref{tab:g1} reports the per-model values.
 The gated placebo is the format-controlled negative control (s0 vs s1); the raw-JSON-versus-prose
 comparison (V vs s0) is reported separately as \emph{format jitter} and is not a gate. The format
@@ -1344,9 +1326,7 @@ s0--s3, which share one format.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{G1 calibration on 60 disjoint prefixes per model. Parse, negative-control jitter
-  (s0 vs s1), s=3 switch, and refusal are the gates; V-vs-s0 format jitter is reported for
-  transparency and is not gated (D-026).}
+  \caption{G1 calibration on 60 disjoint prefixes per model.}
   \label{tab:g1}
   \small
   \begin{tabular}{lccccc}
@@ -1362,20 +1342,9 @@ s0--s3, which share one format.
 
 \subsection{Primary severity--switch estimate}
 
-
-
-The primary estimate is the pooled conditional-logistic slope of the switch indicator of
-Equation~\ref{eq:switch} on severity, with the per-model slopes as the replication gate. The
-base matrix is complete (13{,}200 generations, 880 prefixes, five arms, three models, greedy
-decoding), so this is the pre-registered estimate, not a partial one. The recovery endpoint is
-reported separately; the audits gate the label-based decomposition, not the switch indicator.
-
 \begin{table}[pos=htbp]
   \centering
-  \caption{Primary severity--switch estimate. $\hat\beta$ is the conditional-logistic slope
-  of the switch indicator on severity within prefix; SE is the prefix-cluster standard error;
-  $p$ is the two-sided Wald test. All three per-model slopes are positive, so the pooled slope
-  meets the pre-registered replication gate. Traced to \texttt{artifacts/analysis/g3\_analysis.json}.}
+  \caption{Primary severity-switch estimates by model and pooled.}
   \label{tab:primary}
   \small
   \begin{tabular}{lrrrr}
@@ -1394,12 +1363,14 @@ reported separately; the audits gate the label-based decomposition, not the swit
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.95\linewidth]{figures/fig5.png}
-  \caption{Per-model and pooled severity slopes with 95\% confidence intervals (prefix-cluster
-  SE). Traced to \texttt{artifacts/analysis/g3\_analysis.json}.}
+  \caption{Per-model and pooled severity slopes with 95\% confidence intervals.}
   \label{fig:forest}
 \end{figure}
 
-The pooled slope is $\hat\beta = 0.877$ with a prefix-cluster standard error of $0.059$
+The primary estimate is the pooled conditional-logistic slope of the switch indicator of
+Equation~\ref{eq:switch} on severity, with the per-model slopes as the replication gate. The
+base matrix is complete (13{,}200 generations, 880 prefixes, five arms, three models, greedy
+decoding), so this is the pre-registered estimate, not a partial one. The pooled slope is $\hat\beta = 0.877$ with a prefix-cluster standard error of $0.059$
 ($z = 14.77$, $p = 2.3\times10^{-49}$). The prefix-cluster bootstrap interval is
 $[0.770, 0.998]$ ($2{,}000$ replicates, $p = 0.001$ two-sided). All three per-model slopes
 are positive and Holm-significant, so the pre-registered replication gate is met. The slope is
@@ -1421,19 +1392,16 @@ D-026). An earlier analysis under the pre-fix automatic coder gave $\hat\beta = 
 (\texttt{g3\_analysis\_all880.json}), so the coder change accounts for most of the movement and
 the reserve exclusion for the remainder. The blind audit then found and corrected the labeling
 defect (D-028, A-006), and the estimate above is the corrected one. All three are positive and all
-are reported.
-
-The G3 gate did not pass: its parser-failure criterion is 1.55\% (205/13{,}200; 3.45\% including
+are reported. The G3 gate did not pass: its parser-failure criterion is 1.55\% (205/13{,}200; 3.45\% including
 refusals) against the 1\% threshold. Under the gate's fail action the paper reports the slope as a
 pre-registered measurement estimate and makes no content-sensitivity claim; the estimate is not a
-confirmed effect.
+confirmed effect. The recovery endpoint is reported separately; the audits gate the label-based
+decomposition, not the switch indicator. Estimates trace to
+\texttt{artifacts/analysis/g3\_analysis.json}.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Tier odds ratios against the prose placebo ($s=0$), conditional on prefix and model.
-  Intervals are prefix-cluster percentile bootstrap (2{,}000 replicates); $n$ is informative
-  groups/rows. The jump is at $s=2$, not a constant per-level gradient. Traced to
-  \texttt{artifacts/analysis/prereg\_secondary.json}.}
+  \caption{Tier odds ratios against the prose placebo.}
   \label{tab:tiers}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
@@ -1453,10 +1421,7 @@ confirmed effect.
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.98\linewidth]{figures/fig6.png}
-  \caption{Tier odds ratios against $s=0$ on a log scale, by model and pooled. The $s=1$ tier is
-  near one for Qwen; the large jump is at $s=2$ and the $s=3$ tier is larger still. Intervals are
-  prefix-cluster percentile bootstrap. Traced to
-  \texttt{artifacts/analysis/prereg\_secondary.json}.}
+  \caption{Tier odds ratios against $s=0$ on a log scale.}
   \label{fig:tiers}
 \end{figure}
 
@@ -1475,13 +1440,12 @@ lenient tool-or-verb coding the pooled slope is 0.43 [0.30, 0.57] versus 0.88 [0
 the strict signature: coding changes the magnitude, not the sign. Excluding the placebo,
 $\hat\beta = 1.03$ [0.88, 1.19]. At the analyzed sample the realized pooled MDE is 0.166
 logit/level (OR 1.18, 80\% power), and realized power at the observed effect is 1.0.
+Diagnostics trace to \texttt{artifacts/analysis/prereg\_secondary.json}, with the $s1$ tier
+near one and the jump at $s2$.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Pre-registered linearity and paired diagnostics. The categorical LRT compares three
-  tier dummies with the linear model; the quadratic row is the $s^2$ coefficient; McNemar is the
-  paired $s=2$ versus $s=3$ contrast. Intervals and tests are cluster-robust where applicable.
-  Traced to \texttt{artifacts/analysis/prereg\_secondary.json}.}
+  \caption{Linearity and paired diagnostics by sample.}
   \label{tab:diagnostics}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
@@ -1508,12 +1472,15 @@ population-average paired contrasts over all labels are +10.2 points for $s2$ vs
 [8.7, 11.7], +16.3 for $s3$ vs $s0$ [14.5, 18.0], and +6.2 for $s3$ vs $s2$ [4.9, 7.6]. The
 conditional slope and the marginal contrast therefore agree on direction and on the threshold
 shape; the slope should be read as a within-stratum (mover) effect, not a population-average
-effect.
+effect. Table~\ref{tab:armrates} gives the descriptive per-arm switch rates. They rise
+monotonically with severity for all three models, with $s0$ and $s1$ nearly flat, which is the
+shape the slope summarizes; the s0 placebo rate is the format-jitter floor reported in
+Table~\ref{tab:g1}. Rates use 741--770 labeled rows per arm
+(\texttt{artifacts/analysis/g3\_analysis.json}).
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Analysis coverage by model and arm (800 primary prefixes per arm). Cells show the
-  labeled share of parsed rows; V-unparsed is the share of prefixes without a parsed V reference.}
+  \caption{Analysis coverage by model and arm.}
   \label{tab:missing}
   \small
   \begin{tabular}{lccccr}
@@ -1529,10 +1496,7 @@ effect.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Switch typology across the 2{,}297 prefix$\times$model strata. Never = no switch in any
-  prose arm; always = switch in every arm; dose-responsive = no switch at $s0$ and $s1$ but a
-  switch at $s2$ or $s3$; placebo switcher = switch at $s0$. Counts with row shares. Traced to
-  \texttt{artifacts/analysis/switch\_typology.json}.}
+  \caption{Switch typology across prefix-by-model strata.}
   \label{tab:typology}
   \small
   \begin{tabular}{lrrrr}
@@ -1548,16 +1512,9 @@ effect.
   \end{tabular}
 \end{table}
 
-Table~\ref{tab:armrates} gives the descriptive per-arm switch rates. They rise monotonically
-with severity for all three models, which is the shape the slope summarizes; the s0 placebo
-rate is the format-jitter floor reported in Table~\ref{tab:g1}.
-
 \begin{table}[pos=htbp]
   \centering
-  \caption{Descriptive switch rates $Y$ (signature differs from the verbatim V continuation or an
-  explicit flag is raised) by arm and model, from the complete base matrix. Rates are computed on
-  741--770 labeled rows per arm; exact denominators are in
-  \texttt{artifacts/analysis/g3\_analysis.json}.}
+  \caption{Descriptive switch rates by arm and model.}
   \label{tab:armrates}
   \small
   \begin{tabular}{lrrrr}
@@ -1574,9 +1531,7 @@ rate is the format-jitter floor reported in Table~\ref{tab:g1}.
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.95\linewidth]{figures/fig7.png}
-  \caption{Switch rates by arm and model with Wilson 95\% confidence intervals (800 primary
-  prefixes). The prose placebo $s0$ and the non-critical change $s1$ are nearly flat; the critical
-  arms move. Traced to \texttt{artifacts/analysis/g3\_analysis.json}.}
+  \caption{Switch rates by arm and model with 95\% confidence intervals.}
   \label{fig:dose}
 \end{figure}
 
@@ -1596,10 +1551,7 @@ rather than smoothed over.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Pre-registered audit gates and observed values (label-free round). Severity $\alpha$
-  is nominal/interval; recovery $\kappa$ is step/endpoint. The parser-failure row is the G3
-  criterion from the main matrix, not an audit. Traced to
-  \texttt{artifacts/audit/blind\_audit\_result.json}.}
+  \caption{Pre-registered audit gates and observed values.}
   \label{tab:audit}
   \small
   \begin{tabular}{lrrl}
@@ -1648,13 +1600,12 @@ agreed at $\alpha = .917$ (severity), $\kappa = .942$ (outcome), and $\kappa = .
 (recovery endpoint / step); against the primary severity consensus, $\alpha = .946$. The sessions
 share one underlying model family, and two of the three severity sessions are identical on
 116/120 items, so $\alpha = .911$ is consistency among near-duplicate readings, not independent
-human reliability.
+human reliability. The panel record is
+\texttt{artifacts/audit/verification/panel\_record.json}.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Agent verification panel (D-043). Agreement is with the blind rater majority;
-  corrections are documented in \texttt{artifacts/audit/verification/panel\_record.json}. The
-  severity audit was verified twice, once with the sheet visible and once fully blind.}
+  \caption{Agent verification panel agreement and corrections.}
   \label{tab:panel}
   \small
   \begin{tabular}{lrrl}
@@ -1699,13 +1650,11 @@ single path is the reservation identifier: 58.2\% of its $s=2$ perturbations mov
 51.9\% of those switches are silent. Flags are near-absent (0.8\% of $s=2$ rows). At fixed
 severity the field-class spread in switch rates is 21.1 percentage points, while the criticality
 contrast adds 10.1 points over a render floor of 30.1\%; field type is therefore at least as
-informative as the critical/non-critical label.
+informative as the critical/non-critical label. Wilson 95\% intervals are in the same artifact.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Exploratory field-type breakdown of the $s=2$ switches (800 primary prefixes).
-  Silent share is the fraction of switches with no action change and no flag that repeat the
-  injected value. Wilson 95\% CIs are in the companion artifact.}
+  \caption{Field-type breakdown of $s=2$ switches.}
   \label{tab:fieldtypes}
   \small
   \begin{tabular}{lrrr}
@@ -1725,9 +1674,7 @@ informative as the critical/non-critical label.
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.95\linewidth]{figures/fig8.png}
-  \caption{Field-type switch rates and silent shares at $s=2$ (exploratory). Identifiers and
-  money carry the silent propagation; status fields almost never do. Traced to
-  \texttt{artifacts/analysis/field\_taxonomy.json}.}
+  \caption{Field-type switch rates and silent shares at $s=2$.}
   \label{fig:fields}
 \end{figure}
 
@@ -1749,14 +1696,12 @@ reversion), 56/72 Qwen, but only 56/141 Ministral---most Ministral recoveries ar
 (pooled $p=.49$) or between $s2$ and $s3$ ($p=.52$). Under the alternative convention that
 censors at $H=4$, the primary rates fall to 27.3/34.7/27.2\%. The gate fails on every point estimate of the primary set, but the margin is
 convention-dependent and Ministral is close to the threshold. The curve and RMST stand; the
-half-life is labelled exploratory.
+half-life is labelled exploratory. The curves flatten before $H=4$; recovery estimates trace to
+\texttt{artifacts/analysis/g4\_recovery.json}.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Recovery on the transient risk sets, $H=4$. Events are observed R1/R2 endpoints;
-  censored sequences contribute exposure to the last observed step. RMST and $t_{1/2}$ are in
-  steps; the Weibull $p$ tests the exponential shape ($\kappa=1$). Traced to
-  \texttt{artifacts/analysis/g4\_recovery.json}.}
+  \caption{Recovery on the transient risk sets at $H=4$.}
   \label{tab:recovery}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
@@ -1776,10 +1721,7 @@ half-life is labelled exploratory.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Recovery by $H=4$ across the nine model--risk-set groups (800 primary prefixes).
-  Cells show the recovered share and the risk-set size. The persistent groups are near-inert
-  (prompts byte-identical to transient for 97--100\% of shared steps) and are shown for
-  completeness only.}
+  \caption{Recovery by $H=4$ across model and risk-set groups.}
   \label{tab:recovery_all}
   \small
   \begin{tabular}{lrrr}
@@ -1796,9 +1738,7 @@ half-life is labelled exploratory.
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.98\linewidth]{figures/fig9.png}
-  \caption{Kaplan--Meier survival on the transient $s=2$ (left) and $s=3$ (right) risk sets by
-  model (800 primary prefixes). The curves flatten before $H=4$; the gate fails in every primary
-  group. Traced to \texttt{artifacts/analysis/g4\_recovery.json}.}
+  \caption{Kaplan--Meier survival on the transient risk sets by model.}
   \label{fig:recovery}
 \end{figure}
 
@@ -1814,15 +1754,12 @@ repeated generations; unparsed generations are excluded. The placebo-excluded sl
 [0.88, 1.19]; task-clustered resampling leaves the pooled interval essentially unchanged
 [0.758, 0.996]; the held-out reserve gives $\hat\beta = 0.781$ [0.443, 1.194]. Domain and donor
 strata are reported with the diagnostics. Heterogeneity is reported as an interval, not as a
-ranking, and no model is declared more or less sensitive than another.
+ranking, and no model is declared more or less sensitive than another. Sensitivity fits trace
+to the same artifact, with every point estimate positive.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Pooled severity slope under the pre-registered sensitivity codings (800 primary
-  prefixes). Intervals are prefix-cluster percentile bootstrap with 2{,}000 replicates. Strict
-  coding uses the full signature; lenient coding uses tool-or-verb action only; the
-  placebo-excluded fit uses $s=1,\dots,3$. Traced to
-  \texttt{artifacts/analysis/prereg\_secondary.json}.}
+  \caption{Pooled slope under pre-registered sensitivity codings.}
   \label{tab:sensitivity}
   \small
   \begin{tabular}{lcc}
@@ -1840,10 +1777,7 @@ ranking, and no model is declared more or less sensitive than another.
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.98\linewidth]{figures/fig10.png}
-  \caption{Left: pooled slope under the primary, strict, lenient, and placebo-excluded codings.
-  Right: pooled slope within domain and donor strata. All intervals are prefix-cluster bootstrap;
-  every point estimate is positive. Traced to
-  \texttt{artifacts/analysis/prereg\_secondary.json}.}
+  \caption{Pooled slope under sensitivity codings and within strata.}
   \label{fig:sensitivity}
 \end{figure}
 
@@ -1870,9 +1804,7 @@ question and are reported separately from the within-stratum slope. Second, the 
 is measured rather than perfectly manipulated. The audit finds donor-unused items in the critical
 arms and decision-changing items in $s1$, so $\beta$ is a weighted contrast between intended and
 realized doses, not a clean per-level causal parameter. The sign is stable across every audit pass
-and coding, but the per-level magnitudes should not be read as a calibrated dose--response law.
-
-The decomposition changes the interpretation of a positive slope. A slope driven by detection is
+and coding, but the per-level magnitudes should not be read as a calibrated dose--response law. The decomposition changes the interpretation of a positive slope. A slope driven by detection is
 a slope in which the agent notices the conflict; a slope driven by silent propagation is a slope
 in which the agent absorbs the error. The two have opposite engineering implications even though
 they produce the same value of $Y$. That is why the paper reports $Y^{U}$, $Y^{F}$, and $Y^{A}$
