@@ -378,9 +378,8 @@ pilot found a consult rate of 54/60, placebo jitter of 0/60, and an error-switch
 that the manipulation runs and that error content can move the next action. They do not estimate
 a slope: the sample is small, the model is a single 4B model, the prefixes are synthetic, the
 action coding is coarse, and there are no recovery data. The pilot is therefore a screening
-signal, and Section~\ref{sec:results} keeps it separate from the confirmatory analysis.
-
-The manuscript reports the completed study: the base matrix, recovery sequences, seed-repeat
+signal, and Section~\ref{sec:results} keeps it separate from the confirmatory analysis. The
+manuscript reports the completed study: the base matrix, recovery sequences, seed-repeat
 shard, and blind audits are done, so the results below replace the earlier placeholders. Two
 preregistered criteria failed and are reported as failures. Every quantity in the results section
 traces to a ledger, a manifest, or an analysis artifact.
@@ -427,9 +426,7 @@ estimate is local to the frozen prefixes and to the renderer. The benefit is tha
 switch can be attributed to the observation's content rather than to a change of task. The
 verbatim arm is a separate anchor: it differs in format as well as content, so it is excluded
 from the primary slope and used to measure format and decoding jitter.
-
 \noindent\textbf{Error propagation, detection, and recovery}.\
-
 Silent propagation is the failure mode in which the false value appears in the next decision
 without an explicit flag. It is invisible to a task-success metric when the episode still ends
 in a plausible state. Detection and action switch are the two visible alternatives: the agent
@@ -514,7 +511,7 @@ and target model $m$ returns the next decision
   d_{p,m,a}=f_m\!\left(x_p,R_a(o_p)\right).
   \label{eq:decision}
 \end{equation}
-The design holds $(x_p,o_p,m)$ fixed and varies only $a$, so the contrast is within prefix by
+where the design holds $(x_p,o_p,m)$ fixed and varies only $a$, so the contrast is within prefix by
 construction. Identification rests on two conditions: across the prose arms, the renderer changes
 the observation's content but not the task, tools, history, or policy; and the $s=0$ arm preserves
 the observation's value set, which is checked for every prefix (100\% equality). The verbatim arm
@@ -556,22 +553,20 @@ models.
 The supply is measured, not assumed. The pinned frame is $\tau$-bench commit \texttt{59a200c},
 with four trajectory files, six task databases, and a harness digest recorded in
 \texttt{data/manifests/source\_pin.json}. Parsing every tool message followed by an assistant
-message yields 1{,}980 trajectories and 13{,}605 post-tool candidates, of which 11{,}318 carry
+message yielded 1{,}980 trajectories and 13{,}605 post-tool candidates, of which 11{,}318 carry
 JSON-parseable observations. Excluding the profile and PII tools
 (\texttt{get\_user\_details}, \texttt{find\_user\_id\_by\_name\_zip},
-\texttt{find\_user\_id\_by\_email}, and \texttt{modify\_user\_address}) removes 3{,}692
+\texttt{find\_user\_id\_by\_email}, and \texttt{modify\_user\_address}) removed 3{,}692
 candidates. The operational value-used rule, which keeps a prefix only when at least one
-observation scalar appears in the donor's factual continuation after normalization, leaves
+observation scalar appears in the donor's factual continuation after normalization, left
 5{,}516 eligible prefixes: 1{,}434 airline and 4{,}082 retail. Replay against the pinned task
-database matches 5{,}511 of 5{,}516 eligible prefixes (99.91\%). Table~\ref{tab:supply} reports
-the funnel.
-
-A prefix is eligible if it contains a real tool message, a reconstructable prefix, at least one
+database matched 5{,}511 of 5{,}516 eligible prefixes (99.91\%). Table~\ref{tab:supply} reports
+the funnel. A prefix is eligible if it contains a real tool message, a reconstructable prefix, at least one
 scalar value used in the donor's factual continuation, PII-scrubbed content, a replay match of at
 least 98\%, and a lossless $s=0$ rendering. Replay is the step that makes an observation a real
 environment output: the harness loads the pinned task database, executes the prefix's tool calls
 from the initial state, and compares the final observation with the historical one using a hash
-and normalized values. The 98\% threshold is not relaxed. Full-pool replay is 87.39\%, and the
+and normalized values. The 98\% threshold is not relaxed. Full-pool replay was 87.39\%, and the
 gap is the historical \texttt{get\_user\_details} \texttt{province}/\texttt{state} schema drift,
 which is disclosed in \texttt{docs/DECISIONS.md}; the replay population is the eligible
 non-profile pool.
@@ -607,20 +602,18 @@ non-profile pool.
 \end{table}
 
 Sampling is stratified by domain, donor, step-index bucket, and tool family, with seed 20261108.
-The study selects 880 prefixes: 800 primary (400 airline, 400 retail) plus 80 reserve (40
+The study selected 880 prefixes: 800 primary (400 airline, 400 retail) plus 80 reserve (40
 airline, 40 retail). The sample is frozen before any target-model output is generated. The
 manifest records prefix IDs, message hashes, observation hashes, arm assignments,
 perturbation-record hashes, the renderer version, the field-registry hash, and the preregistration
 hash. Every analysis table must trace to a manifest row and a ledger row. The airline arm is the
 binding supply constraint: the cap-10 pool has 442 airline prefixes, so 400 primary plus 40
 reserve leaves a margin of two before attrition.
-
 \noindent\textbf{Arms and rendering}.\ \label{sec:arms}
-
 All arms use a real observation from the same prefix. V is the exact observation as raw JSON. The
 four prose arms use one deterministic key--value/bullet template; only content changes. No
-LLM-generated text enters the manipulation. A script flattens the V value set and the $s=0$ value
-set and verifies equality; any loss excludes the prefix. Table~\ref{tab:arms} defines the arms
+LLM-generated text enters the manipulation. A script flattened the V value set and the $s=0$ value
+set and verified equality; any loss excluded the prefix. Table~\ref{tab:arms} defines the arms
 and Figure~\ref{fig:arms} shows the construction for one prefix.
 
 \begin{table}[pos=htbp]
@@ -689,7 +682,6 @@ AI-assisted mechanical pre-audit (D-021), and the human verification required by
 preregistration is reported as a deviation rather than as passed. A separate re-scan runs before
 release.
 Raw trajectories, weights, caches, credentials, and run logs never enter the repository.
-
 Automatic labels are primary and are validated by blind audits. The severity audit uses 120
 observations (30 per level) rated by three separate blind rater sessions; the outcome audit
 uses 160 responses rated by two; the recovery audit uses 80 sequences rated by two from per-step
@@ -697,8 +689,9 @@ evidence, where each step's parsed decision and flag bit are given. The reported
 label-free: the packets exclude the mechanical reference labels and every automatic answer, and
 each rater sees only the evidence. The severity packet shows both changed leaves for compound
 perturbations, in shuffled item order, and excludes arm-derived annotations; the outcome packet
-includes the injected true/false values; the recovery packet includes the per-step evidence. A
-first round was label-visible; the author accepted it under
+includes the injected true/false values; the recovery packet includes the per-step evidence.
+
+A first round was label-visible; the author accepted it under
 D-035, and it is archived as a sensitivity. The label-free sheets were checked by an independent
 verification panel (one verifier per audit, plus a second-rater pair on a stratified 120-item
 subset); the panel is recorded under D-043. Its ratings are agent-produced and share one model
@@ -743,9 +736,7 @@ arguments, or the final answer's normalized action verb plus decision-critical s
 generation with a parser failure is retained in the ledger and reported; it is not silently
 dropped. A parser-error rate above 5\% in a shard fails fast rather than burning GPU hours, and
 the overall parser failure must stay below 1\% for G3.
-
 \noindent\textbf{Context and length envelope}.\
-
 The longest observed prompt is 20{,}681 tokens, and the decision budget is 1{,}024 tokens. The
 study therefore adopts a 24{,}576-token context. The choice was audited in D-019: two synthetic
 20k-token prompts pass on all three models. No prefix is truncated and no observation is
@@ -858,7 +849,6 @@ content; $s=0$ is the placebo that absorbs format jitter. The primary test is on
 $H_1:\beta>0$ at $\alpha=.05$, reported two-sided for completeness. H1 is supported only if the
 pooled slope is positive and the per-model slope is positive in at least two of three models with
 the same sign. The second condition is a replication gate, not a model ranking.
-
 \noindent\textbf{Conditional likelihood and inference}.\
 Because $\alpha_{p,m}$ is a nuisance intercept, $\beta$ is estimated by conditional maximum
 likelihood \cite{chamberlain1980}. For group $g=(p,m)$, let $k_g=\sum_{i\in g}y_i$ be the number of switches and let
@@ -1035,7 +1025,6 @@ seeing data, or re-run on a different sample without a logged amendment. Each ga
 the criterion, the observed value, the pass/fail decision, and the consequence. A failed gate
 changes the claim, not the data. Table~\ref{tab:gates} lists the criteria and the fail action for
 G0 through G4.
-
 \begin{table}[pos=htbp]
   \centering
   \caption{Sequential gates and stop rules. A failed gate changes the claim, not the data; no
@@ -1055,20 +1044,17 @@ G0 through G4.
     \bottomrule
   \end{tabular}
 \end{table}
-
 \noindent\textbf{G0: harvest and freeze}.\
-
 G0 is CPU-only and costs \$0. It has five checks: supply of at least 880 eligible prefixes;
 domain balance of at least 440 per domain before audit and 400 after audit; replay of at least
 98\%; a 40-item human audit at 36/40 or better; and freeze integrity, meaning that message hashes,
 observation hashes, perturbation records, the renderer version, the field-registry hash, and the
 preregistration hash are recorded in \texttt{data/manifests/toolresult800\_v1.json}.
-
 The implementation status as of 2026-11-15 is as follows. Supply passes with 5{,}516 eligible.
 Replay passes with 5{,}511/5{,}516 (99.91\%). The cap-10 pool has 442 airline and 1{,}144 retail
 prefixes, so the per-domain floor is met with a two-prefix airline margin. Rendering produced
 4{,}400 arms and 2{,}640 perturbation records with 100\% $s=0$ value-set equality, and the
-calibration set of 60 disjoint prefixes is selected. The freeze dry-run validates the manifest
+calibration set of 60 disjoint prefixes was selected. The freeze dry-run validated the manifest
 shape: 800 plus 80 prefixes, 4{,}400 arms, 2{,}640 perturbations, and 60 calibration prefixes.
 The freeze is complete: the manifest records 800 plus 80 prefixes, 4,400 arms, 2,640 perturbations,
 and 60 calibration prefixes, with message hashes, observation hashes, renderer version,
@@ -1308,7 +1294,6 @@ design-matched comparison and is marginal at $p=.0625$; the recorded 95\% interv
 Wald interval and is compatible with a 1.3 percentage-point effect. A 12-item human spot-check
 agreed with all 12 labels, but the letter coding missed some silent fact propagation, so 8.3
 percentage points is an action-level lower bound rather than a content-sensitivity estimate.
-
 \begin{table}[pos=htbp]
   \centering
   \caption{Pilot results. The pilot used $N=60$ synthetic WebArena-lite / $\tau$-style prefixes,
@@ -1330,7 +1315,6 @@ percentage points is an action-level lower bound rather than a content-sensitivi
     \bottomrule
   \end{tabular}
 \end{table}
-
 The pilot is not evidence for the confirmatory claim. It used one 4B model, synthetic prefixes,
 coarse action coding, and no recovery data, and it cannot distinguish a graded law from a handful
 of flips. Its role is to show that the manipulation is runnable and that the confirmatory design
