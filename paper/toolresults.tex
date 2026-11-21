@@ -1000,66 +1000,10 @@ gives the endpoint coding.
   \end{algorithmic}
 \end{algorithm}
 
-\noindent\textbf{Agreement and audit statistics}.\
-
-Agreement is reported with Krippendorff's $\alpha$ for the ordinal severity rating
-\cite{krippendorff,hayes2007} and Cohen's $\kappa$ for the categorical outcome label
-\cite{cohen1960,landis1977}.
-For two raters with observed agreement $p_o$ and chance agreement $p_e$,
-\begin{equation}
-  \kappa=\frac{p_o-p_e}{1-p_e},
-  \qquad
-  p_o=\frac{1}{n}\sum_{i=1}^{n}\mathbf{1}[a_i=b_i],
-  \qquad
-  p_e=\sum_{c}\hat\pi_a(c)\,\hat\pi_b(c),
-  \label{eq:kappa}
-\end{equation}
-where $\hat\pi_a(c)$ and $\hat\pi_b(c)$ are the two raters' category marginals. Krippendorff's
-$\alpha$ generalizes the same idea to any number of raters and to ordinal codes,
-\begin{equation}
-  \alpha=1-\frac{D_o}{D_e},
-  \qquad
-  \delta^{2}(c,k)=
-  \begin{cases}
-    \mathbf{1}[c\neq k], & \text{nominal},\\
-    (c-k)^{2}, & \text{interval},
-  \end{cases}
-  \label{eq:alpha}
-\end{equation}
-where $D_o$ and $D_e$ are the observed and expected disagreement computed from the coincidence
-matrix \cite{krippendorff}. Silent-propagation positive predictive value and recall are
-\begin{equation}
-  \mathrm{PPV}=\frac{TP}{TP+FP},
-  \qquad
-  \mathrm{Recall}=\frac{TP}{TP+FN},
-  \label{eq:ppv}
-\end{equation}
-with $TP$ the automatic silent labels that the blind audit confirms, $FP$ the automatic labels it
-rejects, and $FN$ the panel-confirmed silent items the coder misses. Switch-rate intervals use the
-Wilson score interval,
-\begin{equation}
-  \frac{\hat p+\frac{z^{2}}{2n}\pm
-        z\sqrt{\frac{\hat p(1-\hat p)}{n}+\frac{z^{2}}{4n^{2}}}}
-       {1+\frac{z^{2}}{n}},
-  \label{eq:wilson}
-\end{equation}
-at $z=1.96$ \cite{wilson1927}. Seed-repeat stability is the share of repeated generations whose decision signature is
-unchanged. These statistics gate the claim rather than decorate it: a low $\kappa$ downgrades the
-study to action-level $Y^{A}$, and a low $\alpha$ invalidates the dose interpretation even if the
-slope is positive.
-
 \noindent\textbf{Power}.\
 
 The design assumes a 4\% placebo switch rate and a random prefix intercept with standard
-deviation 1.0. The minimum detectable effect is
-\begin{equation}
-  \mathrm{MDE}_{\beta}=
-  \left(z_{1-\alpha/2}+z_{1-\beta}\right)\widehat{\mathrm{SE}}(\hat\beta),
-  \qquad
-  \mathrm{MDE}_{\mathrm{OR}}=e^{\mathrm{MDE}_{\beta}},
-  \label{eq:mde}
-\end{equation}
-at $\alpha=.05$ two-sided and $80\%$ power. At $N=800$ the per-model minimum detectable effect is
+deviation 1.0. The minimum detectable effect follows Equation~\ref{eq:mde}. At $N=800$ the per-model minimum detectable effect is
 0.203 logit per level (odds
 ratio 1.22) at 80\% power and $\alpha=.05$ two-sided; the pooled minimum detectable effect is at
 most 0.15. The observed $s0$ switch rate is 30.1\%, far above the 4\% design assumption, so the
@@ -1222,6 +1166,67 @@ booking a paid rental.
     \bottomrule
   \end{tabular}
 \end{table}
+
+\subsection{Evaluation Metrics}
+\label{sec:metrics}
+
+\noindent\textbf{Agreement and audit statistics}.\
+
+Agreement is reported with Krippendorff's $\alpha$ for the ordinal severity rating
+\cite{krippendorff,hayes2007} and Cohen's $\kappa$ for the categorical outcome label
+\cite{cohen1960,landis1977}.
+For two raters with observed agreement $p_o$ and chance agreement $p_e$,
+\begin{equation}
+  \kappa=\frac{p_o-p_e}{1-p_e},
+  \qquad
+  p_o=\frac{1}{n}\sum_{i=1}^{n}\mathbf{1}[a_i=b_i],
+  \qquad
+  p_e=\sum_{c}\hat\pi_a(c)\,\hat\pi_b(c),
+  \label{eq:kappa}
+\end{equation}
+where $\hat\pi_a(c)$ and $\hat\pi_b(c)$ are the two raters' category marginals. Krippendorff's
+$\alpha$ generalizes the same idea to any number of raters and to ordinal codes,
+\begin{equation}
+  \alpha=1-\frac{D_o}{D_e},
+  \qquad
+  \delta^{2}(c,k)=
+  \begin{cases}
+    \mathbf{1}[c\neq k], & \text{nominal},\\
+    (c-k)^{2}, & \text{interval},
+  \end{cases}
+  \label{eq:alpha}
+\end{equation}
+where $D_o$ and $D_e$ are the observed and expected disagreement computed from the coincidence
+matrix \cite{krippendorff}. Silent-propagation positive predictive value and recall are
+\begin{equation}
+  \mathrm{PPV}=\frac{TP}{TP+FP},
+  \qquad
+  \mathrm{Recall}=\frac{TP}{TP+FN},
+  \label{eq:ppv}
+\end{equation}
+with $TP$ the automatic silent labels that the blind audit confirms, $FP$ the automatic labels it
+rejects, and $FN$ the panel-confirmed silent items the coder misses. Switch-rate intervals use the
+Wilson score interval,
+\begin{equation}
+  \frac{\hat p+\frac{z^{2}}{2n}\pm
+        z\sqrt{\frac{\hat p(1-\hat p)}{n}+\frac{z^{2}}{4n^{2}}}}
+       {1+\frac{z^{2}}{n}},
+  \label{eq:wilson}
+\end{equation}
+at $z=1.96$ \cite{wilson1927}. Seed-repeat stability is the share of repeated generations whose decision signature is
+unchanged. These statistics gate the claim rather than decorate it: a low $\kappa$ downgrades the
+study to action-level $Y^{A}$, and a low $\alpha$ invalidates the dose interpretation even if the
+slope is positive.
+
+The minimum detectable effect is
+\begin{equation}
+  \mathrm{MDE}_{\beta}=
+  \left(z_{1-\alpha/2}+z_{1-\beta}\right)\widehat{\mathrm{SE}}(\hat\beta),
+  \qquad
+  \mathrm{MDE}_{\mathrm{OR}}=e^{\mathrm{MDE}_{\beta}},
+  \label{eq:mde}
+\end{equation}
+at $\alpha=.05$ two-sided and $80\%$ power.
 
 \noindent\textbf{Generation envelope}.\
 
@@ -1972,29 +1977,37 @@ critical-arm switches are silent propagation. Three gate criteria failed: the pa
 and recovery (32.4--47.6\% against 50\%); all are reported as failures. The
 contribution is the dataset, the within-prefix design, the audit procedure that caught a labeling
 defect before analysis, and a bounded switch-on-severity estimate with its measured limits; the
-failed G3 parser-failure criterion is reported, so no content-sensitivity claim is made. \section*{Declarations}
+failed G3 parser-failure criterion is reported, so no content-sensitivity claim is made.
+
+\section*{Declarations}
 \begin{itemize}
   \setlength{\itemsep}{0pt}
   \setlength{\parsep}{0pt}
   \item \textbf{Funding:} This research received no external funding. The university provides the
-  H200 MIG 1g.18gb slice in kind; the study has no cash budget and no paid API.   \item \textbf{Conflicts of Interest:} The authors declare that they have no known competing
+  H200 MIG 1g.18gb slice in kind; the study has no cash budget and no paid API.
+  \item \textbf{Conflicts of Interest:} The authors declare that they have no known competing
   financial interests or personal relationships that could have appeared to influence the work
-  reported in this paper.   \item \textbf{Data availability:} Raw $\tau$-bench trajectories are not redistributed. The
+  reported in this paper.
+  \item \textbf{Data availability:} Raw $\tau$-bench trajectories are not redistributed. The
   upstream benchmark is MIT licensed and is pinned by commit and file hash in
   \texttt{data/manifests/source\_pin.json}. ToolResult-800 will release only scrubbed derived
   data: frozen prefix payloads, arm observations, perturbation records, renderer version, and
   hashes, under CC BY 4.0, with upstream notices preserved. Run ledgers stay local until scrubbed and
   packaged. The frozen manifest and the release checklist are the authoritative record.
-  \pending{release DOI and manifest hash; the v1.0 artifact has not been released}.   \item \textbf{Code availability:} The harvest, replay, rendering, inference, coding, and
+  \pending{release DOI and manifest hash; the v1.0 artifact has not been released}.
+  \item \textbf{Code availability:} The harvest, replay, rendering, inference, coding, and
   analysis code is available at \url{https://github.com/Atik203/tool-observation} under the MIT
-  license. Documentation and derived data are CC BY 4.0.   \item \textbf{Ethical approval:} The study collects no human-subject data. Annotation is
+  license. Documentation and derived data are CC BY 4.0.
+  \item \textbf{Ethical approval:} The study collects no human-subject data. Annotation is
   performed by the author team on public benchmark rows, and direct identifiers are scrubbed
-  before freeze. \pending{the institutional ethics determination for the annotation procedure}.   \item \textbf{Author contributions:} Conceptualization, data curation, formal analysis,
+  before freeze. \pending{the institutional ethics determination for the annotation procedure}.
+  \item \textbf{Author contributions:} Conceptualization, data curation, formal analysis,
   investigation, methodology, project administration, software, validation, visualization, and
   writing (original draft) by M.A.R.; data curation, validation, and writing (review and editing)
   by S.A.S. and M.M.A.; supervision, validation, and writing (review and editing) by O.T. The
   CRediT allocation is carried over from the companion manuscript and must be confirmed by every
-  author before submission.   \item \textbf{Use of AI-assisted tooling:} Blind rating sessions were operated with an AI agent
+  author before submission.
+  \item \textbf{Use of AI-assisted tooling:} Blind rating sessions were operated with an AI agent
   (three sessions for the severity audit, two each for the outcome and recovery audits); an agent
   verification panel re-derived every rating (one verifier per audit), and a second-rater pair
   re-rated a stratified 120-item subset. An AI-assisted mechanical pre-audit was used for the
