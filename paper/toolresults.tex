@@ -482,7 +482,7 @@ limitation, not a fixable defect of the sample. Figure~\ref{fig:design} shows th
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.95\linewidth]{figures/fig-design.png}
+  \figfile[0.95\linewidth]{figures/fig1.png}
   \caption{Fixed-prefix design. Every arm is generated from the same frozen prefix ending
   immediately after a real $\tau$-bench tool observation; only the observation's content changes.
   The target model produces the next decision and never generates the prefix.}
@@ -645,7 +645,7 @@ and Figure~\ref{fig:arms} shows the construction for one prefix.
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.95\linewidth]{figures/fig-arms.png}
+  \figfile[0.95\linewidth]{figures/fig2.png}
   \caption{Arm construction for one prefix. The worked example is an illustrative construction,
   not a harvested record: a refund of \$84.50 becomes \$48.50 under $s=2$, and $s=3$ adds a
   return-window contradiction.}
@@ -784,7 +784,7 @@ tiny forward passes; it cannot host an 8--9B AWQ model at a 24k context.
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.95\linewidth]{figures/fig-pipeline.png}
+  \figfile[0.95\linewidth]{figures/fig3.png}
   \caption{End-to-end pipeline: pin and harvest, scrub and replay, freeze, serve, code, and
   analyse. One ledger row is appended per generation; the manifest is the reproducibility spine
   that ties every reported number to a prefix, an arm, and a renderer version.}
@@ -1075,7 +1075,7 @@ model.
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.95\linewidth]{figures/fig-analysis.png}
+  \figfile[0.95\linewidth]{figures/fig4.png}
   \caption{Estimands and analysis path: the within-prefix switch indicator, the
   conditional-logistic slope, the silent-propagation decomposition, and the four-step recovery
   model with Kaplan--Meier and RMST reporting.}
@@ -1404,7 +1404,7 @@ reported separately; the audits gate the label-based decomposition, not the swit
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.95\linewidth]{figures/result-forest.png}
+  \figfile[0.95\linewidth]{figures/fig5.png}
   \caption{Per-model and pooled severity slopes with 95\% confidence intervals (prefix-cluster
   SE). Traced to \texttt{artifacts/analysis/g3\_analysis.json}.}
   \label{fig:forest}
@@ -1463,7 +1463,7 @@ confirmed effect.
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.98\linewidth]{figures/result-tiers.png}
+  \figfile[0.98\linewidth]{figures/fig6.png}
   \caption{Tier odds ratios against $s=0$ on a log scale, by model and pooled. The $s=1$ tier is
   near one for Qwen; the large jump is at $s=2$ and the $s=3$ tier is larger still. Intervals are
   prefix-cluster percentile bootstrap. Traced to
@@ -1584,7 +1584,7 @@ rate is the format-jitter floor reported in Table~\ref{tab:g1}.
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.95\linewidth]{figures/result-dose.png}
+  \figfile[0.95\linewidth]{figures/fig7.png}
   \caption{Switch rates by arm and model with Wilson 95\% confidence intervals (800 primary
   prefixes). The prose placebo $s0$ and the non-critical change $s1$ are nearly flat; the critical
   arms move. Traced to \texttt{artifacts/analysis/g3\_analysis.json}.}
@@ -1735,7 +1735,7 @@ informative as the critical/non-critical label.
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.95\linewidth]{figures/result-fields.png}
+  \figfile[0.95\linewidth]{figures/fig8.png}
   \caption{Field-type switch rates and silent shares at $s=2$ (exploratory). Identifiers and
   money carry the silent propagation; status fields almost never do. Traced to
   \texttt{artifacts/analysis/field\_taxonomy.json}.}
@@ -1806,7 +1806,7 @@ half-life is labelled exploratory.
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.98\linewidth]{figures/result-recovery-s2s3.png}
+  \figfile[0.98\linewidth]{figures/fig9.png}
   \caption{Kaplan--Meier survival on the transient $s=2$ (left) and $s=3$ (right) risk sets by
   model (800 primary prefixes). The curves flatten before $H=4$; the gate fails in every primary
   group. Traced to \texttt{artifacts/analysis/g4\_recovery.json}.}
@@ -1850,7 +1850,7 @@ ranking, and no model is declared more or less sensitive than another.
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.98\linewidth]{figures/result-sensitivity.png}
+  \figfile[0.98\linewidth]{figures/fig10.png}
   \caption{Left: pooled slope under the primary, strict, lenient, and placebo-excluded codings.
   Right: pooled slope within domain and donor strata. All intervals are prefix-cluster bootstrap;
   every point estimate is positive. Traced to

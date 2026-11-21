@@ -457,7 +457,7 @@ def make_design(outdir: Path) -> Path:
         color=MUTED,
     )
 
-    return save(fig, outdir / "fig-design.png")
+    return save(fig, outdir / "fig1.png")
 
 
 # ---------------------------------------------------------------------------
@@ -672,7 +672,7 @@ def make_pipeline(outdir: Path) -> Path:
         color=MUTED,
     )
 
-    return save(fig, outdir / "fig-pipeline.png")
+    return save(fig, outdir / "fig3.png")
 
 
 # ---------------------------------------------------------------------------
@@ -960,7 +960,7 @@ def make_arms(outdir: Path) -> Path:
         color=MUTED,
     )
 
-    return save(fig, outdir / "fig-arms.png")
+    return save(fig, outdir / "fig2.png")
 
 
 # ---------------------------------------------------------------------------
@@ -1130,7 +1130,7 @@ def make_analysis(outdir: Path) -> Path:
             linespacing=1.2,
         )
 
-    return save(fig, outdir / "fig-analysis.png")
+    return save(fig, outdir / "fig4.png")
 
 
 # ---------------------------------------------------------------------------
@@ -1152,10 +1152,10 @@ def describe_png(path: Path) -> tuple[int, int, tuple[float, float]]:
 
 def verify(outdir: Path) -> list[Path]:
     expected = [
-        "fig-design.png",
-        "fig-pipeline.png",
-        "fig-arms.png",
-        "fig-analysis.png",
+        "fig1.png",
+        "fig3.png",
+        "fig2.png",
+        "fig4.png",
     ]
     print(f"{'file':22s} {'width':>7s} {'height':>7s} {'dpi':>12s}")
     paths = []

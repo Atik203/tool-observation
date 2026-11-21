@@ -90,7 +90,7 @@ ax.set_ylim(0, 0.62)
 ax.legend(frameon=False, ncol=3, fontsize=10, loc="upper left")
 style(ax)
 fig.tight_layout()
-fig.savefig(FIG / "result-dose.png", dpi=600)
+fig.savefig(FIG / "fig7.png", dpi=600)
 plt.close(fig)
 
 # --- Figure: forest plot
@@ -122,7 +122,7 @@ ax.set_xlabel("Conditional-logit slope beta (per severity level)")
 ax.set_xlim(-0.05, 1.45)
 style(ax)
 fig.tight_layout()
-fig.savefig(FIG / "result-forest.png", dpi=600)
+fig.savefig(FIG / "fig5.png", dpi=600)
 plt.close(fig)
 
 # --- Figure: field types at s=2
@@ -169,7 +169,7 @@ ax.set_ylim(0, 0.62)
 ax.legend(frameon=False, fontsize=10)
 style(ax)
 fig.tight_layout()
-fig.savefig(FIG / "result-fields.png", dpi=600)
+fig.savefig(FIG / "fig8.png", dpi=600)
 plt.close(fig)
 
 # --- Figure: tier odds ratios (s=1,2,3 vs s=0), log scale
@@ -222,7 +222,7 @@ for ax, tier, title in zip(axes, tiers, tier_titles):
 axes[0].set_yticks(list(range(len(row_labels)))[::-1])
 axes[0].set_yticklabels(row_labels)
 fig.tight_layout()
-fig.savefig(FIG / "result-tiers.png", dpi=600)
+fig.savefig(FIG / "fig6.png", dpi=600)
 plt.close(fig)
 
 # --- Figure: sensitivity of the pooled slope
@@ -302,7 +302,7 @@ axes[1].set_title("Domain and donor strata", fontsize=11)
 axes[1].set_xlim(-0.02, 1.4)
 style(axes[1])
 fig.tight_layout()
-fig.savefig(FIG / "result-sensitivity.png", dpi=600)
+fig.savefig(FIG / "fig10.png", dpi=600)
 plt.close(fig)
 
 # --- Figure: recovery at s=2 and s=3 (transient)
@@ -329,7 +329,7 @@ for ax, severity, title in zip(
     style(ax)
 axes[0].set_ylabel("Kaplan-Meier survival")
 fig.tight_layout()
-fig.savefig(FIG / "result-recovery-s2s3.png", dpi=600)
+fig.savefig(FIG / "fig9.png", dpi=600)
 plt.close(fig)
 
 print("wrote result figures to", FIG)
