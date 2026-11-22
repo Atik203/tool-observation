@@ -21,3 +21,26 @@
   in-sample. No fresh held-out audit exists; the held-out plan (reserve
   prefixes, 60–120-item human audit) is future work.
 - **Provenance:** multi-role agent panel, author-overseen.
+
+## T7 staging note (2026-11-22, P4.7/P5)
+
+- **Release staged:** `release/ToolResult-800-v1.0/` (123 files) built by
+  `scripts/18_build_release.py --build`: frozen manifest + sidecar, perturbation
+  records, source pin, 880 scrubbed prefixes, scrubbed ledger extracts, audit
+  packets/sheets/instructions + verification record, all 27 analysis JSONs, T6
+  packets/maps/codes, prereg + amendments + this note, upstream MIT notice,
+  model-output license verification, `TABLE_MAP.md`, `VALIDATION.md`,
+  `SHA256SUMS`, `release_record.json`, `pii_rescan.json` (clean: 0 identifier
+  hits; reserved-domain placeholders, synthetic-token echoes, and one
+  scrubber-artifact name fragment noted; human re-scan pending).
+- **Validation:** `make validate-release` — 17/17 L1 checks on the staged tree
+  (manifest chain, SHA256SUMS, crude triple, v2 bridge + Wilson, severity
+  7/11/16, McNemar/LRT/H5 recomputes, wrong-direction partition, g3 totals,
+  utility counts, PPV bound, table-map coverage, PII re-scan) and 22/22 with
+  `--rerun` (all six producers rebuilt bit-identical modulo
+  `recorded_utc`/`git_commit` — this doubles as the T4 inference-JSON regen).
+- **DOI:** still pending author upload (no external registry yet). Deposit record
+  with DataCite metadata is in `docs/submission/doi_record.md`; the DOI lands
+  here, in `CITATION.cff`, and in `docs/DATA_CARD.md` at release.
+- **Provenance:** multi-role agent panel, author-overseen (T6 packet contents
+  remain single-agent coded, author-overseen, as disclosed).

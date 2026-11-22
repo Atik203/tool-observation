@@ -1,7 +1,7 @@
 # Data card — ToolResult-800
 
-**Status:** template for the v1.0 release. No ToolResult-800 artifact has been released yet; all values
-marked TBD are resolved at G0 freeze and must be filled from the manifest, not estimated.
+**Status:** v1.0 release staging (2026-11-22). DOI pending (see `docs/submission/doi_record.md`);
+release date is the DOI registration date. Hashes below are from the frozen manifest, not estimates.
 
 ---
 
@@ -11,16 +11,16 @@ marked TBD are resolved at G0 freeze and must be filled from the manifest, not e
 |---|---|
 | Name | ToolResult-800 |
 | Full title | Counterfactual Tool-Observation dataset, 800 frozen prefixes |
-| Version | 1.0 (planned; scaffold is pre-release) |
+| Version | 1.0 (staged 2026-11-22; released on DOI registration) |
 | Repository | https://github.com/Atik203/tool-observation |
 | Dataset brand | ToolResult-800 (the repository is `tool-observation`) |
 | Study | Tool-Result Errors in Language-Model Agents |
 | Maintainer | Atikur Rahaman (atikurrahaman0305@gmail.com) |
 | License | CC BY 4.0 for project additions; upstream τ-bench MIT |
-| Release date | TBD |
-| DOI | TBD |
-| Manifest hash | TBD (`data/manifests/toolresult800_v1.json`) |
-| Preregistration hash | TBD |
+| Release date | TBD (= DOI registration date) |
+| DOI | TBD (`docs/submission/doi_record.md`) |
+| Manifest hash | `d6e034d7f1132b314ad1f82bf14faa0f6762975ee7b404b54cc365acfac5487a` (`data/manifests/toolresult800_v1.json` + sidecar) |
+| Preregistration hash | `e0d107c6` (freeze commit 1675376, tag prereg-freeze-v1; no external registry; record in `prereg/DEPOSIT_NOTE.md`) |
 
 ## 2. Summary
 
@@ -32,8 +32,12 @@ critical wrong value plus a contradiction (s=3). A subset has four-step recovery
 transient and persistent injection.
 
 The dataset contains **800 primary prefixes** (400 airline, 400 retail) plus an **80-prefix
-reserve** that is not part of the primary analysis. Target-model outputs are released only after
-the confirmatory analysis is frozen.
+reserve** that is not part of the primary analysis. The confirmatory analysis is complete and frozen;
+target-model outputs are released in v1.0 as scrubbed derived text (no weights, no raw trajectories).
+
+Executed envelope (G2 complete, within the 45 GPU-hour / 200 GB stop line): **21,611 generations**
+(13,200 base + 7,211 recovery + 1,200 jitter), 8.9 GPU-hours on the university H200 slice, \$0 cash.
+Planned 34,800; recovery is conditional on switching by design (see `tab:envelope` in the paper).
 
 ## 3. Composition
 
@@ -120,7 +124,11 @@ within-prefix contrasts and for benchmarking detection/flagging behavior.
 - Donor prefixes come from gpt-4o/sonnet; target models continue off-policy histories.
 - Recovery is observed for four steps; longer horizons are censored.
 - Severity is ordinal and s=3 is compound.
-- Human labels come from a small team, not an external annotation vendor.
+- Human labels come from a small team, not an external annotation vendor. **Correction
+  (2026-11-22): the preceding sentence was false. No human annotation was used.** All ratings were
+  produced by blind rater sessions operated with an AI agent and checked by a multi-role agent
+  panel, author-overseen (D-043); the task-utility endpoint is single-agent coded, author-overseen
+  (D-044). Agreement statistics measure consistency among sessions, not human independence.
 
 ## 10. Maintenance
 
@@ -128,3 +136,31 @@ within-prefix contrasts and for benchmarking detection/flagging behavior.
 - Errata are published in the repository and linked from the DOI record.
 - The manifest and checksums are the authoritative record.
 - Contact: atikurrahaman0305@gmail.com.
+
+## 11. Release contents (v1.0)
+
+Staged at `release/ToolResult-800-v1.0/` (uploaded to the DOI record; see
+`docs/submission/doi_record.md`):
+
+- `manifests/` — frozen manifest + SHA-256 sidecar, perturbation records, source pin.
+- `frozen/prefixes.jsonl` — 880 scrubbed prefixes with five arm observations each.
+- `traces/` — scrubbed ledger extracts (base, recovery, jitter, G1 calibration_v3 runs).
+  Prompt text was never logged (hashes only); decisions are model outputs on scrubbed inputs.
+- `labels/` — audit packets, sheets, rater instructions, blind-audit result, verification
+  record (`panel_record.json`), second-rater agreement.
+- `analysis/` — every analysis JSON behind the reported tables (`g3_analysis`,
+  `g4_recovery`, `g4_recovery_v2`, `severity_sensitivity`, `inference_robustness`,
+  `wrong_direction`, `new_evidence`, `field_taxonomy`, `prereg_secondary`, jitter stability).
+- `packets/` — T6 blinded packets, sealed maps, and codes (single-agent coded, author-overseen).
+- `prereg/` — frozen preregistration, amendments A-001–A-006, deposit note.
+- `licenses/` — upstream τ-bench MIT text (verbatim) + model-output license verification.
+- `TABLE_MAP.md` (every paper table → artifact), `VALIDATION.md` (one-command validation),
+  `SHA256SUMS`, `release_record.json`, `pii_rescan.json`.
+
+Validate: `make validate-release` (L1 on the package alone; `--rerun` with repo ledgers
+rebuilds all six analysis JSONs and diffs). The G0 harvest audit is an AI pre-audit (40/40)
+adopted by the author with human verification deferred (D-021, A-005); the freeze stands
+provisional on that item. The automated identifier re-scan is clean (reserved-domain
+placeholders, synthetic-token echoes, and one scrubber-artifact fragment noted in
+`pii_rescan.json`); the independent human re-scan is pending (see
+`docs/submission/checklist.md`).

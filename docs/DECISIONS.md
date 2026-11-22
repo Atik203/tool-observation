@@ -6,6 +6,72 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-045 - P4.7/P5 release package, one-command validation, submission staging
+
+- **Date:** 2026-11-22
+- **Status:** accepted (staging; human-gated items listed, not claimed)
+- **Context:** T1–T6 done (HEAD f86916e). P4.7/P5 require: scrubbed artifacts/ledger
+  extracts + manifest + packets + analysis JSONs with DOI; table-to-artifact map;
+  one-command validation implemented or removed; PII re-scan + license verification; AI
+  disclosure; byline/ORCID/CRediT/ethics sign-off; 14-file Overleaf zip + clean-room
+  compile; cover letter + highlights + keyword limits; author freeze; DOI mint + resolve;
+  submission checklist. Deferred items carried in: T4 inference-JSON regen, T5 24-table
+  count (25 with `tab:utility`), T5 old-bib et-al, T6 release-carry requirement, Fig. 4
+  replacement, no local TeX compile.
+- **Decision:** Build `scripts/18_build_release.py` (numbered 18: stage 17 is taken by
+  `17_wrong_direction.py`, same convention as T4's 16-vs-15). `--build` stages
+  `release/ToolResult-800-v1.0/` (123 files, gitignored like all prior release
+  candidates): manifest + sidecar + perturbations + source pin, 880 scrubbed prefixes,
+  scrubbed ledger extracts (base/recovery/jitter/G1-v3; `_backup` and `parser-v3`
+  variants excluded), audit packets/sheets/instructions + panel record + second-rater
+  agreement, all 27 analysis JSONs + companions, T6 packets/maps/codes, prereg +
+  amendments + deposit note, upstream MIT text + model-license record, `TABLE_MAP.md`,
+  `VALIDATION.md`, `SHA256SUMS`, `release_record.json`, `pii_rescan.json`.
+  `--validate` implements the one-command target (paper claim corrected to describe it):
+  L1 on the package alone (manifest chain, SHA256SUMS, crude triple, v2 bridge + Wilson,
+  severity 7/11/16, exact McNemar/LRT/H5 recomputes, wrong-direction partition, g3
+  totals, utility counts, PPV bound, 25-table map coverage, identifier re-scan);
+  L2 `--rerun` reruns all six producers and diffs modulo `recorded_utc`/`git_commit`.
+  Result 2026-11-22: 17/17 L1, 22/22 with rerun — this closes the T4 regen item (all
+  six JSONs rebuilt bit-identical).
+- **Manifest gate enforced:** the builder refuses without `audit.gate_pass` (same rule
+  as `10_release.py`); the manifest itself records `label_source:
+  ai_preaudit_deferred_human`, so the provisionality travels with the package.
+- **M8 second half (prereg/config hashes):** not added to every producer/artifact
+  (would require touching six frozen-by-convention producers for metadata only);
+  instead `release_record.json` binds prereg/field-registry/renderer/source-pin/manifest
+  hashes to every bundled file, and the paper sentence now states that. The run ledgers
+  already carry manifest/prompt/renderer versions and the JSONs carry `git_commit`.
+- **PII findings (automated scan, 0 blocking hits):** reserved-domain placeholders
+  (`@example.com`, fictional 555/123-4567 numbers, generic role addresses — all
+  model-hallucinated, no real persons), synthetic-token echoes (`user_TOKEN@email.com`;
+  PII map never released, not re-identifiable), and one scrubber-artifact fragment
+  (`person_0f41e336893e.ahmed6699@example.com`: given-name + digits surviving inside one
+  frozen prefix + derivatives; kept bit-identical per freeze integrity, bounded to one
+  pseudonymized identity, explicitly flagged for the human re-scan). Human re-scan,
+  ethics determination, DOI mint, tag/release, and second-person verification are author
+  actions (checklist records them unsigned).
+- **Table count (25, justified, not trimmed):** every table is a gate/prereg traceability
+  artifact (`TABLE_MAP.md`); T5 already cited all floats and folded `tab:fit`. Cutting
+  tables now risks T1–T6 number traceability for craft points; supplement migration is
+  offered as an editor-directed option in the cover letter path, not taken unilaterally.
+- **Bib (T5 old-et-al closed by fixing, not justifying):** full author lists verified
+  against arXiv abs pages 2026-11-22 for toolllm (19), webarena (12), sycophancy (19),
+  agentbench (22), plus toolscan (18) and toolbehonest (13) completed; taubench confirmed
+  4-author complete; BFCL URL resolves (V4, updated 2026-04-12); only remaining et-al is
+  the 100+-author Llama herd (file convention, noted).
+- **Fig. 4 verified T5-done:** `figures/fig4.png` is the stamp-free conceptual schematic;
+  caption states "(not study data)". No local TeX compile exists on this host
+  (`latexmk`/`pdflatex` absent); substituted with structural checks (75/75 labels, all
+  floats cited, 69/69 bib keys resolve) + tests; clean-room compile is an author/Overleaf
+  step recorded in the checklist.
+- **Consequences:** `make validate-release` (+ `tasks.ps1`) is the release-validation
+  target; `docs/submission/` holds cover letter, highlights (4×≤85), checklist,
+  authorship freeze, DOI deposit record, license verification. Provenance stays
+  "multi-role agent panel, author-overseen" with the T6 single-agent part disclosed.
+
+---
+
 ## D-044 - P4.6 new-evidence design: task-utility endpoint (no GPU, no amendment)
 
 - **Date:** 2026-11-22

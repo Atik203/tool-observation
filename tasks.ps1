@@ -15,7 +15,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('setup', 'test', 'lint', 'validate', 'compile', 'clean', 'help')]
+    [ValidateSet('setup', 'test', 'lint', 'validate', 'validate-release', 'compile', 'clean', 'help')]
     [string]$Task = 'help'
 )
 
@@ -67,6 +67,9 @@ try {
         'validate' {
             Invoke-Step 'toolobs validate' { & $Python -m toolobs.cli validate }
         }
+        'validate-release' {
+            Invoke-Step 'release validation' { & $Python scripts/18_build_release.py --validate }
+        }
         'clean' {
             Invoke-Step 'Remove caches and build outputs' {
                 $targets = @('.pytest_cache', '.ruff_cache', 'build', 'dist', 'src\tool_observation.egg-info')
@@ -80,7 +83,7 @@ try {
         }
         default {
             Write-Host 'tool-observation task runner'
-            Write-Host 'Usage: .\tasks.ps1 <setup|test|lint|validate|compile|clean>'
+            Write-Host 'Usage: .\tasks.ps1 <setup|test|lint|validate|validate-release|compile|clean>'
             Write-Host 'Python: ' -NoNewline
             Write-Host $Python
         }

@@ -12,26 +12,26 @@ candidate. Built packages are gitignored; only this README is tracked.
 - `traces/` — model continuations, decision signatures, recovery traces, ledger extracts.
 - `labels/` — automatic and adjudicated labels, audit samples, κ/α reports.
 - `docs/` — data card, protocol, gates, label rubric, runbook, decisions.
-- `LICENSES/` — MIT (code), CC BY 4.0 (docs/data), upstream τ-bench MIT notice.
+- `licenses/` — upstream τ-bench MIT notice (verbatim) + model-output license verification.
 - `SHA256SUMS`, `CITATION.cff`, `README.md`, `CHANGELOG.md`.
 
-## Pre-release checklist
+## Pre-release checklist (status 2026-11-22, Task 7)
 
-- [ ] G0, G1, G2, G3, G4 reports are present and unmodified.
-- [ ] The frozen manifest hash matches the analysis artifacts.
-- [ ] PII re-scan passes: no names, emails, phones, addresses, payment identifiers, or raw
-      trajectories. Profile-tool observations are absent.
-- [ ] Scrub report and 40-item audit are included.
-- [ ] Upstream τ-bench MIT notice and attribution are preserved.
-- [ ] `DATA_LICENSE.md`, `LICENSE`, and `LICENSE-DOCS` are included.
-- [ ] Model outputs comply with each model's license; no weights are included.
-- [ ] Checksums are generated and verified from a clean copy.
-- [ ] Data card is complete; every TBD is resolved or explicitly marked.
-- [ ] Preregistration and all amendments are included.
-- [ ] The claim in the README/paper matches the gate outcomes.
-- [ ] A DOI is minted and recorded in `CITATION.cff` and the data card.
-- [ ] Repository tag and GitHub release match the package version.
-- [ ] A second person reproduces the checksum verification.
+- [x] G0, G1, G2, G3, G4 reports are present and unmodified.
+- [x] The frozen manifest hash verifies against the analysis artifacts (`make validate-release`: manifest chain ok).
+- [x] Automated PII re-scan passes: 0 identifier hits (`release/.../pii_rescan.json`; placeholders/echoes documented).
+- [ ] Independent human PII re-scan — pending author action (see `docs/submission/checklist.md`).
+- [x] Scrub report and 40-item audit are included (`labels/scrub_report.json`, `labels/g0_*`).
+- [x] Upstream τ-bench MIT notice and attribution are preserved (`licenses/TAU_BENCH_LICENSE_MIT`, source pin).
+- [x] `DATA_LICENSE.md`, `LICENSE`, and `LICENSE-DOCS` are included.
+- [x] Model outputs comply with each model's license; no weights are included (`licenses/MODEL_OUTPUT_LICENSES.md`; Apache-2.0 ×2 + llama3.1 verified 2026-11-22).
+- [x] Checksums are generated and verified from a clean copy (`SHA256SUMS` + `release_record.json`).
+- [x] Data card is complete; remaining TBDs (DOI, release date) resolve at DOI registration.
+- [x] Preregistration and all amendments are included (`prereg/`).
+- [x] The claim in the README/paper matches the gate outcomes (measurement framing, three failures stated).
+- [ ] A DOI is minted and recorded in `CITATION.cff` and the data card — pending author upload (`docs/submission/doi_record.md` staged).
+- [ ] Repository tag and GitHub release match the package version — pending author action.
+- [ ] A second person reproduces the checksum verification — pending author action.
 
 ## What is gitignored
 

@@ -302,12 +302,13 @@
   values already shifts 20.3--45.6\% of G1 calibration decisions (main-run $s=0$ rates are
   19.8/31.9/38.1\%), so the slope is read over the prose arms
   $s0$--$s3$ only. Audits were blind-rated label-free and checked by a multi-role agent panel,
-  author-overseen.
+  author-overseen. The G0 harvest audit is an AI pre-audit (40/40 adopted) with human verification
+  deferred (D-021), so the freeze stands provisional on that item.
 \end{abstract}
 
 % Keywords. Each keyword is separated by \sep
 \begin{keywords}
-  Tool-result errors \sep LLM agents \sep Within-prefix design \sep Silent propagation \sep Recovery \sep Pre-registration \sep $\tau$-bench
+  Tool-result errors \sep LLM agents \sep Within-prefix design \sep Silent propagation \sep Recovery \sep $\tau$-bench
 \end{keywords}
 
 \begingroup
@@ -1371,13 +1372,18 @@ imputation is used for missing arms, and the missingness rate is reported.
 
 \paragraph{Analysis software and reproducibility}.\
 
-The analysis code is versioned and records the preregistration hash and the configuration hash
-with every run. The primary conditional-logit fit, the prefix-cluster bootstrap, and the
+The analysis code is versioned; run ledgers carry the manifest, prompt, and renderer
+versions, and every analysis artifact records the producing commit. The primary conditional-logit fit, the prefix-cluster bootstrap, and the
 recovery estimators are implemented in pure Python and tested on synthetic fixtures, so the
-analysis can be reproduced without a GPU. A one-command validation target checks that rebuilt and
-reported values match the frozen artifacts. Manifests are the reproducibility spine: every table
-in the paper is expected to cite a manifest row and a ledger row, and the release packager
-refuses to build without a passed audit and a PII re-scan. The workflow follows reproducibility
+analysis can be reproduced without a GPU. A one-command validation target
+(\texttt{make validate-release}, \texttt{scripts/18\_build\_release.py --validate}) reruns the six
+CPU-only analysis producers, diffs the rebuilt JSONs against the released copies, rechecks every
+manifest hash, reconciles the table-to-artifact map (\texttt{TABLE\_MAP.md}), and rescans the
+package for identifiers. Manifests are the reproducibility spine: every table
+in the paper traces to a manifest row, a ledger extract, or an analysis artifact via
+\texttt{TABLE\_MAP.md}, and the release packager
+refuses to build without a passed audit and a clean identifier re-scan. The release record binds
+the preregistration, configuration, and renderer hashes to every bundled file. The workflow follows reproducibility
 guidance that combines preregistration, artifact manifests, and leakage checks
 \cite{nosek2018,munafo2017,pineau,kapoor2023}. The preregistration freeze (commit 1675376,
 tag prereg-freeze-v1, hash \texttt{e0d107c6}; no external registry) and the no-new-amendment
@@ -2241,7 +2247,9 @@ not live services, so a wrong observation here is a controlled counterfactual ra
 production incident. The annotation was produced by blind rater sessions operated with an AI
 agent; the reported round is label-free and was checked by a multi-role agent panel,
 author-overseen, not by
-human coauthors or an external vendor. That limits the independence of the audit and is stated in
+human coauthors or an external vendor. The G0 40-item harvest audit is likewise an AI pre-audit
+(40/40) adopted by the author with human verification deferred (D-021, A-005); the freeze stands
+provisional on that item. That limits the independence of the audit and is stated in
 the declarations. Agreement statistics measure consistency among sessions, not correctness: the
 recovery panel found 14/80 rater over-credits while reproducing the automatic coding on 80/80
 sequences, and two severity sessions were identical on 116/120 items. The 18~GB slice runs at
@@ -2286,18 +2294,23 @@ stated limits; because three gate criteria failed, no causal or content-sensitiv
   reported in this paper.
   \item \textbf{Data availability:} Raw $\tau$-bench trajectories are not redistributed. The
   upstream benchmark is MIT licensed and is pinned by commit and file hash in
-  \texttt{data/manifests/source\_pin.json}. ToolResult-800 will release only scrubbed derived
-  data: frozen prefix payloads, arm observations, perturbation records, renderer version, and
-  hashes, under CC BY 4.0, with upstream notices preserved. Run ledgers stay local until scrubbed and
-  packaged. The frozen manifest and the release checklist are the authoritative record. The v1.0
-  release artifact has not been released; the DOI will be minted at release and recorded here.
+  \texttt{data/manifests/source\_pin.json}. ToolResult-800 releases only scrubbed derived
+  data under CC BY 4.0 with upstream notices preserved: frozen prefix payloads, arm observations,
+  perturbation records, renderer version, scrubbed ledger extracts, audit packets and sheets,
+  analysis JSONs, and hashes; the v1.0 package layout, table-to-artifact map, and one-command
+  validation are in \texttt{release/ToolResult-800-v1.0} (\texttt{TABLE\_MAP.md},
+  \texttt{VALIDATION.md}). Run logs, weights, caches, and credentials are never released.
+  The frozen manifest and the release checklist are the authoritative record. The DOI is pending
+  (deposit staged; \texttt{docs/submission/doi\_record.md}) and will be recorded here and in
+  \texttt{CITATION.cff} at release.
   \item \textbf{Code availability:} The harvest, replay, rendering, inference, coding, and
   analysis code is available at \url{https://github.com/Atik203/tool-observation} under the MIT
   license. Documentation and derived data are CC BY 4.0.
-  \item \textbf{Ethical approval:} The study collects no human-subject data. Annotation is
-  performed by the author team on public benchmark rows, and direct identifiers are scrubbed
+  \item \textbf{Ethical approval:} The study collects no human-subject data. Annotation was
+  produced by blind rater sessions operated with an AI agent and checked by a multi-role agent
+  panel, author-overseen; no human annotation was used and direct identifiers are scrubbed
   before freeze. The institutional ethics determination for the annotation procedure is pending
-  and will be cited here once issued.
+  and will be cited here once issued (tracked in \texttt{docs/submission/checklist.md}).
   \item \textbf{Author contributions:} Conceptualization, data curation, formal analysis,
   investigation, methodology, project administration, software, validation, visualization, and
   writing (original draft) by M.A.R.; supervision, validation, and writing (review and editing)
@@ -2310,9 +2323,17 @@ stated limits; because three gate criteria failed, no causal or content-sensitiv
   re-rated a stratified 120-item subset. An AI-assisted mechanical pre-audit was used for the
   40-item G0 check under D-021. The first, label-visible round was accepted by the author on
   2026-11-18 (D-035); the reported label-free round and its panel record are documented under
-  D-043 (\texttt{artifacts/audit/verification/panel\_record.json}). All sessions share one
-  underlying model family, so their agreement is reproducibility evidence, not human
-  independence. The authors remain responsible for every label, every gate decision, and every
+  D-043 (\texttt{artifacts/audit/verification/panel\_record.json}). Rater sessions ran in this
+  project's agent-harness interface and wrote the released packet/sheet CSVs; the rater
+  instruction files state the audit gates but not the study hypotheses, and the label-free packets
+  exclude arm labels, reference decisions, and automatic answers, so raters were blind to the
+  hypotheses tested. All sessions share one underlying model family (the session model identity was
+  not logged), so their agreement is reproducibility evidence, not human
+  independence. Dates: severity/outcome/recovery packets 2026-11-19, panel record 2026-11-18/19,
+  task-utility packets and codes 2026-11-22. The task-utility endpoint is single-agent coded,
+  same-session intra-rater only ($\kappa=.92$ on 38 re-codes), author-overseen (T6 forbids
+  subagents, so no panel was possible there), and its packets, sealed maps, and codes are released
+  in \texttt{packets/}. The authors remain responsible for every label, every gate decision, and every
   claim in this paper.
 \end{itemize} \section*{Acknowledgements}
 The authors thank the curators of $\tau$-bench for releasing the trajectories, task databases, and

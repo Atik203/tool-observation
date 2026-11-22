@@ -1,31 +1,33 @@
 cff-version: 1.2.0
 message: "If you use this software or dataset, please cite it as below."
-title: "Tool-Result Errors in Language-Model Agents: A Fixed-Prefix Causal Study"
+title: "Tool-Result Errors in Language-Model Agents: A Fixed-Prefix Measurement Study of Switches, Silent Propagation, and Recovery"
 abstract: >-
-  Pre-confirmatory research software for a fixed-prefix causal study of how the
-  content of a real tool observation changes a language-model agent's next
-  decision, and how quickly the agent recovers over four steps. The repository
-  provides the scaffold, configuration, schemas, and governance documents for
-  the ToolResult-800 harvest pipeline, perturbation renderer, calibration and main-run
-  harnesses, and analysis code; pipeline entry points are stubs in version
-  0.1.0. No confirmatory results are reported; the pilot is N=60 and is a
-  screening signal, not a dose-response law.
+  Fixed-prefix measurement study of how the content of a real tool
+  observation changes a language-model agent's next decision. 800 frozen
+  tau-bench prefixes (400 airline, 400 retail), five observation arms,
+  three open-weight 8-9B models, 21,611 generations. Confirmatory analysis
+  complete: pooled conditional-logit slope 0.877 [0.770, 0.998] with three
+  failed gate criteria (parser 1.55% vs 1%, severity s2/s3 88.3% vs 90%,
+  crude recovery 27.3/34.7/27.2% vs 50%); no causal or content-sensitivity
+  claim. Dataset v1.0 staged for DOI release (scrubbed derived data only).
 authors:
   - family-names: Rahaman
-    given-names: Atikur
-    email: atikurrahaman0305@gmail.com
-version: 0.1.0
-date-released: 2026-11-09
+    given-names: Md. Atikur
+    email: mrahaman2310298@bscse.uiu.ac.bd
+    orcid: "https://orcid.org/0009-0008-2945-4117"
+  - family-names: Tuhin
+    given-names: Ohidujjaman
+    orcid: "https://orcid.org/0000-0002-8776-7145"
+version: 0.2.0
+date-released: 2026-11-22
 repository-code: "https://github.com/Atik203/tool-observation"
 url: "https://github.com/Atik203/tool-observation"
 license: MIT
 keywords:
   - llm-agents
-  - causal-inference
   - tool-use
   - tau-bench
   - evaluation
-  - research
   - reproducibility
   - dataset
 type: software

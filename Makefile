@@ -4,10 +4,10 @@
 PYTHON ?= python
 CONDA_ENV ?= tool-observation
 
-.PHONY: help setup test lint validate clean compile all
+.PHONY: help setup test lint validate validate-release clean compile all
 
 help:
-	@echo "Targets: setup test lint validate compile clean"
+	@echo "Targets: setup test lint validate validate-release compile clean"
 
 setup:
 	conda env create -f environment.yml || conda env update -f environment.yml --prune
@@ -24,6 +24,9 @@ compile:
 
 validate:
 	$(PYTHON) -m toolobs.cli validate
+
+validate-release:
+	$(PYTHON) scripts/18_build_release.py --validate
 
 clean:
 	$(PYTHON) -c "import shutil,pathlib; [shutil.rmtree(p, ignore_errors=True) for p in ['.pytest_cache','.ruff_cache','build','dist','src/tool_observation.egg-info']]; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('__pycache__')]"
