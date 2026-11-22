@@ -159,8 +159,13 @@ was read in-process at mint time; it was never printed, logged, echoed, or commi
   server-home, workstation-home, or repository-root path patterns; the extracted tree
   passes the L1 `path-rescan` check.
 - Archive SHA-256: `e63e0c1313e15095619fad7950fd82291ed8b681bdcd961ef7e3a6b4d96ca113`.
-- Package build commit: recorded in `release_record.json` (`doi` field
-  `10.5281/zenodo.24449882`; `concept_doi` field `10.5281/zenodo.24449466`;
-  137 files).
+- Package build commit: `release_record.json` names `6510c4e` (the base commit; the
+  release content was finalized in the working tree before the release-content commit
+  `b4ea98c`). A rebuild at `b4ea98c` produced the same 139-file set with **0
+  non-volatile byte differences**; only `created_utc`/`git_commit`, the generated
+  timestamps (`README.md`, `path_rescan.json`, `pii_rescan.json`,
+  `traces/ledger_hashes.json`), and `SHA256SUMS`/`release_record.json` covering them
+  differ. `release_record.json` records `doi` `10.5281/zenodo.24449882`,
+  `concept_doi` `10.5281/zenodo.24449466`, and 137 files.
 - v1.0.1 record 24449467 is unchanged and still resolves; it is superseded, not
   deleted.
