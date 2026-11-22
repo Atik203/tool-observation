@@ -56,6 +56,12 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   independence than D-043); donor path is one valid path, not certified task success, and
   donor-trajectory success was not verified; text-donor type-match is coarse; adequacy is
   judged on the next decision only, not rollout reward.
+- **Correction note (fix round 1, 2026-11-22; original text above retained):** the design-time
+  donor split "164 tool-call, 636 text" counts prefixes over the 800-prefix sample (from a
+  pre-run scratch join), while the executed deterministic layer reports 245 tool / 794 text
+  over the 1,053 switched pairs (and 1,039 analyzed): tool-donor prefixes are
+  over-represented among switchers. No design, sample, or code changed; the executed
+  245/794 split in `new_evidence.json` and the paper is authoritative.
 
 ---
 
