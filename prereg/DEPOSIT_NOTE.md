@@ -135,8 +135,10 @@ record; v1.0.2 (Phase C below) supersedes it.
   utility counts, PPV bound, table-map coverage, PII re-scan) and 22/22 with
   `--rerun` (all five producers rebuilt bit-identical modulo
   `recorded_utc`/`git_commit` — this doubles as the T4 inference-JSON regen).
-- **DOI:** still pending author upload (no external registry yet). Deposit record
-  with DataCite metadata is in `docs/submission/doi_record.md`; the DOI lands
-  here, in `CITATION.cff`, and in `docs/DATA_CARD.md` at release.
+- **DOI:** published. Version DOI `10.5281/zenodo.24449882` (v1.0.2, concept
+  `10.5281/zenodo.24449466`); the superseded v1.0.1 DOI
+  `10.5281/zenodo.24449467` must not be cited for package bytes. The DOI is
+  recorded here, in `CITATION.cff`, `docs/DATA_CARD.md`, and
+  `docs/submission/doi_record.md`.
 - **Provenance:** multi-role agent panel, author-overseen (T6 packet contents
   remain single-agent coded, author-overseen, as disclosed).
