@@ -14,6 +14,8 @@ This is a made-up example. Do not copy the answer; use the rules.
 |---|---:|---:|---:|---:|---|
 | G0-000 | 1 | 1 | 1 | 1 | Order and status are both used. |
 
+(`domain` is pre-filled in your sheet — do not change it. `note` may be empty when every check is `1`.)
+
 **Why**
 
 - It ends after a real tool result and asks a decision question → `eligibility_pass=1`.

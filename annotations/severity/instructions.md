@@ -8,7 +8,7 @@
 | 📂 From | [packet.csv](packet.csv) — changed fields, observation, donor next message. |
 | ✍️ Fill | [sheet.csv](sheet.csv) — `severity`, `decision_changing`, `absurd`. |
 | 📝 Example | [example.md](example.md) |
-| 📏 Rules | [common/rubrics.md](../common/rubrics.md#severity-120-items) |
+| 📏 Rules | [common/rubrics.md](../common/rubrics.md#severity-120-items) · [how to fill](../common/how_to_fill.md) · [glossary](../common/glossary.md) |
 
 **How**
 
@@ -20,6 +20,6 @@
    - `absurd`: 1 only if the value is impossible, else 0.
 4. Write one short note for `2`/`3`, or any `unsure`.
 
-**Done when:** 120 rows filled, no blanks.
+**Done when:** 120 rows filled, no blanks in answer cells, no new columns.
 
 **If stuck:** choose the best label, write `unsure: ...` in `note`, and continue.

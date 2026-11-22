@@ -12,10 +12,10 @@ Made-up example. Use the rules.
 
 | item_id | task | your_label | agree | note |
 |---|---|---|---|---|
-| OUT-000 | outcome | `Y=1; YA=1; YF=0; YU=0` | correct | Tool name changed; agent said no change. |
+| OUT-000 | outcome | `Y=1; YA=1; YF=0; YU=0` | disagree | Tool name changed; agent said no change. |
 
 **Why**
 
 - The model uses a different tool → `Y=1`, `YA=1`.
 - No flag, and the false value is not repeated → `YF=0`, `YU=0`.
-- The agent label says no change, so it is wrong → `correct`.
+- The agent label says no change, so it is wrong → `disagree`.

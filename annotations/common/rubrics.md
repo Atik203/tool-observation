@@ -20,9 +20,10 @@ Read the changed field(s), the observation, and the donor’s next message.
 | `2` | The field **is used**, and exactly one leaf changed. |
 | `3` | **Two leaves** changed, and at least one is used. A single leaf is never 3. |
 
-- `decision_changing=1` if the donor uses the field; otherwise 0.
+- `decision_changing=1` if the donor uses the field; otherwise 0. “Uses” means the donor’s message refers to that field’s value in any form — quoting the false value **or** the true value both count as used.
 - `absurd=1` only if the false value is impossible or malformed. Plausible wrong values are 0.
 - If `json_path_2` is filled, two leaves changed.
+- Text may be cut off (`...`). Judge from what is visible; if the cut hides the field, write `unsure: cut off` in `note`.
 
 ## Outcome (160 items)
 
@@ -41,7 +42,9 @@ Compare `reference_output` (correct V) with `model_output` (the arm).
 
 ## Recovery (80 items)
 
-`reference_decision` is the correct next decision. `steps_text` shows steps 1–4.
+`reference_decision` is the correct next decision. `steps_text` shows steps 1–4 (fewer if the sequence ended early — that is normal).
+
+Compare ignoring upper/lower case (`#W123` and `#w123` are the same).
 
 1. If a step has `parsed=no`, stop; nothing after it counts.
 2. If the step’s decision matches `reference_decision`, code **R1** at that step.
@@ -53,7 +56,6 @@ Compare `reference_output` (correct V) with `model_output` (the arm).
 
 Read `evidence_text` and `agent_label`. Decide:
 
-- `agree` — the agent label is correct.
-- `correct` — the agent label is wrong.
-- `your_label` — the label you would give, in the same format.
-- `note` — one short reason if `correct`.
+- `your_label`: the label you would give, in the same format as `agent_label` (for example `Y=1; YA=0; YF=1; YU=0`).
+- `agree`: `agree` if the agent label is correct, `disagree` if it is wrong (you corrected it).
+- `note`: one short reason if `disagree`; otherwise leave it empty.
