@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from toolobs.analysis.renderer2 import (
+    paired_contrast,
     paired_rate_difference,
+    paired_slope_difference,
     slope_rows,
     summarize_table,
     unit_table,
@@ -133,3 +135,35 @@ def test_paired_rate_difference_is_zero_for_identical_tables() -> None:
     assert result["n_units"] == 3
     assert result["difference"] == 0.0
     assert result["ci_low"] == 0.0 and result["ci_high"] == 0.0
+
+
+def test_paired_slope_difference_and_contrast() -> None:
+    table_a = {
+        (f"p{index}", "m"): {
+            "s0": False,
+            "s1": False,
+            "s2": True,
+            "s3": True,
+        }
+        for index in range(6)
+    }
+    table_b = {
+        (f"p{index}", "m"): {
+            "s0": False,
+            "s1": False,
+            "s2": False,
+            "s3": False,
+        }
+        for index in range(6)
+    }
+    slope_difference = paired_slope_difference(
+        table_a, table_b, "m", replicates=40, seed=11
+    )
+    assert slope_difference["beta_a"] > 0
+    assert slope_difference["beta_b"] == 0.0
+    assert slope_difference["difference"] > 0
+    assert slope_difference["ci_low"] is not None
+    contrast = paired_contrast(table_a, "s3", "s0", replicates=40, seed=11)
+    assert contrast["difference"] == 1.0
+    assert contrast["n_units"] == 6
+    assert contrast["ci_low"] == 1.0 and contrast["ci_high"] == 1.0

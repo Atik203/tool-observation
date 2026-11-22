@@ -495,12 +495,22 @@ def mode_analyze(args: argparse.Namespace) -> int:
     ).as_dict()
 
     format_checks = {}
+    format_ci_checks = {}
     for model_id in kept_models:
         difference = format_per_model[model_id]["difference"]
         format_checks[model_id] = (
             difference is not None and abs(difference) <= FORMAT_BOUND_PP / 100.0
         )
+        ci_low = format_per_model[model_id]["ci_low"]
+        ci_high = format_per_model[model_id]["ci_high"]
+        format_ci_checks[model_id] = (
+            ci_low is not None
+            and ci_high is not None
+            and ci_low >= -FORMAT_BOUND_PP / 100.0
+            and ci_high <= FORMAT_BOUND_PP / 100.0
+        )
     slope_checks = {}
+    slope_margins = {}
     for model_id in kept_models:
         beta2 = slope_per_model[model_id]["renderer2_slope"]["beta"]
         interval = summary1["slope"]["per_model_bootstrap"][model_id]
@@ -509,6 +519,11 @@ def mode_analyze(args: argparse.Namespace) -> int:
             and beta2 > 0
             and interval.get("ci_low") is not None
             and interval["ci_low"] <= beta2 <= interval["ci_high"]
+        )
+        slope_margins[model_id] = (
+            beta2 - interval["ci_low"]
+            if beta2 is not None and interval.get("ci_low") is not None
+            else None
         )
     pooled_beta2 = summary2["slope"]["pooled"]["beta"]
     pooled_slope_ok = (
@@ -525,7 +540,8 @@ def mode_analyze(args: argparse.Namespace) -> int:
     artifact = {
         "stage": "p6.7_renderer2",
         "recorded_utc": utc_now(),
-        "git_commit": git_commit(),
+        "run_git_commit": report.get("git_commit"),
+        "analysis_git_commit": git_commit(),
         "exploratory": True,
         "pooled_with_confirmatory": False,
         "renderer1_version": RENDERER_VERSION,
@@ -535,6 +551,25 @@ def mode_analyze(args: argparse.Namespace) -> int:
         "parser_version": PARSER_VERSION,
         "signature_version": "toolresult800-signature-v2",
         "manifest_hash": _manifest_hash(),
+        "definitions": {
+            "arm_switch_rates": (
+                "all available parsed units for each arm; denominators vary by arm and "
+                "renderer and are not restricted to units common with the other renderer"
+            ),
+            "format_sensitivity": (
+                "point = mean paired s0-vs-V difference on units parsed under both renderers; "
+                "CI = prefix-cluster bootstrap of that common-unit difference"
+            ),
+            "slope_robustness": (
+                "point betas use all available parsed units in each renderer; the paired "
+                "bootstrap CI resamples prefixes present in both tables and uses each "
+                "prefix's available arms"
+            ),
+            "robustness_bound": (
+                "descriptive point-estimate check; not a hypothesis test and not a "
+                "confidence-interval containment claim"
+            ),
+        },
         "sample": {
             "n_prefixes": len(prefix_ids),
             "domains": report.get("domain_counts"),
@@ -585,13 +620,19 @@ def mode_analyze(args: argparse.Namespace) -> int:
         },
         "robustness_bound": {
             "criterion": (
-                "holds if every per-model s0 format-sensitivity shift is <=10 pp and "
-                "pooled and every per-model renderer-2 slope is positive and inside the "
-                "renderer-1 95% prefix-bootstrap interval"
+                "descriptive: (i) every per-model renderer-2 s0-vs-V point difference "
+                "from renderer 1 is <=10 pp; (ii) the pooled and every per-model "
+                "renderer-2 beta is positive and inside the renderer-1 95% "
+                "prefix-bootstrap interval. The paired delta-beta CI is reported "
+                "descriptively and is not the criterion; (ii) is not equivalent to "
+                "that CI covering zero."
             ),
+            "criterion_type": "descriptive point-estimate check; not a hypothesis test",
             "format_bound_pp": FORMAT_BOUND_PP,
-            "format_checks": format_checks,
+            "format_point_checks": format_checks,
+            "format_ci_within_bound": format_ci_checks,
             "slope_checks": slope_checks,
+            "slope_check_margin_over_ci_low": slope_margins,
             "pooled_slope_check": pooled_slope_ok,
             "holds": holds,
             "reason_if_not": None
@@ -618,6 +659,14 @@ def mode_analyze(args: argparse.Namespace) -> int:
             "one alternative surface form only; not a general renderer population",
             "renderer-1 comparators are recomputed on the same prefixes, not the full 800",
             "no utility or task-success endpoint; switch is decision-level only",
+            (
+                "Ministral parse errors rose from 15 to 26 of 750 under renderer 2, "
+                "reducing paired units; the bound result is unchanged"
+            ),
+            (
+                "the format bound passes on point estimates; the Ministral 95% CI upper "
+                "bound (12.1 pp) exceeds the 10 pp bound, so this is not interval containment"
+            ),
         ],
     }
     write_json(args.out or ARTIFACT_PATH, artifact)
@@ -633,7 +682,10 @@ def mode_analyze(args: argparse.Namespace) -> int:
     print(f"[20_renderer2] robustness bound holds={holds}")
     print(f"[20_renderer2] gpu_hours {artifact['gpu_hours']['total']}")
     print(f"[20_renderer2] wrote {args.out or ARTIFACT_PATH}")
-    return 0 if holds is not False else 0
+    if holds is False:
+        print("[20_renderer2] FAIL: renderer-robustness bound did not hold")
+        return 1
+    return 0
 
 
 def build_parser() -> argparse.ArgumentParser:

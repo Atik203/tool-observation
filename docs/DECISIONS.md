@@ -14,7 +14,11 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   renderer, so every claim is template-local. The highest-value A* run is to re-render the same
   frozen information in a second deterministic surface and ask whether the severity result
   survives it. The register budget is 2-4 GPU hours on the approved H200 MIG 1g.18gb slice.
-- **Decision (fixed before the run):**
+- **Decision (criterion drafted before generation; entry committed after the run):**
+  - **Self-attestation.** The criterion text was written before the 20:03Z generation start,
+    but this entry was committed only after the run and is not externally timestamped. Treat
+    the check as pre-specified by this log, not as a registry deposit or independent
+    timestamp.
   - **Renderer.** `src/toolobs/render/render2.py` defines `toolresult-fieldlist-v1`: a flat
     one-line-per-scalar-leaf surface, `path = value` under the header
     `Observation (field list):`, where `path` is the dotted/bracketed JSON path with list
@@ -41,13 +45,15 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
     conditional-logit severity slope (s0-s3, prefix-cluster SE), the s3-s0 switch contrast,
     and the same quantities recomputed from the confirmatory main ledgers on the same prefixes
     and, for differences, the same parsed units.
-  - **Renderer-robustness bound (criterion fixed before the run).** The bound is descriptive,
-    not a gate. It "holds" if (i) every model's renderer-2 s0-vs-V switch rate differs from
-    renderer 1's by at most 10 percentage points, and (ii) the pooled and every per-model
+  - **Renderer-robustness bound (criterion drafted before generation; descriptive, not a
+    gate).** It "holds" if (i) every model's renderer-2 s0-vs-V **point** difference from
+    renderer 1 is at most 10 percentage points, and (ii) the pooled and every per-model
     renderer-2 severity slope is positive and lies inside the renderer-1 95% prefix-bootstrap
-    interval for the same prefixes (equivalently, the paired bootstrap interval for
-    beta_2 - beta_1 covers 0). If either fails, the paper keeps a template-local claim and
-    reports the observed sensitivity; no pooling is permitted either way.
+    interval for the same prefixes. The paired bootstrap interval for
+    beta_2 - beta_1 is reported descriptively; its covering zero is **not** the criterion and
+    is not equivalent to (ii). A pass is a point-estimate statement, not confidence-interval
+    containment. If either check fails, the paper keeps a template-local claim and reports
+    the observed sensitivity; no pooling is permitted either way.
 - **What is not claimed:** this is an exploratory format-robustness check on 150 prefixes, not
   a preregistered confirmatory test, not a model comparison, and not a second dataset. It does
   not change the primary sample, estimand, manifest, or preregistration.
@@ -63,18 +69,30 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   (refusals 41/6/0; parse errors 1/26/11). The V anchor is stable: identical V signatures
   across renderers for 142/143 Qwen, 144/144 Ministral, 147/147 Llama parsed units.
   - Format sensitivity (s0 vs V, renderer2 - renderer1): +0.7 pp Qwen, +5.0 pp Ministral,
-    0.0 pp Llama; pooled +1.9 pp, 95% prefix-bootstrap CI [-1.9, +5.7]. Every model is within
-    the pre-stated 10 pp bound.
+    0.0 pp Llama; pooled +1.9 pp, 95% prefix-bootstrap CI [-1.9, +5.7]. The **point**
+    estimates are inside the 10 pp bound. Ministral's 95% CI upper bound is +12.1 pp, so the
+    interval is not fully inside the bound; the pass is descriptive and point-based.
   - Severity slope: renderer 2 beta 0.635 Qwen, 0.628 Ministral, 0.696 Llama; renderer 1 on
     the same prefixes 1.068, 0.653, 0.517; pooled 0.649 vs 0.728. Every renderer-2 slope is
-    positive and inside its renderer-1 95% prefix-bootstrap interval; paired differences are
+    positive and inside its renderer-1 95% prefix-bootstrap interval; Qwen has the narrowest
+    margin (0.6348 against a lower bound of 0.6126, margin 0.0222). The paired differences
     -0.433 [-1.292, +0.151] Qwen, -0.025 [-0.523, +0.530] Ministral, +0.179
-    [-0.349, +0.723] Llama.
+    [-0.349, +0.723] Llama are descriptive; their covering zero is not the criterion.
   - The s3-s0 switch contrast is nearly unchanged pooled: renderer 2 13.7 pp [9.2, 18.3] vs
     renderer 1 13.9 pp [9.3, 18.9].
-  - **Bound holds: yes** under the pre-stated criterion. This is exploratory evidence that the
-    severity result is not a single-template artifact; it does not widen the confirmatory
-    claim, which stays preregistered and pooled-only.
+  - **Bound holds (descriptive point-estimate check): yes.** This is exploratory evidence that
+    the severity result is not a single-template artifact; it is not a hypothesis test, not
+    interval containment, and does not widen the confirmatory claim, which stays preregistered
+    and pooled-only.
+  - Ministral parse errors rose from 15 to 26 of 750 under renderer 2, reducing paired units;
+    the bound result is unchanged.
+  - **D-028 consequence / provenance note (recorded here rather than by editing the
+    historical entry):** D-028's parser-v4/signature-v2 rescore is why the parser-v4 main
+    ledgers differ from the server's parser-v3 copies; the renderer-2 analysis uses the
+    rescored copies. The manifest's `config_hashes` are the G0 snapshot by design (D-023
+    records the G1+ serving configuration outside the manifest), so the current
+    `models.yaml` and `calibration.yaml` hashes differ from the manifest's `4a7c...` and
+    `6623...` without a frozen-manifest error; the manifest is not edited.
   - Comparators were recomputed from the locally rescored parser-v4 main ledgers on the same
     prefixes; the server copy of the main ledgers is still parser-v3 (1,619 of 4,400 Qwen
     rows differ in signature), so analysis ran locally after the GPU shards finished. The
