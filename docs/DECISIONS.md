@@ -60,7 +60,89 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
----
+## D-047 - P6.3 row-level refits from local ledgers (cluster LRT, reclassification, missingness, competing risks)
+
+- **Date:** 2026-11-23
+- **Status:** accepted (post hoc robustness; no primary endpoint or risk-set change)
+- **Context:** The Q1 panel register (V4/V5, correction C1) found three estimands that were
+  point-only or asymptotically justified: the categorical/quadratic severity LRTs, the
+  severity-reclassification dilution, and the 5.5% missing cells. The earlier "ledgers
+  absent, refits impossible" claim was wrong: `data/runs/main/` holds 13,200 step-0 rows
+  across three models plus recovery and jitter ledgers. P6.3 upgrades these from "cannot"
+  to "do it" on this machine, with no GPU.
+- **Data provenance:** all inputs are read from `data/runs/main/` (base ledgers
+  `{model}/ledger.jsonl`, recovery step ledgers `{model}/recovery_{transient,persistent}.jsonl`,
+  and recovery event files `recovery/{model}/{transient,persistent}.jsonl`), plus the frozen
+  manifest, perturbation records, and the audit sheets. The script writes SHA-256 hashes and
+  byte sizes for every file it reads into `artifacts/analysis/rowlevel_refits.json`; P6.5
+  publishes them with the release. No raw ledger or frozen data is committed.
+- **Estimands and methods (fixed before running):**
+  1. **Severity functional form.** Exact conditional logit (prefix x model strata; prefix
+     clusters) with linear (`s`), quadratic (`s, s^2`), and categorical (`1(s=1), 1(s=2),
+     1(s=3)`) designs. The primary cluster-robust test is a null parametric bootstrap LRT:
+     resample the 800 prefixes with replacement (all three model groups for a prefix travel
+     together), simulate each stratum's outcome set from the fitted linear model conditional
+     on its observed event count, refit all three designs, and recompute both LRTs.
+     `p = (1 + #{LRT* >= LRT_obs}) / (B + 1)`, seed 20261108, B=150 pooled and B=40 per
+     model. The budgets are runtime-bounded; the bootstrap p floor is 1/151 pooled and
+     1/41 per model, so the cluster-robust Wald family is the primary multiplicity record
+     and the bootstrap is the resampling check. Cluster-robust Wald tests (exact conditional Hessian, prefix-cluster sandwich)
+     are reported alongside. Multiplicity: Holm over the six per-model tests (two LRTs x
+     three models); the pooled bootstrap test is the primary and is not in that family.
+     The note records that shared prefixes induce positive dependence, so Holm is valid but
+     conservative, and that the categorical and quadratic tests are alternative
+     specifications rather than two independent discoveries. Holm on the cluster-robust
+     Wald p-values is the primary multiplicity record; Holm on the bootstrap p-values is
+     reported as a resolution-limited check.
+  2. **Realized severity.** Assigned-severity ORs are unchanged. A critical-arm item is
+     coded inactive when the blind audit or verifier pass codes it donor-unused (majority
+     7/60, sheet-visible 11/60, blind 16/60). The primary refit adds an inactive indicator
+     to the conditional logit, so s1/s2/s3 are compared with the clean original s0 baseline
+     while inactive rows keep their own nuisance coefficient; this is the interval analogue
+     of the old point-only dilution correction. Two versions: (a) audited-only, using the
+     observed 60 critical items (the 43 not flagged stay active); (b) extrapolated, drawing
+     arm-specific donor-unused rates from a Jeffreys Beta posterior for the 30 s2 and 30 s3
+     audited items and applying them only to the 1,540 unaudited critical items, M=40
+     imputations, pooled with Rubin's rules using the cluster-robust covariance. A secondary
+     move-to-s0 variant codes inactive rows as s0; it contaminates the reference and is
+     reported but not the headline.
+  3. **Missingness.** 525/9,600 analysis cells lack a label (5.47%). They decompose into 336
+     cells in 84 prefix x model units whose V reference is unparsed and 189 cells whose arm
+     row is unparsed. IPW: logistic observation model on model x arm, domain, and donor;
+     inverse-probability weights for marginal arm rates, the s3-s2 and s3-s0 risk
+     differences, and a weighted conditional-logit slope (group-mean weights, explicitly
+     labelled a pseudo-likelihood approximation), with fixed-weight prefix-cluster
+     bootstrap CIs (the weights are held at the full-sample fit, which is stated). A
+     task x model x arm post-stratified cross-check is reported because missingness is
+     strongly task-dependent. Manski bounds over all 9,600 cells are the design-robust
+     result: missing outcomes set to 0 or 1 for each arm, with the corresponding extreme
+     slope refits. No MCAR assumption is claimed.
+  4. **Recovery.** v2 semantic risk set exactly as stage 15 (`signatures_differ`, parser v4
+     / signature v2, nonflag, reserve excluded; persistent restricted to the deterministic
+     200-prefix selection). Aalen-Johansen cumulative incidence treats terminal
+     non-recovery (final answer, parse failure) as a competing event and ran-to-H4 as
+     administrative censoring; Kaplan-Meier is retained only for reconciliation. Paired
+     tests are exact McNemar on H=4 recovery: transient s2 vs s3 within model and pooled,
+     and pairwise model comparisons for transient s3, Holm-adjusted over the three model
+     pairs.
+- **What is not claimed:** these are post hoc robustness refits of frozen ledgers, not new
+  preregistered confirmatory tests. They do not alter the primary sample, the v2 recovery
+  risk set, the assigned-severity estimand, or any gate. The reclassification extrapolation
+  assumes audited donor-unused rates transport to unaudited critical items conditional on
+  arm; the IPW assumes MAR given the listed covariates. Both assumptions are stated in the
+  artifact and the report.
+- **Consequences:** new `scripts/19_rowlevel_refits.py`, `tests/test_rowlevel_refits.py`,
+  and `artifacts/analysis/rowlevel_refits.json`. The artifact is gitignored like every
+  analysis JSON and is picked up by the P6.5 release build. Paper text is folded in by
+  Task 6; this task does not edit the paper.
+- **Outcome (2026-11-23):** the artifact was generated from this tree. The pooled
+  cluster-bootstrap LRTs remain significant at the 1/151 floor (p=.0066 for both terms);
+  after Holm over the six per-model cluster-robust Wald tests, qwen categorical and
+  quadratic and ministral categorical survive at .05. The realized-severity ORs overlap
+  the assigned ORs, so the old point-only claim that the assigned estimates are materially
+  attenuated is not confirmed. Aalen-Johansen equals the crude recovery primary in every
+  cell because administrative censoring is horizon-only; Kaplan-Meier is the inflated
+  estimator. Full numbers are in `.superpowers/sdd/p6-q1-hardening/task-4-report.md`.
 
 ## D-045 - P4.7/P5 release package, one-command validation, submission staging
 
