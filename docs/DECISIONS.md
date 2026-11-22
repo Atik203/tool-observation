@@ -6,6 +6,36 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-049 - P6.5 Phase B release: DOI mint, renderer-2 inclusion, package-alone L1
+
+- **Date:** 2026-11-23
+- **Status:** accepted (release packaging; no analysis, sample, estimand, or manifest change)
+- **Context:** Phase A packaged v1.0.1 but excluded the exploratory P6.7 second-renderer
+  artifact (D-048). The Q1 register's V1 finding requires the package to be externally
+  checkable and the DOI to resolve. Zenodo caps a record at 100 files; the complete package
+  has 138 files. Two smaller issues surfaced in review: `TABLE_MAP`'s S9 cell contained a raw
+  pipe that broke the generated Markdown table, and L1 read `paper/toolresults.tex` from the
+  repository, so it was not package-alone despite the `VALIDATION.md` wording.
+- **Decision:**
+  - Include `analysis/renderer2.json`, the three `traces/renderer2/**/ledger.jsonl` extracts,
+    and the rebuild code (`code/09c_rescore.py`, `code/20_renderer2.py`, and the two
+    `toolobs` modules). The artifact's exploratory status and descriptive point-estimate
+    criterion are unchanged; it is never pooled with the confirmatory slope.
+  - Write `paper_audit.json` at build time (ordered main/supplement labels, the single v1
+    reconciliation note, and the paper SHA-256), and validate `TABLE_MAP` against it. L1 then
+    runs on the package alone; the main-text order is checked, not just the label set.
+  - Deposit `ToolResult-800-v1.0.1.zip` + `SHA256SUMS` on Zenodo (the 100-file cap forces one
+    archive). Verify every archive entry against `SHA256SUMS` after download.
+  - Record the reserved DOI `10.5281/zenodo.24449467` in `CITATION.cff`, `docs/DATA_CARD.md`,
+    `docs/submission/doi_record.md`, and the paper's Data-availability bullet.
+- **Consequences:** package 136 checksummed files (138 with `SHA256SUMS` and
+  `release_record.json`), 24 distributed ledger extracts; L1 18/18; L2 24/24; clean-room
+  compile 36 pages with 0 undefined references/citations and 0 BibTeX warnings. No
+  prereg amendment: the frozen manifest, sample, estimand, and confirmatory results are
+  untouched.
+
+---
+
 ## D-048 - P6.7 second deterministic renderer (field-list surface, exploratory GPU run)
 
 - **Date:** 2026-11-23

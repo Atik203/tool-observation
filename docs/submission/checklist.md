@@ -1,6 +1,6 @@
 # P5 submission checklist — ToolResult-800 v1.0.1
 
-Status 2026-11-23 (Task 5, P6.5 Phase A). Items marked [x] are complete and evidenced; items
+Status 2026-11-23 (Task 5, P6.5 Phase B). Items marked [x] are complete and evidenced; items
 marked [ ] require author action (or remain human-gated) and name the artifact that unblocks
 them.
 
@@ -20,28 +20,34 @@ them.
 - [x] PDF metadata title matches; byline/ORCID/CRediT reconciled (pending signatures below).
 - [x] Clean-room compile from the 14-file Overleaf zip with the installed TeX Live 2026:
   `latexmk -pdf -interaction=nonstopmode -halt-on-error toolresults.tex` in a fresh temp
-  directory — current tree (2026-11-23 03:15, paper SHA-256 `20564bda…`, including the
-  pending Task 6 parser/renderer notes) compiles to **36 pages, 0 undefined references,
-  0 undefined citations, 0 BibTeX warnings**; the earlier packaging snapshot compiled to
-  **35 pages** with the same zero-warning result. `dist/toolresults-overleaf.zip` is
-  refreshed from the current `paper/` tree. Structural checks also pass locally: 75/75
-  labels defined, all floats cited, all cite keys resolve (`pytest tests/test_release.py`).
+  directory — final tree compiles to **36 pages, 0 undefined references, 0 undefined
+  citations, 0 BibTeX warnings**, no absolute paths in the extracted sources.
+  `dist/toolresults-overleaf.zip` is rebuilt from the committed `paper/` tree and
+  checksummed (14 files). Structural checks also pass locally: 75/75 labels defined,
+  all floats cited, all cite keys resolve (`pytest tests/test_release.py`).
 
 ## Release / DOI
 
-- [x] Release staged: `release/ToolResult-800-v1.0.1/` (127 files), manifest hash chain ok,
-  SHA256SUMS verified, automated identifier re-scan clean (`pii_rescan.json`).
-- [x] Table-to-artifact map covers all 25 table labels (11 main-text, S1–S14 supplementary;
-  `TABLE_MAP.md`), with `tab:recovery` on the v2 semantic set and one v1 note.
-- [x] One-command validation implemented and passing: `make validate-release` 17/17 L1,
-  23/23 with `--rerun` (six CPU-only producers, P6.3 refits included).
+- [x] Release packaged and published: `release/ToolResult-800-v1.0.1/` (136 checksummed
+  files; 138 with `SHA256SUMS` and `release_record.json`), manifest hash chain ok,
+  SHA256SUMS verified, automated identifier re-scan clean (`pii_rescan.json`), DOI
+  `10.5281/zenodo.24449467` (record 24449467; archive + `SHA256SUMS` deposited because
+  Zenodo caps records at 100 files). The exploratory P6.7 renderer-2 artifact, its three
+  ledgers, and the parser-v4 rescore/second-renderer code are included.
+- [x] Table-to-artifact map covers all 25 table labels (11 ordered main-text, S1–S14
+  supplementary; `TABLE_MAP.md`), with `tab:recovery` on the v2 semantic set and one v1
+  note. L1 validates the order and the map against `paper_audit.json` without a repo
+  checkout.
+- [x] One-command validation implemented and passing: `make validate-release` 18/18 L1,
+  24/24 with `--rerun` (six CPU-only producers, P6.3 refits included).
 - [x] License verification recorded (`licenses/`, `docs/submission/license_verification.md`);
   dual license recorded (data CC BY 4.0, code MIT).
 - [x] Data card corrected (no "human labels" claim; G0 provisional; release inventory).
 - [x] AI disclosure names sessions/dates/prompts/interface/hypothesis-blinding + T6
   single-agent part (paper Declarations).
-- [ ] DOI minted and recorded in `CITATION.cff` + data card — **author action**
-  (deposit record prepared and ready: `docs/submission/doi_record.md`).
+- [x] DOI minted and recorded in `CITATION.cff`, `docs/DATA_CARD.md`,
+  `docs/submission/doi_record.md`, and the paper's Data-availability bullet; resolver
+  returns the record.
 - [ ] Repository tag + GitHub release match v1.0.1 — **author action**.
 - [ ] Second-person checksum verification — **author action**.
 

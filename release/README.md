@@ -27,10 +27,10 @@ candidate. Built packages are gitignored; only this README is tracked.
 - [x] `DATA_LICENSE.md`, `LICENSE`, and `LICENSE-DOCS` are included.
 - [x] Model outputs comply with each model's license; no weights are included (`licenses/MODEL_OUTPUT_LICENSES.md`; Apache-2.0 ×2 + llama3.1 verified 2026-11-22).
 - [x] Checksums are generated and verified from a clean copy (`SHA256SUMS` + `release_record.json`).
-- [x] Data card is complete; remaining TBDs (DOI, release date) resolve at DOI registration.
+- [x] Data card is complete; DOI and release date recorded.
 - [x] Preregistration and all amendments are included (`prereg/`).
 - [x] The claim in the README/paper matches the gate outcomes (measurement framing, three failures stated).
-- [ ] A DOI is minted and recorded in `CITATION.cff` and the data card — pending author upload (`docs/submission/doi_record.md` staged).
+- [x] DOI minted and recorded in `CITATION.cff` and the data card (10.5281/zenodo.24449467).
 - [ ] Repository tag and GitHub release match the package version — pending author action.
 - [ ] A second person reproduces the checksum verification — pending author action.
 

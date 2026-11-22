@@ -7,7 +7,8 @@
   manifest's `freeze.git_commit` carry the same full hash; the earlier
   `1675376` here was a typo, corrected 2026-11-22 under P6.1.
 - **External registry:** none. The deposit is in-repo until the release DOI
-  (Task 7): `prereg/PREREGISTRATION.md` (frozen) + `prereg/AMENDMENTS.md`
+  (now minted: `10.5281/zenodo.24449467`, 2026-11-23): `prereg/PREREGISTRATION.md`
+  (frozen) + `prereg/AMENDMENTS.md`
   (A-001–A-011) + `data/manifests/toolresult800_v1.json` (hash sidecar).
   A-007–A-011 record post-freeze analysis-record items (decisions and the
   A-011 provenance finding) and were entered on 2026-11-22 (D-036, D-039,
@@ -61,9 +62,28 @@
   https://github.com/Atik203/tool-observation; upstream τ-bench @
   `59a200c6d575d595120f1cb70fea53cef0632f6b`; this prereg freeze commit `1673856`,
   tag `prereg-freeze-v1`, hash `e0d107c6`, bundled under `prereg/` in the package.
-- **DOI:** not minted. Phase A prepares the record in
-  `docs/submission/doi_record.md`; the author uploads to Zenodo and mints in Phase B.
-  The token in `.env` is read only at mint time and is never printed or committed.
+- **DOI:** published **2026-11-23** as `10.5281/zenodo.24449467`
+  (<https://doi.org/10.5281/zenodo.24449467>, Zenodo record 24449467). The record
+  carries the v1.0.1 package archive, the package `SHA256SUMS`, and the DataCite
+  metadata in `docs/submission/doi_record.md`. The token in `.env` was read only
+  at mint time (in-process) and was never printed or committed.
+
+## P6.5 Phase B publication note (2026-11-23)
+
+- **Package:** `release/ToolResult-800-v1.0.1/` — 136 checksummed files (138 with
+  `SHA256SUMS` and `release_record.json`). Adds the exploratory P6.7
+  `analysis/renderer2.json`, its three renderer-2 ledgers under
+  `traces/renderer2/`, and `code/` (parser-v4 rescore + second-renderer sources).
+  `traces/ledger_hashes.json` now records 24 extracts (21 confirmatory + 3
+  renderer-2).
+- **Validation:** 18/18 L1 on the package alone (includes renderer-2 ledger hashes
+  and an ordered main-text table check via `paper_audit.json`); 24/24 with
+  `--rerun` (six CPU-only producers).
+- **Clean-room compile:** 36 pages, 0 undefined references, 0 undefined citations,
+  0 BibTeX warnings; the paper's Data-availability bullet carries the DOI.
+- **DOI:** `10.5281/zenodo.24449467`; resolver verified. Zenodo caps a record at
+  100 files, so the record holds the release archive + `SHA256SUMS`; every archive
+  entry was re-checked against `SHA256SUMS` after download.
 
 ## T7 staging note (2026-11-22, P4.7/P5)
 

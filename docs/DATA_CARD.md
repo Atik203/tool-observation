@@ -1,7 +1,8 @@
 # Data card — ToolResult-800
 
-**Status:** v1.0.1 release packaged and validated (2026-11-23; redaction errata over v1.0.0). DOI pending (see `docs/submission/doi_record.md`);
-release date is the DOI registration date. Hashes below are from the frozen manifest, not estimates.
+**Status:** v1.0.1 released (2026-11-23; redaction errata over v1.0.0). DOI
+`10.5281/zenodo.24449467` (resolver: https://doi.org/10.5281/zenodo.24449467); the release
+date is the DOI registration date. Hashes below are from the frozen manifest, not estimates.
 
 ---
 
@@ -11,15 +12,15 @@ release date is the DOI registration date. Hashes below are from the frozen mani
 |---|---|
 | Name | ToolResult-800 |
 | Full title | Counterfactual Tool-Observation dataset, 800 frozen prefixes |
-| Version | 1.0.1 (packaged 2026-11-23; released on DOI registration; supersedes v1.0.0 redaction errata) |
+| Version | 1.0.1 (released 2026-11-23 on DOI registration; supersedes v1.0.0 redaction errata) |
 | Repository | https://github.com/Atik203/tool-observation |
 | Dataset brand | ToolResult-800 (the repository is `tool-observation`) |
 | Study | Tool-Result Errors in Language-Model Agents |
 | Maintainer | Md. Atikur Rahaman (mrahaman2310298@bscse.uiu.ac.bd) |
 | License | Dual: CC BY 4.0 for project data additions; MIT for the repository code; upstream τ-bench MIT |
-| Release date | TBD (= DOI registration date) |
-| DOI | TBD (`docs/submission/doi_record.md`) |
-| Package | `release/ToolResult-800-v1.0.1/` — 127 checksummed files (129 files with `SHA256SUMS` and `release_record.json`); 17/17 L1 validated |
+| Release date | 2026-11-23 (= DOI registration date) |
+| DOI | `10.5281/zenodo.24449467` (https://doi.org/10.5281/zenodo.24449467) |
+| Package | `release/ToolResult-800-v1.0.1/` — 136 checksummed files (138 files with `SHA256SUMS` and `release_record.json`); 18/18 L1 validated |
 | Manifest hash | `d6e034d7f1132b314ad1f82bf14faa0f6762975ee7b404b54cc365acfac5487a` (`data/manifests/toolresult800_v1.json` + sidecar) |
 | Preregistration hash | `e0d107c6` (freeze commit 1673856, tag prereg-freeze-v1; no external registry; record in `prereg/DEPOSIT_NOTE.md`) |
 
@@ -134,7 +135,8 @@ within-prefix contrasts and for benchmarking detection/flagging behavior.
 - τ-bench tasks are public and may be in target-model training data; baseline reliance may be
   inflated.
 - Only three 8–9B model families; no frontier or API models.
-- Two domains, one renderer, one severity rubric.
+- Two domains; one confirmatory renderer plus an exploratory second renderer on 150 prefixes
+  (descriptive, not pooled with the confirmatory estimate); one severity rubric.
 - Mock/deterministic benchmark tools, not live APIs.
 - Donor prefixes come from gpt-4o/sonnet; target models continue off-policy histories.
 - Recovery is observed for four steps; longer horizons are censored.
@@ -155,35 +157,41 @@ within-prefix contrasts and for benchmarking detection/flagging behavior.
 
 ## 11. Release contents (v1.0.1)
 
-Packaged at `release/ToolResult-800-v1.0.1/` (127 files; not yet uploaded; DOI deposit
-record at `docs/submission/doi_record.md`):
+Packaged and published at `release/ToolResult-800-v1.0.1/` (136 files; DOI
+`10.5281/zenodo.24449467`; deposit record at `docs/submission/doi_record.md`):
 
 - `manifests/` — frozen manifest + SHA-256 sidecar, perturbation records, source pin.
 - `frozen/prefixes.jsonl` — 880 scrubbed prefixes with five arm observations each, in the
   redacted release derivative (D-046). The unredacted frozen source is not distributed.
 - `traces/` — scrubbed, redacted ledger extracts (base, recovery, jitter, G1 calibration_v3
-  runs) plus `ledger_hashes.json` (SHA-256 and byte size of every distributed extract,
-  computed after redaction). Prompt text was never logged (hashes only); decisions are
-  model outputs on scrubbed inputs.
+  runs, and the exploratory P6.7 second-renderer runs) plus `ledger_hashes.json` (SHA-256 and
+  byte size of every distributed extract, computed after redaction). Prompt text was never
+  logged (hashes only); decisions are model outputs on scrubbed inputs.
 - `labels/` — audit packets, sheets, rater instructions, blind-audit result, verification
   record (`panel_record.json`), second-rater agreement.
 - `analysis/` — every analysis JSON behind the reported tables (`g3_analysis`,
   `g4_recovery`, `g4_recovery_v2`, `rowlevel_refits`, `severity_sensitivity`,
   `inference_robustness`, `wrong_direction`, `new_evidence`, `field_taxonomy`,
-  `prereg_secondary`, jitter stability). `rowlevel_refits.json` records its generation
-  commit (`8e6f536`) and SHA-256 `965805ea…dbedfcb`; its `reconciliation.note` is the
-  text-only correction later committed as `7f0169d` (no numeric change).
+  `prereg_secondary`, jitter stability) plus the exploratory `renderer2.json` (second
+  deterministic renderer, 150 prefixes, 2,250 generations; descriptive robustness check).
+  `rowlevel_refits.json` records its generation commit (`8e6f536`) and SHA-256
+  `965805ea…dbedfcb`; its `reconciliation.note` is the text-only correction later committed
+  as `7f0169d` (no numeric change).
 - `packets/` — T6 blinded packets, sealed maps, and codes (single-agent coded, author-overseen),
   with the flagged identity redacted.
 - `prereg/` — frozen preregistration, amendments A-001–A-011, deposit note.
 - `licenses/` — upstream τ-bench MIT text (verbatim) + model-output license verification.
+- `code/` — `09c_rescore.py` (parser-v4 rescore for the confirmatory main ledgers),
+  `20_renderer2.py`, and the two `toolobs` second-renderer modules, so the released
+  comparators can be rebuilt from the released ledgers.
 - `ATTRIBUTION.md`, `DATA_LICENSE.md`, `CHANGELOG.md`, `TABLE_MAP.md` (all 25 paper tables:
-  11 main + S1–S14), `VALIDATION.md` (one-command validation), `SHA256SUMS`,
+  11 main + S1–S14, in paper order), `VALIDATION.md` (one-command validation),
+  `paper_audit.json` (paper-side label/reconciliation snapshot used by L1), `SHA256SUMS`,
   `release_record.json`, `pii_rescan.json` (including `n_redactions`).
 
-Validate: `make validate-release` (L1 on the package alone; `--rerun` with repo ledgers
-rebuilds the six T2–T6 analysis JSONs and diffs). The G0 harvest audit is an AI pre-audit (40/40)
-adopted by the author with human verification deferred (D-021, A-005); the freeze stands
+Validate: `make validate-release` (18/18 L1 on the package alone; `--rerun` with repo ledgers
+reruns the six CPU-only analysis producers for 24/24). The G0 harvest audit is an AI pre-audit
+(40/40) adopted by the author with human verification deferred (D-021, A-005); the freeze stands
 provisional on that item. The automated identifier re-scan is clean (reserved-domain
 placeholders, synthetic-token echoes, and the redaction count reported in `pii_rescan.json`);
 the independent human re-scan is pending (see `docs/submission/checklist.md`).

@@ -18,9 +18,13 @@ weights, caches, credentials, or run logs):
   prefixes; prompt text was never logged, only hashes).
 - ``labels/`` — audit packets, sheets, instructions, verification record.
 - ``analysis/`` — every analysis JSON (+ ``.md`` companions) behind the
-  reported tables, including the T2/T3/T4/T6 regenerable JSONs.
+  reported tables, including the T2/T3/T4/T6 regenerable JSONs and the
+  exploratory P6.7 second-renderer artifact.
 - ``packets/`` — T6 blinded packets, sealed maps, and codes.
-- ``prereg/``, ``licenses/``, ``costs/``, ``TABLE_MAP.md``, ``VALIDATION.md``.
+- ``code/`` — the parser-v4 rescore script and the second-renderer sources
+  needed to rebuild the exploratory comparators from the released ledgers.
+- ``prereg/``, ``licenses/``, ``costs/``, ``TABLE_MAP.md``, ``VALIDATION.md``,
+  ``paper_audit.json`` (the paper label/order snapshot behind L1).
 
 What ``--validate`` checks (works on the staged tree OR the live repo tree):
 
@@ -30,7 +34,9 @@ What ``--validate`` checks (works on the staged tree OR the live repo tree):
   reconciliations behind every measured table (crude triple, v2 bridge,
   severity 7/11/16 from the verification sheets, exact McNemar/LRT
   recomputes, wrong-direction partition, utility counts, g3 totals, H5);
-  TABLE_MAP covers all 25 paper tables; identifier re-scan clean.
+  TABLE_MAP covers all 25 paper tables (main order included); identifier
+  re-scan clean. ``paper_audit.json`` carries the paper-side label snapshot,
+  so L1 also runs on the package alone.
 - L2 (``--rerun``, repo ledgers present): rerun the five analysis producers
   (13/14/15/16/17/16-task-utility; CPU-only, seeded) into a temp dir and
   diff against the released copies ignoring volatile keys
@@ -81,7 +87,9 @@ from toolobs.provenance import git_commit, utc_now, write_json  # noqa: E402
 
 PACKAGE_NAME = "ToolResult-800-v1.0.1"
 PACKAGE_VERSION = "1.0.1"
-BUILDER_VERSION = "stage-18 v2"
+BUILDER_VERSION = "stage-18 v3"
+# Reserved on Zenodo at deposit creation; resolves once the record is published.
+PACKAGE_DOI = "10.5281/zenodo.24449467"
 VOLATILE_KEYS = frozenset({"recorded_utc", "git_commit"})
 
 # ---------------------------------------------------------------------------
@@ -193,7 +201,7 @@ TABLE_MAP: list[dict[str, str]] = [
     {"label": "tab:armrates", "section": "supplement", "table_no": "S9",
      "title": "Per-arm switch rates",
      "artifact": "analysis/g3_analysis.json",
-     "keys": "arm_table any/n per model|arm; s0 19.8/31.9/38.1%",
+     "keys": "arm_table any/n per model-arm; s0 19.8/31.9/38.1%",
      "producer": "scripts/13_analyze.py", "kind": "measured"},
     {"label": "tab:panel", "section": "supplement", "table_no": "S10",
      "title": "Verification panel agreement",
@@ -268,7 +276,7 @@ ANALYSIS_JSONS = [
     "prereg_secondary.json", "prereg_secondary.md",
     "severity_sensitivity.json", "inference_robustness.json",
     "wrong_direction.json", "new_evidence.json",
-    "rowlevel_refits.json",
+    "rowlevel_refits.json", "renderer2.json",
     "field_taxonomy.json", "field_taxonomy.md",
     "switch_typology.json", "missingness_marginal.json",
     "jitter_stability_llama_3_1_8b_instruct_awq.json",
@@ -282,6 +290,17 @@ TASK_UTILITY_FILES = [
     "task_utility_codes.json", "task_utility_s0_codes.json",
     "task_utility_recodes_packets.json", "task_utility_recodes_map.json",
     "task_utility_recodes.json",
+]
+
+# (repo-relative source, package-relative destination) for the code needed to
+# rebuild the released derived artifacts from the released ledgers. The full
+# repository is the related code identifier; these files make the parser-v4 and
+# second-renderer comparators rebuildable without cloning.
+CODE_FILES: list[tuple[str, str]] = [
+    ("scripts/09c_rescore.py", "code/09c_rescore.py"),
+    ("scripts/20_renderer2.py", "code/20_renderer2.py"),
+    ("src/toolobs/analysis/renderer2.py", "code/toolobs/analysis/renderer2.py"),
+    ("src/toolobs/render/render2.py", "code/toolobs/render/render2.py"),
 ]
 
 # (script, staged output name, extra argv) for --rerun L2 validation.
@@ -634,11 +653,6 @@ def _ledger_extract_paths() -> list[tuple[Path, str]]:
         rel = path.relative_to(RUNS_DIR)
         if "_backup" in rel.parts:
             continue
-        if "renderer2" in rel.parts:
-            # Exploratory P6.7 second-renderer runs (D-048): not part of the
-            # confirmatory v1.0.1 package. Including them is a separate deposit
-            # decision (they need their own analysis artifact).
-            continue
         if "calibration" in rel.parts and "calibration_v3" not in rel.parts:
             continue  # superseded first calibration pass; v3 is the reported one
         name = path.name
@@ -674,8 +688,47 @@ def stage_files() -> list[tuple[Path, str]]:
     for name in TASK_UTILITY_FILES:
         staged.append((ANALYSIS_DIR / name, f"packets/{name}"))
     staged.append((COST_DIR / "main_cost.json", "costs/main_cost.json"))
+    for src, dst in CODE_FILES:
+        staged.append((REPO_ROOT / src, dst))
     staged.extend(_ledger_extract_paths())
     return staged
+
+
+def paper_audit_json() -> dict:
+    """Paper-side facts L1 needs, snapshotted so the package validates alone."""
+    tex_path = REPO_ROOT / "paper" / "toolresults.tex"
+    tex = tex_path.read_text(encoding="utf-8")
+    supp_at = tex.index("\\section*{Supplementary tables}")
+    main_labels = list(
+        dict.fromkeys(re.findall(r"\\label\{(tab:[^}]+)\}", tex[:supp_at]))
+    )
+    supp_labels = list(
+        dict.fromkeys(re.findall(r"\\label\{(tab:[^}]+)\}", tex[supp_at:]))
+    )
+    marker = "Run-risk-set (v1) reconciliation"
+    note_count = tex.count(marker)
+    outside = tex
+    if note_count == 1:
+        start = tex.index(marker)
+        end = tex.find("\n\n", start)
+        if end != -1:
+            outside = tex[:start] + tex[end:]
+    return {
+        "paper": "paper/toolresults.tex",
+        "sha256": sha256_file(tex_path),
+        "main_labels": main_labels,
+        "supplement_labels": supp_labels,
+        "recovery_note": {
+            "marker": marker,
+            "count": note_count,
+            "v1_crude_outside_note": "27.3/34.7/27.2" in outside,
+            "v1_km_outside_note": "32.4/47.6/28.2" in outside,
+        },
+        "note": "Snapshot of the paper-side labels and the single v1 recovery "
+        "reconciliation note, written at build time. L1 checks TABLE_MAP "
+        "against this snapshot so --validate --root <package> needs no "
+        "repository checkout.",
+    }
 
 
 def table_map_md() -> str:
@@ -728,10 +781,10 @@ def ledger_hashes_json(root: Path) -> dict:
         "total_bytes": sum(int(row["bytes"]) for row in rows),
         "note": "SHA-256 of every distributed ledger extract after the v1.0.1 "
         "release-copy redaction (D-046). Base decision ledgers, recovery step "
-        "and event ledgers, jitter runs, and the reported G1 calibration_v3 "
-        "runs; the superseded first calibration pass, *_backup files, and the "
-        "exploratory P6.7 second-renderer runs (D-048) are excluded. The raw "
-        "run tree is not distributed.",
+        "and event ledgers, jitter runs, the reported G1 calibration_v3 runs, "
+        "and the exploratory P6.7 second-renderer runs (D-048). The superseded "
+        "first calibration pass and *_backup files are excluded; the raw run "
+        "tree is not distributed.",
         "files": rows,
     }
 
@@ -753,12 +806,21 @@ One-command validation (no GPU, stdlib Python only):
   the single v1 hash-set reconciliation, hash-vs-semantic bridge, severity
   7/11/16 re-derived from the verification sheets, exact McNemar and LRT
   recomputes, wrong-direction partition, utility counts, g3 totals, H5);
-  `TABLE_MAP.md` covers all 25 paper tables (11 main + S1–S14); identifier
-  re-scan clean.
+  `TABLE_MAP.md` covers all 25 paper tables (11 main, ordered, + S1–S14);
+  identifier re-scan clean. The paper-side label order and the single v1
+  reconciliation note are carried in `paper_audit.json`, so this level
+  needs no repository checkout.
 - **L2 (`--rerun`, needs the repo with run ledgers):** reruns the six
   CPU-only analysis producers (including `19_rowlevel_refits.py`, P6.3) and
   diffs the rebuilt JSONs against the released copies (volatile
   `recorded_utc`/`git_commit` ignored).
+
+The exploratory P6.7 second-renderer artifact is included: `analysis/renderer2.json`,
+its three ledgers under `traces/renderer2/`, and the code to rebuild the parser-v4
+comparators (`code/09c_rescore.py`, `code/20_renderer2.py`, and the two
+`toolobs` modules). `traces/ledger_hashes.json` records the SHA-256 of every
+distributed ledger, including the renderer-2 extracts; `renderer2.json` also
+records the same hashes, so the two records must agree.
 
 Artifact provenance: `analysis/rowlevel_refits.json` was generated at commit
 `8e6f536` (SHA-256 `965805ea…dbedfcb`, recorded in `release_record.json`).
@@ -831,6 +893,13 @@ def release_changelog_md() -> str:
 - L1 now checks the v2 crude/KM triple (24.4/32.9/21.3; 28.2/44.6/22.0) and
   the v1 decomposition (54+18=72, 116+25=141, 80+32=112); L2 reruns six
   producers including `19_rowlevel_refits.py`.
+- Added the exploratory P6.7 second-renderer artifact (`analysis/renderer2.json`),
+  its three ledgers under `traces/renderer2/`, and the rebuild code under
+  `code/` (parser-v4 rescore + renderer sources). The exploratory status and
+  the descriptive, point-estimate nature of its robustness check are unchanged.
+- `paper_audit.json` snapshots the paper's main/supplement table order and the
+  single v1 recovery note so L1 validates the package without a repository
+  checkout; the main-text table order is now checked, not just the label set.
 
 ## v1.0.0 — 2026-11-22
 
@@ -909,6 +978,7 @@ def build_package(out: Path, force: bool = False) -> dict:
         shutil.copy2(src, target)
 
     (out / "TABLE_MAP.md").write_text(table_map_md(), encoding="utf-8")
+    write_json(out / "paper_audit.json", paper_audit_json())
     (out / "VALIDATION.md").write_text(validation_md(), encoding="utf-8")
     (out / "CHANGELOG.md").write_text(release_changelog_md(), encoding="utf-8")
     (out / "licenses").mkdir(parents=True, exist_ok=True)
@@ -930,7 +1000,7 @@ def build_package(out: Path, force: bool = False) -> dict:
         "Scrubber-artifact identities are redacted in this copy at build time "
         "(D-046); the frozen source is not distributed.\n\n"
         f"Staged: {utc_now()} (builder {BUILDER_VERSION}, commit {git_commit()}).\n"
-        "DOI: TBD — see `docs/submission/doi_record.md` in the repository.\n"
+        f"DOI: {PACKAGE_DOI}.\n"
         "Validate: `python scripts/18_build_release.py --validate --root <this dir>`.\n"
         "Every paper table traces via `TABLE_MAP.md`; every number traces to "
         "`manifests/`, `traces/`, `labels/`, or `analysis/`.\n",
@@ -975,7 +1045,7 @@ def build_package(out: Path, force: bool = False) -> dict:
         "builder": BUILDER_VERSION,
         "created_utc": utc_now(),
         "git_commit": git_commit(),
-        "doi": "TBD",
+        "doi": PACKAGE_DOI,
         "manifest_hash": sha256_file(MANIFEST_DIR / "toolresult800_v1.json"),
         "prereg_hash": manifest.get("prereg_hash"),
         "field_registry_hash": manifest.get("field_registry_hash"),
@@ -1071,6 +1141,15 @@ def _load(root: Path, rel: str) -> dict:
             with open(candidate, encoding="utf-8") as handle:
                 return json.load(handle)
     raise FileNotFoundError(f"{rel} not found under {root}")
+
+
+def _paper_audit(root: Path) -> dict:
+    """Paper-side snapshot: package copy when present, else the live paper."""
+    path = root / "paper_audit.json"
+    if path.is_file():
+        with open(path, encoding="utf-8") as handle:
+            return json.load(handle)
+    return paper_audit_json()
 
 
 def _deep_equal_ignoring(a: object, b: object, path: str = "") -> list[str]:
@@ -1225,15 +1304,7 @@ def validate_tree(root: Path, rerun: bool = False) -> dict:
             )
             for m in ids
         )
-        tex = (REPO_ROOT / "paper" / "toolresults.tex").read_text(encoding="utf-8")
-        marker = "Run-risk-set (v1) reconciliation"
-        note_count = tex.count(marker)
-        outside = tex
-        if note_count == 1:
-            start = tex.index(marker)
-            end = tex.find("\n\n", start)
-            if end != -1:
-                outside = tex[:start] + tex[end:]
+        audit = _paper_audit(root).get("recovery_note", {})
         check(
             "g4-crude-triple",
             v2_events == ((54, 221), (116, 353), (80, 376))
@@ -1241,11 +1312,11 @@ def validate_tree(root: Path, rerun: bool = False) -> dict:
             and v2_km == (28.2, 44.6, 22.0)
             and v1_events == ((72, 264), (141, 406), (112, 412))
             and decomposition == ((54, 18, 72), (116, 25, 141), (80, 32, 112))
-            and note_count == 1
-            and "27.3/34.7/27.2" not in outside
-            and "32.4/47.6/28.2" not in outside,
+            and audit.get("count") == 1
+            and not audit.get("v1_crude_outside_note")
+            and not audit.get("v1_km_outside_note"),
             f"v2 crude {v2_rates} KM {v2_km} events {v2_events}; "
-            f"v1 note {v1_events} x{note_count}",
+            f"v1 note {v1_events} x{audit.get('count')}",
         )
         bridge_bad = [
             k for k, cell in bridge.items()
@@ -1407,29 +1478,57 @@ def validate_tree(root: Path, rerun: bool = False) -> dict:
         f"{clopper_pearson_lower(9, 9):.4f}",
     )
 
-    # --- TABLE_MAP covers all 25 paper tables, main/supplement split ---
+    # --- TABLE_MAP covers all 25 paper tables, ordered main/supplement split ---
     try:
-        tex = (REPO_ROOT / "paper" / "toolresults.tex").read_text(encoding="utf-8")
-        labels = sorted(set(re.findall(r"\\label\{(tab:[^}]+)\}", tex)))
-        supp_at = tex.index("\\section*{Supplementary tables}")
-        main_labels = set(re.findall(r"\\label\{(tab:[^}]+)\}", tex[:supp_at]))
-        supp_ordered = list(
-            dict.fromkeys(re.findall(r"\\label\{(tab:[^}]+)\}", tex[supp_at:]))
-        )
+        audit = _paper_audit(root)
+        main_labels = audit["main_labels"]
+        supp_labels = audit["supplement_labels"]
+        labels = sorted(set(main_labels) | set(supp_labels))
         mapped_main = [row["label"] for row in TABLE_MAP if row["section"] == "main"]
         mapped_supp = [row["label"] for row in TABLE_MAP if row["section"] == "supplement"]
         supp_nos = [row["table_no"] for row in TABLE_MAP if row["section"] == "supplement"]
         check(
             "table-map-coverage",
             sorted(mapped_main + mapped_supp) == labels
-            and set(mapped_main) == main_labels
+            and mapped_main == main_labels
+            and mapped_supp == supp_labels
             and len(mapped_main) == 11
-            and mapped_supp == supp_ordered
-            and supp_nos == [f"S{i}" for i in range(1, 15)],
-            f"{len(mapped_main)} main + {len(mapped_supp)} supplement",
+            and supp_nos == [f"S{i}" for i in range(1, 15)]
+            and [row["table_no"] for row in TABLE_MAP if row["section"] == "main"]
+            == [str(i) for i in range(1, 12)],
+            f"{len(mapped_main)} main (ordered) + {len(mapped_supp)} supplement",
         )
-    except (OSError, ValueError) as exc:
+    except (OSError, ValueError, KeyError) as exc:
         check("table-map-coverage", False, str(exc))
+
+    # --- renderer-2 ledgers: artifact hashes == distributed bytes ---
+    try:
+        r2 = _load(root, "analysis/renderer2.json")
+        expected = r2["ledger_hashes"]["renderer2"]
+        trace_root = root / "traces" if (root / "traces").is_dir() else root / "data" / "runs"
+        bad: list[str] = []
+        for model, cell in expected.items():
+            rel = cell["path"].split("data/runs/", 1)[1]
+            actual_path = trace_root / rel
+            if not actual_path.is_file():
+                bad.append(f"{model}: missing {actual_path}")
+                continue
+            if sha256_file(actual_path) != cell["sha256"]:
+                bad.append(f"{model}: sha mismatch")
+            if actual_path.stat().st_size != cell["bytes"]:
+                bad.append(f"{model}: size mismatch")
+        recorded = None
+        if (root / "traces" / "ledger_hashes.json").is_file():
+            recorded = _load(root, "traces/ledger_hashes.json")
+        if recorded is not None:
+            by_path = {row["path"]: row for row in recorded.get("files", [])}
+            for model, cell in expected.items():
+                row = by_path.get(f"traces/{cell['path'].split('data/runs/', 1)[1]}")
+                if row is None or row.get("sha256") != cell["sha256"]:
+                    bad.append(f"{model}: ledger_hashes.json disagrees")
+        check("renderer2-ledgers", not bad, f"{len(expected)} ledgers" + (f" bad={bad[:3]}" if bad else ""))
+    except (FileNotFoundError, KeyError, ValueError) as exc:
+        check("renderer2-ledgers", False, str(exc))
 
     # --- identifier re-scan ---
     if (root / "frozen" / "prefixes.jsonl").is_file() or (root / "data").is_dir():

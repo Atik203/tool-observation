@@ -26,6 +26,27 @@ def _tex() -> str:
     return _TEX.read_text(encoding="utf-8")
 
 
+def test_doi_recorded_consistently() -> None:
+    """One DOI, four surfaces: CFF, data card, deposit record, paper."""
+    doi = "10.5281/zenodo.24449467"
+    for rel in (
+        "CITATION.cff",
+        "docs/DATA_CARD.md",
+        "docs/submission/doi_record.md",
+        "paper/toolresults.tex",
+    ):
+        text = (_REPO / rel).read_text(encoding="utf-8")
+        assert doi in text, rel
+    citation = (_REPO / "CITATION.cff").read_text(encoding="utf-8")
+    assert 'cff-version: 1.2.0' in citation
+    assert 'date-released: "2026-11-23"' in citation
+    assert "doi:" in citation
+    record = (_REPO / "docs" / "submission" / "doi_record.md").read_text(encoding="utf-8")
+    # The .env key is zendo_token; never the misspelling used in early drafts.
+    assert "`zendo_token`" in record
+    assert "zenodo_token" not in record
+
+
 def test_stats_helpers_known_values() -> None:
     lo, hi = build_release.wilson(54, 221)
     assert abs(lo - 0.192) < 1e-3 and abs(hi - 0.305) < 1e-3
@@ -66,11 +87,12 @@ def test_table_map_covers_all_labels() -> None:
 
     tex = _tex()
     supp_at = tex.index("\\section*{Supplementary tables}")
-    main_labels = set(re.findall(r"\\label\{(tab:[^}]+)\}", tex[:supp_at]))
+    main_labels = list(dict.fromkeys(re.findall(r"\\label\{(tab:[^}]+)\}", tex[:supp_at])))
     supp_ordered = list(dict.fromkeys(re.findall(r"\\label\{(tab:[^}]+)\}", tex[supp_at:])))
     mapped_main = [row["label"] for row in build_release.TABLE_MAP if row["section"] == "main"]
     mapped_supp = [row["label"] for row in build_release.TABLE_MAP if row["section"] == "supplement"]
-    assert len(mapped_main) == 11 and set(mapped_main) == main_labels
+    # Ordered, not set-only: the paper prints main tables in MAP order.
+    assert mapped_main == main_labels and len(mapped_main) == 11
     assert mapped_supp == supp_ordered and len(mapped_supp) == 14
     assert [row["table_no"] for row in build_release.TABLE_MAP if row["section"] == "main"] == [
         str(i) for i in range(1, 12)
@@ -81,6 +103,25 @@ def test_table_map_covers_all_labels() -> None:
     for row in build_release.TABLE_MAP:
         assert row["section"] in ("main", "supplement"), row["label"]
         assert row["kind"] in ("measured", "protocol", "definitional"), row["label"]
+        # A raw pipe would break the generated Markdown table (S9 regression).
+        for field in ("title", "artifact", "keys", "producer"):
+            assert "|" not in row[field], (row["label"], field)
+
+
+def test_paper_audit_snapshot_matches_paper() -> None:
+    audit = build_release.paper_audit_json()
+    assert audit["main_labels"][0] == "tab:neighbors"
+    assert audit["main_labels"][-1] == "tab:recovery"
+    assert len(audit["main_labels"]) == 11 and len(audit["supplement_labels"]) == 14
+    assert audit["recovery_note"] == {
+        "marker": "Run-risk-set (v1) reconciliation",
+        "count": 1,
+        "v1_crude_outside_note": False,
+        "v1_km_outside_note": False,
+    }
+    import hashlib
+
+    assert audit["sha256"] == hashlib.sha256(_TEX.read_bytes()).hexdigest()
 
 
 def test_table_map_recovery_uses_v2_semantic_set() -> None:
@@ -98,6 +139,7 @@ def test_release_stages_p63_refits_and_ledger_hashes() -> None:
     staged = {dst: src for src, dst in build_release.stage_files()}
     for name in (
         "analysis/rowlevel_refits.json",
+        "analysis/renderer2.json",
         "analysis/wrong_direction.json",
         "analysis/new_evidence.json",
         "analysis/severity_sensitivity.json",
@@ -107,9 +149,36 @@ def test_release_stages_p63_refits_and_ledger_hashes() -> None:
         assert staged[name].is_file(), name
     have_traces = any(dst.startswith("traces/") for dst in staged)
     assert have_traces
-    # The exploratory P6.7 second-renderer runs are not part of v1.0.1.
-    assert not any("renderer2" in dst for dst in staged)
+    # P6.7 completeness: the exploratory renderer-2 ledgers, artifact, and the
+    # parser-v4 rescore code are part of the v1.0.1 deposit.
+    renderer2_traces = sorted(
+        dst for dst in staged if dst.startswith("traces/renderer2/")
+    )
+    assert renderer2_traces == [
+        "traces/renderer2/llama_3_1_8b_instruct_awq/ledger.jsonl",
+        "traces/renderer2/ministral_3_8b_instruct_2512_awq/ledger.jsonl",
+        "traces/renderer2/qwen3_5_9b_instruct_awq/ledger.jsonl",
+    ]
+    assert "code/09c_rescore.py" in staged
     assert hasattr(build_release, "ledger_hashes_json")
+
+
+def test_renderer2_ledger_hashes_match_artifact() -> None:
+    """The staged ledgers are exactly the bytes hashed in renderer2.json."""
+    import hashlib
+
+    artifact = json.loads(
+        (_REPO / "artifacts" / "analysis" / "renderer2.json").read_text(encoding="utf-8")
+    )
+    staged = {dst: src for src, dst in build_release.stage_files()}
+    for model, cell in artifact["ledger_hashes"]["renderer2"].items():
+        src = staged[f"traces/renderer2/{model}/ledger.jsonl"]
+        digest = hashlib.sha256(src.read_bytes()).hexdigest()
+        assert digest == cell["sha256"], model
+        assert src.stat().st_size == cell["bytes"], model
+    assert artifact["exploratory"] is True
+    assert artifact["pooled_with_confirmatory"] is False
+    assert "10 pp" in artifact["robustness_bound"]["criterion"]
 
 
 def test_artifact_provenance_notes_bind_bytes() -> None:
