@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-"""Stage 18 — build + validate the ToolResult-800 v1.0 public release package.
+"""Stage 18 — build + validate the ToolResult-800 v1.0.1 public release package.
 
-Builds the staged release tree ``release/ToolResult-800-v1.0/`` (gitignored;
+Builds the staged release tree ``release/ToolResult-800-v1.0.1/`` (gitignored;
 uploaded to the DOI record, never committed) and validates it with one
 command::
 
@@ -79,9 +79,9 @@ from toolobs.paths import (  # noqa: E402
 )
 from toolobs.provenance import git_commit, utc_now, write_json  # noqa: E402
 
-PACKAGE_NAME = "ToolResult-800-v1.0"
-PACKAGE_VERSION = "1.0"
-BUILDER_VERSION = "stage-18 v1"
+PACKAGE_NAME = "ToolResult-800-v1.0.1"
+PACKAGE_VERSION = "1.0.1"
+BUILDER_VERSION = "stage-18 v2"
 VOLATILE_KEYS = frozenset({"recorded_utc", "git_commit"})
 
 # ---------------------------------------------------------------------------
@@ -439,6 +439,84 @@ def pii_rescan(root: Path) -> tuple[list[str], list[str], list[str], list[str]]:
 
 
 # ---------------------------------------------------------------------------
+# Release-copy redaction (P6.4 / D-046, v1.0.1)
+# ---------------------------------------------------------------------------
+
+# One scrubber-artifact identity survived the harvest scrub because the email
+# rule saw an already-tokenised local part. The frozen source is bit-identical
+# under the manifest hash and is never distributed; every distributed copy is
+# redacted here, at build time, so a rebuild cannot reintroduce the fragment.
+REDACTION_TOKEN = "person_redacted_0001"
+
+# Longest first. The bare token ``person_0f41e336893e`` is a legitimate
+# pseudonym (PII map never released) and is not redacted; only the given-name
+# + digits residual and the full email form are.
+REDACTION_RULES: tuple[tuple[str, str], ...] = (
+    ("person_0f41e336893e.ahmed6699@example.com", REDACTION_TOKEN),
+    ("person_0f41e336893e.ahmed6699", REDACTION_TOKEN),
+    ("ahmed6699", "redacted"),
+)
+
+REDACTION_NOTE = (
+    "The frozen source is not distributed and remains bit-identical under its "
+    "manifest hash. Every staged release file passes through this redaction "
+    "before checksums are written; the count below is per string occurrence."
+)
+
+_TEXT_NAMES = frozenset({"LICENSE", "LICENSE-DOCS", "TAU_BENCH_LICENSE_MIT"})
+_TEXT_SUFFIXES = frozenset({
+    ".json", ".jsonl", ".csv", ".md", ".txt", ".cff", ".yaml", ".yml",
+})
+
+
+def redact_text(text: str) -> tuple[str, int]:
+    """Apply the frozen redaction rules to one text blob.
+
+    Returns the redacted text and the number of replaced occurrences.
+    Deterministic and idempotent: the synthetic token contains none of the
+    rule strings.
+    """
+    n = 0
+    for old, new in REDACTION_RULES:
+        n += text.count(old)
+        text = text.replace(old, new)
+    return text, n
+
+
+def apply_redactions(root: Path) -> dict:
+    """Redact every staged text file under ``root`` in place.
+
+    Returns a metadata dict safe to publish (no rule strings, no fragment).
+    """
+    changed: dict[str, int] = {}
+    total = 0
+    for path in sorted(root.rglob("*")):
+        if not path.is_file():
+            continue
+        if path.name not in _TEXT_NAMES and path.suffix.lower() not in _TEXT_SUFFIXES:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        redacted, n = redact_text(text)
+        if n:
+            path.write_text(redacted, encoding="utf-8")
+            changed[path.relative_to(root).as_posix()] = n
+            total += n
+    return {
+        "token": REDACTION_TOKEN,
+        "n_occurrences": total,
+        "n_files": len(changed),
+        "files": changed,
+        "rule": "scrubber-artifact email fragment (given-name + digits) "
+        "replaced by a synthetic identity token",
+        "frozen_source_unchanged": True,
+        "note": REDACTION_NOTE,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Staging
 # ---------------------------------------------------------------------------
 
@@ -465,7 +543,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-MODEL_LICENSES_MD = """# Model output licenses — ToolResult-800 v1.0
+MODEL_LICENSES_MD = """# Model output licenses — ToolResult-800 v1.0.1
 
 Verified 2026-11-22 against the HuggingFace API for the exact pinned
 revisions in `configs/models.yaml` (revision SHAs match the served weights).
@@ -488,8 +566,9 @@ are released.
 Redistribution basis: Apache-2.0 outputs carry no redistribution
 restriction; Llama 3.1 Community License governs model use and its
 acceptable-use policy, and the released decision strings are user-owned
-derived text containing no model weights. Authors confirm with the target
-venue at submission if its policy requires more.
+derived text containing no model weights. See `ATTRIBUTION.md` for the
+consolidated notices. Authors confirm with the target venue at submission if
+its policy requires more.
 """
 
 
@@ -517,6 +596,7 @@ def stage_files() -> list[tuple[Path, str]]:
     staged.append((REPO_ROOT / "docs" / "DATA_CARD.md", "DATA_CARD.md"))
     staged.append((REPO_ROOT / "CITATION.cff", "CITATION.cff"))
     staged.append((REPO_ROOT / "DATA_LICENSE.md", "DATA_LICENSE.md"))
+    staged.append((REPO_ROOT / "ATTRIBUTION.md", "ATTRIBUTION.md"))
     staged.append((REPO_ROOT / "LICENSE", "LICENSE"))
     staged.append((REPO_ROOT / "LICENSE-DOCS", "LICENSE-DOCS"))
     for name in ("PREREGISTRATION.md", "AMENDMENTS.md", "DEPOSIT_NOTE.md"):
@@ -539,7 +619,7 @@ def stage_files() -> list[tuple[Path, str]]:
 
 def table_map_md() -> str:
     lines = [
-        "# Table-to-artifact map — ToolResult-800 v1.0",
+        "# Table-to-artifact map — ToolResult-800 v1.0.1",
         "",
         "Every numbered paper table traces to a bundled artifact (or is marked",
         "definitional/protocol with no data artifact). Kinds: **measured**",
@@ -565,12 +645,12 @@ def table_map_md() -> str:
 
 
 def validation_md() -> str:
-    return """# Validation — ToolResult-800 v1.0
+    return """# Validation — ToolResult-800 v1.0.1
 
 One-command validation (no GPU, stdlib Python only):
 
-    python scripts/18_build_release.py --validate --root release/ToolResult-800-v1.0
-    python scripts/18_build_release.py --validate --root release/ToolResult-800-v1.0 --rerun
+    python scripts/18_build_release.py --validate --root release/ToolResult-800-v1.0.1
+    python scripts/18_build_release.py --validate --root release/ToolResult-800-v1.0.1 --rerun
     make validate-release   # same checks against the live tree
 
 - **L1 (this package alone):** required files present; `SHA256SUMS`
@@ -586,11 +666,57 @@ One-command validation (no GPU, stdlib Python only):
   CPU-only analysis producers and diffs the rebuilt JSONs against the
   released copies (volatile `recorded_utc`/`git_commit` ignored).
 
+`frozen/prefixes.jsonl` is the redacted release derivative: the builder
+replaces the flagged scrubber-artifact fragment in every staged file at build
+time (D-046), records the counts here and in `release_record.json`, and
+checks the redacted file against the recorded release hash. The frozen source
+is not distributed and stays bit-identical under its manifest hash.
+
 A clean automated scan does not replace the pending independent human
 PII re-scan before public release (see `docs/submission/checklist.md`).
 `pii_rescan.json` lists every placeholder/echo occurrence (duplicates retained:
 one entry per scanned value, so a string echoed in both `decision_json` and
-`output_text` counts twice); `n_*` counts match the list lengths.
+`output_text` counts twice); `n_*` counts match the list lengths, and
+`n_redactions` counts the occurrences replaced before the scan.
+"""
+
+
+def release_changelog_md() -> str:
+    return """# Changelog — ToolResult-800
+
+## v1.0.1 — 2026-11-23
+
+### Fixed (PII)
+
+- Redacted one scrubber-artifact identity (a given name plus digits surviving
+  inside an `@example.com` address) in every distributed file. The builder
+  replaces it with `person_redacted_0001` on each build, covering
+  `frozen/prefixes.jsonl`, the T6 packet files, and one recovery trace.
+- The frozen source under `data/frozen/` is unchanged and still verifies
+  against the manifest hash; it is not part of the distributed payload.
+- `pii_rescan.json` now reports `n_redactions` and the per-file replacement
+  counts; the automated scan is clean (0 identifier hits).
+
+### Licensing
+
+- Added `ATTRIBUTION.md`: ToolResult-800 authors, upstream τ-bench MIT notice
+  with the Sierra copyright line, the three model families and their licenses,
+  and the "changes were made" statement.
+- `DATA_LICENSE.md` and `DATA_CARD.md` now describe the release accurately:
+  the distributed copy is redacted; the freeze-vs-release distinction is
+  explicit.
+
+### Validation
+
+- `python scripts/18_build_release.py --validate --root <package>` (L1) and
+  the guard test in `tests/test_release.py` fail on reintroduction of the
+  fragment.
+
+## v1.0.0 — 2026-11-22
+
+- First staged public release: 880 scrubbed prefixes, manifests,
+  scrubbed ledger extracts, audit labels, analysis JSONs, T6 packets, prereg
+  and amendments, table map, validation record, checksums.
 """
 
 
@@ -652,11 +778,12 @@ def build_package(out: Path, force: bool = False) -> dict:
 
     (out / "TABLE_MAP.md").write_text(table_map_md(), encoding="utf-8")
     (out / "VALIDATION.md").write_text(validation_md(), encoding="utf-8")
+    (out / "CHANGELOG.md").write_text(release_changelog_md(), encoding="utf-8")
     (out / "licenses").mkdir(parents=True, exist_ok=True)
     (out / "licenses" / "TAU_BENCH_LICENSE_MIT").write_text(
         "# Upstream tau-bench license (verbatim, MIT)\n# Source: "
         "https://github.com/sierra-research/tau-bench (LICENSE)\n# Pinned commit: "
-        "59a200c6d575d5951f1cb70fea53cef032f6b (see manifests/source_pin.json)\n"
+        "59a200c6d575d595120f1cb70fea53cef0632f6b (see manifests/source_pin.json)\n"
         "# Fetched 2026-11-22; copyright holder as published upstream.\n\n" + TAU_BENCH_MIT,
         encoding="utf-8",
     )
@@ -664,10 +791,12 @@ def build_package(out: Path, force: bool = False) -> dict:
         MODEL_LICENSES_MD, encoding="utf-8"
     )
     (out / "README.md").write_text(
-        "# ToolResult-800 v1.0\n\n"
+        "# ToolResult-800 v1.0.1\n\n"
         "Scrubbed derived data for the fixed-prefix measurement study of tool-result "
         "errors (800 primary + 80 reserve prefixes, five arms, three models). "
-        "Raw trajectories, PII, weights, caches, and run logs are excluded.\n\n"
+        "Raw trajectories, PII, weights, caches, and run logs are excluded. "
+        "One scrubber-artifact identity is redacted in this copy at build time "
+        "(D-046); the frozen source is not distributed.\n\n"
         f"Staged: {utc_now()} (builder {BUILDER_VERSION}, commit {git_commit()}).\n"
         "DOI: TBD — see `docs/submission/doi_record.md` in the repository.\n"
         "Validate: `python scripts/18_build_release.py --validate --root <this dir>`.\n"
@@ -675,6 +804,23 @@ def build_package(out: Path, force: bool = False) -> dict:
         "`manifests/`, `traces/`, `labels/`, or `analysis/`.\n",
         encoding="utf-8",
     )
+
+    # Apply the release-copy redaction to every staged text file. Runs before
+    # checksums are written so SHA256SUMS covers the redacted bytes. The
+    # frozen source is untouched (hash verified above); this is the only
+    # difference between it and frozen/prefixes.jsonl here.
+    redaction = apply_redactions(out)
+    if not redaction["n_occurrences"]:
+        print("[18_build_release] FAIL: redaction applied 0 occurrences")
+        return {"ok": False, "reason": "redaction-noop"}
+    frozen_release_hash = hash_jsonl_dicts(read_jsonl_dicts(out / "frozen" / "prefixes.jsonl"))
+    redaction["frozen_prefixes_hash_source"] = manifest.get("frozen_prefixes_hash")
+    redaction["frozen_prefixes_hash_release"] = frozen_release_hash
+    if redaction["frozen_prefixes_hash_source"] == frozen_release_hash:
+        print("[18_build_release] FAIL: redaction did not change the release prefixes")
+        return {"ok": False, "reason": "redaction-unapplied"}
+    print(f"[18_build_release] redacted {redaction['n_occurrences']} occurrence(s) "
+          f"in {redaction['n_files']} file(s)")
 
     files = sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
@@ -695,6 +841,7 @@ def build_package(out: Path, force: bool = False) -> dict:
         "field_registry_hash": manifest.get("field_registry_hash"),
         "renderer_hash": manifest.get("renderer_hash"),
         "source_pin_hash": manifest.get("source_pin_hash"),
+        "redaction": redaction,
         "n_files": len(files),
         "files": {f: sha256_file(out / f) for f in files},
     }
@@ -706,19 +853,25 @@ def build_package(out: Path, force: bool = False) -> dict:
         "counting_rule": "Counts and lists are per scanned-value occurrence "
         "(duplicates retained: one entry per JSON value / CSV cell / text "
         "line, so a string echoed in both decision_json and output_text "
-        "counts twice); n_* match the list lengths.",
+        "counts twice); n_* match the list lengths, and n_redactions counts "
+        "occurrences replaced before the scan.",
         "n_hits": len(hits),
         "hits": sorted(hits),
+        "n_redactions": redaction["n_occurrences"],
+        "n_redacted_files": redaction["n_files"],
+        "redactions": redaction["files"],
+        "redaction_token": REDACTION_TOKEN,
+        "redaction_note": redaction["note"],
         "n_placeholders": len(placeholders),
         "placeholders": sorted(placeholders),
         "n_synthetic_echoes": len(echoes),
         "synthetic_echoes": sorted(echoes),
         "echo_note": "Synthetic echoes embed only scrubber tokens "
         "(person_/user_/email_ + 12 hex); the PII map is never released, so "
-        "they are not re-identifiable. The person_0f41e336893e.ahmed6699 "
-        "fragment (one frozen prefix + derivatives) is a scrubber artifact "
-        "kept bit-identical per freeze integrity and is flagged for the "
-        "independent human re-scan.",
+        "they are not re-identifiable. The frozen source retains one "
+        "scrubber-artifact fragment for freeze integrity; it is not "
+        "distributed, and every release copy is redacted at build (D-046; "
+        "see CHANGELOG.md and release_record.json).",
         "email_allowlist": allowlisted,
         "allowlist_note": "CITATION.cff and DATA_CARD.md carry the "
         "corresponding-author contact email by design; ORCID iDs are public "
@@ -744,9 +897,11 @@ def build_package(out: Path, force: bool = False) -> dict:
             print(f"  {hit}")
         return {"ok": False, "reason": "pii", "hits": hits}
     print(f"[18_build_release] PII re-scan clean ({len(files)} files; "
+          f"{redaction['n_occurrences']} redaction(s), "
           f"{len(placeholders)} placeholders, {len(echoes)} synthetic echoes noted)")
     print(f"[18_build_release] wrote {out} ({len(files)} files)")
-    return {"ok": True, "n_files": len(files), "out": str(out)}
+    return {"ok": True, "n_files": len(files), "out": str(out),
+            "redactions": redaction["n_occurrences"]}
 
 
 # ---------------------------------------------------------------------------
@@ -828,11 +983,26 @@ def validate_tree(root: Path, rerun: bool = False) -> dict:
         from toolobs.hashing import sha256_text_file  # noqa: E402
 
         chain = {
-            "frozen_prefixes": hash_jsonl_dicts(read_jsonl_dicts(_raw("frozen/prefixes.jsonl")))
-            == manifest.get("frozen_prefixes_hash"),
             "perturbations": sha256_text_file(_raw("manifests/perturbations.jsonl"))
             == manifest.get("perturbations_hash"),
         }
+        frozen_hash = hash_jsonl_dicts(read_jsonl_dicts(_raw("frozen/prefixes.jsonl")))
+        if (root / "frozen" / "prefixes.jsonl").is_file():
+            # Staged package: the distributed prefix file is the redacted
+            # derivative (D-046). Bind it to the recorded release hash and to
+            # the frozen-source hash; the source itself is not distributed.
+            record = json.loads((root / "release_record.json").read_text(encoding="utf-8"))
+            red = record.get("redaction", {})
+            chain["frozen_prefixes"] = (
+                frozen_hash == red.get("frozen_prefixes_hash_release")
+                and red.get("frozen_prefixes_hash_source") == manifest.get("frozen_prefixes_hash")
+                and red.get("token") == REDACTION_TOKEN
+                and int(red.get("n_occurrences", 0)) > 0
+                and int(red.get("files", {}).get("frozen/prefixes.jsonl", 0)) > 0
+                and redact_text(_raw("frozen/prefixes.jsonl").read_text(encoding="utf-8"))[1] == 0
+            )
+        else:
+            chain["frozen_prefixes"] = frozen_hash == manifest.get("frozen_prefixes_hash")
         # Repo-only links (prereg source, configs) checked when present.
         if (REPO_ROOT / "prereg" / "PREREGISTRATION.md").is_file():
             chain["prereg"] = sha256_text_file(REPO_ROOT / "prereg" / "PREREGISTRATION.md") == manifest.get(

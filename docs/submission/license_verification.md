@@ -1,12 +1,12 @@
-# License verification — ToolResult-800 v1.0 (2026-11-22)
+# License verification — ToolResult-800 v1.0.1 (2026-11-23; v1.0.0 → v1.0.1 redaction errata)
 
 ## Upstream τ-bench (data source)
 
 - Repository: https://github.com/sierra-research/tau-bench, pinned commit
-  `59a200c6d575d5951f1cb70fea53cef032f6b` (`data/manifests/source_pin.json`).
+  `59a200c6d575d595120f1cb70fea53cef0632f6b` (`data/manifests/source_pin.json`).
 - License: **MIT**, "Copyright (c) 2024 Sierra" — full text fetched verbatim from the
   upstream repository on 2026-11-22 and bundled at
-  `release/ToolResult-800-v1.0/licenses/TAU_BENCH_LICENSE_MIT`.
+  `release/ToolResult-800-v1.0.1/licenses/TAU_BENCH_LICENSE_MIT`.
 - Citation: the τ-bench paper/repository must be cited by any use (see `DATA_LICENSE.md`).
 
 ## Target-model outputs (released as scrubbed derived text only)
@@ -35,6 +35,8 @@ author step at submission if the target venue requires more.
 ## Bundle contents check
 
 - [x] MIT `LICENSE` (code), `LICENSE-DOCS` (CC BY 4.0 docs/data), `DATA_LICENSE.md` staged.
+- [x] Consolidated `ATTRIBUTION.md` staged (authors, upstream MIT + Sierra copyright,
+      three model families and licenses, changes-made statement).
 - [x] Upstream MIT notice + attribution staged (`licenses/TAU_BENCH_LICENSE_MIT`).
 - [x] Model-output license record staged (`licenses/MODEL_OUTPUT_LICENSES.md`).
 - [x] No weights/caches in the package (builder allowlists payload files; `*.safetensors`,

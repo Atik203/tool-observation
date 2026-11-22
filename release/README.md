@@ -5,13 +5,14 @@ candidate. Built packages are gitignored; only this README is tracked.
 
 ## What the release contains
 
-- `ToolResult-800-v1.0/` — frozen 800 prefixes (400 airline, 400 retail), reserve IDs, raw observations
-  (scrubbed), factual continuations, perturbation records, arm assignments, renderer version.
+- `ToolResult-800-v1.0.1/` — frozen 800 prefixes (400 airline, 400 retail), reserve IDs, scrubbed
+  observations, factual continuations, perturbation records, arm assignments, renderer version.
+  The distributed copy is redacted (D-046); the frozen source is not distributed.
 - `manifests/` — `toolresult800_v1.json`, `perturbations.jsonl`, model pins, field-registry hash,
   prereg hash, checksums.
 - `traces/` — model continuations, decision signatures, recovery traces, ledger extracts.
 - `labels/` — automatic and adjudicated labels, audit samples, κ/α reports.
-- `docs/` — data card, protocol, gates, label rubric, runbook, decisions.
+- `DATA_CARD.md`, `ATTRIBUTION.md`, `DATA_LICENSE.md` — data card and consolidated notices.
 - `licenses/` — upstream τ-bench MIT notice (verbatim) + model-output license verification.
 - `SHA256SUMS`, `CITATION.cff`, `README.md`, `CHANGELOG.md`.
 
@@ -19,7 +20,7 @@ candidate. Built packages are gitignored; only this README is tracked.
 
 - [x] G0, G1, G2, G3, G4 reports are present and unmodified.
 - [x] The frozen manifest hash verifies against the analysis artifacts (`make validate-release`: manifest chain ok).
-- [x] Automated PII re-scan passes: 0 identifier hits (`release/.../pii_rescan.json`; placeholders/echoes documented).
+- [x] Automated PII re-scan passes: 0 identifier hits (`release/.../pii_rescan.json`; placeholders/echoes documented, redaction counts reported).
 - [ ] Independent human PII re-scan — pending author action (see `docs/submission/checklist.md`).
 - [x] Scrub report and 40-item audit are included (`labels/scrub_report.json`, `labels/g0_*`).
 - [x] Upstream τ-bench MIT notice and attribution are preserved (`licenses/TAU_BENCH_LICENSE_MIT`, source pin).
@@ -41,7 +42,8 @@ built locally, verified, and uploaded to the DOI archive; they are not committed
 ## Versioning
 
 - `v1.0` — first public ToolResult-800 release with confirmatory results or a documented null.
-- `v1.0.1` — metadata/errata only; no data changes.
+- `v1.0.1` — PII redaction errata: the distributed copy replaces one scrubber-artifact
+  identity with `person_redacted_0001`; the frozen source is unchanged. No result changes.
 - `v1.1` — additive data or labels; requires a new manifest and changelog entry.
 - Corrections that change a frozen record require a new major/minor version, never an in-place
   edit.

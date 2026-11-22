@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Because the project is pre-confirmatory, minor versions may change the scaffold structure before
 the v1.0 dataset and paper release.
 
+## Dataset releases
+
+### [1.0.1] - 2026-11-23
+
+- Redacted one scrubber-artifact email fragment (given name + digits) in the distributed release
+  copy as `person_redacted_0001`; the builder applies the redaction on every build and
+  `pii_rescan.json` reports the counts. The frozen source is unchanged and still verifies against
+  the manifest hash; it is not distributed. See `docs/DECISIONS.md` D-046 and the package
+  `CHANGELOG.md`.
+- Added `ATTRIBUTION.md` (ToolResult-800 authors, upstream τ-bench MIT with the Sierra copyright
+  line, the three model families and licenses, and the changes-made statement);
+  `DATA_LICENSE.md` and `docs/DATA_CARD.md` now describe the release accurately.
+
+### [1.0.0] - 2026-11-22
+
+- First staged public release package (880 scrubbed prefixes, manifests, scrubbed ledger
+  extracts, labels, analysis JSONs, T6 packets, prereg and amendments, checksums).
+
 ## [Unreleased]
 
 ### Added

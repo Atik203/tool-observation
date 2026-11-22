@@ -6,6 +6,62 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-046 - P6.4 release-copy PII redaction, v1.0.1, attribution and license consistency
+
+- **Date:** 2026-11-23
+- **Status:** accepted (release errata; frozen source untouched)
+- **Context:** Q1 register V3 confirmed one scrubber-artifact identity (a given name plus
+  digits surviving inside an `@example.com` address) in `data/frozen/prefixes.jsonl` and in
+  the v1.0.0 release derivatives (`frozen/prefixes.jsonl`, two T6 packet files, one recovery
+  trace, and the `pii_rescan.json` note). `DATA_LICENSE.md` and `docs/DATA_CARD.md` claimed
+  "No raw PII is released" while the package shipped the fragment and a note flagging it. The
+  register's stop rule treats a PII leak as release-blocking; C2 confirms the fragment is in
+  gitignored frozen/release data, not in committed files, so repository history is unaffected.
+- **Decision:** Redact the release copy only, in the builder, and bump the package to
+  **v1.0.1** (metadata/errata; no frozen-source change):
+  - `scripts/18_build_release.py` defines ordered redaction rules in `REDACTION_RULES` and
+    rewrites every staged text file through `apply_redactions()` after copying/generating and
+    before `SHA256SUMS`. The replacement is `person_redacted_0001`; the bare
+    `person_0f41e336893e` pseudonym is left intact (it is a legitimate scrubber token whose map
+    is never released).
+  - `frozen/prefixes.jsonl` is copied from `data/frozen/prefixes.jsonl` and then redacted in
+    the package. The frozen source stays bit-identical under the manifest hash. The package
+    records both `frozen_prefixes_hash_source` (manifest) and
+    `frozen_prefixes_hash_release` (redacted buffer), plus per-file counts, in
+    `release_record.json`; `--validate` binds both and rejects an unredacted or non-idempotent
+    prefix file.
+  - `pii_rescan.json` gains `n_redactions`, `n_redacted_files`, `redactions`, `redaction_token`,
+    and `redaction_note`; its old note naming the fragment is removed.
+  - `tests/test_release.py` adds a guard: `redact_text()` must remove the literal; no file under
+    `release/` may contain the literal or the `ahmed6699` pattern; a present package's
+    `pii_rescan.json` must report zero hits and a positive redaction count. The guard was
+    verified red (probe file under `release/`) then green after removing the probe.
+  - Version bump: `PACKAGE_NAME = ToolResult-800-v1.0.1`, `PACKAGE_VERSION = 1.0.1`,
+    `BUILDER_VERSION = stage-18 v2`; package `CHANGELOG.md` and repository `CHANGELOG.md` record
+    v1.0.0 → v1.0.1. The superseded local v1.0.0 and pre-v1.0 `toolresult800-v1` candidates are
+    removed after the v1.0.1 build (both gitignored, neither published).
+  - Licensing consistency: new `ATTRIBUTION.md` (ToolResult-800 authors, upstream τ-bench MIT
+    with "Copyright (c) 2024 Sierra", the three model families and licenses, Llama 3.1
+    Community License "no weights, derived text" note, and the "changes were made" statement);
+    `DATA_LICENSE.md`, `docs/DATA_CARD.md`, and the package licenses reference it.
+  - `DATA_LICENSE.md` and `DATA_CARD.md` now state the freeze-vs-release distinction: the
+    unredacted fragment remains only in the gitignored frozen source, which is not distributed;
+    the released copy is redacted on every build and carries no unredacted direct identifiers.
+    The pending independent human re-scan is not claimed as done.
+  - Corrected the upstream pin quoted in the bundled τ-bench license header,
+    `docs/submission/license_verification.md`, and `docs/submission/doi_record.md` to the hash
+    in `data/manifests/source_pin.json` (`59a200c6d575d595120f1cb70fea53cef0632f6b`).
+- **Not changed:** `prereg/*`, the frozen manifest, perturbations, field registry, renderer,
+  `data/frozen/prefixes.jsonl`, and `paper/toolresults.tex` (the paper's short `59a200c`
+  reference is correct).
+- **Consequences:** v1.0.1 is the publishable candidate for P6.5; a rebuild cannot reintroduce
+  the fragment without a guard failure. The release is still gated on the independent human
+  PII re-scan, DOI mint, and clean-room compile.
+
+---
+
+---
+
 ## D-045 - P4.7/P5 release package, one-command validation, submission staging
 
 - **Date:** 2026-11-22

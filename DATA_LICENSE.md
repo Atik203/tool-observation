@@ -9,9 +9,11 @@
 | Third-party model weights and outputs | Under each model's own license |
 | Project source code | **MIT** (`LICENSE`) |
 | Project documentation | **CC BY 4.0** (`LICENSE-DOCS`) |
+| Consolidated third-party notices (τ-bench, model families, changes statement) | `ATTRIBUTION.md` |
 
 ToolResult-800 is a derived dataset built on the public τ-bench historical trajectories. It is not a
-re-license of τ-bench. Upstream notices and license terms are preserved.
+re-license of τ-bench. Upstream notices and license terms are preserved. `ATTRIBUTION.md` is the
+consolidated notice file and must travel with the dataset.
 
 ## Upstream τ-bench
 
@@ -35,7 +37,9 @@ The following additions are released under CC BY 4.0:
 - aggregate tables, figures, and documentation.
 
 Attribution should name **ToolResult-800 / tool-observation**, the authors, the CC BY 4.0 license, and
-the upstream τ-bench source, and should indicate whether changes were made.
+the upstream τ-bench source, and should indicate whether changes were made. `ATTRIBUTION.md`
+contains the ready-to-copy notices, the upstream MIT text with the Sierra copyright line, and the
+three model families with their licenses.
 
 ## What is not released
 
@@ -48,14 +52,23 @@ the upstream τ-bench source, and should indicate whether changes were made.
 
 τ-bench trajectories can contain names, emails, addresses, phone numbers, and payment
 identifiers. The release pipeline excludes profile tools and replaces direct identifiers with
-stable synthetic tokens. No raw PII is released. If you believe PII is present in a ToolResult-800
-artifact, report it privately per `SECURITY.md`; do not redistribute the artifact.
+stable synthetic tokens. **The distributed release contains no unredacted participant
+identifiers** (the corresponding-author contact email in `CITATION.cff`/the data card is
+intentional and allowlisted).
+One scrubber-artifact email fragment survived the harvest scrub inside a frozen prefix; because
+the freeze is bit-identical, the fragment remains in the gitignored frozen source, which is
+**not distributed**. The release builder replaces it with `person_redacted_0001` in every staged
+file on every build (D-046, v1.0.1) and records the counts in `pii_rescan.json` and
+`release_record.json`. The automated re-scan reports zero identifier hits; the independent human
+re-scan is still pending (see `docs/submission/checklist.md`). If you believe PII is present in a
+ToolResult-800 artifact, report it privately per `SECURITY.md`; do not redistribute the artifact.
 
 ## Redistribution and notices
 
 If you redistribute ToolResult-800 or a derived work:
 
-1. Include this file, `LICENSE-DOCS`, the MIT `LICENSE`, and the upstream τ-bench notice.
+1. Include this file, `ATTRIBUTION.md`, `LICENSE-DOCS`, the MIT `LICENSE`, and the upstream
+   τ-bench notice.
 2. Preserve the attribution and the modification indication.
 3. Do not imply endorsement by the authors or by the τ-bench authors.
 4. Do not add legal or technical restrictions that prevent others from exercising the CC BY 4.0

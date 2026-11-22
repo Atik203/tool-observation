@@ -1,9 +1,11 @@
-"""Tests for the stage-18 release builder/validator (P4.7/P5)."""
+"""Tests for the stage-18 release builder/validator (P4.7/P5/P6.4)."""
 
 from __future__ import annotations
 
 import importlib.util
+import json
 import re
+import zipfile
 from pathlib import Path
 
 _SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "18_build_release.py"
@@ -229,6 +231,86 @@ def test_pii_scanner_buckets() -> None:
     assert hits == []  # generic role address, noted as placeholder
     hits, _, _ = scan('orcid 0009-0008-2945-4117 listed', "CITATION.cff")
     assert hits == []  # public researcher identifier, masked by design
+
+
+# The scrubber-artifact identity that must never reach a distributed file
+# (Q1 register V3 / D-046). The bare person_0f41e336893e token is legitimate.
+_PII_FRAGMENT = "person_0f41e336893e.ahmed6699@example.com"
+_PII_PATTERN = re.compile(r"ahmed6699")
+_RELEASE = _REPO / "release"
+_RELEASE_TEXT_SUFFIXES = frozenset({
+    ".json", ".jsonl", ".csv", ".md", ".txt", ".cff", ".yaml", ".yml",
+})
+_RELEASE_TEXT_NAMES = frozenset({
+    "LICENSE", "LICENSE-DOCS", "TAU_BENCH_LICENSE_MIT", "SHA256SUMS",
+})
+
+
+def _release_texts() -> list[tuple[Path, str]]:
+    """Every distributable text payload under release/, zip members included."""
+    texts: list[tuple[Path, str]] = []
+    if not _RELEASE.is_dir():
+        return texts
+    for path in sorted(_RELEASE.rglob("*")):
+        if not path.is_file():
+            continue
+        if path.suffix.lower() == ".zip":
+            try:
+                with zipfile.ZipFile(path) as archive:
+                    for name in archive.namelist():
+                        if name.endswith("/"):
+                            continue
+                        try:
+                            texts.append((path, archive.read(name).decode("utf-8", "ignore")))
+                        except (KeyError, RuntimeError):
+                            continue
+            except zipfile.BadZipFile:
+                continue
+        elif path.name in _RELEASE_TEXT_NAMES or path.suffix.lower() in _RELEASE_TEXT_SUFFIXES:
+            texts.append((path, path.read_text(encoding="utf-8", errors="ignore")))
+    return texts
+
+
+def test_release_pii_redaction_guard() -> None:
+    """The flagged identity cannot appear in any release file (D-046)."""
+    # The builder's rule must remove both the full form and the name pattern.
+    redacted, n = build_release.redact_text(f"write to {_PII_FRAGMENT} today")
+    assert n == 1
+    assert _PII_FRAGMENT not in redacted
+    assert not _PII_PATTERN.search(redacted)
+    assert build_release.REDACTION_TOKEN in redacted
+    # Idempotent: a rebuild of an already-redacted file changes nothing.
+    again, n_again = build_release.redact_text(redacted)
+    assert n_again == 0 and again == redacted
+
+    offenders = [
+        path.relative_to(_REPO).as_posix()
+        for path, text in _release_texts()
+        if _PII_FRAGMENT in text or _PII_PATTERN.search(text)
+    ]
+    assert offenders == [], f"PII fragment in release file(s): {offenders}"
+
+
+def test_release_pii_report_records_redaction() -> None:
+    """A staged package reports the redaction and scans clean."""
+    reports = sorted(_RELEASE.glob("ToolResult-800-*/pii_rescan.json"))
+    if not reports:
+        import pytest
+
+        pytest.skip("no staged release package")
+    report_path = reports[-1]
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["n_hits"] == 0, report.get("hits")
+    assert report["n_redactions"] > 0
+    assert report["redaction_token"] == build_release.REDACTION_TOKEN
+    assert report["redactions"].get("frozen/prefixes.jsonl", 0) > 0
+
+    record = json.loads(
+        (report_path.parent / "release_record.json").read_text(encoding="utf-8")
+    )
+    redaction = record["redaction"]
+    assert redaction["frozen_prefixes_hash_source"] != redaction["frozen_prefixes_hash_release"]
+    assert tuple(int(part) for part in record["version"].split(".")) >= (1, 0, 1)
 
 
 def test_stage_files_all_present() -> None:

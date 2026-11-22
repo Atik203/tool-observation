@@ -1,6 +1,6 @@
 # Data card — ToolResult-800
 
-**Status:** v1.0 release staging (2026-11-22). DOI pending (see `docs/submission/doi_record.md`);
+**Status:** v1.0.1 release staging (2026-11-23; redaction errata over v1.0.0). DOI pending (see `docs/submission/doi_record.md`);
 release date is the DOI registration date. Hashes below are from the frozen manifest, not estimates.
 
 ---
@@ -11,7 +11,7 @@ release date is the DOI registration date. Hashes below are from the frozen mani
 |---|---|
 | Name | ToolResult-800 |
 | Full title | Counterfactual Tool-Observation dataset, 800 frozen prefixes |
-| Version | 1.0 (staged 2026-11-22; released on DOI registration) |
+| Version | 1.0.1 (staged 2026-11-23; released on DOI registration; supersedes v1.0.0 redaction errata) |
 | Repository | https://github.com/Atik203/tool-observation |
 | Dataset brand | ToolResult-800 (the repository is `tool-observation`) |
 | Study | Tool-Result Errors in Language-Model Agents |
@@ -33,7 +33,8 @@ transient and persistent injection.
 
 The dataset contains **800 primary prefixes** (400 airline, 400 retail) plus an **80-prefix
 reserve** that is not part of the primary analysis. The confirmatory analysis is complete and frozen;
-target-model outputs are released in v1.0 as scrubbed derived text (no weights, no raw trajectories).
+target-model outputs are released in v1.0.1 as scrubbed derived text (no weights, no raw trajectories).
+The distributed copy is redacted; the frozen source is not distributed (see §6 and §11).
 
 Executed envelope (G2 complete, within the 45 GPU-hour / 200 GB stop line): **21,611 generations**
 (13,200 base + 7,211 recovery + 1,200 jitter), 8.9 GPU-hours on the university H200 slice, \$0 cash.
@@ -96,17 +97,27 @@ database and verified by replay, not LLM-generated prose.
 Raw τ-bench trajectories may contain names, emails, addresses, phone numbers, and payment
 identifiers. The release excludes profile-tool observations and scrubs direct identifiers.
 Decision-relevant content that is itself PII is excluded. A 40-item human audit checks PII before
-freeze; a separate re-scan runs before release. **No raw PII is released.** Report suspected PII
-privately per `SECURITY.md`.
+freeze; a separate automated re-scan runs before release.
+
+One scrubber-artifact email fragment (a given name plus digits) survived the harvest scrub inside
+one frozen prefix. Freeze integrity requires the frozen source to stay bit-identical, so the
+fragment remains there; **the frozen source is not distributed**. The release builder replaces it
+with `person_redacted_0001` in every staged file on every build (D-046, v1.0.1), and
+`pii_rescan.json` reports the replacement counts. **The distributed release therefore contains no
+unredacted participant identifiers** (the corresponding-author contact email in `CITATION.cff`
+and this card is intentional and allowlisted). The independent human re-scan is still pending;
+report suspected PII privately per `SECURITY.md`.
 
 ## 7. Licensing and attribution
 
 - ToolResult-800 additions: CC BY 4.0.
-- Upstream τ-bench: MIT; notices preserved.
+- Upstream τ-bench: MIT; notices preserved (Sierra copyright line in `ATTRIBUTION.md`).
 - Model outputs: subject to each model's license; released only as derived, scrubbed text.
+  Qwen3.5-9B and Ministral-3-8B are Apache-2.0; Llama-3.1-8B-Instruct is under the Llama 3.1
+  Community License, with no weights distributed and only derived text released.
 - Users must cite ToolResult-800/tool-observation and the upstream τ-bench paper/repository.
 
-See `DATA_LICENSE.md`.
+See `DATA_LICENSE.md` and the consolidated notices in `ATTRIBUTION.md`.
 
 ## 8. Intended use
 
@@ -132,35 +143,39 @@ within-prefix contrasts and for benchmarking detection/flagging behavior.
 
 ## 10. Maintenance
 
-- Version 1.0 is frozen; corrections require a new version and a changelog entry.
-- Errata are published in the repository and linked from the DOI record.
+- Version 1.0.1 is frozen; corrections require a new version and a changelog entry.
+- Errata are published in the repository and linked from the DOI record; v1.0.1 is the PII
+  redaction errata over v1.0.0 (`CHANGELOG.md` in the release package).
 - The manifest and checksums are the authoritative record.
 - Contact: mrahaman2310298@bscse.uiu.ac.bd.
 
-## 11. Release contents (v1.0)
+## 11. Release contents (v1.0.1)
 
-Staged at `release/ToolResult-800-v1.0/` (uploaded to the DOI record; see
+Staged at `release/ToolResult-800-v1.0.1/` (uploaded to the DOI record; see
 `docs/submission/doi_record.md`):
 
 - `manifests/` — frozen manifest + SHA-256 sidecar, perturbation records, source pin.
-- `frozen/prefixes.jsonl` — 880 scrubbed prefixes with five arm observations each.
-- `traces/` — scrubbed ledger extracts (base, recovery, jitter, G1 calibration_v3 runs).
-  Prompt text was never logged (hashes only); decisions are model outputs on scrubbed inputs.
+- `frozen/prefixes.jsonl` — 880 scrubbed prefixes with five arm observations each, in the
+  redacted release derivative (D-046). The unredacted frozen source is not distributed.
+- `traces/` — scrubbed, redacted ledger extracts (base, recovery, jitter, G1 calibration_v3
+  runs). Prompt text was never logged (hashes only); decisions are model outputs on scrubbed
+  inputs.
 - `labels/` — audit packets, sheets, rater instructions, blind-audit result, verification
   record (`panel_record.json`), second-rater agreement.
 - `analysis/` — every analysis JSON behind the reported tables (`g3_analysis`,
   `g4_recovery`, `g4_recovery_v2`, `severity_sensitivity`, `inference_robustness`,
   `wrong_direction`, `new_evidence`, `field_taxonomy`, `prereg_secondary`, jitter stability).
-- `packets/` — T6 blinded packets, sealed maps, and codes (single-agent coded, author-overseen).
+- `packets/` — T6 blinded packets, sealed maps, and codes (single-agent coded, author-overseen),
+  with the flagged identity redacted.
 - `prereg/` — frozen preregistration, amendments A-001–A-011 (release rebuild pending, P6.5), deposit note.
 - `licenses/` — upstream τ-bench MIT text (verbatim) + model-output license verification.
-- `TABLE_MAP.md` (every paper table → artifact), `VALIDATION.md` (one-command validation),
-  `SHA256SUMS`, `release_record.json`, `pii_rescan.json`.
+- `ATTRIBUTION.md`, `DATA_LICENSE.md`, `CHANGELOG.md`, `TABLE_MAP.md` (every paper table →
+  artifact), `VALIDATION.md` (one-command validation), `SHA256SUMS`, `release_record.json`,
+  `pii_rescan.json` (including `n_redactions`).
 
 Validate: `make validate-release` (L1 on the package alone; `--rerun` with repo ledgers
 rebuilds the five T2–T6 analysis JSONs and diffs). The G0 harvest audit is an AI pre-audit (40/40)
 adopted by the author with human verification deferred (D-021, A-005); the freeze stands
 provisional on that item. The automated identifier re-scan is clean (reserved-domain
-placeholders, synthetic-token echoes, and one scrubber-artifact fragment noted in
-`pii_rescan.json`); the independent human re-scan is pending (see
-`docs/submission/checklist.md`).
+placeholders, synthetic-token echoes, and the redaction count reported in `pii_rescan.json`);
+the independent human re-scan is pending (see `docs/submission/checklist.md`).
