@@ -292,7 +292,7 @@
   switches, 21.3\% silently repeat the injected value without flagging, and identifiers and money
   carry most of that propagation; status fields
   almost never do. Fewer than half of corrupted episodes return to the reference decision within
-  four steps (28.2--47.6\% Kaplan--Meier). Re-serializing the same observation without changing its
+  four steps (22.0--44.6\% Kaplan--Meier secondary on the semantic risk set). Re-serializing the same observation without changing its
   values already shifts 20.3--45.6\% of decisions, so the slope is read over the prose arms
   $s0$--$s3$ only. Audits were blind-rated label-free and checked by a multi-role agent panel,
   author-overseen.
@@ -1054,8 +1054,10 @@ budget, and G3 and G4 the slope and recovery claims.
   severity $s2/s3$, recovery); the original G1 criterion failed but the main run proceeded under
   the post-freeze amendment A-004, so it is disclosed separately rather than counted. The Weibull
   rejection is part of the G4 recovery failure, not a separate count. Recovery crude rates are
-  Events/n from Table~\ref{tab:recovery} (Qwen 72/264, Ministral 141/406, Llama 112/412),
-  recomputed in \texttt{artifacts/analysis/g4\_recovery.json} (\texttt{transient\_s3} groups).}
+  run-risk-set Events/n (Qwen 72/264, Ministral 141/406, Llama 112/412),
+  recomputed in \texttt{artifacts/analysis/g4\_recovery.json} (\texttt{transient\_s3} groups);
+  the semantic risk-set re-estimation (Table~\ref{tab:recovery},
+  \texttt{artifacts/analysis/g4\_recovery\_v2.json}) confirms the failure with wider margin.}
   \label{tab:gate-status}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
@@ -1760,57 +1762,81 @@ informative as the critical/non-critical label. Wilson 95\% intervals are in the
 
 \noindent\textbf{Recovery}.\
 
-Recovery is reported as a Kaplan--Meier curve, RMST over the four-step horizon, and an
+Recovery is reported as crude cumulative incidence Events/n (primary), with
+Kaplan--Meier $1-S(4)$ as a secondary, RMST over the four-step horizon, and an
 exponential half-life only if G4 passes (Tables~\ref{tab:recovery} and~\ref{tab:recovery_all},
-Figure~\ref{fig:recovery}). Censoring is at the last observed step. G4 does not
-pass on the primary set: 32.4\%, 47.6\%, and 28.2\% of the transient $s=3$ risk set recover by
-$H=4$ (Qwen, Ministral, Llama). The secondary sets reach 35.0\%--52.1\%: the transient $s=2$ set
-is 35.0/51.4/28.9\% and the persistent $s=3$ set 36.4/52.1/31.0\%. The persistent arm is
+Figure~\ref{fig:recovery}). The v2 re-estimation rebuilds the risk set from the semantic
+switch definition (\texttt{signatures\_differ}, parser v4 / signature v2) instead of the
+run-time hash inequality: a prefix whose injected decision differs from the verbatim-V
+reference and that did not flag at injection. The run-time (hash) risk set admitted
+final-answer paraphrases the semantic coding treats as unchanged---36 Llama, 53 Ministral,
+and 43 Qwen transient-$s3$ members (overlap table in
+\texttt{artifacts/analysis/g4\_recovery\_v2.md})---and those members recovered at
+41.9--88.9\%, inflating the reported curve. Dropping them leaves semantic risk sets of
+376/353/221 transient-$s3$ prefixes (Llama/Ministral/Qwen) against run-set sizes 412/406/264
+and reported switch counts 377/390/286; the hash-based crude triple 72/264, 141/406, 112/412
+in Table~\ref{tab:gate-status} decomposes exactly into semantic plus hash-only events
+(54+18, 116+25, 80+32). Censoring is at the last observed step. G4 does not
+pass on the primary set: 24.4\%, 32.9\%, and 21.3\% of the semantic transient $s=3$ risk set
+recover by $H=4$ (Qwen, Ministral, Llama; Wilson 95\% intervals [19.2, 30.5], [28.2, 37.9],
+[17.4, 25.7]). The KM secondary reaches 28.2/44.6/22.0\%; the gap to crude is the
+competing-risk bias from censoring terminal non-recovery states (final answers, parse
+failures) as non-informative, and is largest for Ministral, where 118/353 sequences end in a
+parse failure and 58/353 in a final answer. The recovery parse-failure rate is 5.3/33.4/5.0\%
+(Llama/Ministral/Qwen transient $s3$); only 61/353 Ministral sequences run to $H=4$ without an
+event or an early terminal state. Treating final answers and parse failures as non-recoveries
+is the crude itself (co-primary); counting the 0--6 semantic returns missed by hash-exact R1
+coding moves crude by at most 1.7 points, and the never-run bounds (33 Ministral and 48 Qwen
+semantic switchers predate the rescored parser and have no sequences) stay below 39\%. The
+secondary sets reach crude 25.4/33.1/22.9\% (transient $s=2$) and 31.7/35.3/23.9\% (persistent
+$s=3$). The persistent arm is
 near-inert (the re-applied false value recurred in only a handful of steps, and the prompts are
 byte-identical to the transient arm for 97--100\% of shared steps), so those groups are
 descriptive and not a persistence contrast. The Weibull shape rejects the exponential assumption
-for two of three primary groups, and the fitted half-lives (4.3--8.0 steps) exceed the horizon in
-every group. Endpoint composition differs by model: 108/112 Llama recoveries are R1 (signature
-reversion), 56/72 Qwen, but only 56/141 Ministral---most Ministral recoveries are explicit flags
-(85), not reversion. Log-rank tests find no difference between the transient and persistent curves
-(pooled $p=.49$) or between $s2$ and $s3$ ($p=.52$). Under the alternative convention that
-censors at $H=4$, the primary rates fall to 27.3/34.7/27.2\%. The gate fails on every point estimate of the primary set, but the margin is
-convention-dependent and Ministral is close to the threshold. The curve and RMST stand; the
+for all three primary groups ($p=.0047$, $<10^{-4}$, $.0006$), and the fitted half-lives
+(4.7--10.9 steps across groups) exceed the horizon in
+every group. Endpoint composition differs by model: 78/80 Llama recoveries are R1 (signature
+reversion), 43/54 Qwen, but only 38/116 Ministral---most Ministral recoveries are explicit flags
+(78), not reversion. Marginal log-rank tests find no difference between the transient and persistent curves
+(pooled $p=.49$) or between $s2$ and $s3$ ($p=.52$). The gate fails on every point estimate of the primary set, and the ``Ministral close'' reading of the KM secondary is retired: Ministral's gate statistic is crude 32.9\% [28.2, 37.9], not KM 44.6\%. The curve and RMST stand; the
 half-life is labelled exploratory. The curves flatten before $H=4$; recovery estimates trace to
-\texttt{artifacts/analysis/g4\_recovery.json}.
+\texttt{artifacts/analysis/g4\_recovery\_v2.json}.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Recovery on the transient risk sets at $H=4$.}
+  \caption{Recovery on the semantic risk sets at $H=4$ (v2 re-estimation;
+  \texttt{artifacts/analysis/g4\_recovery\_v2.json}). Recovered is crude Events/n (primary);
+  KM is the Kaplan--Meier secondary.}
   \label{tab:recovery}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{llrrrrrr}
+  \begin{tabular}{llrrrrrrr}
     \toprule
-    \textbf{Model} & \textbf{Risk set} & $n$ & \textbf{Events} & \textbf{Censored} & \textbf{Recovered} & \textbf{RMST} & \textbf{$t_{1/2}$ (Weibull $p$)} \\
+    \textbf{Model} & \textbf{Risk set} & $n$ & \textbf{Events} & \textbf{Censored} & \textbf{Recovered (crude)} & \textbf{KM} & \textbf{RMST} & \textbf{$t_{1/2}$ (Weibull $p$)} \\
     \midrule
-    Qwen3.5-9B     & $s=2$ & 239 & 71  & 168 & 35.0\% & 2.84 & 5.58 (.042) \\
-                   & $s=3$ & 264 & 72  & 192 & 32.4\% & 2.97 & 6.39 (.013) \\
-    Ministral-3-8B & $s=2$ & 366 & 131 & 235 & 51.4\% & 2.62 & 3.94 ($<10^{-4}$) \\
-                   & $s=3$ & 406 & 141 & 265 & 47.6\% & 2.71 & 4.29 ($<10^{-4}$) \\
-    Llama-3.1-8B   & $s=2$ & 376 & 105 & 271 & 28.9\% & 3.13 & 7.78 (.0009) \\
-                   & $s=3$ & 412 & 112 & 300 & 28.2\% & 3.16 & 8.02 (.0007) \\
+    Qwen3.5-9B     & $s=2$ & 185 & 47  & 138 & 25.4\% & 28.9\% & 3.11 & 7.7 (.019) \\
+                   & $s=3$ & 221 & 54  & 167 & 24.4\% & 28.2\% & 3.16 & 8.0 (.0047) \\
+    Ministral-3-8B & $s=2$ & 311 & 103 & 208 & 33.1\% & 47.7\% & 2.82 & 4.7 ($<10^{-4}$) \\
+                   & $s=3$ & 353 & 116 & 237 & 32.9\% & 44.6\% & 2.87 & 5.0 ($<10^{-4}$) \\
+    Llama-3.1-8B   & $s=2$ & 345 & 79  & 266 & 22.9\% & 23.6\% & 3.31 & 10.0 (.0008) \\
+                   & $s=3$ & 376 & 80  & 296 & 21.3\% & 22.0\% & 3.37 & 10.9 (.0006) \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Recovery by $H=4$ across model and risk-set groups.}
+  \caption{Recovery by $H=4$ across model and risk-set groups (Kaplan--Meier secondary;
+  crude primary in Table~\ref{tab:recovery}; semantic risk sets).}
   \label{tab:recovery_all}
   \small
   \begin{tabular}{lrrr}
     \toprule
     \textbf{Model} & \textbf{Transient $s=2$} & \textbf{Transient $s=3$} & \textbf{Persistent $s=3$} \\
     \midrule
-    Qwen3.5-9B     & 35.0\% (239) & 32.4\% (264) & 36.4\% (73) \\
-    Ministral-3-8B & 51.4\% (366) & 47.6\% (406) & 52.1\% (97) \\
-    Llama-3.1-8B   & 28.9\% (376) & 28.2\% (412) & 31.0\% (100) \\
+    Qwen3.5-9B     & 28.9\% (185) & 28.2\% (221) & 35.2\% (63) \\
+    Ministral-3-8B & 47.7\% (311) & 44.6\% (353) & 49.3\% (85) \\
+    Llama-3.1-8B   & 23.6\% (345) & 22.0\% (376) & 24.9\% (92) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1818,7 +1844,8 @@ half-life is labelled exploratory. The curves flatten before $H=4$; recovery est
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.98\linewidth]{figures/fig9.png}
-  \caption{Kaplan--Meier survival on the transient risk sets by model.}
+  \caption{Kaplan--Meier survival (secondary) on the transient risk sets by model; v2
+  semantic curves in \texttt{artifacts/analysis/g4\_recovery\_v2.json}.}
   \label{fig:recovery}
 \end{figure}
 
@@ -1957,7 +1984,7 @@ batch 4 rather than the planned batch 8; the G2 cap was not approached (about 8.
 45-hour budget), so the sample is complete. Three gate criteria failed and are reported as
 failures: the protocol parser-failure rate is 1.55\% against the 1\% threshold (3.45\% if refusals are
 counted), the severity audit's $s2/s3$ decision-changing share is 88.3\% against 90\%, and G4
-recovery is crude 27.3/34.7/27.2\% (Kaplan--Meier 28.2--47.6\% secondary) against the 50\% threshold. The
+recovery is crude 27.3/34.7/27.2\% (Kaplan--Meier 22.0--44.6\% secondary) against the 50\% threshold. The
 automatic labeling was
 corrected once, after the blind audit found a defect (D-028, A-006); the pre-fix analysis is also
 reported
@@ -1977,7 +2004,7 @@ complete; the pooled slope is $0.877$ [0.770, 0.998], positive in all three mode
 critical-arm switches silently repeat the injected value. Three gate criteria failed: the
 protocol parser-failure rate
 (1.55\% against 1\%), the severity audit's $s2/s3$ decision-changing share (88.3\% against 90\%),
-and recovery (crude 27.3/34.7/27.2\%, Kaplan--Meier 28.2--47.6\%, against 50\%); all are reported
+and recovery (crude 27.3/34.7/27.2\%, Kaplan--Meier 22.0--44.6\%, against 50\%); all are reported
 as failures. The
 contribution is the dataset, the within-prefix design, the audit procedure that caught a labeling
 defect and corrected it before the reported analysis, and a measured shift among movers with its
