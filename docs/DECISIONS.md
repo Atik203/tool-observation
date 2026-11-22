@@ -110,7 +110,7 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
      family** (Holm over six per-model cluster-robust Wald tests), Qwen categorical, Qwen
      quadratic, and Ministral categorical survive at .05 (Ministral quadratic .059; Llama
      .109). Under the **LRT-Holm family** (Holm over six per-model asymptotic LRT p-values),
-     only Qwen categorical survives (p_Holm=.00064; Ministral categorical=.0835; Qwen
+     only Qwen categorical survives (p_Holm=.00064; Ministral categorical=.0836; Qwen
      quadratic=.168). The shared 800 prefixes make the six tests positively dependent; Holm
      is valid but conservative. The pooled test is not in either six-test family.
   2. **Realized severity.** Assigned-severity ORs are unchanged. A critical-arm item is
@@ -119,8 +119,9 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
      to the conditional logit, so s1/s2/s3 are compared with the clean original s0 baseline
      while inactive rows keep their own nuisance coefficient; this is the interval analogue
      of the old point-only dilution correction. Two versions: (a) audited-only, using the
-     50 main audited items (10 reserve items are outside the analysis sample; the 43 main
-     audited items not flagged stay active); (b) extrapolated, drawing
+     50 main audited items (10 reserve items are outside the analysis sample; the main
+     audited items not flagged are 43 under majority, 40 under sheet-visible -- one reserve
+     item, SEV-057, is flagged there -- and 34 under blind); (b) extrapolated, drawing
      arm-specific donor-unused rates from a Jeffreys Beta posterior for the 30 s2 and 30 s3
      audited items and applying them only to the 1,550 unaudited main-sample critical items
      (1,600 main critical combos minus 50 audited main combos), M=40 imputations, pooled
@@ -168,7 +169,7 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   (p=7.4e-5); the prefix-resampling bootstrap is a sensitivity at its 1/151 floor (p=.0066
   for both terms), not a cluster-valid test. Under the pre-specified Wald-Holm family,
   Qwen categorical, Qwen quadratic, and Ministral categorical survive at .05; under
-  LRT-Holm only Qwen categorical survives (p_Holm=.00064; Ministral categorical=.0835;
+  LRT-Holm only Qwen categorical survives (p_Holm=.00064; Ministral categorical=.0836;
   Qwen quadratic=.168). The realized-severity refit shows **no material change** in the
   assigned ORs (s2 about -3%, s3 +1 to +6%; every CI overlaps), so the old attenuation
   claim is not confirmed. Aalen-Johansen equals the crude recovery primary in every cell
