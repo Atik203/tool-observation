@@ -291,6 +291,24 @@ def test_release_pii_redaction_guard() -> None:
     assert offenders == [], f"PII fragment in release file(s): {offenders}"
 
 
+def test_redaction_preserves_line_endings(tmp_path: Path) -> None:
+    """Redaction changes only the matched strings, not every line ending."""
+    payload = (
+        f'{{"observation_json": "mail {_PII_FRAGMENT} now"}}\n'
+        '{"observation_json": "unchanged"}\n'
+    ).encode("utf-8")
+    target = tmp_path / "prefixes.jsonl"
+    target.write_bytes(payload)
+    stats = build_release.apply_redactions(tmp_path)
+    data = target.read_bytes()
+    assert stats["n_occurrences"] == 1
+    assert stats["files"] == {"prefixes.jsonl": 1}
+    assert b"\r\n" not in data
+    assert data.count(b"\n") == 2
+    assert _PII_FRAGMENT.encode() not in data
+    assert b"unchanged" in data
+
+
 def test_release_pii_report_records_redaction() -> None:
     """A staged package reports the redaction and scans clean."""
     reports = sorted(_RELEASE.glob("ToolResult-800-*/pii_rescan.json"))

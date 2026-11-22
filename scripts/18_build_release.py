@@ -496,12 +496,15 @@ def apply_redactions(root: Path) -> dict:
         if path.name not in _TEXT_NAMES and path.suffix.lower() not in _TEXT_SUFFIXES:
             continue
         try:
-            text = path.read_text(encoding="utf-8")
+            # Read/write bytes, not text: read_text/write_text would normalise
+            # every line ending on Windows and change all 880 lines instead of
+            # only the redacted strings.
+            text = path.read_bytes().decode("utf-8")
         except (UnicodeDecodeError, OSError):
             continue
         redacted, n = redact_text(text)
         if n:
-            path.write_text(redacted, encoding="utf-8")
+            path.write_bytes(redacted.encode("utf-8"))
             changed[path.relative_to(root).as_posix()] = n
             total += n
     return {
