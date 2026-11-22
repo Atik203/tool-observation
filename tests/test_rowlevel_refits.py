@@ -13,6 +13,7 @@ import math
 import random
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -228,6 +229,135 @@ def test_rubin_pool_known_values() -> None:
     assert abs(pooled[0]["within_var"] - 0.04) < 1e-12
     assert abs(pooled[0]["between_var"] - 2.0) < 1e-12
     assert abs(pooled[0]["se"] - math.sqrt(3.04)) < 1e-12
+
+
+def _synthetic_inputs(
+    prefixes: list[str],
+    models: list[str],
+    labels: list[SimpleNamespace],
+    *,
+    rows_by_key: dict[tuple[str, str, str], SimpleNamespace] | None = None,
+) -> rowlevel.Inputs:
+    label_by_key = {
+        (label.prefix_id, label.model_id, label.arm): label for label in labels
+    }
+    return rowlevel.Inputs(
+        models=models,
+        prefixes=prefixes,
+        reserve_ids=set(),
+        rows=[],
+        n_step0_rows=0,
+        rows_by_key=rows_by_key or {},
+        labels=labels,
+        label_by_key=label_by_key,
+        perturbations=[],
+        files=[],
+    )
+
+
+def test_severity_reclassification_end_to_end_fixture(monkeypatch) -> None:
+    prefixes = [f"airline-claude35sonnet-t{i:02d}-r01-s001-task" for i in range(24)]
+    models = ["model-a"]
+    labels = []
+    for index, prefix in enumerate(prefixes):
+        for arm in rowlevel.ARMS:
+            outcome = int(arm in ("s2", "s3") and index % 3 == 0)
+            labels.append(
+                SimpleNamespace(
+                    prefix_id=prefix,
+                    model_id="model-a",
+                    arm=arm,
+                    y_any=bool(outcome),
+                )
+            )
+    inputs = _synthetic_inputs(prefixes, models, labels)
+    audit = {
+        "levels": {"I1": "2", "I2": "3"},
+        "prefix_by_item": {"I1": prefixes[0], "I2": prefixes[1]},
+        "passes": {
+            "majority": {
+                "items": ["I1", "I2"],
+                "k": 2,
+                "n": 2,
+                "by_arm": {"s2": 1, "s3": 1},
+                "combos": [(prefixes[0], "s2"), (prefixes[1], "s3")],
+            }
+        },
+        "files": [],
+    }
+    monkeypatch.setattr(rowlevel, "_load_severity_passes", lambda: audit)
+
+    report = rowlevel.severity_reclassification(inputs, imputations=2, seed=7)
+    assert report["audited_items"] == 2
+    assert report["audited_main"] == 2
+    assert report["audited_reserve"] == 0
+    assert report["unaudited_combos"] == len(prefixes) * 2 - 2
+    payload = report["passes"]["majority"]
+    assert payload["audited_only"]["inactive_rows"] == 2
+    assert len(payload["audited_only"]["realized"]["coefficients"]) == 3
+    assert set(payload["audited_only"]["arm_specific"]) == {"s2", "s3"}
+    assert "converged" in payload["audited_only"]["realized"]
+    assert "separated" in payload["audited_only"]["realized"]["inactive_critical"]
+    assert len(payload["extrapolated"]["realized"]["coefficients"]) == 3
+    assert payload["extrapolated"]["mi_converged"] >= 1
+
+
+def test_missingness_end_to_end_fixture() -> None:
+    prefixes = [
+        "airline-claude35sonnet-t01-r01-s001-task",
+        "airline-claude35sonnet-t02-r01-s001-task",
+        "airline-claude35sonnet-t03-r01-s001-task",
+        "airline-claude35sonnet-t04-r01-s001-task",
+        "retail-gpt4o-t10-r01-s001-task",
+        "retail-gpt4o-t11-r01-s001-task",
+        "retail-gpt4o-t12-r01-s001-task",
+        "retail-gpt4o-t13-r01-s001-task",
+    ]
+    labels = []
+    rows_by_key: dict[tuple[str, str, str], SimpleNamespace] = {}
+    for index, prefix in enumerate(prefixes):
+        reference = SimpleNamespace(parsed=index != 1, decision_json="{}")
+        rows_by_key[(prefix, "model-a", "V")] = reference
+        for arm in rowlevel.ARMS:
+            parsed = not (index == 2 and arm == "s1")
+            rows_by_key[(prefix, "model-a", arm)] = SimpleNamespace(
+                parsed=parsed, decision_json="{}"
+            )
+            observed = index != 1 and parsed
+            if observed:
+                outcome = int(arm in ("s2", "s3") and index % 2 == 0)
+                labels.append(
+                    SimpleNamespace(
+                        prefix_id=prefix,
+                        model_id="model-a",
+                        arm=arm,
+                        y_any=bool(outcome),
+                    )
+                )
+    inputs = _synthetic_inputs(prefixes, ["model-a"], labels, rows_by_key=rows_by_key)
+    report = rowlevel.missingness(
+        inputs, rate_bootstrap=5, slope_bootstrap=3, seed=7
+    )
+    assert report["cells"]["potential"] == len(prefixes) * 4
+    assert report["cells"]["missing"] == 5
+    assert report["cells"]["reasons"] == {"v_unparsed": 4, "arm_unparsed": 1}
+    assert report["ipw"]["rates"]["s3"]["rate"] is not None
+    assert report["manski"]["design_robust"] is True
+    assert report["slope"]["ipw"]["bootstrap_reps"] >= 1
+
+
+def test_aalen_johansen_differs_from_crude_with_early_censoring() -> None:
+    sequences = (
+        [_sequence("recovery", 1, prefix=f"r1-{i}") for i in range(2)]
+        + [_sequence("censored", 1, prefix=f"z1-{i}", reason="ran_to_H4") for i in range(2)]
+        + [_sequence("recovery", 2, prefix=f"r2-{i}") for i in range(3)]
+        + [_sequence("competing", 2, prefix=f"c2-{i}", reason="final_answer") for i in range(3)]
+    )
+    result = rowlevel.aalen_johansen(sequences)[-1]
+    crude = 5 / 10
+    assert abs(result["cif_recovery"] - 0.60) < 1e-12
+    assert abs(result["cif_recovery"] - crude) > 0.09
+    assert abs(result["cif_competing"] - 0.40) < 1e-12
 
 
 def test_severity_pass_counts_real_audit() -> None:

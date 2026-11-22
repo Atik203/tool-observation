@@ -9,13 +9,14 @@ ledgers, recovery events); nothing is generated and no GPU is used.
 What this script computes:
 
 - severity functional form: exact conditional-logit LRTs for the quadratic and
-  categorical severity terms, with a prefix-cluster null parametric bootstrap
-  (the 800 prefixes are the resampling unit, all three model groups travel
-  together) and a cluster-robust Wald companion; Holm over the six per-model
-  tests with an explicit dependence note;
+  categorical severity terms. The design-valid primary is the pooled
+  prefix-cluster robust Wald test; a prefix-resampling parametric bootstrap is
+  a sensitivity, not a cluster bootstrap (simulated outcomes are independent
+  within strata). Holm is reported for the Wald family, the LRT family, and the
+  bootstrap family with an explicit dependence note;
 - severity reclassification: audited-only and rate-extrapolated refits that
-  move donor-unused critical rows to s=0, with Rubin intervals from multiple
-  imputation (replaces the old point-only dilution table);
+  give donor-unused critical rows an inactive indicator, with Rubin intervals
+  from multiple imputation (replaces the old point-only dilution table);
 - missingness: decomposition of the 525/9,600 missing cells, logistic IPW for
   arm rates and risk differences, a task x model x arm post-stratified check,
   a weighted conditional-logit slope, and Manski bounds (including extreme
@@ -861,6 +862,8 @@ def severity_functional_form(
         seed=seed + 1,
         label="pooled",
     )
+    pooled_cat_wald = categorical_linearity_wald(pooled["categorical"])
+    pooled_quad_wald = quadratic_term_wald(pooled["quadratic"])
     pooled_summary = {
         "n_prefixes": len(inputs.prefixes),
         "n_informative_prefixes": len({group.cluster for group in pooled_groups}),
@@ -875,14 +878,24 @@ def severity_functional_form(
         "quadratic": {
             "beta": pooled["quadratic"]["beta"],
             "loglik": pooled["quadratic"]["loglik"],
-            "term_wald": quadratic_term_wald(pooled["quadratic"]),
+            "term_wald": pooled_quad_wald,
         },
         "categorical": {
             "coefficients": coefficient_table(
                 pooled["categorical"], ["s1", "s2", "s3"]
             ),
             "loglik": pooled["categorical"]["loglik"],
-            "linearity_wald": categorical_linearity_wald(pooled["categorical"]),
+            "linearity_wald": pooled_cat_wald,
+        },
+        "primary_inference": {
+            "design_valid": "prefix-cluster robust Wald",
+            "categorical_linearity": pooled_cat_wald,
+            "quadratic_term": pooled_quad_wald,
+            "bootstrap_role": (
+                "prefix-resampling sensitivity, not a cluster bootstrap: prefixes are "
+                "resampled but outcomes are simulated independently within strata, so the "
+                "within-cluster residual correlation is not carried"
+            ),
         },
         "lrt_categorical_vs_linear": pooled["lrt_categorical_vs_linear"],
         "lrt_categorical_asymptotic_p": chi2_sf_df2(
@@ -898,6 +911,7 @@ def severity_functional_form(
     per_model: dict[str, Any] = {}
     raw_p: dict[str, float] = {}
     raw_wald: dict[str, float] = {}
+    raw_lrt: dict[str, float] = {}
     for model_id in inputs.models:
         model_records = [
             (
@@ -930,6 +944,12 @@ def severity_functional_form(
         ]
         raw_wald[f"{model_id}|categorical_vs_linear"] = cat_wald["p_value"]
         raw_wald[f"{model_id}|quadratic_vs_linear"] = quad_wald["p_value"]
+        raw_lrt[f"{model_id}|categorical_vs_linear"] = chi2_sf_df2(
+            fits["lrt_categorical_vs_linear"]
+        )
+        raw_lrt[f"{model_id}|quadratic_vs_linear"] = chi2_sf_df1(
+            fits["lrt_quadratic_vs_linear"]
+        )
         per_model[model_id] = {
             "n_prefixes": len(inputs.prefixes),
             "n_informative_prefixes": len({group.cluster for group in model_groups}),
@@ -962,6 +982,7 @@ def severity_functional_form(
         }
     holm_bootstrap = holm_adjust(raw_p)
     holm_wald = holm_adjust(raw_wald)
+    holm_lrt = holm_adjust(raw_lrt)
     return {
         "estimand": (
             "conditional (fixed-effects) logit of the any-switch outcome on assigned "
@@ -973,21 +994,26 @@ def severity_functional_form(
         "multiplicity": {
             "family": "six per-model tests (categorical-vs-linear and quadratic-vs-linear x three models)",
             "method": (
-                "Holm step-down on cluster-robust Wald p-values (primary family); "
-                "bootstrap p-values are a resampling check with 1/(B+1) resolution"
+                "Holm step-down on cluster-robust Wald p-values is the pre-specified family; "
+                "Holm on asymptotic LRT p-values and Holm on prefix-resampling bootstrap "
+                "p-values are reported as secondary families"
             ),
             "raw_wald_p": raw_wald,
             "holm_wald_p": holm_wald,
+            "raw_lrt_p": raw_lrt,
+            "holm_lrt_p": holm_lrt,
             "raw_bootstrap_p": raw_p,
             "holm_bootstrap_p": holm_bootstrap,
             "note": (
                 "The six tests reuse the same 800 prefixes in all three models, so they are "
                 "positively dependent. Holm controls the family-wise error rate under arbitrary "
                 "dependence and is therefore valid but conservative here; it does not model the "
-                "shared-prefix correlation. The pooled bootstrap test is the primary and is not "
-                "in the six-test family. The per-model bootstrap p-values have resolution "
-                "1/(B+1); with B=40 the floor is 0.024, so Holm on bootstrap p-values is "
-                "conservative and the Wald family is the primary multiplicity record."
+                "shared-prefix correlation. The pooled cluster-robust Wald test is the "
+                "design-valid primary and is not in the six-test family. The prefix-resampling "
+                "bootstrap is a sensitivity, not a cluster bootstrap: it resamples prefixes but "
+                "simulates outcomes independently within strata, so it does not carry "
+                "within-cluster residual correlation. Its per-model p-values also have a 1/41 "
+                "floor, so Holm on the LRT family is the cleaner secondary record."
             ),
         },
     }
@@ -1115,6 +1141,7 @@ def severity_reclassification(
     baseline_groups, _ = _design_inputs(inputs)
     baseline = fit_conditional(baseline_groups, CATEGORICAL)
 
+    prefix_set = set(inputs.prefixes)
     critical = sorted(
         {
             (label.prefix_id, label.arm)
@@ -1127,10 +1154,19 @@ def severity_reclassification(
         for item_id, level in audit["levels"].items()
         if level in ("2", "3")
     }
+    audited_main = {combo for combo in audited_all if combo[0] in prefix_set}
+    audited_reserve = audited_all - audited_main
     audited_flagged = {
         combo for payload in audit["passes"].values() for combo in payload["combos"]
     }
     unaudited = [combo for combo in critical if combo not in audited_all]
+
+    def by_arm(combos: set[tuple[str, str]]) -> dict[str, int]:
+        return {
+            arm: sum(1 for _prefix, level_arm in combos if level_arm == arm)
+            for arm in S2S3
+        }
+
     rng = random.Random(seed + 40)
 
     report: dict[str, Any] = {
@@ -1145,11 +1181,36 @@ def severity_reclassification(
         ),
         "baseline_assigned": {
             "coefficients": coefficient_table(baseline, ["s1", "s2", "s3"]),
+            "converged": baseline["converged"],
             "loglik": baseline["loglik"],
             "n_groups": baseline["n_groups"],
             "n_rows": baseline["n_rows"],
         },
+        "audit_provenance": {
+            "audited_critical_items": len(audited_all),
+            "audited_main": len(audited_main),
+            "audited_reserve": len(audited_reserve),
+            "by_arm": {
+                arm: {
+                    "total": by_arm(audited_all)[arm],
+                    "main": by_arm(audited_main)[arm],
+                    "reserve": by_arm(audited_reserve)[arm],
+                }
+                for arm in S2S3
+            },
+            "imputation_population": len(unaudited),
+            "rate_denominators": {"s2": 30, "s3": 30},
+            "main_only_denominators": {"s2": 25, "s3": 25},
+            "note": (
+                "The 60 audited critical items split 50 main (25 s2 + 25 s3) and 10 reserve "
+                "(5 s2 + 5 s3). The Jeffreys Beta rate denominators are the full 30 s2 and "
+                "30 s3 audited items, so 5+5 reserve items inform rates applied to the "
+                "1,550 main unaudited population; this is recorded rather than refit."
+            ),
+        },
         "audited_items": len(audited_all),
+        "audited_main": len(audited_main),
+        "audited_reserve": len(audited_reserve),
         "audited_flagged_union": len(audited_flagged),
         "critical_combos": len(critical),
         "unaudited_combos": len(unaudited),
@@ -1169,8 +1230,45 @@ def severity_reclassification(
             for label in inputs.labels
             if (label.prefix_id, label.arm) in audited_inactive
         )
+        inactive_beta = audited_fit["beta"][3]
+        inactive_se = audited_fit["se_cluster"][3]
+        inactive_or = math.exp(inactive_beta)
+        inactive_separated = (not audited_fit["converged"]) or abs(inactive_beta) > 10.0
+
+        arm_specific: dict[str, Any] = {}
+        for arm in S2S3:
+            arm_inactive = {combo for combo in audited_inactive if combo[1] == arm}
+            arm_groups, _ = _design_inputs(inputs, inactive=arm_inactive)
+            arm_fit = fit_conditional(arm_groups, REALIZED)
+            arm_rows = sum(
+                1
+                for label in inputs.labels
+                if (label.prefix_id, label.arm) in arm_inactive
+            )
+            arm_beta = arm_fit["beta"][3]
+            arm_specific[arm] = {
+                "inactive_rows": arm_rows,
+                "coefficients": coefficient_table(
+                    arm_fit, ["s1", "s2", "s3", "inactive_critical"]
+                )[:3],
+                "inactive_critical": {
+                    "beta": arm_beta,
+                    "se_cluster": arm_fit["se_cluster"][3],
+                    "or": math.exp(arm_beta),
+                    "converged": arm_fit["converged"],
+                    "separated": (not arm_fit["converged"]) or abs(arm_beta) > 10.0,
+                    "note": (
+                        "inactive indicator for this arm only; the other critical arm stays "
+                        "active, so the s2/s3 pooling limitation does not apply here"
+                    ),
+                },
+                "converged": arm_fit["converged"],
+                "loglik": arm_fit["loglik"],
+            }
+
         draws: list[tuple[list[float], list[list[float]]]] = []
         inactive_total = 0
+        mi_converged = 0
         for _ in range(imputations):
             m_s2 = rng.betavariate(
                 payload["by_arm"]["s2"] + 0.5, 30 - payload["by_arm"]["s2"] + 0.5
@@ -1190,7 +1288,11 @@ def severity_reclassification(
             )
             groups, _ = _design_inputs(inputs, inactive=inactive)
             fit = fit_conditional(groups, REALIZED)
+            mi_converged += int(fit["converged"])
             draws.append((fit["beta"], fit["cov"]))
+        pooled_coefficients = _rubin_pool(
+            draws, ["s1", "s2", "s3", "inactive_critical"]
+        )
         report["passes"][name] = {
             "k": payload["k"],
             "n": payload["n"],
@@ -1202,21 +1304,30 @@ def severity_reclassification(
                         audited_fit, ["s1", "s2", "s3", "inactive_critical"]
                     )[:3],
                     "inactive_critical": {
-                        "beta": audited_fit["beta"][3],
-                        "se_cluster": audited_fit["se_cluster"][3],
+                        "beta": inactive_beta,
+                        "se_cluster": inactive_se,
+                        "or": inactive_or,
+                        "converged": audited_fit["converged"],
+                        "separated": inactive_separated,
+                        "rows": inactive_audited,
                         "note": (
-                            "nuisance indicator; with only 20 audited rows it can separate "
-                            "and is not interpreted"
+                            f"nuisance indicator; {inactive_audited} audited rows; "
+                            f"beta={inactive_beta:.2f}, OR={inactive_or:.1e}; "
+                            f"{'separated' if inactive_separated else 'not separated'}; "
+                            "not interpreted"
                         ),
                     },
+                    "converged": audited_fit["converged"],
                     "loglik": audited_fit["loglik"],
                     "n_groups": audited_fit["n_groups"],
                     "n_rows": audited_fit["n_rows"],
                 },
+                "arm_specific": arm_specific,
                 "move_to_s0": {
                     "coefficients": coefficient_table(
                         audited_move_fit, ["s1", "s2", "s3"]
                     ),
+                    "converged": audited_move_fit["converged"],
                     "loglik": audited_move_fit["loglik"],
                     "n_groups": audited_move_fit["n_groups"],
                     "n_rows": audited_move_fit["n_rows"],
@@ -1224,25 +1335,22 @@ def severity_reclassification(
             },
             "extrapolated": {
                 "imputations": imputations,
+                "mi_converged": mi_converged,
                 "mean_inactive_rows": inactive_total / imputations,
                 "realized": {
-                    "coefficients": _rubin_pool(
-                        draws, ["s1", "s2", "s3", "inactive_critical"]
-                    )[:3],
+                    "coefficients": pooled_coefficients[:3],
                     "inactive_critical": {
-                        **_rubin_pool(
-                            draws, ["s1", "s2", "s3", "inactive_critical"]
-                        )[3],
+                        **pooled_coefficients[3],
                         "note": (
-                            "nuisance indicator; its MI coefficient mixes true donor-unused "
-                            "rows with randomly reclassified active rows and is not interpreted"
+                            "nuisance indicator; the MI coefficient pools s2+s3 inactive "
+                            "rows because a 5-parameter arm-specific MI was not run at this "
+                            "budget; the audited-only arm_specific block gives the direct check"
                         ),
                     },
                 },
             },
         }
     return report
-
 
 # ---------------------------------------------------------------------------
 # Missingness
@@ -1566,6 +1674,13 @@ def missingness(
             "min_probability": min(probabilities),
             "max_probability": max(probabilities),
             "max_weight": max(weights),
+            "limitation": (
+                "This model cannot represent whole-group V-parse failure (336 of the 525 "
+                "missing cells): it sees only model x arm + domain + donor, so the fitted "
+                "weights are near-uniform (max 1.13) and the IPW estimates are descriptive, "
+                "not design-robust. Only the Manski bounds cover all 525 missing cells "
+                "without an ignorability assumption."
+            ),
         },
         "complete_case": complete,
         "ipw": {
@@ -1574,11 +1689,21 @@ def missingness(
             "note": (
                 "Hajek inverse-probability-weighted rates; bootstrap resamples prefixes with "
                 "the fitted weights held fixed, so it does not propagate propensity-estimation "
-                "uncertainty. The post-stratified check is the task-heterogeneity cross-check."
+                "uncertainty. The post-stratified check is the task-heterogeneity cross-check; "
+                "only the Manski bounds are design-robust because they do not assume "
+                "ignorability and do cover the whole-group V-parse failures."
             ),
+            "design_robust": False,
         },
         "poststratified": _poststratified(cells),
-        "manski": manski,
+        "manski": {
+            **manski,
+            "design_robust": True,
+            "note": (
+                "Worst-case bounds over the 525 missing cells; no ignorability assumption "
+                "and no propensity model. These are the design-robust missingness result."
+            ),
+        },
         "slope": {
             "complete_case": {
                 "beta": unweighted_slope["beta"][0],
