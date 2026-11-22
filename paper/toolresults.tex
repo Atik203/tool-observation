@@ -407,7 +407,7 @@ counterfactual variants of its content, so none separates noticing a wrong value
 it. Holistic evaluation and contamination audits further show that benchmark scores depend on
 protocol and leakage \cite{helm,contamination}.
 
-\noindent\textbf{Observation content as a causal variable}.\
+\noindent\textbf{Observation content as a decision variable}.\
 
 The observation is a message like any other, and message content is known to move model
 behaviour. Lost-in-the-middle shows that the position of relevant text changes recall
@@ -425,7 +425,7 @@ a guardrail aimed at injections does not necessarily catch a wrong refund amount
 
 \noindent\textbf{Counterfactual and paired designs}.\
 
-The design is a within-unit causal contrast \cite{causal,rubin1974}. Because every arm shares the prefix,
+The design is a within-unit contrast \cite{causal,rubin1974}. Because every arm shares the prefix,
 task difficulty, domain, donor style, and conversation history are held constant, and the
 comparison does not depend on between-task variation. The cost of this choice is that the
 estimate is local to the frozen prefixes and to the renderer. The benefit is that a decision
@@ -475,7 +475,7 @@ The unit is a frozen message prefix that ends immediately after a real $\tau$-be
 observation. The prefix contains the system policy, the user turns, the donor assistant turns,
 and all prior tool calls and results. The target model produces the next decision; it never
 generates or repairs the prefix. Every arm is generated from the same prefix, so the contrast is
-within prefix in the sense of a within-unit causal contrast \cite{causal}. The donors are the
+within prefix in the sense of a within-unit contrast \cite{causal}. The donors are the
 public gpt-4o and claude-3.5-sonnet $\tau$-bench trajectories: gpt-4o airline, gpt-4o retail,
 sonnet-35-new airline, and sonnet-35-new retail. Separating donors from targets avoids a circular
 design in which the model that produced the history also supplies the outcome. The target models
@@ -650,7 +650,7 @@ and Figure~\ref{fig:arms} shows the construction for one prefix.
 
 
 The construction rules are pre-specified. For $s=1$, the perturbed field must be absent from the
-donor's factual continuation; if a non-critical change moves decisions as much as $s=2$, the
+donor's factual continuation; if a non-critical change is associated with as many switches as $s=2$, the
 field was misclassified or the model is hypersensitive, and both are audit findings. For $s=2$,
 the wrong value must be plausible for the entity and must change the correct action if trusted;
 absurd values are rejected. For $s=3$, the critical error is combined with a second inconsistency
@@ -923,7 +923,7 @@ replicates clustered by prefix.
 
 \noindent\textbf{Recovery}.\
 
-Recovery uses the risk set of prefixes whose decision moved at the injected step ($Y^{U}=1$ or
+Recovery uses the risk set of prefixes whose decision differed from the reference at the injected step ($Y^{U}=1$ or
 $Y^{A}=1$) and did not flag there, separately for $s=2$ and $s=3$. Prefixes that flagged at
 injection are coded $h=0$ for detection and are not at risk for later recovery. The episode
 continues for $H=4$ steps against the real environment. Recovery at step $h$ is the first step
@@ -1015,7 +1015,7 @@ model.
   \caption{Pre-registered analysis path (schematic; no study outcomes are plotted): the within-prefix
   switch indicator, the conditional-logistic slope, the silent-propagation decomposition, and the
   four-step recovery model with Kaplan--Meier and RMST reporting. A regenerated conceptual figure
-  will replace this placeholder in the revision figures pass.}
+  will replace this placeholder in Task 5 (figures pass) of the revision plan.}
   \label{fig:analysis}
 \end{figure}
 
@@ -1053,7 +1053,9 @@ budget, and G3 and G4 the slope and recovery claims.
   preregistration or was introduced by protocol/amendment. Three gate criteria failed (parser,
   severity $s2/s3$, recovery); the original G1 criterion failed but the main run proceeded under
   the post-freeze amendment A-004, so it is disclosed separately rather than counted. The Weibull
-  rejection is part of the G4 recovery failure, not a separate count.}
+  rejection is part of the G4 recovery failure, not a separate count. Recovery crude rates are
+  Events/n from Table~\ref{tab:recovery} (Qwen 72/264, Ministral 141/406, Llama 112/412),
+  recomputed in \texttt{artifacts/analysis/g4\_recovery.json} (\texttt{transient\_s3} groups).}
   \label{tab:gate-status}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
@@ -1069,7 +1071,7 @@ budget, and G3 and G4 the slope and recovery claims.
     G3 outcome & $\kappa\ge.80$; PPV $\ge.90$ (preregistered) & $\kappa=.987$; PPV 1.00, 9/9 (95\% lower bound .66) & pass \\
     G3 parser & failure $<1\%$ (protocol, not frozen prereg) & 205/13{,}200 (1.55\%) & \textbf{fail} \\
     G3 recovery agr.\ & $\kappa\ge.75$ (preregistered) & .920 / .917 & pass \\
-    G4 & $\ge50\%$ of $s3$ risk set recovers by $H=4$; Weibull $p\ge.01$ (preregistered) & crude 27.3/34.7/27.2\%; KM 32.4/47.6/28.2\%; Weibull rejected in 2/3 primary groups & \textbf{fail} \\
+    G4 & $\ge50\%$ of $s3$ risk set recovers by $H=4$; Weibull $p\ge.01$ (preregistered) & crude 27.3/34.7/27.2\% (72/264; 141/406; 112/412); KM 32.4/47.6/28.2\%; Weibull rejected in 2/3 primary groups & \textbf{fail} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1395,9 +1397,12 @@ s0--s3, which share one format.
   \centering
   \caption{Hypothesis status (preregistration \S2). H1--H5 are confirmatory, H6--H7 exploratory.
   H5 is reported here ($s=3$ vs $s=1$ paired exact McNemar: pooled $b=431$, $c=93$, two-sided
-  $p=5.3\times10^{-53}$; per-model $p\le2.0\times10^{-9}$). The slope rows pass as a measured
+  $p=5.3\times10^{-53}$; per-model two-sided $p=1.98\times10^{-9}$ (Llama-3.1-8B),
+  $9.0\times10^{-22}$ (Ministral-3-8B), $7.5\times10^{-27}$ (Qwen3.5-9B);
+  \texttt{artifacts/analysis/prereg\_secondary.json}). The slope rows pass as a measured
   shift among movers; no causal or content-sensitivity claim is made because three gate criteria
-  failed (Table~\ref{tab:gate-status}).}
+  failed (Table~\ref{tab:gate-status}). H4 crude counts are Events/n (72/264; 141/406; 112/412)
+  from \texttt{artifacts/analysis/g4\_recovery.json} (\texttt{transient\_s3} groups).}
   \label{tab:hypotheses}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{1.1cm}>{\raggedright\arraybackslash}p{6.8cm}>{\raggedright\arraybackslash}p{4.6cm}c}
@@ -1721,7 +1726,7 @@ An exploratory breakdown of the $s=2$ switches by perturbed field class
 field\_taxonomy.json}) shows that identifiers and money are the silent-propagation engines: 45.0\% and 45.6\% of their switches are
 unflagged, action-preserving copies of the false value, versus 6.9\% (entity) and 6.6\% (status).
 Entity and status fields instead flip the action in about half of their switches. The clearest
-single path is the reservation identifier: 58.2\% of its $s=2$ perturbations move the decision and
+single path is the reservation identifier: 58.2\% of its $s=2$ perturbations are associated with a different decision and
 51.9\% of those switches are silent. Flags are near-absent (0.8\% of $s=2$ rows). At fixed
 severity the field-class spread in switch rates is 21.1 percentage points, while the criticality
 contrast adds 10.1 points over a render floor of 30.1\%; field type is therefore at least as
@@ -1952,7 +1957,7 @@ batch 4 rather than the planned batch 8; the G2 cap was not approached (about 8.
 45-hour budget), so the sample is complete. Three gate criteria failed and are reported as
 failures: the protocol parser-failure rate is 1.55\% against the 1\% threshold (3.45\% if refusals are
 counted), the severity audit's $s2/s3$ decision-changing share is 88.3\% against 90\%, and G4
-recovery is 28.2--47.6\% Kaplan--Meier (crude 27.3/34.7/27.2\%) against the 50\% threshold. The
+recovery is crude 27.3/34.7/27.2\% (Kaplan--Meier 28.2--47.6\% secondary) against the 50\% threshold. The
 automatic labeling was
 corrected once, after the blind audit found a defect (D-028, A-006); the pre-fix analysis is also
 reported
