@@ -9,7 +9,7 @@ require author action and name the artifact that unblocks them.
   content-sensitivity claim (C1; `tab:gate-status`, `tab:hypotheses`).
 - [x] All three gate failures stated (parser 1.55%, severity 88.3%, crude recovery
   24.4/32.9/21.3% on the semantic risk set); G1 original criterion reported as failed (A-004/D-041).
-- [x] 25 tables all cited; 10 figures all cited; 0 undefined refs; 0 duplicate labels
+- [x] 11 main-text and 14 supplementary tables all cited; 10 figures all cited; 0 undefined refs; 0 duplicate labels
   (`pytest tests/test_release.py`).
 - [x] 69/69 bib entries cited; 9 author lists completed from arXiv (4 legacy
   `[VERIFY CITATION]` + tool_survey/agent_survey/helm + toolscan/toolbehonest);
@@ -27,7 +27,7 @@ require author action and name the artifact that unblocks them.
 
 - [x] Release staged: `release/ToolResult-800-v1.0/` (123 files), manifest hash chain ok,
   SHA256SUMS verified, automated identifier re-scan clean (`pii_rescan.json`).
-- [x] Table-to-artifact map covers all 25 tables (`TABLE_MAP.md`).
+- [x] Table-to-artifact map covers all 25 table labels (11 main-text, 14 supplementary; `TABLE_MAP.md`).
 - [x] One-command validation implemented and passing: `make validate-release` 17/17 L1,
   22/22 with `--rerun` (T4 inference regen included).
 - [x] License verification recorded (`licenses/`, `docs/submission/license_verification.md`).

@@ -12,8 +12,9 @@
 \usepackage{booktabs}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-% Float placement: the manuscript carries 24 tables and 10 figures. Allow pages
-% to hold more than two floats and keep text pages from breaking early.
+% Float placement: the manuscript carries 11 main-text tables, 14 supplementary
+% tables, and 10 figures. Allow pages to hold more than two floats and keep text
+% pages from breaking early.
 \setcounter{topnumber}{3}
 \setcounter{bottomnumber}{2}
 \setcounter{totalnumber}{5}
@@ -257,7 +258,6 @@
 \credit{Conceptualization, Data curation, Formal analysis, Investigation, Methodology, Project administration, Resources, Software, Validation, Visualization, Writing - original draft, Writing - review \& editing}
 
 
-
 % Supervisor
 \author[1]{Ohidujjaman Tuhin}[orcid=0000-0002-8776-7145]
 \credit{Supervision, Validation, Writing - review \& editing}
@@ -277,38 +277,28 @@
 \begin{abstract}
   Tool-using language-model agents read tool outputs and act on them, but end-to-end benchmarks
   score the finished episode and cannot show whether an agent noticed a wrong price, date, or
-  identifier. We report a frozen fixed-prefix measurement study of that moment: 800 real $\tau$-bench prefixes
-  (400 airline, 400 retail), each ending after a tool observation, with the observation varied
-  across four prose arms---faithful paraphrase, one non-critical change, one plausible critical
-  error, and a critical error with a second contradiction. Three open-weight 8--9B models answer
-  every arm greedily on an 18~GB H200 slice. The pre-registered content-sensitivity claim is not
-  made: three gate criteria failed. The parser-failure rate is 1.55\% against the 1\% protocol
-  threshold, the severity audit's $s2/s3$ decision-changing share is 88.3\% against 90\%, and crude
-  recovery on the semantic risk set is 24.4/32.9/21.3\% by model against 50\% (Kaplan--Meier
-  28.2/44.6/22.0\% as a secondary with a competing-risk caveat). Within that bound, we report a measured shift among movers: the
-  pooled conditional-logistic slope of the switch indicator on severity is 0.877 (95\% CI
-  0.770--0.998), positive in all three models, with tier odds ratios against the prose placebo of
-  1.27 (non-critical --- the $s1$ control is not inert, $p=.019$), 4.60 (critical), and
-  11.21 (critical plus contradiction). These are assigned-severity effects: the audit finds
-  7--16 of 60 critical-arm stimuli donor-unused (7 majority, 11 sheet-visible, 16 blind), and a
-  bounded reclassification sensitivity steepens rather than flattens the $s1$--$s2$ contrast.
-  Linearity is
-  rejected, so the slope summarizes a threshold at $s=2$, not a per-level law. Of 1{,}964 critical-arm
-  switches, at least 21.3\% silently repeat the injected value without flagging
-  (recall-adjusted $\approx$28.5\%), and identifiers and money
-  carry most of that propagation; status fields
-  almost never do. Fewer than half of corrupted episodes return to the reference decision within
-  four steps (22.0--44.6\% Kaplan--Meier secondary on the semantic risk set). Re-serializing the same observation without changing its
-  values already shifts 20.3--45.6\% of G1 calibration decisions (main-run $s=0$ rates are
-  19.8/31.9/38.1\%), so the slope is read over the prose arms
-  $s0$--$s3$ only. Audits were blind-rated label-free (A-008) and checked by a multi-role agent panel,
-  author-overseen. The G0 harvest audit is an AI pre-audit (40/40 adopted) with human verification
-  deferred (D-021), so the freeze stands provisional on that item.
+  identifier. We report a frozen fixed-prefix study of that moment: 800 real $\tau$-bench prefixes
+  (400 airline, 400 retail), each ending after a tool observation, varying the observation across
+  four prose arms: faithful paraphrase, one non-critical change, one plausible critical error, and
+  a critical error with a second contradiction. Three open-weight 8--9B models answer greedily on
+  an 18~GB H200 slice. The pre-registered content-sensitivity claim is not made: three gate
+  criteria failed. Parser failures are 1.55\% against the 1\% threshold, the severity audit's
+  $s2/s3$ decision-changing share is 88.3\% against 90\%, and crude recovery on the semantic risk
+  set is 24.4/32.9/21.3\% by model against 50\% (Kaplan--Meier 28.2/44.6/22.0\% is secondary and
+  censoring-inflated). Within that bound, the pooled conditional-logistic slope of the switch
+  indicator on severity is 0.877 (95\% CI 0.770--0.998), positive in all three models, with tier
+  ORs 1.27/4.60/11.21. These are assigned-severity effects; a row-level realized-severity refit
+  gives 4.45--4.56 and 11.38--11.86 for the critical tiers, intervals overlapping the assigned
+  values. Linearity is rejected, so the slope marks a threshold at $s=2$. At least 21.3\% of
+  1{,}964 critical-arm switches silently repeat the injected value (recall-adjusted
+  $\approx$28.5\%). Re-serializing identical values shifts 20.3--45.6\% of calibration decisions,
+  so format alone matters. Audits were blind and label-free but AI-operated and author-overseen;
+  the G0 human verification remains deferred, so the freeze is provisional.
 \end{abstract}
 
 % Keywords. Each keyword is separated by \sep
 \begin{keywords}
-  Tool-result errors \sep LLM agents \sep Within-prefix design \sep Silent propagation \sep Recovery \sep $\tau$-bench
+  Tool-result errors \sep LLM agents \sep Within-prefix design \sep Silent propagation \sep Recovery \sep tau-bench
 \end{keywords}
 
 \begingroup
@@ -581,23 +571,20 @@ models.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Notation. Symbols are scoped to the equation where they are defined:
-  $S$ is the episode-success indicator in Eq.~\ref{eq:e2e} and the hatted
-  Kaplan--Meier survival estimate in Eq.~\ref{eq:km}; $\alpha$ is the nominal
-  level (Eq.~\ref{eq:mde}) and Krippendorff's agreement (Eq.~\ref{eq:alpha});
-  $\beta$ is the severity slope except for the quadratic coefficient $\xi$ and
-  the fixed power in $z_{0.8}$; $p$ is a prefix except in $p$-values; $h$ is a
-  recovery step (the Weibull hazard rate is $r_W$); $H$ is the horizon (the
-  alternative hypothesis is spelled out). The score, variance, Weibull shape,
-  subset, and intercept collisions are renamed ($T_g$, $W_g$, $\nu$, $I$,
-  $a_{p,m}$).}
+  \caption{Notation. Symbols are scoped to the equation where they are defined.
+  Colliding letters are renamed: $S$ is episode success (Eq.~\ref{eq:e2e}) and
+  Kaplan--Meier survival (Eq.~\ref{eq:km}); $\alpha$ is the nominal level
+  (Eq.~\ref{eq:mde}) and Krippendorff's agreement (Eq.~\ref{eq:alpha}); $\beta$
+  is the severity slope (the quadratic coefficient is $\xi$; the fixed power is
+  $z_{0.8}$); $p$ is a prefix except in $p$-values; $h$ is a recovery step (the
+  Weibull hazard is $r_W$); $H=4$ is the horizon.}
   \label{tab:notation}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{2.1cm}>{\raggedright\arraybackslash}p{11.6cm}}
     \toprule
     \textbf{Symbol} & \textbf{Meaning} \\
     \midrule
-    $p$, $m$ & frozen prefix; target model \\
+    $p$, $m$, $n_a$ & frozen prefix; target model; labeled rows in arm $a$ \\
     $a$ & arm, $a\in\{V,0,1,2,3\}$; $s(a)$ is its severity, with $s(V)$ undefined \\
     $x_p$, $o_p$ & frozen message sequence; real tool observation at its end \\
     $o_p^{(s)}$, $\Pi_s$ & observation under perturbation $\Pi_s$ (Eq.~\ref{eq:perturb}) \\
@@ -610,13 +597,11 @@ models.
     $\gamma_k$, $\xi$ & categorical-severity coefficients; quadratic coefficient (Eq.~\ref{eq:categorical}) \\
     $\Lambda$ & likelihood-ratio statistics $\Lambda_{\mathrm{cat}}$, $\Lambda_{\mathrm{quad}}$ (Eq.~\ref{eq:lrt}) \\
     $T_g$, $W_g$, $E_g$ & conditional score, variance, and mean for group $g$ (Eqs.~\ref{eq:score}--\ref{eq:sandwich}) \\
-    $h$, $H$ & recovery step; recovery horizon ($H=4$) \\
-    $\mu$, $t_{1/2}$ & per-step hazard; half-life $\ln2/\mu$ (Eq.~\ref{eq:recovery}) \\
+    $h$, $H$, $\mu$, $t_{1/2}$ & recovery step; horizon ($H=4$); per-step hazard; half-life $\ln2/\mu$ (Eq.~\ref{eq:recovery}) \\
     $\nu$, $\lambda$ & Weibull shape and scale; $S_W$, $r_W$ its survival and hazard rate (Eq.~\ref{eq:weibull}) \\
     $\hat S_{\mathrm{KM}}(h)$, RMST & Kaplan--Meier survival estimate; restricted mean survival (Eq.~\ref{eq:km}) \\
     $\tau$, $\theta_{\mathrm{e2e}}$ & an episode; the conventional end-to-end estimand (Eq.~\ref{eq:e2e}) \\
     $v^{\ast}$, $\mathcal{V}(d)$, $F$ & injected false value; typed values a decision asserts; flag indicator (Eqs.~\ref{eq:switch}--\ref{eq:silent}) \\
-    $n_a$ & labeled rows in arm $a$ \\
     $p_o$, $p_e$ & observed and chance agreement (Eq.~\ref{eq:kappa}) \\
     \bottomrule
   \end{tabular}
@@ -647,32 +632,6 @@ gap is the historical \texttt{get\_user\_details} \texttt{province}/\texttt{stat
 which is disclosed in \texttt{docs/DECISIONS.md}; the replay population is the eligible
 non-profile pool.
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Sampling frame and selected sample from the pinned $\tau$-bench frame.}
-  \label{tab:supply}
-  \small
-  \begin{tabular}{>{\raggedright\arraybackslash}p{6.6cm}rr}
-    \toprule
-    \textbf{Stage} & \textbf{Count} & \textbf{Note} \\
-    \midrule
-    Source trajectories                 & 1{,}980 & four donor files \\
-    Post-tool candidates                & 13{,}605 & tool message + assistant reply \\
-    JSON-parseable observations         & 11{,}318 & \\
-    Profile/PII-tool candidates excluded & 3{,}692 & four excluded tools \\
-    Eligible value-used                 & 5{,}516 & airline 1{,}434; retail 4{,}082 \\
-    Replay-matched (eligible pool)      & 5{,}511 & 99.91\% \\
-    \quad full-pool replay              & 87.39\% & schema drift, D-011 \\
-    Cap-10 pool                         & 1{,}586 & airline 442; retail 1{,}144 \\
-    Selected (primary + reserve)        & 880 & seed 20261108 \\
-    \quad primary                       & 800 & 400 airline; 400 retail \\
-    \quad reserve                       & 80 & 40 airline; 40 retail \\
-    Calibration prefixes                & 60 & 30 airline; 30 retail; disjoint \\
-    Rendered arms                       & 4{,}400 & 880 $\times$ 5 \\
-    Perturbation records                & 2{,}640 & 880 each for $s=1,2,3$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 Sampling is stratified by domain, donor, step-index bucket, and tool family, with seed 20261108.
 The study selected 880 prefixes: 800 primary (400 airline, 400 retail) plus 80 reserve (40
@@ -716,7 +675,6 @@ and Figure~\ref{fig:arms} shows the construction for one prefix.
 \end{figure}
 
 \subsection{Perturbation records and the severity rubric}
-
 
 
 The construction rules are pre-specified. For $s=1$, the perturbed field must be absent from the
@@ -777,12 +735,10 @@ one rubric revision, the study downgrades to action-level $Y^{A}$ only and does 
 content-sensitivity claim.
 
 
-
 Figure~\ref{fig:pipeline} shows how the stages connect, from the pinned upstream checkout to the
 ledger row that carries each reported number.
 
 \subsection{Next-decision prompt}
-
 
 
 The prompt is version 3 (decision D-020) and is frozen before calibration. It renders the call
@@ -855,9 +811,7 @@ tiny forward passes; it cannot host an 8--9B AWQ model at a 24k context.
 \end{figure}
 
 
-
 \subsection{Decision signature and labels}
-
 
 
 For prefix $p$, model $m$, and severity $s \in \{0,1,2,3\}$, let $d=d_{p,m,s}$ and
@@ -1117,24 +1071,6 @@ G0 through G4. G0 guards supply and freeze integrity, G1 the calibration harness
 budget, and G3 and G4 the slope and recovery claims.
 \begin{table}[pos=htbp]
   \centering
-  \caption{Sequential gates and stop rules.}
-  \label{tab:gates}
-  \footnotesize
-  \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{>{\raggedright\arraybackslash}p{0.9cm}>{\raggedright\arraybackslash}p{9.6cm}>{\raggedright\arraybackslash}p{4.2cm}}
-    \toprule
-    \textbf{Gate} & \textbf{Pass criterion} & \textbf{If it fails} \\
-    \midrule
-    G0 & At least 880 eligible; at least 440 per domain before audit and 400 after audit; replay at least 98\%; 40-item audit at least 36/40; freeze hash stable. & Fall back to 500 prefixes and 2 models, or stop. \\
-    G1 & Per model: parse at least 95\%; placebo jitter at most 20\%; $s=3$ switch 10--80\%; format refusal below 5\%. & Fix prompt or parser and rerun; no main-run start. \\
-    G2 & Stop at 45 GPU-hours or 200~GB storage, whichever comes first; ledger complete. & Analyse completed shards; disclose the shortfall. \\
-    G3 & Pooled $\beta>0$; positive in at least 2 of 3 models with the same sign; severity $\alpha \ge .75$; outcome $\kappa \ge .80$ (or adjudicated at least .70 with downgrade); recovery $\kappa \ge .75$; silent-propagation PPV at least .90; parser failure below 1\% (protocol criterion from \texttt{docs/GATES.md}, absent from the frozen prereg G3 row; A-011). & Measurement paper; no causal or content-sensitivity claim. \\
-    G4 & At least 50\% of the $s=3$ risk set recovers by $H=4$; Weibull shape not rejected at $p \ge .01$. & Report RMST and the curve; $t_{1/2}$ exploratory only. \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-\begin{table}[pos=htbp]
-  \centering
   \caption{Gate outcomes as executed. Origin marks whether the criterion is in the frozen
   preregistration or was introduced by protocol/amendment. Three gate criteria failed (parser,
   severity $s2/s3$, recovery); the parser criterion's provenance is A-011, and the original G1
@@ -1238,7 +1174,6 @@ matrix construction.
 \end{algorithm}
 
 
-
 \paragraph{Environment}.\
 
 All confirmatory inference runs on the approved university H200 MIG 1g.18gb slice: 18~GB of
@@ -1337,27 +1272,6 @@ across all five arms to estimate decoding and prompt-format noise; they do not a
 primary estimate. The executed total is 21{,}611 rows at about 8.9 GPU-hours of the 45-hour
 allocation (D-034 reconstruction, upper bound $\approx$8.95~h; \texttt{docs/DECISIONS.md}).
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Planned vs executed generation envelope. Recovery continuation is conditional on
-  switching at the injected step, so planned recovery rows were an upper bound. GPU total is
-  the D-034 stage-span reconstruction ($\approx$8.9~h of the 45-hour cap).}
-  \label{tab:envelope}
-  \small
-  \begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{4.6cm}rr}
-    \toprule
-    \textbf{Component} & \textbf{Planned calculation} & \textbf{Planned} & \textbf{Executed} \\
-    \midrule
-    Base decisions            & $800 \times 5 \times 3$ (run: $880 \times 5 \times 3$) & 12{,}000 & 13{,}200 \\
-    Recovery, transient       & $800 \times 2 \times 4 \times 3$ (at-risk only)       & 19{,}200 & 6{,}430 \\
-    Recovery, persistent      & $200 \times 1 \times 4 \times 3$ (at-risk only)       & 2{,}400  & 781 \\
-    Jitter repeats            & $80 \times 5 \times 3$                                & 1{,}200  & 1{,}200 \\
-    \midrule
-    Total                     &                                                       & 34{,}800 & 21{,}611 \\
-    GPU-hours                 & stop at 45 GPU-hours                                & ---       & $\approx$8.9 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \paragraph{Execution, ledger, and stop rules}.\
 
@@ -1421,24 +1335,6 @@ coarse action coding, and no recovery data, and it cannot distinguish a graded l
 of flips. Its role is to show that the manipulation is runnable and that the confirmatory design
 is worth the GPU time.
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Pilot results on 60 synthetic prefixes; excluded from confirmatory analysis.}
-  \label{tab:pilot}
-  \small
-  \begin{tabular}{>{\raggedright\arraybackslash}p{7.4cm}r}
-    \toprule
-    \textbf{Quantity} & \textbf{Result} \\
-    \midrule
-    Consult rate                              & 54/60 = 90.0\% \\
-    Placebo jitter (placebo vs truthful)      & 0/60 = 0\% \\
-    Error switch (error vs truthful)          & 5/60 = 8.3\% \\
-    Gap, 95\% CI                              & 8.3 pp [1.3, 15.3] \\
-    McNemar                                   & $b=5$, $c=0$; exact $p=.0625$ \\
-    Human spot-check                          & 12/12 labels agree \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \paragraph{G0 harvest and freeze status}.\
 
@@ -1464,23 +1360,6 @@ comparison (V vs s0) is reported separately as \emph{format jitter} and is not a
 effect is large (20.3--45.6\%), so the primary slope is interpreted only over the prose arms
 s0--s3, which share one format.
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{G1 calibration on 60 disjoint prefixes per model. The gated placebo is the
-  format-controlled $s0$-vs-$s1$ negative control (A-004, post-freeze and not blind per D-041);
-  the V-vs-$s0$ column is the failed original criterion, shown for format sensitivity and not gated.}
-  \label{tab:g1}
-  \small
-  \begin{tabular}{lccccc}
-    \toprule
-    \textbf{Model} & \textbf{Parse} & \textbf{Neg.\ control} & \textbf{Format (V/s0)} & \textbf{s=3 switch} & \textbf{Refusal} \\
-    \midrule
-    Qwen3.5-9B     & 98.3\% (295/300) & 11.9\% & 20.3\% & 35.6\% & 1.7\% \\
-    Ministral-3-8B & 100\% (300/300)  & 13.3\% & 36.7\% & 55.0\% & 0.0\% \\
-    Llama-3.1-8B   & 96.7\% (290/300) & 10.5\% & 45.6\% & 56.1\% & 0.0\% \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \subsection{Primary severity--switch estimate}
 
@@ -1624,9 +1503,12 @@ primary per model ($p=1.1\times10^{-7}$, $2.6\times10^{-10}$,
 $5.8\times10^{-5}$) and secondary pooled ($p = 2.1\times10^{-20}$ over 2{,}251
 model-prefix pairs); the pooled value survives a prefix-cluster design-effect grid to
 $\rho=0.5$ and a model-stratified check (Section~\ref{sec:method};
-\texttt{artifacts/analysis/inference\_robustness.json}). No new bootstrap LRT was run
-(row-level refits need the run ledgers, which are not in the repo); the resampling
-robustness is the 2{,}000-replicate prefix-cluster bootstrap tier-OR intervals, whose
+\texttt{artifacts/analysis/inference\_robustness.json}). Row-level refits from the local ledgers
+reproduce these tests with a cluster-robust null bootstrap (categorical 25.03, quadratic 10.31;
+$p<.01$ at the 1/151 resolution floor) and supply design-robust Manski bounds for the $s3-s2$ and
+$s3-s0$ contrasts ([.004,.115] and [.101,.209], both excluding zero;
+\texttt{artifacts/analysis/rowlevel\_refits.json}); the resampling
+robustness here is the 2{,}000-replicate prefix-cluster bootstrap tier-OR intervals, whose
 $s2$/$s3$ intervals exclude one in every model while the Qwen $s1$ interval includes one. The pattern is a threshold at $s2$, not a graded per-level law. Domain
 slopes are 0.74 [0.59, 0.93] (airline) and 0.99 [0.83, 1.17] (retail); the domain interaction is
 $p=.035$ (exploratory, driven by Ministral) and the donor interaction is null ($p=.61$). Under
@@ -1644,26 +1526,6 @@ decision-changing (majority; Wilson 95\% [3.5, 25.6]\%), so the non-critical arm
 realized critical content at the margin. The threshold reading is therefore a gradient from
 $s0$ through a contaminated $s1$ to $s2$, steepening at $s2$, not a step from a true zero.
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Linearity and paired diagnostics by sample. Per-model McNemar tests are the
-  primary paired contrast; the pooled McNemar $p$ is secondary (prefix-cluster caveat in
-  Section~\ref{sec:method}).}
-  \label{tab:diagnostics}
-  \footnotesize
-  \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{lccccc}
-    \toprule
-    \textbf{Sample} & \textbf{Cat.\ LRT $\chi^2(2)$} & \textbf{$p$} & \textbf{Quadratic $b$ (SE)} & \textbf{$p$} & \textbf{McNemar $b/c$ ($p$)} \\
-    \midrule
-    Qwen3.5-9B     & 18.29 & $1.0\times10^{-4}$ & 0.171 (0.067) & .011 & 70/20 ($1.1\times10^{-7}$) \\
-    Ministral-3-8B & 8.18  & .017               & 0.135 (0.058) & .020 & 73/15 ($2.6\times10^{-10}$) \\
-    Llama-3.1-8B   & 2.59  & .274               & 0.101 (0.052) & .054 & 47/15 ($5.8\times10^{-5}$) \\
-    \midrule
-    Pooled         & 25.03 & $3.7\times10^{-6}$ & 0.143 (0.036) & $7.4\times10^{-5}$ & 190/50 ($2.1\times10^{-20}$) \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \paragraph{Missingness and the population-average contrast}.\
 
@@ -1691,56 +1553,6 @@ Parsed rows are 776--789 per arm (Table~\ref{tab:missing}); labeled rows are 740
 after the V-unparsed filter
 (\texttt{artifacts/analysis/g3\_analysis.json}).
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Analysis coverage by model and arm.}
-  \label{tab:missing}
-  \small
-  \begin{tabular}{lccccr}
-    \toprule
-    \textbf{Model} & \textbf{s0} & \textbf{s1} & \textbf{s2} & \textbf{s3} & \textbf{V-unparsed (\%)} \\
-    \midrule
-    Qwen3.5-9B     & 97.4\% & 97.4\% & 97.1\% & 97.0\% & 4.9\% \\
-    Ministral-3-8B & 98.0\% & 97.8\% & 97.8\% & 97.8\% & 3.4\% \\
-    Llama-3.1-8B   & 98.6\% & 98.6\% & 98.5\% & 98.3\% & 2.3\% \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Switch typology across prefix-by-model strata. A missing labelled arm is coded as a
-  non-switch, so the four classes sum to the 2{,}297 labelled strata.}
-  \label{tab:typology}
-  \small
-  \begin{tabular}{lrrrr}
-    \toprule
-    \textbf{Sample} & \textbf{Never} & \textbf{Always} & \textbf{Dose-responsive} & \textbf{Placebo switcher} \\
-    \midrule
-    Qwen3.5-9B     & 429 (56.7\%) & 111 (14.7\%) & 161 (21.3\%) & 56 (7.4\%) \\
-    Ministral-3-8B & 320 (41.7\%) & 190 (24.7\%) & 168 (21.9\%) & 90 (11.7\%) \\
-    Llama-3.1-8B   & 350 (45.3\%) & 248 (32.1\%) & 107 (13.9\%) & 67 (8.7\%) \\
-    \midrule
-    Pooled         & 1{,}099 (47.8\%) & 549 (23.9\%) & 436 (19.0\%) & 213 (9.3\%) \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Descriptive switch rates by arm and model.}
-  \label{tab:armrates}
-  \small
-  \begin{tabular}{lrrrr}
-    \toprule
-    \textbf{Model} & \textbf{s=0} & \textbf{s=1} & \textbf{s=2} & \textbf{s=3} \\
-    \midrule
-    Qwen3.5-9B     & 19.8\% & 19.9\% & 31.0\% & 38.4\% \\
-    Ministral-3-8B & 31.9\% & 33.6\% & 44.4\% & 51.9\% \\
-    Llama-3.1-8B   & 38.1\% & 39.7\% & 44.8\% & 49.0\% \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \begin{figure}[pos=htbp]
   \centering
@@ -1802,11 +1614,15 @@ ratios treating donor-unused critical-arm rows as switching at the pooled $s1$ r
 observed marginal ORs of 1.56 ($s2$) and 2.02 ($s3$) rise to 1.64/2.19, 1.70/2.31, and
 1.79/2.52 under $m=7/60$, $11/60$, and $16/60$, and the marginal $s1$--$s2$ gap widens from
 9.0 to 12.3 points at the blind-verifier bound. Correcting the
-assigned doses therefore steepens the $s1$--$s2$ contrast under every pass; the observed threshold is not an
-artifact of this audit failure. The estimand is labelled assigned-severity throughout: the
-conditional tier ORs 1.27/4.60/11.21 are contrasts over assigned arms, attenuated
-(conservative) for realized criticality, and the per-level magnitudes are read as
-descriptive rather than as a calibrated dose--response function.
+assigned doses therefore steepens the marginal $s1$--$s2$ contrast under every pass; that marginal
+adjustment is superseded as a correction by the row-level refit. The estimand is labelled
+assigned-severity throughout: the conditional tier ORs 1.27/4.60/11.21 are contrasts over assigned
+arms, and a row-level realized-severity refit gives 4.45--4.56 ($s2$) and 11.38--11.86 ($s3$)
+across the three audit passes, against the assigned 4.60 and 11.21, with every interval overlapping
+the assigned estimate; the assigned odds ratios are therefore not materially attenuated. The
+per-level magnitudes are read as descriptive rather than as a calibrated dose--response function
+(\texttt{artifacts/analysis/rowlevel\_refits.json}, which records SHA-256 for the 15 ledger files
+and 11 auxiliary inputs it reads).
 
 An agent verification panel re-derived the ratings from the same packets (D-043; Table~\ref{tab:panel}). On outcome, the
 verifier agreed with the blind majority on 158/160 items and confirmed the silent-propagation PPV
@@ -1830,22 +1646,6 @@ future work; until then the agreement statistics are reproducibility evidence, n
 validation. The panel record is
 \texttt{artifacts/audit/verification/panel\_record.json}.
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Agent verification panel agreement and corrections.}
-  \label{tab:panel}
-  \small
-  \begin{tabular}{lrrl}
-    \toprule
-    \textbf{Audit} & \textbf{Agreement} & \textbf{Corrections} & \textbf{Panel check} \\
-    \midrule
-    Outcome            & 158/160 & 2  & PPV 9/9; recall .75 \\
-    Recovery           & 66/80   & 14 & automatic endpoint/step 80/80 \\
-    Severity (visible) & 114/120 & 6  & $s2/s3$ decision share 81.7\% \\
-    Severity (blind)   & 108/120 & 12 & $s2/s3$ decision share 73.3\% \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \paragraph{Silent propagation and the outcome decomposition}.\
 
@@ -1936,26 +1736,6 @@ rather than catching it. This does not score task success, but it converts devia
 harm-direction evidence: nearly two-thirds of critical-arm switches adopt the injected value
 or change action where the design anticipated harm, while explicit skepticism is the exception.
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Wrong-direction endpoint on the 1{,}964 critical-arm switches. Wrong-direction is
-  the exclusive action-switch or silent-propagation class; caught is flag-only. Intervals are
-  Wilson 95\%.}
-  \label{tab:wrongdir}
-  \small
-  \begin{tabular}{lrrr}
-    \toprule
-    \textbf{Sample} & \textbf{Switches} & \textbf{Wrong-direction} & \textbf{Caught} \\
-    \midrule
-    Pooled       & 1{,}964 & 1{,}258 (64.1\% [61.9, 66.1]) & 30 (1.5\% [1.1, 2.2]) \\
-    $s=2$        & 911     & 598 (65.6\% [62.5, 68.7])     & 14 (1.5\%) \\
-    $s=3$        & 1{,}053 & 660 (62.7\% [59.7, 65.5])     & 16 (1.5\%) \\
-    Qwen3.5-9B     & 516   & 374 (72.5\% [68.5, 76.2])     & 21 (4.1\%) \\
-    Ministral-3-8B & 726   & 462 (63.6\% [60.1, 67.1])     & 9 (1.2\%) \\
-    Llama-3.1-8B   & 722   & 422 (58.4\% [54.8, 62.0])     & 0 (0.0\%) \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \subsection{Task-utility endpoint (exploratory)}
 
@@ -2002,31 +1782,10 @@ coarse. Adequacy is judged on the next decision only, not rollout reward. The si
 same-session protocol cannot support population claims; the Wilson intervals are
 measurement uncertainty on this sample, not a general harm rate.
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Task-utility endpoint (exploratory; \texttt{artifacts/analysis/new\_evidence.json}).
-  Agent adequacy on 115 judgeable $s=0$/$s=3$ pairs (120 sampled; 5 pairs carry a 9) and
-  deterministic donor-path adherence on all 1{,}039 switched pairs. Intervals are Wilson
-  95\%; McNemar is the paired exact test.}
-  \label{tab:utility}
-  \small
-  \begin{tabular}{lrrrr}
-    \toprule
-    \textbf{Sample} & \textbf{n} & \textbf{Adequate} & \textbf{Degraded} & \textbf{Harmful} \\
-    \midrule
-    Agent $s=0$ & 115 & 55.7\% [46.5, 64.4] & 28.7\% [21.2, 37.5] & 15.7\% [10.1, 23.4] \\
-    Agent $s=3$ & 115 & 28.7\% [21.2, 37.6] & 33.0\% [25.1, 42.1] & 38.3\% [29.9, 47.4] \\
-    \midrule
-    \textbf{Sample} & \textbf{n} & \textbf{Match $s=0$} & \textbf{Match $s=3$} & \textbf{McNemar $p$} \\
-    \midrule
-    Donor adherence & 1{,}039 & 29.1\% [26.4, 31.9] & 28.9\% [26.2, 31.7] & .89 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \paragraph{Recovery}.\
 
-Recovery is reported as crude cumulative incidence Events/n (primary), with
+Recovery is reported as crude cumulative incidence Events/$n$ (primary), with
 Kaplan--Meier $1-S_{\mathrm{KM}}(4)$ as a secondary, RMST over the four-step horizon, and an
 exponential half-life only if G4 passes (Tables~\ref{tab:recovery} and~\ref{tab:recovery_all},
 Figure~\ref{fig:recovery}). The v2 re-estimation rebuilds the risk set from the semantic
@@ -2078,14 +1837,15 @@ half-life is labelled exploratory. The curves flatten before $H=4$; recovery est
 \begin{table}[pos=htbp]
   \centering
   \caption{Recovery on the semantic risk sets at $H=4$ (v2 re-estimation;
-  \texttt{artifacts/analysis/g4\_recovery\_v2.json}). Recovered is crude Events/n (primary);
-  KM is the Kaplan--Meier secondary.$^{\ast}$}
+  \texttt{artifacts/analysis/g4\_recovery\_v2.json}). Recovered is crude Events/$n$ (primary);
+  $1-S_{\mathrm{KM}}(4)$ is the recovery complement of the Kaplan--Meier survival estimate
+  (secondary).$^{\ast}$}
   \label{tab:recovery}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
   \begin{tabular}{llrrrrrrr}
     \toprule
-    \textbf{Model} & \textbf{Risk set} & $n$ & \textbf{Events} & \textbf{Censored} & \textbf{Recovered (crude)} & \textbf{KM} & \textbf{RMST} & \textbf{$t_{1/2}$ (Weibull $p$)} \\
+    \textbf{Model} & \textbf{Risk set} & $n$ & \textbf{Events} & \textbf{Censored} & \textbf{Recovered (crude)} & \textbf{$1-S_{\mathrm{KM}}(4)$} & \textbf{RMST} & \textbf{$t_{1/2}$ (Weibull $p$)} \\
     \midrule
     Qwen3.5-9B     & $s=2$ & 185 & 47  & 138 & 25.4\% & 28.9\% & 3.11 & 7.7 (.019) \\
                    & $s=3$ & 221 & 54  & 167 & 24.4\% & 28.2\% & 3.16 & 8.0 (.0047) \\
@@ -2107,29 +1867,13 @@ groups). The hash set decomposes exactly into the semantic events plus hash-only
 and recovered at 41.9--88.9\%, which inflates the v1 curve. The v1 values are retained only as
 this reconciliation record and are not a primary estimate in this paper.
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Recovery by $H=4$ across model and risk-set groups (Kaplan--Meier secondary;
-  crude primary in Table~\ref{tab:recovery}; semantic risk sets).}
-  \label{tab:recovery_all}
-  \small
-  \begin{tabular}{lrrr}
-    \toprule
-    \textbf{Model} & \textbf{Transient $s=2$} & \textbf{Transient $s=3$} & \textbf{Persistent $s=3$} \\
-    \midrule
-    Qwen3.5-9B     & 28.9\% (185) & 28.2\% (221) & 35.2\% (63) \\
-    Ministral-3-8B & 47.7\% (311) & 44.6\% (353) & 49.3\% (85) \\
-    Llama-3.1-8B   & 23.6\% (345) & 22.0\% (376) & 24.9\% (92) \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.98\linewidth]{figures/fig9.png}
-  \caption{Kaplan--Meier survival (secondary; y-axis from 0.55) on the transient semantic
-  risk sets by model (Table~\ref{tab:recovery}); curves are the v2 re-estimation in
-  \texttt{artifacts/analysis/g4\_recovery\_v2.json}.}
+  \caption{Cumulative recovery $1-S_{\mathrm{KM}}(t)$ (secondary; full 0--1 scale) on the
+  transient semantic risk sets by model (Table~\ref{tab:recovery}); curves are the v2
+  re-estimation in \texttt{artifacts/analysis/g4\_recovery\_v2.json}.}
   \label{fig:recovery}
 \end{figure}
 
@@ -2148,22 +1892,6 @@ strata are reported with the diagnostics. Heterogeneity is reported as an interv
 ranking, and no model is declared more or less sensitive than another. Sensitivity fits trace
 to the same artifact, with every point estimate positive.
 
-\begin{table}[pos=htbp]
-  \centering
-  \caption{Pooled slope under pre-registered sensitivity codings.}
-  \label{tab:sensitivity}
-  \small
-  \begin{tabular}{lcc}
-    \toprule
-    \textbf{Analysis} & $\hat\beta$ & \textbf{95\% CI} \\
-    \midrule
-    Primary ($s=0,\dots,3$) & 0.877 & [0.770, 0.998] \\
-    Strict signature        & 0.876 & [0.768, 0.996] \\
-    Lenient action only     & 0.434 & [0.296, 0.574] \\
-    Exclude placebo ($s=1,\dots,3$) & 1.031 & [0.881, 1.193] \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \begin{figure}[pos=htbp]
   \centering
@@ -2173,6 +1901,7 @@ to the same artifact, with every point estimate positive.
 \end{figure}
 
 
+\section{Discussion}\label{sec:discussion}
 
 \paragraph{Conditional interpretation}.\
 
@@ -2195,9 +1924,12 @@ and +6.2 percentage points for $s2-s0$, $s3-s0$, and $s3-s2$) answer the populat
 question and are reported separately from the within-stratum slope. Second, the assigned severity
 is measured rather than perfectly manipulated. The audit finds 7--16 of 60 donor-unused items in the critical
 arms and 3/30 decision-changing items in $s1$, so $\beta$ is a weighted contrast between intended and
-realized doses, not a clean per-level effect parameter; the bounded sensitivity in
-\texttt{artifacts/analysis/severity\_sensitivity.json} shows correction steepens the contrast. The sign is stable across every audit pass
-and coding, but the per-level magnitudes should not be read as a calibrated dose--response law. The decomposition changes the interpretation of a positive slope. A slope driven by detection is
+realized doses, not a clean per-level effect parameter. The row-level realized-severity refit leaves
+the assigned odds ratios essentially unchanged (4.45--4.56 and 11.38--11.86 versus 4.60/11.21, every
+interval overlapping), so attribution to assigned severity is retained; the earlier point-only
+dilution adjustment is superseded, and the per-level magnitudes are not materially attenuated. The
+sign is stable across every audit pass and coding, but the per-level magnitudes should not be read
+as a calibrated dose--response law. The decomposition changes the interpretation of a positive slope. A slope driven by detection is
 a slope in which the agent notices the conflict; a slope driven by silent propagation is a slope
 in which the agent absorbs the error. The two have opposite engineering implications even though
 they produce the same value of $Y$. That is why the paper reports $Y^{U}$, $Y^{F}$, and $Y^{A}$
@@ -2243,7 +1975,7 @@ means the manipulation is too weak in this population. Opposite signs across mod
 positive slope in fewer than two of three, fail the replication gate. Each of these is
 pre-registered, so none of them can be reinterpreted after the fact as a discovery.
 
-
+\section{Limitations}\label{sec:limitations}
 
 The limitations are known in advance and are part of the claim boundary. $\tau$-bench tasks are
 public and may be memorized by target models, so baseline reliance could be inflated; the
@@ -2301,6 +2033,291 @@ as failures. The
 contribution is the dataset, the within-prefix design, the audit procedure that caught a labeling
 defect and corrected it before the reported analysis, and a measured shift among movers with its
 stated limits; because three gate criteria failed, no causal or content-sensitivity claim is made.
+
+\clearpage
+\section*{Supplementary tables}\label{sec:supplement}
+
+Tables S1--S14 collect the ancillary records moved out of the main text: sampling frame and
+gate criteria, the generation envelope, pilot screening, G1 calibration, diagnostics,
+missingness, switch typology and per-arm rates, the verification panel, wrong-direction
+coding, the exploratory task-utility endpoint, all recovery groups, and sensitivity codings.
+Supplementary tables use an S prefix and are cited from the main text by label.
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Sampling frame and selected sample from the pinned $\tau$-bench frame.}
+  \label{tab:supply}
+  \small
+  \begin{tabular}{>{\raggedright\arraybackslash}p{6.6cm}rr}
+    \toprule
+    \textbf{Stage} & \textbf{Count} & \textbf{Note} \\
+    \midrule
+    Source trajectories                 & 1{,}980 & four donor files \\
+    Post-tool candidates                & 13{,}605 & tool message + assistant reply \\
+    JSON-parseable observations         & 11{,}318 & \\
+    Profile/PII-tool candidates excluded & 3{,}692 & four excluded tools \\
+    Eligible value-used                 & 5{,}516 & airline 1{,}434; retail 4{,}082 \\
+    Replay-matched (eligible pool)      & 5{,}511 & 99.91\% \\
+    \quad full-pool replay              & 87.39\% & schema drift, D-011 \\
+    Cap-10 pool                         & 1{,}586 & airline 442; retail 1{,}144 \\
+    Selected (primary + reserve)        & 880 & seed 20261108 \\
+    \quad primary                       & 800 & 400 airline; 400 retail \\
+    \quad reserve                       & 80 & 40 airline; 40 retail \\
+    Calibration prefixes                & 60 & 30 airline; 30 retail; disjoint \\
+    Rendered arms                       & 4{,}400 & 880 $\times$ 5 \\
+    Perturbation records                & 2{,}640 & 880 each for $s=1,2,3$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Sequential gates and stop rules.}
+  \label{tab:gates}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{>{\raggedright\arraybackslash}p{0.9cm}>{\raggedright\arraybackslash}p{9.6cm}>{\raggedright\arraybackslash}p{4.2cm}}
+    \toprule
+    \textbf{Gate} & \textbf{Pass criterion} & \textbf{If it fails} \\
+    \midrule
+    G0 & At least 880 eligible; at least 440 per domain before audit and 400 after audit; replay at least 98\%; 40-item audit at least 36/40; freeze hash stable. & Fall back to 500 prefixes and 2 models, or stop. \\
+    G1 & Per model: parse at least 95\%; placebo jitter at most 20\%; $s=3$ switch 10--80\%; format refusal below 5\%. & Fix prompt or parser and rerun; no main-run start. \\
+    G2 & Stop at 45 GPU-hours or 200~GB storage, whichever comes first; ledger complete. & Analyse completed shards; disclose the shortfall. \\
+    G3 & Pooled $\beta>0$; positive in at least 2 of 3 models with the same sign; severity $\alpha \ge .75$; outcome $\kappa \ge .80$ (or adjudicated at least .70 with downgrade); recovery $\kappa \ge .75$; silent-propagation PPV at least .90; parser failure below 1\% (protocol criterion from \texttt{docs/GATES.md}, absent from the frozen prereg G3 row; A-011). & Measurement paper; no causal or content-sensitivity claim. \\
+    G4 & At least 50\% of the $s=3$ risk set recovers by $H=4$; Weibull shape not rejected at $p \ge .01$. & Report RMST and the curve; $t_{1/2}$ exploratory only. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Planned vs executed generation envelope. Recovery continuation is conditional on
+  switching at the injected step, so planned recovery rows were an upper bound. GPU total is
+  the D-034 stage-span reconstruction ($\approx$8.9~h of the 45-hour cap).}
+  \label{tab:envelope}
+  \small
+  \begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{4.6cm}rr}
+    \toprule
+    \textbf{Component} & \textbf{Planned calculation} & \textbf{Planned} & \textbf{Executed} \\
+    \midrule
+    Base decisions            & $800 \times 5 \times 3$ (run: $880 \times 5 \times 3$) & 12{,}000 & 13{,}200 \\
+    Recovery, transient       & $800 \times 2 \times 4 \times 3$ (at-risk only)       & 19{,}200 & 6{,}430 \\
+    Recovery, persistent      & $200 \times 1 \times 4 \times 3$ (at-risk only)       & 2{,}400  & 781 \\
+    Jitter repeats            & $80 \times 5 \times 3$                                & 1{,}200  & 1{,}200 \\
+    \midrule
+    Total                     &                                                       & 34{,}800 & 21{,}611 \\
+    GPU-hours                 & stop at 45 GPU-hours                                & ---       & $\approx$8.9 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Pilot results on 60 synthetic prefixes; excluded from confirmatory analysis.}
+  \label{tab:pilot}
+  \small
+  \begin{tabular}{>{\raggedright\arraybackslash}p{7.4cm}r}
+    \toprule
+    \textbf{Quantity} & \textbf{Result} \\
+    \midrule
+    Consult rate                              & 54/60 = 90.0\% \\
+    Placebo jitter (placebo vs truthful)      & 0/60 = 0\% \\
+    Error switch (error vs truthful)          & 5/60 = 8.3\% \\
+    Gap, 95\% CI                              & 8.3 pp [1.3, 15.3] \\
+    McNemar                                   & $b=5$, $c=0$; exact $p=.0625$ \\
+    Human spot-check                          & 12/12 labels agree \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{G1 calibration on 60 disjoint prefixes per model. The gated placebo is the
+  format-controlled $s0$-vs-$s1$ negative control (A-004, post-freeze and not blind per D-041);
+  the V-vs-$s0$ column is the failed original criterion, shown for format sensitivity and not gated.}
+  \label{tab:g1}
+  \small
+  \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Model} & \textbf{Parse} & \textbf{Neg.\ control} & \textbf{Format (V/s0)} & \textbf{s=3 switch} & \textbf{Refusal} \\
+    \midrule
+    Qwen3.5-9B     & 98.3\% (295/300) & 11.9\% & 20.3\% & 35.6\% & 1.7\% \\
+    Ministral-3-8B & 100\% (300/300)  & 13.3\% & 36.7\% & 55.0\% & 0.0\% \\
+    Llama-3.1-8B   & 96.7\% (290/300) & 10.5\% & 45.6\% & 56.1\% & 0.0\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Linearity and paired diagnostics by sample. Per-model McNemar tests are the
+  primary paired contrast; the pooled McNemar $p$ is secondary (prefix-cluster caveat in
+  Section~\ref{sec:method}).}
+  \label{tab:diagnostics}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Sample} & \textbf{Cat.\ LRT $\chi^2(2)$} & \textbf{$p$} & \textbf{Quadratic $b$ (SE)} & \textbf{$p$} & \textbf{McNemar $b/c$ ($p$)} \\
+    \midrule
+    Qwen3.5-9B     & 18.29 & $1.0\times10^{-4}$ & 0.171 (0.067) & .011 & 70/20 ($1.1\times10^{-7}$) \\
+    Ministral-3-8B & 8.18  & .017               & 0.135 (0.058) & .020 & 73/15 ($2.6\times10^{-10}$) \\
+    Llama-3.1-8B   & 2.59  & .274               & 0.101 (0.052) & .054 & 47/15 ($5.8\times10^{-5}$) \\
+    \midrule
+    Pooled         & 25.03 & $3.7\times10^{-6}$ & 0.143 (0.036) & $7.4\times10^{-5}$ & 190/50 ($2.1\times10^{-20}$) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Analysis coverage by model and arm.}
+  \label{tab:missing}
+  \small
+  \begin{tabular}{lccccr}
+    \toprule
+    \textbf{Model} & \textbf{s0} & \textbf{s1} & \textbf{s2} & \textbf{s3} & \textbf{V-unparsed (\%)} \\
+    \midrule
+    Qwen3.5-9B     & 97.4\% & 97.4\% & 97.1\% & 97.0\% & 4.9\% \\
+    Ministral-3-8B & 98.0\% & 97.8\% & 97.8\% & 97.8\% & 3.4\% \\
+    Llama-3.1-8B   & 98.6\% & 98.6\% & 98.5\% & 98.3\% & 2.3\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Switch typology across prefix-by-model strata. A missing labelled arm is coded as a
+  non-switch, so the four classes sum to the 2{,}297 labelled strata.}
+  \label{tab:typology}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    \textbf{Sample} & \textbf{Never} & \textbf{Always} & \textbf{Dose-responsive} & \textbf{Placebo switcher} \\
+    \midrule
+    Qwen3.5-9B     & 429 (56.7\%) & 111 (14.7\%) & 161 (21.3\%) & 56 (7.4\%) \\
+    Ministral-3-8B & 320 (41.7\%) & 190 (24.7\%) & 168 (21.9\%) & 90 (11.7\%) \\
+    Llama-3.1-8B   & 350 (45.3\%) & 248 (32.1\%) & 107 (13.9\%) & 67 (8.7\%) \\
+    \midrule
+    Pooled         & 1{,}099 (47.8\%) & 549 (23.9\%) & 436 (19.0\%) & 213 (9.3\%) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Descriptive switch rates by arm and model.}
+  \label{tab:armrates}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    \textbf{Model} & \textbf{s=0} & \textbf{s=1} & \textbf{s=2} & \textbf{s=3} \\
+    \midrule
+    Qwen3.5-9B     & 19.8\% & 19.9\% & 31.0\% & 38.4\% \\
+    Ministral-3-8B & 31.9\% & 33.6\% & 44.4\% & 51.9\% \\
+    Llama-3.1-8B   & 38.1\% & 39.7\% & 44.8\% & 49.0\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Agent verification panel agreement and corrections.}
+  \label{tab:panel}
+  \small
+  \begin{tabular}{lrrl}
+    \toprule
+    \textbf{Audit} & \textbf{Agreement} & \textbf{Corrections} & \textbf{Panel check} \\
+    \midrule
+    Outcome            & 158/160 & 2  & PPV 9/9; recall .75 \\
+    Recovery           & 66/80   & 14 & automatic endpoint/step 80/80 \\
+    Severity (visible) & 114/120 & 6  & $s2/s3$ decision share 81.7\% \\
+    Severity (blind)   & 108/120 & 12 & $s2/s3$ decision share 73.3\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Wrong-direction endpoint on the 1{,}964 critical-arm switches. Wrong-direction is
+  the exclusive action-switch or silent-propagation class; caught is flag-only. Intervals are
+  Wilson 95\%.}
+  \label{tab:wrongdir}
+  \small
+  \begin{tabular}{lrrr}
+    \toprule
+    \textbf{Sample} & \textbf{Switches} & \textbf{Wrong-direction} & \textbf{Caught} \\
+    \midrule
+    Pooled       & 1{,}964 & 1{,}258 (64.1\% [61.9, 66.1]) & 30 (1.5\% [1.1, 2.2]) \\
+    $s=2$        & 911     & 598 (65.6\% [62.5, 68.7])     & 14 (1.5\%) \\
+    $s=3$        & 1{,}053 & 660 (62.7\% [59.7, 65.5])     & 16 (1.5\%) \\
+    Qwen3.5-9B     & 516   & 374 (72.5\% [68.5, 76.2])     & 21 (4.1\%) \\
+    Ministral-3-8B & 726   & 462 (63.6\% [60.1, 67.1])     & 9 (1.2\%) \\
+    Llama-3.1-8B   & 722   & 422 (58.4\% [54.8, 62.0])     & 0 (0.0\%) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Task-utility endpoint (exploratory; \texttt{artifacts/analysis/new\_evidence.json}).
+  Agent adequacy on 115 judgeable $s=0$/$s=3$ pairs (120 sampled; 5 pairs carry a 9) and
+  deterministic donor-path adherence on all 1{,}039 switched pairs. Intervals are Wilson
+  95\%; McNemar is the paired exact test.}
+  \label{tab:utility}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    \textbf{Sample} & \textbf{n} & \textbf{Adequate} & \textbf{Degraded} & \textbf{Harmful} \\
+    \midrule
+    Agent $s=0$ & 115 & 55.7\% [46.5, 64.4] & 28.7\% [21.2, 37.5] & 15.7\% [10.1, 23.4] \\
+    Agent $s=3$ & 115 & 28.7\% [21.2, 37.6] & 33.0\% [25.1, 42.1] & 38.3\% [29.9, 47.4] \\
+    \midrule
+    \textbf{Sample} & \textbf{n} & \textbf{Match $s=0$} & \textbf{Match $s=3$} & \textbf{McNemar $p$} \\
+    \midrule
+    Donor adherence & 1{,}039 & 29.1\% [26.4, 31.9] & 28.9\% [26.2, 31.7] & .89 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Recovery by $H=4$ across model and risk-set groups (Kaplan--Meier secondary;
+  crude primary in Table~\ref{tab:recovery}; semantic risk sets).}
+  \label{tab:recovery_all}
+  \small
+  \begin{tabular}{lrrr}
+    \toprule
+    \textbf{Model} & \textbf{Transient $s=2$} & \textbf{Transient $s=3$} & \textbf{Persistent $s=3$} \\
+    \midrule
+    Qwen3.5-9B     & 28.9\% (185) & 28.2\% (221) & 35.2\% (63) \\
+    Ministral-3-8B & 47.7\% (311) & 44.6\% (353) & 49.3\% (85) \\
+    Llama-3.1-8B   & 23.6\% (345) & 22.0\% (376) & 24.9\% (92) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Pooled slope under pre-registered sensitivity codings.}
+  \label{tab:sensitivity}
+  \small
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Analysis} & $\hat\beta$ & \textbf{95\% CI} \\
+    \midrule
+    Primary ($s=0,\dots,3$) & 0.877 & [0.770, 0.998] \\
+    Strict signature        & 0.876 & [0.768, 0.996] \\
+    Lenient action only     & 0.434 & [0.296, 0.574] \\
+    Exclude placebo ($s=1,\dots,3$) & 1.031 & [0.881, 1.193] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\renewcommand{\thetable}{\arabic{table}}
 
 \section*{Declarations}
 \begin{itemize}

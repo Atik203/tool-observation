@@ -7,8 +7,9 @@ the effective printed size stays at or above 8 pt. Legends distinguish
 models by marker and line style as well as colour. Figure 5 shows Wald 95%
 intervals from the prefix-cluster standard errors and overlays the pooled
 prefix-cluster bootstrap interval reported in the text; Figure 9 plots the
-v2 semantic risk-set curves (``g4_recovery_v2.json``), not the run-time
-hash curves.
+recovery complement 1 - S_KM(t) of the v2 semantic risk-set Kaplan-Meier
+curves (``g4_recovery_v2.json``) on a full 0-1 scale, not the run-time hash
+curves.
 """
 
 import argparse
@@ -349,8 +350,9 @@ fig.savefig(FIG / "fig10.png", dpi=600)
 plt.close(fig)
 
 # --- Figure: recovery at s=2 and s=3, transient regime (printed at 0.98).
-# Curves are the v2 semantic risk-set Kaplan-Meier estimates from
-# g4_recovery_v2.json (Table tab:recovery), not the run-time hash curves.
+# Curves are 1 - S_KM, the recovery complement of the v2 semantic risk-set
+# Kaplan-Meier estimates in g4_recovery_v2.json (Table tab:recovery), not the
+# run-time hash curves. The y-axis spans the full 0-1 range.
 fig, axes = plt.subplots(1, 2, figsize=(6.3, 3.4), sharey=True)
 for ax, severity, title in zip(
     axes, (2, 3), ("s = 2 (one critical)", "s = 3 (critical + second)"), strict=False
@@ -359,9 +361,10 @@ for ax, severity, title in zip(
         group = g4["groups"][f"{model}|transient_s{severity}"]
         steps = [0] + [row["step"] for row in group["kaplan_meier"]]
         surv = [1.0] + [row["survival"] for row in group["kaplan_meier"]]
+        recovery = [1.0 - value for value in surv]
         ax.step(
             steps,
-            surv,
+            recovery,
             where="post",
             color=COLORS[mi],
             linestyle=LINESTYLES[mi],
@@ -372,11 +375,12 @@ for ax, severity, title in zip(
         )
     ax.set_xlabel("Step after corruption")
     ax.set_title(title, fontsize=11)
-    ax.set_ylim(0.55, 1.0)
+    ax.set_ylim(0.0, 1.0)
+    ax.set_yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     ax.set_xticks(range(5))
     ax.legend(frameon=False, fontsize=9)
     style(ax)
-axes[0].set_ylabel("Kaplan-Meier survival")
+axes[0].set_ylabel(r"Recovery $1-S_{\mathrm{KM}}(t)$")
 fig.tight_layout()
 fig.savefig(FIG / "fig9.png", dpi=600)
 plt.close(fig)
