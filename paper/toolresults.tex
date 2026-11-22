@@ -751,8 +751,14 @@ the outcome of interest is what the model does by default. A prompt that warned 
 would measure compliance with an instruction rather than sensitivity to content. The prompt
 version is frozen at G0 (prompt v3) and its hash is recorded in the manifest. The parser was
 revised during calibration (D-024, D-025) and once after the blind audit (D-028); the final
-parser is \texttt{toolresult-parser-v4}, recorded in every ledger row. The manifest records
-config hashes and the renderer version, not a parser field.
+parser is \texttt{toolresult-parser-v4}, recorded in every ledger row.\footnote{All analyses in
+this paper use the parser-v4 rescored main ledgers; the server copies of those ledgers were
+originally written under parser v3, and the rescore changes the stored decision JSON and
+signature hash for 1{,}619 of 4{,}400 Qwen rows (D-028).} The manifest records
+config hashes and the renderer version, not a parser field.\footnote{The manifest's
+\texttt{config\_hashes} are the G0 snapshot by design (D-023); the G1+ serving configuration is
+recorded in the decision log, so the current \texttt{models.yaml} and \texttt{calibration.yaml}
+hashes differ from the manifest's without a frozen-manifest error.}
 
 \paragraph{Parser and canonicalization}.\
 
@@ -1894,6 +1900,28 @@ ranking, and no model is declared more or less sensitive than another. Sensitivi
 to the same artifact, with every point estimate positive.
 
 
+\paragraph{Second renderer (exploratory)}.\
+
+The confirmatory run uses one prose template. A second deterministic renderer,
+\texttt{toolresult-fieldlist-v1}, expresses the same scalar leaves as flat
+\texttt{path = value} lines, with $V$ still the raw JSON. On 150 frozen prefixes (75 airline, 75
+retail, reserve excluded), five arms, and the same three models, the 2{,}250 generations took
+0.62 GPU-hours. The $s=0$-versus-$V$ switch-rate shift from renderer 1 is +0.7 pp for
+Qwen3.5-9B, +5.0 pp for Ministral-3-8B, and 0.0 pp for Llama-3.1-8B, pooled +1.9 pp
+[$-1.9$, $+5.7$]. The severity slopes are 0.635, 0.628, and 0.696 against 1.068, 0.653, and
+0.517 for renderer 1 on the same prefixes (pooled 0.649 vs.\ 0.728); every paired
+$\Delta\beta$ interval covers zero, and the Qwen3.5-9B slope drops from 1.068 to 0.635 with a
+wide 95\% paired interval [$-1.292$, $+0.151$]. The check was specified descriptively: every
+per-model format shift at most 10 pp, and every renderer-2 slope positive and inside the
+same-prefix renderer-1 95\% prefix-bootstrap interval. It passes on point estimates;
+Ministral's format interval reaches +12.1 pp and Qwen3.5-9B clears its lower bound by 0.022, so
+no interval-containment claim is made. This is exploratory evidence that the severity result is
+not specific to one prose surface
+(\texttt{artifacts/\allowbreak analysis/\allowbreak renderer2.json}; D-048). It is not pooled
+with the confirmatory 800-prefix estimate, and its pooled slope is not comparable to the
+confirmatory pooled estimate because the sample, precision, and renderer differ.
+
+
 \begin{figure}[pos=htbp]
   \centering
   \figfile[0.98\linewidth]{figures/fig10.png}
@@ -1988,13 +2016,16 @@ history on-policy. Severity is a constructed ordinal variable. If $s=1$ is assoc
 $s=2$, the dose interpretation fails, and the paper reports that finding instead of relabelling
 the levels.
 
-The study covers three 8--9B model families, two domains, one renderer, deterministic tools, and a
-four-step horizon. Only one deterministic prose renderer is used (renderer \texttt{toolresult-prose-v1}),
+The study covers three 8--9B model families, two domains, one confirmatory renderer,
+deterministic tools, and a
+four-step horizon. Only one deterministic prose renderer is used for the confirmatory estimate
+(renderer \texttt{toolresult-prose-v1}),
 so the severity slope is template-local: within one fixed template, the treatment bundles content,
 format, length, and salience, and the 20.3--45.6\% G1 format effect (main-run $s=0$ rates
-19.8/31.9/38.1\%) is the visible part of that bundle. A second renderer on a 100--200 prefix
-subsample would test whether the slope is template-specific and is left to future work, as is the
-held-out human audit. It does not claim end-to-end task success, frontier-model behaviour, live-API
+19.8/31.9/38.1\%) is the visible part of that bundle. A second renderer
+(\texttt{toolresult-fieldlist-v1}) is reported as an exploratory robustness check on a
+150-prefix subsample (Section~\ref{sec:results}); it does not widen the confirmatory claim,
+which remains one-template and one-sample. The held-out human audit is left to future work. It does not claim end-to-end task success, frontier-model behaviour, live-API
 validity, or a universal law. The tools are benchmark implementations against a pinned database,
 not live services, so a wrong observation here is a controlled counterfactual rather than a
 production incident. The annotation was produced by blind rater sessions operated with an AI
