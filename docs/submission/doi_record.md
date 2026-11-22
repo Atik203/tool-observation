@@ -129,4 +129,7 @@ was read in-process at mint time; it was never printed, logged, echoed, or commi
 - Archive SHA-256: `83fadce666d034b8c53bdfc3bfe4c10f1b684c421fb6090c5de96dd66c89fa85`.
 - Package build commit: `074d217` (the release-content commit; the package's
   `release_record.json` records this commit, `doi` field
-  `10.5281/zenodo.24449467`, and 136 files).
+  `10.5281/zenodo.24449467`, and 136 files). A rebuild at post-release commit
+  `6b88f5e` produced the identical 138-file set with 0 non-volatile byte
+  differences (only `created_utc`/`git_commit`, the generated timestamps, `README.md`,
+  and the checksums covering them differ).
