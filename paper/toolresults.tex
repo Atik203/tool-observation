@@ -241,13 +241,12 @@
 \shortauthors{Rahaman et~al.}
 
 % Main title of the paper
-\title [mode = title]{Tool-Result Errors in Language-Model Agents: A Fixed-Prefix Causal Study of Detection, Reliance, and Recovery}
+\title [mode = title]{Tool-Result Errors in Language-Model Agents: A Fixed-Prefix Measurement Study of Switches, Silent Propagation, and Recovery}
 
 % ---------------------------------------------------------------------------
-% Author block. The group, affiliations, ORCID iDs, and CRediT roles are
-% carried over from the companion manuscript. CONFIRM WITH ALL AUTHORS before
-% submission: author order, spelling, e-mail addresses, ORCID iDs, and the
-% CRediT allocation below must be checked and signed off.
+% Author block. The group, affiliations, ORCID iDs, and CRediT roles are reconciled to the
+% byline above; any change before submission requires sign-off from all authors (order, spelling,
+% e-mail addresses, ORCID iDs, CRediT allocation).
 % ---------------------------------------------------------------------------
 
 % First author and corresponding author
@@ -277,22 +276,26 @@
 \begin{abstract}
   Tool-using language-model agents read tool outputs and act on them, but end-to-end benchmarks
   score the finished episode and cannot show whether an agent noticed a wrong price, date, or
-  identifier. We report a frozen fixed-prefix study of that moment: 800 real $\tau$-bench prefixes
+  identifier. We report a frozen fixed-prefix measurement study of that moment: 800 real $\tau$-bench prefixes
   (400 airline, 400 retail), each ending after a tool observation, with the observation varied
   across four prose arms---faithful paraphrase, one non-critical change, one plausible critical
   error, and a critical error with a second contradiction. Three open-weight 8--9B models answer
-  every arm greedily on an 18~GB H200 slice. Critical errors move the next decision: tier odds
-  ratios against the placebo are 1.27 (non-critical), 4.60 (critical), and 11.21 (critical plus
-  contradiction). Linearity is rejected, so the slope (0.877; 95\% CI 0.770--0.998) is a summary
-  of a threshold, not a per-level law. Of 1{,}964 critical-arm switches, 21.3\% silently repeat
-  the injected value, and identifiers and money carry most of that propagation; status fields
-  almost never do. Fewer than half of corrupted episodes recover within four steps
-  (32.4--47.6\%). Re-serializing the same observation already moves 20--46\% of decisions. Three
-  pre-registered criteria failed: the parser-failure rate (1.55\% vs <1\%), the severity audit's
-  $s2/s3$ decision-changing share (88.3\% vs $\ge90\%$), and recovery (32.4--47.6\% vs
-  $\ge50\%$). The paper therefore reports a measurement estimate, not a confirmed
-  content-sensitivity claim. Audits were blind-rated label-free and checked by an agent
-  verification panel.
+  every arm greedily on an 18~GB H200 slice. The pre-registered content-sensitivity claim is not
+  made: three gate criteria failed. The parser-failure rate is 1.55\% against the 1\% protocol
+  threshold, the severity audit's $s2/s3$ decision-changing share is 88.3\% against 90\%, and crude
+  recovery is 27.3/34.7/27.2\% by model against 50\% (Kaplan--Meier 32.4/47.6/28.2\% as a secondary
+  with a competing-risk caveat). Within that bound, we report a measured shift among movers: the
+  pooled conditional-logistic slope of the switch indicator on severity is 0.877 (95\% CI
+  0.770--0.998), positive in all three models, with tier odds ratios against the prose placebo of
+  1.27 (non-critical), 4.60 (critical), and 11.21 (critical plus contradiction). Linearity is
+  rejected, so the slope summarizes a threshold at $s=2$, not a per-level law. Of 1{,}964 critical-arm
+  switches, 21.3\% silently repeat the injected value without flagging, and identifiers and money
+  carry most of that propagation; status fields
+  almost never do. Fewer than half of corrupted episodes return to the reference decision within
+  four steps (28.2--47.6\% Kaplan--Meier). Re-serializing the same observation without changing its
+  values already shifts 20.3--45.6\% of decisions, so the slope is read over the prose arms
+  $s0$--$s3$ only. Audits were blind-rated label-free and checked by a multi-role agent panel,
+  author-overseen.
 \end{abstract}
 
 % Keywords. Each keyword is separated by \sep
@@ -306,7 +309,7 @@
 \endgroup
 \hypersetup{
   pdfauthor={Md. Atikur Rahaman, Ohidujjaman Tuhin},
-  pdftitle={Tool-Result Errors in Language-Model Agents: A Fixed-Prefix Causal Study of Detection, Reliance, and Recovery}
+  pdftitle={Tool-Result Errors in Language-Model Agents: A Fixed-Prefix Measurement Study of Switches, Silent Propagation, and Recovery}
 }
 \linenumbers
 
@@ -363,8 +366,8 @@ content error, and how quickly the agent returns to the verbatim-observation dec
 paper targets that gap with a paired design, a real-prefix dataset frozen before outcomes, and a
 pre-registered analysis. The contributions are four. First, ToolResult-800 provides 800 real $\tau$-bench
 prefixes with five observation arms, perturbation records, renderer version, and hashes; the
-manifest is frozen and hashed. Second, the design estimates a within-prefix dose--response slope
-rather than a between-episode
+manifest is frozen and hashed. Second, the design measures a within-prefix shift in the next decision
+across ordered severity arms---a measured shift among movers---rather than a between-episode
 correlation. Third, it decomposes a decision change into action switch, detection, and silent
 propagation, so that a fluent wrong answer can be separated from a caught one. Fourth, it
 estimates a four-step recovery curve, which speaks to whether one verification step is enough. A
@@ -375,13 +378,16 @@ A 60-prefix pilot tested whether the manipulation is runnable. It used synthetic
 $\tau$-style prefixes, \texttt{qwen3.5:4b}, greedy decoding, and three collapsed action codes. The
 pilot found a consult rate of 54/60, placebo jitter of 0/60, and an error-switch rate of
 5/60 = 8.3\% (95\% CI [1.3, 15.3] pp; McNemar $b=5$, $c=0$, exact $p=.0625$). Those numbers show
-that the manipulation runs and that error content can move the next action. They do not estimate
+that the manipulation runs and that error content was associated with a different next action in
+5 of 60 prefixes. They do not estimate
 a slope: the sample is small, the model is a single 4B model, the prefixes are synthetic, the
 action coding is coarse, and there are no recovery data. The pilot is therefore a screening
 signal, and Section~\ref{sec:results} keeps it separate from the confirmatory analysis. The
 manuscript reports the completed study: the base matrix, recovery sequences, seed-repeat
-shard, and blind audits are done, so the results below replace the earlier placeholders. Two
-preregistered criteria failed and are reported as failures. Every quantity in the results section
+shard, and blind audits are done, so the results below replace the earlier placeholders. Three
+gate criteria failed and are reported as failures: the parser-failure rate (1.55\% against the 1\%
+protocol threshold), the severity audit's $s2/s3$ decision-changing share (88.3\% against 90\%),
+and recovery (crude 27.3/34.7/27.2\% against 50\%). Every quantity in the results section
 traces to a ledger, a manifest, or an analysis artifact.
 
 \section{Conventional Method}\label{sec:conventional}
@@ -521,7 +527,10 @@ models.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Notation. The same symbol is used with the same meaning throughout the paper.}
+  \caption{Notation. Symbols are read section-locally in the current draft: the audit
+  (M16) finds the symbols $S$, $\alpha$, $\beta$, $\kappa$, $h$, $U$, $V$, $p$, $H$, and $k$ each
+  reused with more than one meaning across sections; disambiguation is scheduled and tracked in
+  the revision plan.}
   \label{tab:notation}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{2.1cm}>{\raggedright\arraybackslash}p{11.6cm}}
@@ -683,8 +692,8 @@ perturbations, in shuffled item order, and excludes arm-derived annotations; the
 includes the injected true/false values; the recovery packet includes the per-step evidence.
 
 A first round was label-visible; the author accepted it under
-D-035, and it is archived as a sensitivity. The label-free sheets were checked by an independent
-verification panel (one verifier per audit, plus a second-rater pair on a stratified 120-item
+D-035, and it is archived as a sensitivity. The label-free sheets were checked by a multi-role
+agent panel, author-overseen (one verifier per audit, plus a second-rater pair on a stratified 120-item
 subset); the panel is recorded under D-043. Its ratings are agent-produced and share one model
 family, so they establish reproducibility rather than human independence.
 The ratings were produced by blind rater sessions operated with an AI agent. The severity gate
@@ -997,10 +1006,16 @@ model.
 
 \begin{figure}[pos=htbp]
   \centering
-  \figfile[0.95\linewidth]{figures/fig4.png}
-  \caption{Estimands and analysis path: the within-prefix switch indicator, the
-  conditional-logistic slope, the silent-propagation decomposition, and the four-step recovery
-  model with Kaplan--Meier and RMST reporting.}
+  \fbox{\begin{minipage}[c][3.4cm][c]{0.90\linewidth}%
+    \centering\itshape Schematic of the pre-registered analysis path (not data):\\
+    within-prefix switch indicator $\to$ conditional-logistic slope $\to$\\
+    silent-propagation decomposition $\to$ four-step recovery\\
+    (Kaplan--Meier and RMST reporting).%
+  \end{minipage}}
+  \caption{Pre-registered analysis path (schematic; no study outcomes are plotted): the within-prefix
+  switch indicator, the conditional-logistic slope, the silent-propagation decomposition, and the
+  four-step recovery model with Kaplan--Meier and RMST reporting. A regenerated conceptual figure
+  will replace this placeholder in the revision figures pass.}
   \label{fig:analysis}
 \end{figure}
 
@@ -1027,11 +1042,39 @@ budget, and G3 and G4 the slope and recovery claims.
     G0 & At least 880 eligible; at least 440 per domain before audit and 400 after audit; replay at least 98\%; 40-item audit at least 36/40; freeze hash stable. & Fall back to 500 prefixes and 2 models, or stop. \\
     G1 & Per model: parse at least 95\%; placebo jitter at most 20\%; $s=3$ switch 10--80\%; format refusal below 5\%. & Fix prompt or parser and rerun; no main-run start. \\
     G2 & Stop at 45 GPU-hours or 200~GB storage, whichever comes first; ledger complete. & Analyse completed shards; disclose the shortfall. \\
-    G3 & Pooled $\beta>0$; positive in at least 2 of 3 models with the same sign; severity $\alpha \ge .75$; outcome $\kappa \ge .80$ (or adjudicated at least .70 with downgrade); recovery $\kappa \ge .75$; silent-propagation PPV at least .90; parser failure below 1\%. & Null or measurement paper; no content-sensitivity claim. \\
+    G3 & Pooled $\beta>0$; positive in at least 2 of 3 models with the same sign; severity $\alpha \ge .75$; outcome $\kappa \ge .80$ (or adjudicated at least .70 with downgrade); recovery $\kappa \ge .75$; silent-propagation PPV at least .90; parser failure below 1\% (protocol criterion from \texttt{docs/GATES.md}, absent from the frozen prereg G3 row). & Measurement paper; no causal or content-sensitivity claim. \\
     G4 & At least 50\% of the $s=3$ risk set recovers by $H=4$; Weibull shape not rejected at $p \ge .01$. & Report RMST and the curve; $t_{1/2}$ exploratory only. \\
     \bottomrule
   \end{tabular}
 \end{table}
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Gate outcomes as executed. Origin marks whether the criterion is in the frozen
+  preregistration or was introduced by protocol/amendment. Three gate criteria failed (parser,
+  severity $s2/s3$, recovery); the original G1 criterion failed but the main run proceeded under
+  the post-freeze amendment A-004, so it is disclosed separately rather than counted. The Weibull
+  rejection is part of the G4 recovery failure, not a separate count.}
+  \label{tab:gate-status}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{>{\raggedright\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{6.4cm}>{\raggedright\arraybackslash}p{4.6cm}c}
+    \toprule
+    \textbf{Gate} & \textbf{Criterion (origin)} & \textbf{Observed} & \textbf{Verdict} \\
+    \midrule
+    G0 & $\ge880$ eligible; replay $\ge98\%$; 40-item human audit $\ge36/40$ (preregistered) & 5{,}516 eligible; 99.91\% replay; AI pre-audit 40/40 adopted, human verification deferred (D-021; A-005) & provisional \\
+    G1 orig.\ & V-vs-$s0$ jitter $\le20\%$ (preregistered) & 20.3 / 36.7 / 45.6\% & \textbf{fail} \\
+    G1 amend.\ & $s0$-vs-$s1$ $\le20\%$; parse $\ge95\%$; $s3$ 10--80\%; refusal $<5\%$ (A-004: post-freeze, not blind, D-041) & 10.5--13.3\%; parse 96.7--100\%; $s3$ 35.6--56.1\%; refusal 0--1.7\% & pass \\
+    G3 slope & pooled $\beta>0$; $\ge2/3$ models same sign (preregistered) & $\hat\beta=0.877$; 3/3 positive & pass$^{\ast}$ \\
+    G3 severity & $\alpha\ge.75$; $s2/s3$ $\ge90\%$ (preregistered) & $\alpha=.911$; 88.3\% (53/60) & \textbf{fail} \\
+    G3 outcome & $\kappa\ge.80$; PPV $\ge.90$ (preregistered) & $\kappa=.987$; PPV 1.00, 9/9 (95\% lower bound .66) & pass \\
+    G3 parser & failure $<1\%$ (protocol, not frozen prereg) & 205/13{,}200 (1.55\%) & \textbf{fail} \\
+    G3 recovery agr.\ & $\kappa\ge.75$ (preregistered) & .920 / .917 & pass \\
+    G4 & $\ge50\%$ of $s3$ risk set recovers by $H=4$; Weibull $p\ge.01$ (preregistered) & crude 27.3/34.7/27.2\%; KM 32.4/47.6/28.2\%; Weibull rejected in 2/3 primary groups & \textbf{fail} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+\noindent $^{\ast}$The slope passes as a measured shift among movers; because three gate criteria
+failed, no causal or content-sensitivity claim is made.
 \noindent\textbf{G0: harvest and freeze}.\
 G0 is CPU-only and costs \$0. It has five checks: supply of at least 880 eligible prefixes;
 domain balance of at least 440 per domain before audit and 400 after audit; replay of at least
@@ -1061,9 +1104,12 @@ below 5\%. The gate also inspects the parser failure taxonomy, prompt truncation
 latency, and whether $s=3$ is a ceiling. A model that refuses the forced next-decision format is
 fixed with a prompt or grammar change; if it still refuses, it is excluded and the substitution
 policy applies under a prereg amendment recorded before calibration results are used. No
-main-run spend occurs before G1 passes. G1 passed on all three models under the amended
-negative-control criterion (A-004; $s0$ vs $s1$ jitter 10.5--13.3\%); the original V-vs-$s0$
-format-jitter criterion failed at 20.3--45.6\% and is reported separately (Table~\ref{tab:g1}).
+main-run spend occurs before G1 passes. G1 passed on all three models only under the amended
+negative-control criterion (A-004; $s0$-vs-$s1$ jitter 10.5--13.3\%); the original preregistered
+V-vs-$s0$ format-jitter criterion failed at 20.3/36.7/45.6\% against the 20\% threshold and is
+reported as a failed criterion in Table~\ref{tab:gate-status} and separately in
+Table~\ref{tab:g1}. Amendment A-004 is post-freeze and not blind to the G1 calibration values
+(D-041); the main run proceeded under A-004.
 
 \noindent\textbf{G2 to G4}.\
 
@@ -1260,7 +1306,7 @@ The confirmatory analysis of the base matrix is complete. The run generated the 
 matrix (13,200 base generations, five arms, three models, greedy decoding); the confirmatory
 analysis uses the 800 primary prefixes and excludes the 80 reserve prefixes, as pre-registered.
 The recovery sequences and the 10\% seed-repeat shard are collected, and the blind audits are
-complete in a label-free round; an agent verification panel re-derived the ratings (D-043). This
+complete in a label-free round; a multi-role agent panel, author-overseen, re-derived the ratings (D-043). This
 section reports the pilot, the G0 harvest counts, the G1 calibration, the
 primary estimate, silent propagation, recovery, and sensitivity. Results are reported as
 measured; the three failed gate criteria (parser failure, severity $s2/s3$ decision share, and
@@ -1272,8 +1318,8 @@ The pilot used $N=60$ synthetic WebArena-lite / $\tau$-style prefixes, \texttt{q
 decoding, and three collapsed action codes (trust, re-call, flag). It compared a truthful arm, a
 placebo arm, and an error arm. Table~\ref{tab:pilot} reports the recorded results. The consult
 rate of 90\% shows that the model reads the observation. The placebo jitter of zero shows that
-the format change alone did not move the collapsed action code in this sample. The error-switch
-rate of 8.3\% shows that error content can move the next action. The paired McNemar test is the
+the format change alone was not associated with a different collapsed action code in this sample. The error-switch
+rate of 8.3\% shows that error content was associated with a different next action. The paired McNemar test is the
 design-matched comparison and is marginal at $p=.0625$; the recorded 95\% interval is an unpaired
 Wald interval and is compatible with a 1.3 percentage-point effect. A 12-item human spot-check
 agreed with all 12 labels, but the letter coding missed some silent fact propagation, so 8.3
@@ -1312,7 +1358,8 @@ rendering meet their thresholds. The manifest is frozen at
 mechanical pre-audit at 40/40 under decision D-021, with the authors' final verification deferred;
 the preregistration requires a human audit at 36/40 or better. The audit deviation is reported
 here rather than in a footnote, because a reader should be able to see exactly how the gate was
-filled. \pending{final author verification date and any replacement rows if verification fails}.
+filled. Final author verification is deferred under D-021; any replacement rows and the
+verification date will be logged in the manifest record.
 
 \noindent\textbf{G1 calibration}.\
 
@@ -1326,7 +1373,9 @@ s0--s3, which share one format.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{G1 calibration on 60 disjoint prefixes per model.}
+  \caption{G1 calibration on 60 disjoint prefixes per model. The gated placebo is the
+  format-controlled $s0$-vs-$s1$ negative control (A-004, post-freeze and not blind per D-041);
+  the V-vs-$s0$ column is the failed original criterion, shown for format sensitivity and not gated.}
   \label{tab:g1}
   \small
   \begin{tabular}{lccccc}
@@ -1341,6 +1390,32 @@ s0--s3, which share one format.
 \end{table}
 
 \subsection{Primary severity--switch estimate}
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Hypothesis status (preregistration \S2). H1--H5 are confirmatory, H6--H7 exploratory.
+  H5 is reported here ($s=3$ vs $s=1$ paired exact McNemar: pooled $b=431$, $c=93$, two-sided
+  $p=5.3\times10^{-53}$; per-model $p\le2.0\times10^{-9}$). The slope rows pass as a measured
+  shift among movers; no causal or content-sensitivity claim is made because three gate criteria
+  failed (Table~\ref{tab:gate-status}).}
+  \label{tab:hypotheses}
+  \small
+  \begin{tabular}{>{\raggedright\arraybackslash}p{1.1cm}>{\raggedright\arraybackslash}p{6.8cm}>{\raggedright\arraybackslash}p{4.6cm}c}
+    \toprule
+    \textbf{ID} & \textbf{Hypothesis} & \textbf{Observed} & \textbf{Status} \\
+    \midrule
+    H1 & Pooled slope $\beta>0$ over $s=0,\dots,3$ & $\hat\beta=0.877$ [0.770, 0.998], $p=2.3\times10^{-49}$ & supported$^{\ast}$ \\
+    H2 & Per-model slope positive in $\ge2/3$ models, same sign & 3/3 positive, Holm-significant & pass \\
+    H3 & Silent propagation a non-zero share at $s=2,3$ & 419/1{,}964 = 21.3\% of critical-arm switches & supported$^{\dagger}$ \\
+    H4 & $\ge50\%$ of $s3$ risk set recovers by $H=4$; Weibull $p\ge.01$ & crude 27.3/34.7/27.2\%; Weibull rejected 2/3 & \textbf{fail} \\
+    H5 & $s=3$ switch rate exceeds $s=1$ & McNemar $b=431$, $c=93$, $p=5.3\times10^{-53}$ & supported \\
+    H6 & Donor/task slopes directionally consistent & donor interaction $p=.61$; domain 0.74/0.99, interaction $p=.035$ (exploratory) & consistent \\
+    H7 & Model $\times$ severity, task $\times$ severity not claimed & reported exploratory only & --- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+\noindent $^{\ast}$As a measurement estimate only (gate fail action). $^{\dagger}$Descriptive
+secondary analysis, gated on the outcome audit (pass); silent share is a lower bound (recall .75).
 
 \begin{table}[pos=htbp]
   \centering
@@ -1392,10 +1467,10 @@ D-026). An earlier analysis under the pre-fix automatic coder gave $\hat\beta = 
 (\texttt{g3\_analysis\_all880.json}), so the coder change accounts for most of the movement and
 the reserve exclusion for the remainder. The blind audit then found and corrected the labeling
 defect (D-028, A-006), and the estimate above is the corrected one. All three are positive and all
-are reported. The G3 gate did not pass: its parser-failure criterion is 1.55\% (205/13{,}200; 3.45\% including
-refusals) against the 1\% threshold. Under the gate's fail action the paper reports the slope as a
-pre-registered measurement estimate and makes no content-sensitivity claim; the estimate is not a
-confirmed effect. The recovery endpoint is reported separately; the audits gate the label-based
+are reported. The G3 gate did not pass: the protocol parser-failure criterion is 1.55\% (205/13{,}200; 3.45\% including
+refusals) against the 1\% threshold (a protocol criterion from \texttt{docs/GATES.md}, absent from
+the frozen prereg G3 row). Under the gate's fail action the paper reports a measured shift among
+movers and makes no causal or content-sensitivity claim; the slope is not a confirmed effect. The recovery endpoint is reported separately; the audits gate the label-based
 decomposition, not the switch indicator. Estimates trace to
 \texttt{artifacts/analysis/g3\_analysis.json}.
 
@@ -1788,11 +1863,12 @@ to the same artifact, with every point estimate positive.
 The study is designed to answer one question at one level of resolution: within a frozen real
 prefix, does changing the content of a tool observation change the next decision, and is the
 change ordered by severity? If the pooled slope is positive and at least two of three models
-replicate the sign, the result is a bounded estimate of switch-on-severity for three open-weight
+replicate the sign, the result is a measured shift among movers for three open-weight
 8--9B families on $\tau$-bench airline and retail, under one renderer and one severity rubric. It
-is not a universal constant, and because the G3 parser-failure criterion did not pass, it is not
-stated as a content-sensitivity claim. If the slope is flat, the result is a measurement: at the
-achieved precision, plausible content errors of this kind did not move the next decision in this
+is not a universal constant, and because three gate criteria failed, no causal or content-sensitivity
+claim is made. If the slope is flat, the result is a measurement: at the
+achieved precision, plausible content errors of this kind were not associated with a different
+next decision in this
 sample. Both outcomes are informative, and the second is the one that practitioners are most
 likely to misread, because a flat slope bounds how much observation-level checking is worth
 relative to tool selection, planning, or policy adherence.
@@ -1803,7 +1879,7 @@ and +6.2 percentage points for $s2-s0$, $s3-s0$, and $s3-s2$) answer the populat
 question and are reported separately from the within-stratum slope. Second, the assigned severity
 is measured rather than perfectly manipulated. The audit finds donor-unused items in the critical
 arms and decision-changing items in $s1$, so $\beta$ is a weighted contrast between intended and
-realized doses, not a clean per-level causal parameter. The sign is stable across every audit pass
+realized doses, not a clean per-level effect parameter. The sign is stable across every audit pass
 and coding, but the per-level magnitudes should not be read as a calibrated dose--response law. The decomposition changes the interpretation of a positive slope. A slope driven by detection is
 a slope in which the agent notices the conflict; a slope driven by silent propagation is a slope
 in which the agent absorbs the error. The two have opposite engineering implications even though
@@ -1819,7 +1895,7 @@ recovers.
 
 \noindent\textbf{Engineering implications}.\
 
-The result will inform choices at the observation boundary. If wrong content moves decisions and
+The result will inform choices at the observation boundary. If wrong content is associated with different decisions and
 silent propagation is common, builders should add verification for critical fields, require a
 second tool call before acting on a suspicious value, surface a confidence flag, or route
 high-stakes actions to human approval. If the slope is flat, those checks may be less urgent than
@@ -1857,7 +1933,7 @@ public and may be memorized by target models, so baseline reliance could be infl
 within-prefix contrast remains valid, but the absolute switch rate may not transfer. The donor
 prefixes come from gpt-4o and claude-3.5-sonnet, so the target models continue off-policy
 histories; the design fixes prefixes across arms and stratifies by donor, but it does not make the
-history on-policy. Severity is a constructed ordinal variable. If $s=1$ moves decisions as much as
+history on-policy. Severity is a constructed ordinal variable. If $s=1$ is associated with as many switches as
 $s=2$, the dose interpretation fails, and the paper reports that finding instead of relabelling
 the levels.
 
@@ -1866,34 +1942,41 @@ four-step horizon. It does not claim end-to-end task success, frontier-model beh
 validity, or a universal law. The tools are benchmark implementations against a pinned database,
 not live services, so a wrong observation here is a controlled counterfactual rather than a
 production incident. The annotation was produced by blind rater sessions operated with an AI
-agent; the reported round is label-free and was checked by an agent verification panel, not by
+agent; the reported round is label-free and was checked by a multi-role agent panel,
+author-overseen, not by
 human coauthors or an external vendor. That limits the independence of the audit and is stated in
 the declarations. Agreement statistics measure consistency among sessions, not correctness: the
 recovery panel found 14/80 rater over-credits while reproducing the automatic coding on 80/80
 sequences, and two severity sessions were identical on 116/120 items. The 18~GB slice runs at
 batch 4 rather than the planned batch 8; the G2 cap was not approached (about 8.9 GPU-hours of the
 45-hour budget), so the sample is complete. Three gate criteria failed and are reported as
-failures: the G3 parser-failure rate is 1.55\% against the 1\% threshold (3.45\% if refusals are
+failures: the protocol parser-failure rate is 1.55\% against the 1\% threshold (3.45\% if refusals are
 counted), the severity audit's $s2/s3$ decision-changing share is 88.3\% against 90\%, and G4
-recovery is 32.4--47.6\% against the 50\% threshold. The automatic labeling was
-corrected once, after the blind audit found a defect; the pre-fix analysis is also reported
-above, and no threshold was changed.
+recovery is 28.2--47.6\% Kaplan--Meier (crude 27.3/34.7/27.2\%) against the 50\% threshold. The
+automatic labeling was
+corrected once, after the blind audit found a defect (D-028, A-006); the pre-fix analysis is also
+reported
+above. The G1 placebo criterion was amended post-freeze under A-004 (not blind to the G1 values,
+D-041); the analysis gates were not re-thresholded after the confirmatory run.
 
 \section{Conclusion}\label{sec:conclusion}
 
-This paper asks whether the content of a real tool observation changes an agent's next decision,
-whether the change is ordered by the severity of the content error, and how quickly the agent
-recovers. The design holds 800 real $\tau$-bench prefixes fixed, varies only the observation across
-five arms, and estimates a within-prefix conditional-logistic slope with a silent-propagation
-decomposition and a four-step recovery curve. The study is pre-registered, gated, and ran at \$0
+This paper asks whether the content of a real tool observation is associated with a different
+next decision by an agent, whether that association is ordered by the severity of the content
+error, and how quickly the agent returns to the reference decision. The design holds 800 real
+$\tau$-bench prefixes fixed, varies only the observation across five arms, and reports a
+within-prefix conditional-logistic slope with a silent-propagation decomposition and a four-step
+recovery curve. The study is pre-registered, gated, and ran at \$0
 cash on a university H200 slice. The base matrix, recovery sequences, and seed-repeat shard are
 complete; the pooled slope is $0.877$ [0.770, 0.998], positive in all three models, and 21.3\% of
-critical-arm switches are silent propagation. Three gate criteria failed: the parser-failure rate
+critical-arm switches silently repeat the injected value. Three gate criteria failed: the
+protocol parser-failure rate
 (1.55\% against 1\%), the severity audit's $s2/s3$ decision-changing share (88.3\% against 90\%),
-and recovery (32.4--47.6\% against 50\%); all are reported as failures. The
+and recovery (crude 27.3/34.7/27.2\%, Kaplan--Meier 28.2--47.6\%, against 50\%); all are reported
+as failures. The
 contribution is the dataset, the within-prefix design, the audit procedure that caught a labeling
-defect before analysis, and a bounded switch-on-severity estimate with its measured limits; the
-failed G3 parser-failure criterion is reported, so no content-sensitivity claim is made.
+defect and corrected it before the reported analysis, and a measured shift among movers with its
+stated limits; because three gate criteria failed, no causal or content-sensitivity claim is made.
 
 \section*{Declarations}
 \begin{itemize}
@@ -1909,23 +1992,24 @@ failed G3 parser-failure criterion is reported, so no content-sensitivity claim 
   \texttt{data/manifests/source\_pin.json}. ToolResult-800 will release only scrubbed derived
   data: frozen prefix payloads, arm observations, perturbation records, renderer version, and
   hashes, under CC BY 4.0, with upstream notices preserved. Run ledgers stay local until scrubbed and
-  packaged. The frozen manifest and the release checklist are the authoritative record.
-  \pending{release DOI and manifest hash; the v1.0 artifact has not been released}.
+  packaged. The frozen manifest and the release checklist are the authoritative record. The v1.0
+  release artifact has not been released; the DOI will be minted at release and recorded here.
   \item \textbf{Code availability:} The harvest, replay, rendering, inference, coding, and
   analysis code is available at \url{https://github.com/Atik203/tool-observation} under the MIT
   license. Documentation and derived data are CC BY 4.0.
   \item \textbf{Ethical approval:} The study collects no human-subject data. Annotation is
   performed by the author team on public benchmark rows, and direct identifiers are scrubbed
-  before freeze. \pending{the institutional ethics determination for the annotation procedure}.
+  before freeze. The institutional ethics determination for the annotation procedure is pending
+  and will be cited here once issued.
   \item \textbf{Author contributions:} Conceptualization, data curation, formal analysis,
   investigation, methodology, project administration, software, validation, visualization, and
-  writing (original draft) by M.A.R.; data curation, validation, and writing (review and editing)
-  by S.A.S. and M.M.A.; supervision, validation, and writing (review and editing) by O.T. The
-  CRediT allocation is carried over from the companion manuscript and must be confirmed by every
+  writing (original draft) by M.A.R.; supervision, validation, and writing (review and editing)
+  by O.T. The
+  CRediT allocation was reconciled to the byline and must be confirmed by every
   author before submission.
   \item \textbf{Use of AI-assisted tooling:} Blind rating sessions were operated with an AI agent
-  (three sessions for the severity audit, two each for the outcome and recovery audits); an agent
-  verification panel re-derived every rating (one verifier per audit), and a second-rater pair
+  (three sessions for the severity audit, two each for the outcome and recovery audits); a multi-role
+  agent panel, author-overseen, re-derived every rating (one verifier per audit), and a second-rater pair
   re-rated a stratified 120-item subset. An AI-assisted mechanical pre-audit was used for the
   40-item G0 check under D-021. The first, label-visible round was accepted by the author on
   2026-11-18 (D-035); the reported label-free round and its panel record are documented under
