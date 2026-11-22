@@ -672,10 +672,11 @@ One-command validation (no GPU, stdlib Python only):
   released copies (volatile `recorded_utc`/`git_commit` ignored).
 
 `frozen/prefixes.jsonl` is the redacted release derivative: the builder
-replaces the flagged scrubber-artifact fragment in every staged file at build
-time (D-046), records the counts here and in `release_record.json`, and
-checks the redacted file against the recorded release hash. The frozen source
-is not distributed and stays bit-identical under its manifest hash.
+replaces every match of the scrubber-artifact identity class in every staged
+file at build time (D-046), records the counts here and in
+`release_record.json`, and checks the redacted file against the recorded
+release hash. The frozen source is not distributed and stays bit-identical
+under its manifest hash.
 
 A clean automated scan does not replace the pending independent human
 PII re-scan before public release (see `docs/submission/checklist.md`).
@@ -693,9 +694,10 @@ def release_changelog_md() -> str:
 
 ### Fixed (PII)
 
-- Redacted one scrubber-artifact identity (a given name plus digits surviving
-  inside an `@example.com` address) in every distributed file. The builder
-  replaces it with `person_redacted_0001` on each build, covering
+- Redacted the scrubber-artifact identity class (a bare scrubber token followed
+  by an unsanitized given-name+digits local part on a reserved example domain)
+  in every distributed file. The builder replaces each match with
+  `person_redacted_0001` on every build, covering
   `frozen/prefixes.jsonl`, the T6 packet files, and one recovery trace.
 - The frozen source under `data/frozen/` is unchanged and still verifies
   against the manifest hash; it is not part of the distributed payload.
@@ -800,7 +802,7 @@ def build_package(out: Path, force: bool = False) -> dict:
         "Scrubbed derived data for the fixed-prefix measurement study of tool-result "
         "errors (800 primary + 80 reserve prefixes, five arms, three models). "
         "Raw trajectories, PII, weights, caches, and run logs are excluded. "
-        "One scrubber-artifact identity is redacted in this copy at build time "
+        "Scrubber-artifact identities are redacted in this copy at build time "
         "(D-046); the frozen source is not distributed.\n\n"
         f"Staged: {utc_now()} (builder {BUILDER_VERSION}, commit {git_commit()}).\n"
         "DOI: TBD — see `docs/submission/doi_record.md` in the repository.\n"
@@ -873,10 +875,10 @@ def build_package(out: Path, force: bool = False) -> dict:
         "synthetic_echoes": sorted(echoes),
         "echo_note": "Synthetic echoes embed only scrubber tokens "
         "(person_/user_/email_ + 12 hex); the PII map is never released, so "
-        "they are not re-identifiable. The frozen source retains one "
-        "scrubber-artifact fragment for freeze integrity; it is not "
-        "distributed, and every release copy is redacted at build (D-046; "
-        "see CHANGELOG.md and release_record.json).",
+        "they are not re-identifiable. The frozen source retains "
+        "scrubber-artifact identity-class fragments for freeze integrity; they "
+        "are not distributed, and every release copy is redacted at build "
+        "(D-046; see CHANGELOG.md and release_record.json).",
         "email_allowlist": allowlisted,
         "allowlist_note": "CITATION.cff and DATA_CARD.md carry the "
         "corresponding-author contact email by design; ORCID iDs are public "

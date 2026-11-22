@@ -55,13 +55,15 @@ identifiers. The release pipeline excludes profile tools and replaces direct ide
 stable synthetic tokens. **The distributed release contains no unredacted participant
 identifiers** (the corresponding-author contact email in `CITATION.cff`/the data card is
 intentional and allowlisted).
-One scrubber-artifact email fragment survived the harvest scrub in the frozen prefix set; because
-the freeze is bit-identical, the fragment remains in the gitignored frozen source, which is
-**not distributed**. The release builder replaces it with `person_redacted_0001` in every staged
-file on every build (D-046, v1.0.1) and records the counts in `pii_rescan.json` and
-`release_record.json`. The automated re-scan reports zero identifier hits; the independent human
-re-scan is still pending (see `docs/submission/checklist.md`). If you believe PII is present in a
-ToolResult-800 artifact, report it privately per `SECURITY.md`; do not redistribute the artifact.
+Scrubber-artifact email fragments (a bare scrubber token followed by an unsanitized given
+name plus digits on the reserved `example.com` domain) survived the harvest scrub in the frozen
+prefix set; because the freeze is bit-identical, they remain in the gitignored frozen source,
+which is **not distributed**. The release builder replaces every match with
+`person_redacted_0001` in every staged file on every build (D-046, v1.0.1) and records the
+counts in `pii_rescan.json` and `release_record.json`. The automated re-scan reports zero
+identifier hits; the independent human re-scan is still pending (see
+`docs/submission/checklist.md`). If you believe PII is present in a ToolResult-800 artifact,
+report it privately per `SECURITY.md`; do not redistribute the artifact.
 
 ## Redistribution and notices
 

@@ -100,10 +100,11 @@ Decision-relevant content that is itself PII is excluded. A 40-item PII pre-audi
 freeze (AI pre-audit adopted by the author; human verification deferred, D-021/A-005); a separate
 automated re-scan runs before release.
 
-One scrubber-artifact email fragment (a given name plus digits) survived the harvest scrub in the
-frozen prefix set. Freeze integrity requires the frozen source to stay bit-identical, so the
-fragment remains there; **the frozen source is not distributed**. The release builder replaces it
-with `person_redacted_0001` in every staged file on every build (D-046, v1.0.1), and
+Scrubber-artifact email fragments (a bare scrubber token followed by an unsanitized given
+name plus digits on the reserved `example.com` domain) survived the harvest scrub in the
+frozen prefix set. Freeze integrity requires the frozen source to stay bit-identical, so they
+remain there; **the frozen source is not distributed**. The release builder replaces every
+match with `person_redacted_0001` in every staged file on every build (D-046, v1.0.1), and
 `pii_rescan.json` reports the replacement counts. **The distributed release therefore contains no
 unredacted participant identifiers** (the corresponding-author contact email in `CITATION.cff`
 and this card is intentional and allowlisted). The independent human re-scan is still pending;

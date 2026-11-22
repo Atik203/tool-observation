@@ -42,8 +42,9 @@ built locally, verified, and uploaded to the DOI archive; they are not committed
 ## Versioning
 
 - `v1.0` — first public ToolResult-800 release with confirmatory results or a documented null.
-- `v1.0.1` — PII redaction errata: the distributed copy replaces one scrubber-artifact
-  identity with `person_redacted_0001`; the frozen source is unchanged. No result changes.
+- `v1.0.1` — PII redaction errata: the distributed copy replaces every match of the
+  scrubber-artifact identity class with `person_redacted_0001`; the frozen source is
+  unchanged. No result changes.
 - `v1.1` — additive data or labels; requires a new manifest and changelog entry.
 - Corrections that change a frozen record require a new major/minor version, never an in-place
   edit.

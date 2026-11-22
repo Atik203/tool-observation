@@ -17,14 +17,16 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   `pii_rescan.json` note). `DATA_LICENSE.md` and `docs/DATA_CARD.md` claimed
   "No raw PII is released" while the package shipped the fragment and a note flagging it.
   The register's stop rule treats a PII leak as release-blocking. Correction C2
-  understated the repository exposure: the identifier is in gitignored frozen/release
-  data **and** in published repository history and current tracked docs
+  understated the repository exposure: the identity class is present in gitignored
+  frozen/release data **and** in published repository history and current tracked docs
   (`docs/DECISIONS.md` D-045, `docs/reviews/2026-11-22/Q1_PANEL_REGISTER.md`,
   `docs/superpowers/plans/p6-q1-hardening.md`); the first T3 source/test commit
   (`a9a13b7`) also repeated the literal. The released package is clean after the
   redaction below. Repository history will not be rewritten (AGENTS.md §4/§7). The
-  residual uses the reserved `example.com` domain and is not a working address, but it
-  is direct-identifier-shaped and is treated as PII.
+  residuals use the reserved `example.com` domain and are not working addresses, but
+  they are direct-identifier-shaped and are treated as PII. The generic detector found
+  three distinct residual local parts (five occurrences in the frozen prefix file,
+  eight across the package) where the initial exact-literal rule had found two.
 - **Decision:** Redact the release copy only, in the builder, and bump the package to
   **v1.0.1** (metadata/errata; no frozen-source change):
   - `scripts/18_build_release.py` defines a generic detector in
