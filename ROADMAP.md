@@ -43,7 +43,7 @@ The detailed 25-row G0 table and ten-day sprint from the original plan are retir
 | **G1** | ✅ completed, amended | Original V-vs-s0 format jitter failed at 20.3–45.6%; A-004 replaced it with s0-vs-s1 negative control 10.5–13.3% after calibration, not blind | Main run proceeded under A-004; original criterion must be reported as failed |
 | **G2** | ✅ | 21,611 rows; 8.9 GPU-hours; within 45-hour / 200 GB stop line | Sample complete; recovery conditional on switching |
 | **G3** | ❌ | Slope passes; parser failure 1.55% (fail); severity s2/s3 88.3% (fail); outcome κ .987 (pass); silent PPV 1.00 point, exact lower bound .66 | Measurement paper; no content-sensitivity claim |
-| **G4** | ❌ | Crude recovery 24.4/32.9/21.3% by H=4 on the semantic risk set (KM 28.2/44.6/22.0); Weibull shape rejected 2/3 | Report curve/RMST; half-life exploratory; the “Ministral close” reading is retired |
+| **G4** | ❌ | Crude recovery 24.4/32.9/21.3% by H=4 on the semantic risk set (KM 28.2/44.6/22.0); Weibull shape rejected 3/3 | Report curve/RMST; half-life exploratory; the “Ministral close” reading is retired |
 
 ---
 

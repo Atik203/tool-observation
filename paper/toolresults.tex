@@ -1159,7 +1159,7 @@ budget, and G3 and G4 the slope and recovery claims.
     G3 outcome & $\kappa\ge.80$; PPV $\ge.90$ (preregistered) & $\kappa=.987$; PPV 1.00, 9/9 (95\% lower bound .66) & pass \\
     G3 parser & failure $<1\%$ (protocol, not frozen prereg; A-011) & 205/13{,}200 (1.55\%) & \textbf{fail} \\
     G3 recovery agr.\ & $\kappa\ge.75$ (preregistered) & .920 / .917 & pass \\
-    G4 & $\ge50\%$ of $s3$ risk set recovers by $H=4$; Weibull $p\ge.01$ (preregistered) & crude 24.4/32.9/21.3\% (54/221; 116/353; 80/376); KM 28.2/44.6/22.0\%; Weibull rejected in 2/3 primary groups & \textbf{fail} \\
+    G4 & $\ge50\%$ of $s3$ risk set recovers by $H=4$; Weibull $p\ge.01$ (preregistered) & crude 24.4/32.9/21.3\% (54/221; 116/353; 80/376); KM 28.2/44.6/22.0\%; Weibull rejected in all three primary groups & \textbf{fail} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1507,7 +1507,7 @@ the slope and tier paragraphs below give the H1--H3, H5--H6 detail.
     H1 & Pooled slope $\beta>0$ over $s=0,\dots,3$ & $\hat\beta=0.877$ [0.770, 0.998], $p=2.3\times10^{-49}$ & supported$^{\ast}$ \\
     H2 & Per-model slope positive in $\ge2/3$ models, same sign & 3/3 positive, Holm-significant & pass \\
     H3 & Silent propagation a non-zero share at $s=2,3$ & 419/1{,}964 = 21.3\% of critical-arm switches & supported$^{\dagger}$ \\
-    H4 & $\ge50\%$ of $s3$ risk set recovers by $H=4$; Weibull $p\ge.01$ & crude 24.4/32.9/21.3\%; Weibull rejected 2/3 & \textbf{fail} \\
+    H4 & $\ge50\%$ of $s3$ risk set recovers by $H=4$; Weibull $p\ge.01$ & crude 24.4/32.9/21.3\%; Weibull rejected 3/3 & \textbf{fail} \\
     H5 & $s=3$ switch rate exceeds $s=1$ & McNemar $b=431$, $c=93$, $p=5.3\times10^{-53}$ & supported \\
     H6 & Donor/task slopes directionally consistent & donor interaction $p=.61$; domain 0.74/0.99, interaction $p=.035$ (exploratory) & consistent \\
     H7 & Model $\times$ severity, task $\times$ severity not claimed & reported exploratory only & --- \\
@@ -1563,7 +1563,8 @@ ratios against $s0$ are 1.27 (s1), 4.60 (s2), and 11.21 (s3) (Table~\ref{tab:tie
 Figure~\ref{fig:tiers}), and the pre-registered linearity diagnostics reject a constant gradient. The estimate uses the 617 informative prefix$\times$model groups
 (423 unique prefixes) and 2{,}458 slope rows from the 800 primary
 prefixes; the 80 reserve prefixes are excluded (A-007). Of the 9{,}075 labelled prose-arm
-cells, 2{,}297 form prefix$\times$model strata. The switch typology codes a missing labelled arm
+cells, 2{,}297 form prefix$\times$model strata. The switch typology
+(\texttt{artifacts/analysis/switch\_typology.json}) codes a missing labelled arm
 as a non-switch: 47.8\% never switch, 23.9\% switch in every arm, 19.0\% are dose-responsive
 ($s0=s1=0$, $s2$ or $s3=1$), and 9.3\% are placebo switchers (Table~\ref{tab:typology}). That
 gives 649 strata (28.3\%) varying across the four-arm grid; 32 of the 649 lack at least one

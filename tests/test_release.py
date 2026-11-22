@@ -135,39 +135,73 @@ def test_p6_2_recovery_and_strata_numbers() -> None:
     v1_crude = "27.3/34.7/27.2"
     v1_km = "32.4/47.6/28.2"
     v2_crude = "24.4/32.9/21.3"
-    assert tex.count(v1_crude) == 1
-    assert tex.count(v1_km) == 1
+    v2_km = "28.2/44.6/22.0"
     marker = "Run-risk-set (v1) reconciliation"
     assert marker in tex
     start = tex.index(marker)
-    block = tex[start : start + 900]
-    assert v1_crude in block and v1_km in block
+    end = tex.find("\n\n", start)
+    assert end != -1
+    note = tex[start:end]
+    assert v1_crude in note and v1_km in note
     for bridge in ("54+18=72", "116+25=141", "80+32=112"):
-        assert bridge in block
+        assert bridge in note
+    outside_note = tex[:start] + tex[end:]
+    assert v1_crude not in outside_note
+    assert v1_km not in outside_note
     assert tex.count(v2_crude) >= 4
+    assert tex.count(v2_km) >= 3
     assert "617 informative" in tex
     assert "2{,}458" in tex
     assert "649 strata (28.3\\%)" in tex
     assert "26.9\\% of the 2{,}297" in tex
     assert "32 of the 649" in tex
     assert "649 of the 2{,}297" not in tex
+    assert "switch\\_typology.json" in tex
 
-    for rel in ("README.md", "ROADMAP.md", "CITATION.cff",
-                "docs/submission/cover_letter.md", "docs/submission/highlights.md",
-                "docs/submission/checklist.md"):
-        text = (_REPO / rel).read_text(encoding="utf-8")
+    # The v2 semantic set rejects the Weibull shape in all three primary groups;
+    # the old 2/3 count was the v1 hash-set result (Qwen v1 p=.0132).
+    assert "2/3 primary groups" not in tex
+    assert "Weibull rejected in all three primary groups" in tex
+    assert "Weibull rejected 3/3" in tex
+    assert "for all three primary groups" in tex
+
+    docs = {rel: (_REPO / rel).read_text(encoding="utf-8") for rel in (
+        "README.md", "ROADMAP.md", "CITATION.cff",
+        "docs/submission/cover_letter.md", "docs/submission/highlights.md",
+        "docs/submission/checklist.md",
+    )}
+    for rel, text in docs.items():
         assert v1_crude not in text, rel
         assert v1_km not in text, rel
-    letter = (_REPO / "docs/submission/cover_letter.md").read_text(encoding="utf-8")
-    assert v2_crude in letter
-    citation = (_REPO / "CITATION.cff").read_text(encoding="utf-8")
-    assert v2_crude in citation
+    assert v2_crude in docs["ROADMAP.md"]
+    assert v2_crude in docs["docs/submission/cover_letter.md"]
+    assert v2_crude in docs["docs/submission/checklist.md"]
+    assert v2_crude in docs["CITATION.cff"]
+    assert "21.3–32.9%" in docs["README.md"]
+    assert "21.3–32.9%" in docs["docs/submission/highlights.md"]
+    assert "Weibull shape rejected 3/3" in docs["ROADMAP.md"]
+    assert "Weibull shape rejected 2/3" not in docs["ROADMAP.md"]
+
+    recovery_path = _REPO / "artifacts" / "analysis" / "g4_recovery_v2.json"
+    if recovery_path.is_file():
+        import json as _json
+
+        cells = _json.loads(recovery_path.read_text(encoding="utf-8"))["groups"]
+        for group in (
+            "qwen3_5_9b_instruct_awq|transient_s3",
+            "ministral_3_8b_instruct_2512_awq|transient_s3",
+            "llama_3_1_8b_instruct_awq|transient_s3",
+        ):
+            assert cells[group]["weibull"]["p_value"] < .01, group
 
     decisions = (_REPO / "docs" / "DECISIONS.md").read_text(encoding="utf-8")
     d040 = decisions[decisions.index("## D-040") : decisions.index("## D-039")]
     assert v1_crude in d040
+    assert "Secondary sets reach" in d040
+    assert "Weibull rejects 2/3" in d040
     assert "Supersession (2026-11-23; P6.2)" in d040
-    assert "not censoring variants" in d040
+    assert "v1-derived" in d040
+    assert "all three primary groups" in d040
     assert "Ministral close" in d040
 
 
