@@ -82,7 +82,7 @@ def style(ax):
 fig, ax = plt.subplots(figsize=(6.3, 3.1))
 arms = ["s0", "s1", "s2", "s3"]
 width = 0.26
-for mi, (model, label) in enumerate(zip(MODELS, LABELS)):
+for mi, (model, label) in enumerate(zip(MODELS, LABELS, strict=False)):
     rates, lows, highs = [], [], []
     for arm in arms:
         cell = g3["arm_table"][f"{model}|{arm}"]
