@@ -1,5 +1,17 @@
-"""Result figures for the ToolResult-800 manuscript (from analysis artifacts)."""
+"""Result figures for the ToolResult-800 manuscript (from analysis artifacts).
 
+Print contract: every figure is drawn at (or just above) its final printed
+width -- the CAS text block is 6.18 in wide and the manuscript includes
+figures at 0.95-0.98 \\linewidth -- with nominal fonts of at least 9 pt, so
+the effective printed size stays at or above 8 pt. Legends distinguish
+models by marker and line style as well as colour. Figure 5 shows Wald 95%
+intervals from the prefix-cluster standard errors and overlays the pooled
+prefix-cluster bootstrap interval reported in the text; Figure 9 plots the
+v2 semantic risk-set curves (``g4_recovery_v2.json``), not the run-time
+hash curves.
+"""
+
+import argparse
 import json
 from pathlib import Path
 
@@ -7,6 +19,11 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+# Nominal floor: nothing below 9 pt. At the printed scale (5.87-6.06 in from
+# a 6.3-6.4 in canvas) the effective floor is ~8.4 pt.
+FONT_FLOOR = 9
+PRINT_WIDTH_IN = 6.18
 
 plt.rcParams.update(
     {
@@ -28,6 +45,9 @@ FIG = ROOT / "paper" / "figures"
 FIG.mkdir(exist_ok=True)
 
 COLORS = ["#0072B2", "#E69F00", "#009E73", "#D55E00"]
+HATCHES = ["", "///", "..."]
+MARKERS = ["o", "s", "^"]
+LINESTYLES = ["-", "--", ":"]
 MODELS = [
     "qwen3_5_9b_instruct_awq",
     "ministral_3_8b_instruct_2512_awq",
@@ -36,7 +56,7 @@ MODELS = [
 LABELS = ["Qwen3.5-9B", "Ministral-3-8B", "Llama-3.1-8B"]
 
 g3 = json.loads((AN / "g3_analysis.json").read_text(encoding="utf-8"))
-g4 = json.loads((AN / "g4_recovery.json").read_text(encoding="utf-8"))
+g4 = json.loads((AN / "g4_recovery_v2.json").read_text(encoding="utf-8"))
 ft = json.loads((AN / "field_taxonomy.json").read_text(encoding="utf-8"))
 secondary = json.loads((AN / "prereg_secondary.json").read_text(encoding="utf-8"))
 
@@ -58,8 +78,8 @@ def style(ax):
     ax.set_axisbelow(True)
 
 
-# --- Figure: dose-response by arm and model
-fig, ax = plt.subplots(figsize=(8.4, 4.0))
+# --- Figure: dose-response by arm and model (printed at 0.95 linewidth)
+fig, ax = plt.subplots(figsize=(6.3, 3.1))
 arms = ["s0", "s1", "s2", "s3"]
 width = 0.26
 for mi, (model, label) in enumerate(zip(MODELS, LABELS)):
@@ -76,6 +96,8 @@ for mi, (model, label) in enumerate(zip(MODELS, LABELS)):
         rates,
         width=width,
         color=COLORS[mi],
+        hatch=HATCHES[mi],
+        edgecolor="white",
         label=label,
         yerr=[lows, highs],
         capsize=2,
@@ -93,8 +115,11 @@ fig.tight_layout()
 fig.savefig(FIG / "fig7.png", dpi=600)
 plt.close(fig)
 
-# --- Figure: forest plot
-fig, ax = plt.subplots(figsize=(7.6, 3.3))
+# --- Figure: forest plot (printed at 0.95 linewidth).
+# Error bars are Wald 95% intervals from the prefix-cluster SE; the shaded
+# band and diamond show the pooled prefix-cluster bootstrap interval
+# reported in the text (2,000 replicates, seed 20261108).
+fig, ax = plt.subplots(figsize=(6.3, 2.9))
 rows = [(m, LABELS[i]) for i, m in enumerate(MODELS)] + [("pooled", "Pooled")]
 ys = list(range(len(rows)))[::-1]
 for y, (key, label) in zip(ys, rows):
@@ -115,17 +140,31 @@ for y, (key, label) in zip(ys, rows):
         markersize=5,
     )
     ax.text(hi + 0.02, y, f"{beta:.2f} [{lo:.2f}, {hi:.2f}]", va="center", fontsize=10)
+boot_lo = g3["bootstrap"]["ci_low"]
+boot_hi = g3["bootstrap"]["ci_high"]
+boot_mean = g3["bootstrap"]["beta_mean"]
+ax.axvspan(boot_lo, boot_hi, color=COLORS[0], alpha=0.12, zorder=0)
+ax.plot(boot_mean, 0, marker="D", color=COLORS[3], markersize=7, zorder=4)
+ax.text(
+    boot_hi + 0.02,
+    -0.32,
+    f"pooled bootstrap [{boot_lo:.3f}, {boot_hi:.3f}]",
+    va="center",
+    fontsize=9,
+    color=COLORS[3],
+)
 ax.axvline(0, color="#555555", linewidth=0.8, linestyle="--")
 ax.set_yticks(ys)
 ax.set_yticklabels([label for _, label in rows])
 ax.set_xlabel("Conditional-logit slope beta (per severity level)")
-ax.set_xlim(-0.05, 1.45)
+ax.set_xlim(-0.05, 1.55)
+ax.set_ylim(-0.75, 3.6)
 style(ax)
 fig.tight_layout()
 fig.savefig(FIG / "fig5.png", dpi=600)
 plt.close(fig)
 
-# --- Figure: field types at s=2
+# --- Figure: field types at s=2 (printed at 0.95 linewidth)
 records = [r for r in ft["by_class_arm"] if r["arm"] == "s2"]
 class_order = ["identifier", "money", "entity", "status"]
 by_class = {r["class"]: r for r in records}
@@ -135,7 +174,7 @@ all_switch = {
 }
 all_silent_k = sum(r["silent"]["k"] for r in records)
 all_switch_k = sum(r["switch"]["k"] for r in records)
-fig, ax = plt.subplots(figsize=(8.0, 3.7))
+fig, ax = plt.subplots(figsize=(6.3, 3.0))
 xs = range(len(class_order) + 1)
 switch_rates = [by_class[c]["switch"]["pct"] / 100 for c in class_order] + [
     all_switch["k"] / all_switch["n"]
@@ -153,6 +192,8 @@ ax.bar(
     switch_rates,
     width=0.38,
     color=COLORS[0],
+    hatch=HATCHES[2],
+    edgecolor="white",
     label="Switch rate",
 )
 ax.bar(
@@ -160,6 +201,8 @@ ax.bar(
     silent_shares,
     width=0.38,
     color=COLORS[3],
+    hatch=HATCHES[1],
+    edgecolor="white",
     label="Silent share of switches",
 )
 ax.set_xticks(list(xs))
@@ -172,14 +215,14 @@ fig.tight_layout()
 fig.savefig(FIG / "fig8.png", dpi=600)
 plt.close(fig)
 
-# --- Figure: tier odds ratios (s=1,2,3 vs s=0), log scale
+# --- Figure: tier odds ratios (s=1,2,3 vs s=0), log scale (printed at 0.98)
 tiers = ["s1", "s2", "s3"]
 tier_titles = [
     "s = 1 (non-critical)",
     "s = 2 (one critical)",
     "s = 3 (critical + second)",
 ]
-fig, axes = plt.subplots(1, 3, figsize=(12.6, 3.6), sharey=True)
+fig, axes = plt.subplots(1, 3, figsize=(6.4, 3.3), sharey=True)
 row_labels = list(LABELS) + ["Pooled"]
 for ax, tier, title in zip(axes, tiers, tier_titles):
     ys = list(range(len(row_labels)))[::-1]
@@ -217,16 +260,16 @@ for ax, tier, title in zip(axes, tiers, tier_titles):
     ax.axvline(1, color="#555555", linewidth=0.8, linestyle="--")
     ax.set_xscale("log")
     ax.set_title(title, fontsize=11)
-    ax.set_xlabel("Odds ratio vs s=0 (log scale)")
     style(ax)
 axes[0].set_yticks(list(range(len(row_labels)))[::-1])
 axes[0].set_yticklabels(row_labels)
+fig.supxlabel("Odds ratio vs s=0 (log scale)", fontsize=11)
 fig.tight_layout()
 fig.savefig(FIG / "fig6.png", dpi=600)
 plt.close(fig)
 
-# --- Figure: sensitivity of the pooled slope
-fig, axes = plt.subplots(1, 2, figsize=(12.0, 3.8))
+# --- Figure: sensitivity of the pooled slope (printed at 0.98 linewidth)
+fig, axes = plt.subplots(1, 2, figsize=(6.4, 3.4))
 panel_a = [
     (
         "Primary (s0-s3)",
@@ -305,12 +348,14 @@ fig.tight_layout()
 fig.savefig(FIG / "fig10.png", dpi=600)
 plt.close(fig)
 
-# --- Figure: recovery at s=2 and s=3 (transient)
-fig, axes = plt.subplots(1, 2, figsize=(11.2, 3.8), sharey=True)
+# --- Figure: recovery at s=2 and s=3, transient regime (printed at 0.98).
+# Curves are the v2 semantic risk-set Kaplan-Meier estimates from
+# g4_recovery_v2.json (Table tab:recovery), not the run-time hash curves.
+fig, axes = plt.subplots(1, 2, figsize=(6.3, 3.4), sharey=True)
 for ax, severity, title in zip(
-    axes, (2, 3), ("s = 2 (one critical)", "s = 3 (critical + second)")
+    axes, (2, 3), ("s = 2 (one critical)", "s = 3 (critical + second)"), strict=False
 ):
-    for mi, (model, label) in enumerate(zip(MODELS, LABELS)):
+    for mi, (model, label) in enumerate(zip(MODELS, LABELS, strict=False)):
         group = g4["groups"][f"{model}|transient_s{severity}"]
         steps = [0] + [row["step"] for row in group["kaplan_meier"]]
         surv = [1.0] + [row["survival"] for row in group["kaplan_meier"]]
@@ -319,6 +364,10 @@ for ax, severity, title in zip(
             surv,
             where="post",
             color=COLORS[mi],
+            linestyle=LINESTYLES[mi],
+            marker=MARKERS[mi],
+            markersize=4,
+            markevery=1,
             label=f"{label} (n={group['n']})",
         )
     ax.set_xlabel("Step after corruption")
@@ -333,3 +382,84 @@ fig.savefig(FIG / "fig9.png", dpi=600)
 plt.close(fig)
 
 print("wrote result figures to", FIG)
+
+
+# ---------------------------------------------------------------------------
+# Verification: 600 DPI at final size and >=8 pt effective type.
+# ---------------------------------------------------------------------------
+
+# Maps figure file -> (canvas width in, printed fraction of the 6.18 in text
+# block, smallest nominal font in pt). The effective size is the nominal size
+# scaled by printed/canvas width; every entry must stay at or above 8 pt.
+PRINT_CONTRACT = {
+    "fig5.png": (6.3, 0.95, 9),
+    "fig6.png": (6.4, 0.98, 9),
+    "fig7.png": (6.3, 0.95, 10),
+    "fig8.png": (6.3, 0.95, 10),
+    "fig9.png": (6.3, 0.98, 9),
+    "fig10.png": (6.4, 0.98, 9),
+}
+
+DPI = 600
+
+
+def describe_png(path: Path) -> tuple[int, int, tuple[float, float]]:
+    """Return (width, height, dpi) for a PNG, using Pillow."""
+    from PIL import Image
+
+    with Image.open(path) as image:
+        width, height = image.size
+        dpi = image.info.get("dpi", (0.0, 0.0))
+    if isinstance(dpi, (int, float)):
+        dpi = (float(dpi), float(dpi))
+    return width, height, (float(dpi[0]), float(dpi[1]))
+
+
+def verify(outdir: Path = FIG) -> list[Path]:
+    """Check DPI, final-size pixel width, and effective font size."""
+    print(f"{'file':22s} {'width':>7s} {'height':>7s} {'dpi':>12s} {'eff.pt':>7s}")
+    paths = []
+    for name, (canvas_in, fraction, min_font) in PRINT_CONTRACT.items():
+        path = outdir / name
+        if not path.exists():
+            raise FileNotFoundError(f"missing figure: {path}")
+        width, height, dpi = describe_png(path)
+        if min(dpi) < DPI - 0.5:
+            raise ValueError(f"{path.name}: expected {DPI} DPI, got {dpi}")
+        if width < 3300:
+            raise ValueError(f"{path.name}: unexpectedly narrow ({width}px)")
+        effective = min_font * (fraction * PRINT_WIDTH_IN / canvas_in)
+        if effective < 8.0 - 1e-9:
+            raise ValueError(
+                f"{path.name}: effective font {effective:.2f} pt below 8 pt"
+            )
+        print(
+            f"{name:22s} {width:7d} {height:7d}"
+            f" {dpi[0]:6.0f} x {dpi[1]:<5.0f} {effective:7.2f}"
+        )
+        paths.append(path)
+    return paths
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--outdir",
+        type=Path,
+        default=FIG,
+        help="output directory for the figures",
+    )
+    parser.add_argument(
+        "--verify-only",
+        action="store_true",
+        help="check the PNGs (the module redraws deterministically from "
+        "artifacts on import, so this verifies fresh output)",
+    )
+    args = parser.parse_args()
+    if not args.verify_only:
+        raise SystemExit("generation runs on import; use --verify-only to check")
+    verify(args.outdir.resolve())
+
+
+if __name__ == "__main__":
+    main()

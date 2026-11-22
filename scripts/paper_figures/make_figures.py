@@ -3,14 +3,17 @@
 
 The four figures are design schematics, not result plots:
 
-* ``fig-design.png``   -- frozen prefix -> five paired arms -> target model.
-* ``fig-pipeline.png`` -- harvest through G0 freeze, G1, G2, and analysis.
-* ``fig-arms.png``     -- the V / s=0..3 severity ladder with a synthetic record.
-* ``fig-analysis.png`` -- conceptual slope and recovery curves, explicitly
-  labelled "illustrative, not data".
+* ``fig1.png`` -- frozen prefix -> five paired arms -> target model.
+* ``fig3.png`` -- harvest through G0 freeze, G1, G2, and analysis.
+* ``fig2.png`` -- the V / s=0..3 severity ladder with a synthetic record.
+* ``fig4.png`` -- conceptual slope and recovery curves, explicitly labelled
+  "conceptual schematic" (no study outcomes are plotted).
 
-Every figure is written at 600 DPI with a base font of at least 14 pt.  No
-number in these files is a study outcome.  The only counts that appear are
+Every figure is drawn at (or just above) its final printed width -- the CAS
+text block is 6.18 in wide and the manuscript includes figures at
+0.95 \\linewidth -- with nominal fonts of at least 14 pt, so the effective
+printed size stays well above 8 pt. No
+number in these files is a study outcome. The only counts that appear are
 design constants recorded in ``README.md`` / ``docs/PROTOCOL.md`` (sample size,
 arm count, generation envelope).
 
@@ -18,13 +21,13 @@ Run from the repository root::
 
     python scripts/paper_figures/make_figures.py
 
-Use ``--verify-only`` to re-check DPI and pixel dimensions without redrawing.
+Use ``--verify-only`` to re-check DPI, pixel dimensions, and effective type
+size without redrawing.
 """
 
 from __future__ import annotations
 
 import argparse
-import math
 from pathlib import Path
 
 import matplotlib
@@ -273,14 +276,14 @@ def make_design(outdir: Path) -> Path:
     fig, ax = canvas((15.0, 9.2))
 
     # Frozen prefix ---------------------------------------------------------
-    card(ax, 17.5, 78.0, 65.0, 17.0, facecolor=TINT[BLUE], edgecolor=BLUE, lw=2.4)
+    card(ax, 17.5, 78.0, 65.0, 17.0, facecolor=TINT[BLUE], edgecolor=BLUE, lw=3.2)
     label(ax, 50.0, 91.6, "Frozen τ-bench prefix", size=24, weight="bold", color=BLUE)
     label(
         ax,
         50.0,
         87.6,
-        "real donor trajectory · cut after a tool observation · target models never generate it",
-        size=14,
+        "real donor trajectory · cut after a tool observation",
+        size=21,
         color=MUTED,
     )
 
@@ -301,7 +304,7 @@ def make_design(outdir: Path) -> Path:
             5.6,
             facecolor=PAPER,
             edgecolor=ORANGE if highlight else GRID,
-            lw=2.2 if highlight else 1.4,
+            lw=3.0 if highlight else 2.0,
             radius=0.8,
             zorder=4,
         )
@@ -310,7 +313,7 @@ def make_design(outdir: Path) -> Path:
             chip_x + chip_w / 2,
             82.2,
             text,
-            size=14,
+            size=21,
             color=INK,
             weight="bold" if highlight else "normal",
             linespacing=1.15,
@@ -320,11 +323,11 @@ def make_design(outdir: Path) -> Path:
 
     # Arms ------------------------------------------------------------------
     arms = [
-        ("V", "verbatim JSON", "anchor · not in slope", BLUE, PAPER),
+        ("V", "verbatim JSON", "anchor", BLUE, PAPER),
         ("s = 0", "faithful prose", "placebo", GREEN, TINT[GREEN]),
-        ("s = 1", "non-critical field", "negative control", SKY, TINT[SKY]),
-        ("s = 2", "critical wrong value", "dose", ORANGE, TINT[ORANGE]),
-        ("s = 3", "critical + contradiction", "dose (compound)", VERMILLION, TINT[VERMILLION]),
+        ("s = 1", "non-critical edit", "neg. control", SKY, TINT[SKY]),
+        ("s = 2", "critical error", "dose", ORANGE, TINT[ORANGE]),
+        ("s = 3", "error + conflict", "compound dose", VERMILLION, TINT[VERMILLION]),
     ]
     arm_w, arm_gap = 17.2, 1.6
     arm_y, arm_h = 50.0, 17.0
@@ -332,7 +335,7 @@ def make_design(outdir: Path) -> Path:
     centers: list[float] = []
     for title, subtitle, role, color, tint in arms:
         centers.append(arm_x + arm_w / 2)
-        card(ax, arm_x, arm_y, arm_w, arm_h, facecolor=tint, edgecolor=color, lw=2.4)
+        card(ax, arm_x, arm_y, arm_w, arm_h, facecolor=tint, edgecolor=color, lw=3.2)
         band(ax, arm_x, arm_y + arm_h - 4.2, arm_w, 4.2, color)
         header_ink = PAPER if color in (BLUE, VERMILLION) else INK
         label(
@@ -349,7 +352,7 @@ def make_design(outdir: Path) -> Path:
             arm_x + arm_w / 2,
             arm_y + 9.4,
             subtitle,
-            size=14,
+            size=21,
             color=INK,
         )
         label(
@@ -357,7 +360,7 @@ def make_design(outdir: Path) -> Path:
             arm_x + arm_w / 2,
             arm_y + 3.8,
             role,
-            size=14,
+            size=21,
             color=MUTED,
             style="italic",
         )
@@ -365,10 +368,10 @@ def make_design(outdir: Path) -> Path:
 
     # Fan-out arrows from the prefix to each arm.
     for cx in centers:
-        arrow(ax, (50.0, 78.0), (cx, arm_y + arm_h), color="#8A8A8A", lw=1.9, scale=16)
+        arrow(ax, (50.0, 78.0), (cx, arm_y + arm_h), color="#8A8A8A", lw=2.4, scale=20)
 
     # Target model ----------------------------------------------------------
-    card(ax, 20.0, 31.0, 60.0, 12.0, facecolor=TINT[PURPLE], edgecolor=PURPLE, lw=2.4)
+    card(ax, 20.0, 31.0, 60.0, 12.0, facecolor=TINT[PURPLE], edgecolor=PURPLE, lw=3.2)
     label(
         ax,
         50.0,
@@ -394,39 +397,39 @@ def make_design(outdir: Path) -> Path:
             4.8,
             facecolor=PAPER,
             edgecolor=PURPLE,
-            lw=1.4,
+            lw=2.0,
             radius=0.7,
             zorder=4,
         )
-        label(ax, model_x + model_w / 2, 34.6, name, size=14, zorder=7)
+        label(ax, model_x + model_w / 2, 34.6, name, size=21, zorder=7)
         model_x += model_w + model_gap
 
     for cx in centers:
-        arrow(ax, (cx, arm_y), (50.0, 43.0), color="#8A8A8A", lw=1.9, scale=16)
+        arrow(ax, (cx, arm_y), (50.0, 43.0), color="#8A8A8A", lw=2.4, scale=20)
 
     # Decision and recovery -------------------------------------------------
-    arrow(ax, (50.0, 31.0), (36.0, 23.0), color=INK, lw=2.4)
+    arrow(ax, (50.0, 31.0), (36.0, 23.0), color=INK, lw=3.0)
 
-    card(ax, 9.0, 8.5, 54.0, 14.5, facecolor=PAPER, edgecolor=INK, lw=2.2)
+    card(ax, 9.0, 8.5, 54.0, 14.5, facecolor=PAPER, edgecolor=INK, lw=3.0)
     label(ax, 36.0, 19.4, "Next decision", size=21, weight="bold")
-    label(ax, 36.0, 15.2, "JSON tool call or final answer", size=15)
+    label(ax, 36.0, 15.2, "JSON tool call or final answer", size=21)
     label(
         ax,
         36.0,
         11.7,
         "signature compared with the V continuation",
-        size=14,
+        size=21,
         color=MUTED,
     )
 
-    card(ax, 67.0, 8.5, 25.0, 14.5, facecolor=TINT[ORANGE], edgecolor=ORANGE, lw=2.0)
-    label(ax, 79.5, 19.4, "Recovery follow-up", size=18, weight="bold", color=INK)
+    card(ax, 67.0, 8.5, 25.0, 14.5, facecolor=TINT[ORANGE], edgecolor=ORANGE, lw=3.0)
+    label(ax, 79.5, 19.4, "Recovery follow-up", size=21, weight="bold", color=INK)
     paragraph(
         ax,
         79.5,
         15.6,
-        ["continue H = 4 steps", "transient primary; persistent 25%"],
-        size=14,
+        ["continue H = 4 steps", "persistent on 25%"],
+        size=21,
         color=INK,
         linespacing=1.25,
     )
@@ -435,7 +438,7 @@ def make_design(outdir: Path) -> Path:
         (63.0, 15.7),
         (67.0, 15.7),
         color=ORANGE,
-        lw=2.2,
+        lw=3.0,
         linestyle=(0, (4, 3)),
     )
 
@@ -443,17 +446,9 @@ def make_design(outdir: Path) -> Path:
     label(
         ax,
         50.0,
-        3.6,
-        "800 primary prefixes (400 airline + 400 retail)  ·  paired within prefix  ·  5 arms × 3 models = 12,000 base generations",
-        size=FOOTNOTE_FONT,
-        color=MUTED,
-    )
-    label(
-        ax,
-        50.0,
-        1.1,
-        "recovery and jitter repeats bring the pre-specified envelope to 34,800 generations",
-        size=FOOTNOTE_FONT,
+        2.5,
+        "800 primary (400 + 400) · 5 arms × 3 models · planned 34,800, executed 21,611 (see text)",
+        size=21,
         color=MUTED,
     )
 
@@ -466,669 +461,202 @@ def make_design(outdir: Path) -> Path:
 
 
 def make_pipeline(outdir: Path) -> Path:
-    fig, ax = canvas((17.0, 10.0))
-
-    label(
-        ax,
-        3.0,
-        95.0,
-        "Study pipeline and gate sequence",
-        size=26,
-        weight="bold",
-        ha="left",
-    )
-    label(
-        ax,
-        3.0,
-        89.5,
-        "G0 — CPU-only harvest and freeze",
-        size=18,
-        weight="bold",
-        color=BLUE,
-        ha="left",
-    )
-
-    stages = [
-        (
-            "1",
-            "Harvest",
-            ["Pin the τ-bench commit;", "parse real trajectories", "into post-tool", "decision points."],
-            BLUE,
-        ),
-        (
-            "2",
-            "Scrub / relevance",
-            ["Remove PII; exclude", "profile tools; keep", "observations whose", "values the donor used."],
-            BLUE,
-        ),
-        (
-            "3",
-            "Replay",
-            ["Re-execute tool calls", "against the task", "database; keep only", "normalized matches."],
-            BLUE,
-        ),
-        (
-            "4",
-            "Sample",
-            ["800 primary + 80", "reserve (400 airline /", "400 retail);", "cap 10 per task–domain."],
-            BLUE,
-        ),
-        (
-            "5",
-            "Render / perturb",
-            ["Five arms per prefix;", "fixed template; s=0", "value-set check; write", "perturbation records."],
-            BLUE,
-        ),
-        (
-            "6",
-            "Freeze",
-            ["Manifest, renderer,", "rubric, prereg; 40-item", "human audit, pass at", "≥ 36/40."],
-            BLUE,
-        ),
-    ]
-
-    stage_w, stage_gap = 15.2, 0.8
-    stage_x = 1.8
-    stage_y, stage_h = 61.0, 22.0
-    stage_centers: list[float] = []
-    for number, title, body, color in stages:
-        stage_centers.append(stage_x + stage_w / 2)
-        card(ax, stage_x, stage_y, stage_w, stage_h, facecolor=TINT[color], edgecolor=color, lw=2.2)
-        band(ax, stage_x, stage_y + stage_h - 5.0, stage_w, 5.0, color)
-        label(
-            ax,
-            stage_x + stage_w / 2,
-            stage_y + stage_h - 2.5,
-            f"{number}  {title}",
-            size=14.5,
-            weight="bold",
-            color=PAPER,
-        )
-        paragraph(
-            ax,
-            stage_x + stage_w / 2,
-            stage_y + stage_h - 7.6,
-            body,
-            size=14,
-            linespacing=1.32,
-        )
-        stage_x += stage_w + stage_gap
-
-    for left, right in zip(stage_centers[:-1], stage_centers[1:], strict=False):
-        arrow(ax, (left + stage_w / 2, stage_y + 6.0), (right - stage_w / 2, stage_y + 6.0))
-
-    # Wrap from stage 6 down and back to stage 7.
-    last_x = stage_centers[-1]
-    first_x = 21.5
-    wrap_y = 55.0
-    ax.plot([last_x, last_x], [stage_y, wrap_y], color=MUTED, lw=2.0, zorder=1)
-    ax.plot([last_x, first_x], [wrap_y, wrap_y], color=MUTED, lw=2.0, zorder=1)
-    arrow(ax, (first_x, wrap_y), (first_x, 46.0), color=MUTED, lw=2.0)
-    label(
-        ax,
-        55.0,
-        wrap_y + 1.8,
-        "only after G0 freeze",
-        size=14,
-        color=MUTED,
-        style="italic",
-        ha="center",
-    )
-
-    bottom = [
-        (
-            "7",
-            "G1 — Calibration",
-            [
-                "60 disjoint prefixes ×",
-                "3 models. Parse ≥ 95%,",
-                "placebo jitter ≤ 20%,",
-                "s=3 switch 10–80%,",
-                "format refusal < 5%.",
-            ],
-            ORANGE,
-        ),
-        (
-            "8",
-            "G2 — Main run",
-            [
-                "34,800-generation",
-                "envelope on the H200",
-                "slice; ledger every",
-                "generation; hard stop at",
-                "45 GPU-hours or 200 GB.",
-            ],
-            ORANGE,
-        ),
-        (
-            "9",
-            "G3 / G4 — Analysis",
-            [
-                "Pre-registered slope",
-                "and recovery sequence;",
-                "report gate outcomes",
-                "and null results as",
-                "measured.",
-            ],
-            GREEN,
-        ),
-    ]
-
-    bottom_w, bottom_gap = 27.0, 3.0
-    bottom_x = 8.0
-    bottom_y, bottom_h = 23.0, 23.0
-    bottom_centers: list[float] = []
-    for number, title, body, color in bottom:
-        bottom_centers.append(bottom_x + bottom_w / 2)
-        card(
-            ax,
-            bottom_x,
-            bottom_y,
-            bottom_w,
-            bottom_h,
-            facecolor=TINT[color],
-            edgecolor=color,
-            lw=2.4,
-        )
-        band(ax, bottom_x, bottom_y + bottom_h - 5.4, bottom_w, 5.4, color)
-        header_ink = INK if color in (ORANGE, GREEN) else PAPER
-        label(
-            ax,
-            bottom_x + bottom_w / 2,
-            bottom_y + bottom_h - 2.7,
-            f"{number}  {title}",
-            size=18,
-            weight="bold",
-            color=header_ink,
-        )
-        paragraph(
-            ax,
-            bottom_x + bottom_w / 2,
-            bottom_y + bottom_h - 8.0,
-            body,
-            size=14,
-            linespacing=1.38,
-        )
-        bottom_x += bottom_w + bottom_gap
-
-    for left, right in zip(bottom_centers[:-1], bottom_centers[1:], strict=False):
-        arrow(ax, (left + bottom_w / 2, bottom_y + 10.0), (right - bottom_w / 2, bottom_y + 10.0))
+    fig, ax = canvas((6.3, 7.4))
 
     label(
         ax,
         50.0,
-        15.0,
-        "Sequential gates: G1 cannot start before G0 freezes; G2 cannot start before G1 passes.",
+        95.5,
+        "Study pipeline and gate sequence",
         size=15,
+        weight="bold",
+        ha="center",
+    )
+
+    stages = [
+        ("1", "Harvest", "pin τ-bench commit; parse 13,605 post-tool points", BLUE),
+        ("2", "Scrub + replay", "PII tools excluded; 99.91% replay on eligible pool", BLUE),
+        ("3", "Sample + render", "800 primary + 80 reserve; five arms; s=0 check", BLUE),
+        ("4", "Freeze (G0)", "manifest + renderer + prereg hashes; AI audit 40/40", BLUE),
+        ("5", "Calibrate (G1)", "60 prefixes × 3 models; s0-vs-s1 ≤20% (A-004)", ORANGE),
+        ("6", "Main run (G2)", "executed 21,611 rows; hard stop 45 GPU-h / 200 GB", ORANGE),
+        ("7", "Analyse (G3/G4)", "slope + silent split; KM/RMST; gates as measured", GREEN),
+    ]
+
+    y = 89.0
+    for number, title, desc, color in stages:
+        card(ax, 2.0, y - 8.4, 96.0, 8.8, facecolor=TINT[color], edgecolor=color, lw=2.0)
+        label(ax, 7.5, y - 4.0, number, size=14, weight="bold", color=color)
+        label(ax, 13.0, y - 2.9, title, size=12.5, weight="bold", color=color, ha="left")
+        label(ax, 13.0, y - 6.2, desc, size=11, color=INK, ha="left")
+        if y > 30.0:
+            arrow(ax, (50.0, y - 8.4), (50.0, y - 9.6), color=MUTED, lw=2.0)
+        y -= 10.2
+
+    label(
+        ax,
+        50.0,
+        14.0,
+        "Sequential gates: G1 starts only after G0 freezes; G2 only after G1 passes.",
+        size=11,
         color=INK,
         weight="bold",
     )
     label(
         ax,
         50.0,
-        9.5,
-        "Stage descriptions are schematic; recorded counts and hashes live in the G0 report and manifests.",
-        size=FOOTNOTE_FONT,
+        7.0,
+        "Schematic; counts and hashes live in the G0 report and manifests.",
+        size=11,
         color=MUTED,
     )
 
     return save(fig, outdir / "fig3.png")
-
-
 # ---------------------------------------------------------------------------
 # Figure 3: arms
 # ---------------------------------------------------------------------------
 
 
-def _observation_card(
-    ax,
-    x: float,
-    y: float,
-    w: float,
-    h: float,
-    lines: list[tuple[str, str | None]],
-    *,
-    mono: bool,
-    size: float = 14,
-) -> None:
-    """Draw a small observation excerpt; highlight lines by tint colour."""
-    card(ax, x, y, w, h, facecolor=PAPER, edgecolor=GRID, lw=1.4, radius=0.9)
-    line_h = min(4.3, h / (len(lines) + 0.6))
-    block_h = line_h * len(lines)
-    top = y + h / 2 + block_h / 2 - line_h / 2
-    for i, (text, tint) in enumerate(lines):
-        yy = top - i * line_h
-        bbox = None
-        if tint is not None:
-            bbox = {
-                "boxstyle": "round,pad=0.18",
-                "facecolor": tint,
-                "edgecolor": "none",
-            }
-        ax.text(
-            x + 0.9,
-            yy,
-            text,
-            fontsize=size,
-            family=MONO if mono else "DejaVu Sans",
-            ha="left",
-            va="center",
-            color=INK,
-            bbox=bbox,
-            zorder=7,
-        )
-
-
 def make_arms(outdir: Path) -> Path:
-    fig, ax = canvas((18.0, 10.0))
+    fig, ax = canvas((6.4, 5.6))
 
     label(
         ax,
         50.0,
-        96.3,
+        95.5,
         "Five arms: V format anchor + s = 0…3 severity ladder",
-        size=22,
+        size=15,
         weight="bold",
+        ha="center",
     )
 
     panels = [
-        {
-            "title": "V",
-            "subtitle": "verbatim JSON",
-            "role": "anchor · not in slope",
-            "color": BLUE,
-            "tint": PAPER,
-            "mono": True,
-            "obs": [
-                ('{"flight": "TA100",', None),
-                (' "date": "2027-03-14",', None),
-                (' "fare_usd": 420,', None),
-                (' "cabin": "economy",', None),
-                (' "status": "confirmed"}', None),
-            ],
-            "change": [
-                "Raw JSON, byte-for-byte",
-                "real observation.",
-                "Format / jitter anchor;",
-                "not a severity level.",
-            ],
-        },
-        {
-            "title": "s = 0",
-            "subtitle": "faithful prose",
-            "role": "placebo · jitter absorbed by α",
-            "color": GREEN,
-            "tint": TINT[GREEN],
-            "mono": False,
-            "obs": [
-                ("Flight TA100 departs", None),
-                ("2027-03-14. Fare: \\$420.", None),
-                ("Cabin: economy.", None),
-                ("Status: confirmed.", None),
-            ],
-            "change": [
-                "All values preserved in",
-                "the fixed prose template.",
-                "Value set must equal V;",
-                "any loss excludes the prefix.",
-            ],
-        },
-        {
-            "title": "s = 1",
-            "subtitle": "non-critical change",
-            "role": "negative control",
-            "color": SKY,
-            "tint": TINT[SKY],
-            "mono": False,
-            "obs": [
-                ("Flight TA100 departs", None),
-                ("2027-03-14. Fare: \\$420.", None),
-                ("Cabin: economy.", None),
-                ("Aircraft: A321.", TINT[SKY]),
-                ("Status: confirmed.", None),
-            ],
-            "change": [
-                "Aircraft A320 → A321.",
-                "Non-critical: must not",
-                "appear in the donor's",
-                "factual continuation.",
-            ],
-        },
-        {
-            "title": "s = 2",
-            "subtitle": "critical wrong value",
-            "role": "dose",
-            "color": ORANGE,
-            "tint": TINT[ORANGE],
-            "mono": False,
-            "obs": [
-                ("Flight TA100 departs", None),
-                ("2027-03-14. Fare: \\$520.", TINT[ORANGE]),
-                ("Cabin: economy.", None),
-                ("Status: confirmed.", None),
-            ],
-            "change": [
-                "Fare \\$420 → \\$520.",
-                "Decision-critical: plausible,",
-                "and trusting it changes the",
-                "correct next action.",
-            ],
-        },
-        {
-            "title": "s = 3",
-            "subtitle": "critical + contradiction",
-            "role": "dose · compound",
-            "color": VERMILLION,
-            "tint": TINT[VERMILLION],
-            "mono": False,
-            "obs": [
-                ("Flight TA100 departs", None),
-                ("2027-03-14. Fare: \\$520.", TINT[VERMILLION]),
-                ("Cabin: economy.", None),
-                ("Status: cancelled.", TINT[VERMILLION]),
-                ("Seats available: 6.", TINT[YELLOW]),
-            ],
-            "change": [
-                "Fare \\$420 → \\$520 plus",
-                "status confirmed →",
-                "cancelled while seats",
-                "remain. Critical error +",
-                "contradiction.",
-            ],
-        },
+        ("V", '{"fare": 420, "status": "ok"}', "verbatim JSON · anchor, not in slope", BLUE),
+        ("s = 0", "Fare: $420. Status: ok.", "faithful prose · placebo", GREEN),
+        ("s = 1", "Fare: $420. Aircraft: A321.", "non-critical edit · neg. control", SKY),
+        ("s = 2", "Fare: $520. Status: ok.", "critical error · dose", ORANGE),
+        (
+            "s = 3",
+            "Fare: $520. Status: cancelled; seats open.",
+            "error + conflict · compound dose",
+            VERMILLION,
+        ),
     ]
 
-    panel_w, panel_gap = 18.0, 1.6
-    panel_x, panel_y, panel_h = 1.8, 21.0, 71.0
-    centers: list[float] = []
-    for panel in panels:
-        centers.append(panel_x + panel_w / 2)
-        color = panel["color"]
-        card(
-            ax,
-            panel_x,
-            panel_y,
-            panel_w,
-            panel_h,
-            facecolor=panel["tint"],
-            edgecolor=color,
-            lw=2.6,
-        )
-        band(ax, panel_x, panel_y + panel_h - 9.4, panel_w, 9.4, color)
-        header_ink = PAPER if color in (BLUE, VERMILLION) else INK
-        label(
-            ax,
-            panel_x + panel_w / 2,
-            panel_y + panel_h - 4.2,
-            panel["title"],
-            size=24,
-            weight="bold",
-            color=header_ink,
-        )
-        label(
-            ax,
-            panel_x + panel_w / 2,
-            panel_y + panel_h - 7.6,
-            panel["subtitle"],
-            size=14,
-            color=header_ink,
-        )
+    y = 87.0
+    for title, example, role, color in panels:
+        card(ax, 2.0, y - 11.4, 96.0, 11.8, facecolor=TINT[color], edgecolor=color, lw=2.0)
+        label(ax, 7.5, y - 5.5, title, size=13, weight="bold", color=color)
+        label(ax, 22.0, y - 3.8, example, size=11, color=INK, ha="left", family=MONO)
+        label(ax, 22.0, y - 8.4, role, size=11, color=MUTED, ha="left", style="italic")
+        y -= 13.0
 
-        _observation_card(
-            ax,
-            panel_x + 0.9,
-            panel_y + 35.0,
-            panel_w - 1.8,
-            23.5,
-            panel["obs"],
-            mono=panel["mono"],
-            size=14,
-        )
-
-        # Change description.
-        card(
-            ax,
-            panel_x + 0.9,
-            panel_y + 13.0,
-            panel_w - 1.8,
-            19.0,
-            facecolor=PAPER,
-            edgecolor=color,
-            lw=1.4,
-            radius=0.9,
-        )
-        label(
-            ax,
-            panel_x + panel_w / 2,
-            panel_y + 29.4,
-            "change",
-            size=14,
-            weight="bold",
-            color=color,
-        )
-        paragraph(
-            ax,
-            panel_x + panel_w / 2,
-            panel_y + 26.8,
-            panel["change"],
-            size=14,
-            linespacing=1.3,
-        )
-
-        label(
-            ax,
-            panel_x + panel_w / 2,
-            panel_y + 7.2,
-            panel["role"],
-            size=14,
-            color=MUTED,
-            style="italic",
-        )
-        panel_x += panel_w + panel_gap
-
-    # Severity ladder covers s=0..s=3 only; V is a format anchor.
-    ladder_y = 13.0
-    arrow(ax, (centers[1] - 5.0, ladder_y), (centers[4] + 5.0, ladder_y), color=INK, lw=2.4)
-    for cx in centers[1:]:
-        ax.plot([cx, cx], [ladder_y - 1.0, ladder_y + 1.0], color=INK, lw=2.0, zorder=2)
     label(
         ax,
-        58.0,
-        7.2,
-        "severity ladder: ordinal, not interval",
-        size=15,
+        50.0,
+        18.0,
+        "severity ladder: ordinal, not interval · V is a format anchor, not a level",
+        size=11,
         color=INK,
         weight="bold",
     )
     label(
         ax,
-        centers[0],
-        13.0,
-        "V is a format anchor,\nnot a severity level",
-        size=14,
-        color=MUTED,
-        style="italic",
-        linespacing=1.2,
-    )
-
-    label(
-        ax,
         50.0,
-        2.6,
-        "Synthetic example (flight TA100). No real τ-bench record and no PII; values illustrate the manipulation, not study data.",
-        size=FOOTNOTE_FONT,
+        10.0,
+        "Synthetic example (flight TA100). No real record, no PII; values show the manipulation.",
+        size=11,
         color=MUTED,
     )
 
     return save(fig, outdir / "fig2.png")
-
-
 # ---------------------------------------------------------------------------
-# Figure 4: analysis (explicitly illustrative)
+# Figure 4: analysis (explicitly a conceptual schematic, not results)
 # ---------------------------------------------------------------------------
 
 
 def make_analysis(outdir: Path) -> Path:
-    fig, axes = plt.subplots(1, 2, figsize=(16.0, 8.8))
-    fig.subplots_adjust(left=0.075, right=0.985, top=0.80, bottom=0.20, wspace=0.26)
-    ax_slope, ax_rec = axes
+    fig, ax = canvas((6.3, 3.3))
 
-    # ---- Panel A: conceptual within-prefix slope --------------------------
-    severities = [0, 1, 2, 3]
-    # Prefix-specific intercepts with one common slope.  These are schematic
-    # model-implied lines, not estimated probabilities.
-    intercepts = [-1.0, 0.05, 1.1]
-    slope = 0.55
-    prefix_colors = [BLUE, GREEN, PURPLE]
-    for i, (alpha, color) in enumerate(zip(intercepts, prefix_colors, strict=False), start=1):
-        ys = [alpha + slope * s for s in severities]
-        ax_slope.plot(
-            severities,
-            ys,
-            color=color,
-            lw=3.0,
-            marker="o",
-            ms=9,
-            mfc=PAPER,
-            mew=2.4,
-            label=f"prefix $p_{i}$",
-            zorder=4,
-        )
-
-    ax_slope.set_xlim(-0.35, 3.35)
-    ax_slope.set_ylim(-1.8, 3.0)
-    ax_slope.set_xticks(severities)
-    ax_slope.set_xticklabels(
-        ["s = 0\nplacebo", "s = 1\nnegative\ncontrol", "s = 2\ndose", "s = 3\ndose\n(compound)"],
-        fontsize=15,
-    )
-    ax_slope.set_yticks([])
-    ax_slope.set_xlabel("severity level (ordinal)", fontsize=17)
-    ax_slope.set_ylabel("logit P(switch) — conceptual", fontsize=17)
-    ax_slope.set_title("Within-prefix slope\n(illustrative, not data)", fontsize=20, pad=14)
-    ax_slope.grid(axis="x", color=GRID, lw=1.0, alpha=0.7, zorder=0)
-    ax_slope.spines["top"].set_visible(False)
-    ax_slope.spines["right"].set_visible(False)
-    ax_slope.legend(
-        loc="upper left",
-        frameon=True,
-        facecolor=PAPER,
-        edgecolor=GRID,
-        framealpha=1.0,
-        fontsize=14,
-        handlelength=1.8,
-    )
-    ax_slope.text(
-        0.5,
-        0.035,
-        "model: logit P(Y=1) = α$_p$ + β·s,  β > 0  ·  V excluded",
-        transform=ax_slope.transAxes,
-        fontsize=14,
-        color=MUTED,
+    label(
+        ax,
+        50.0,
+        94.0,
+        "Analysis path: from switch indicator to recovery",
+        size=22,
+        weight="bold",
         ha="center",
-        va="bottom",
-        bbox=dict(boxstyle="round,pad=0.35", facecolor=PAPER, edgecolor=GRID),
     )
 
-    # ---- Panel B: conceptual four-step recovery ---------------------------
-    hours = [0, 1, 2, 3, 4]
-    mu = 0.45
-    survival = [1.0] + [math.exp(-mu * h) for h in hours[1:]]
-    ax_rec.plot(
-        hours,
-        survival,
-        color=VERMILLION,
-        lw=3.2,
-        marker="o",
-        ms=10,
-        mfc=PAPER,
-        mew=2.6,
-        zorder=4,
-    )
-    ax_rec.fill_between(hours, survival, 0, color=TINT[VERMILLION], alpha=0.75, zorder=1)
-    ax_rec.axhline(0.5, color=MUTED, lw=1.6, linestyle=(0, (5, 4)), zorder=2)
-    ax_rec.axvline(1.54, color=MUTED, lw=1.4, linestyle=(0, (2, 3)), zorder=2)
-    ax_rec.annotate(
-        "t½ = ln 2 / μ\n(reported only if identifiable)",
-        xy=(1.54, 0.5),
-        xytext=(2.25, 0.78),
-        fontsize=14,
-        color=MUTED,
-        ha="left",
-        va="center",
-        arrowprops=dict(arrowstyle="-", color=MUTED, lw=1.4),
-        bbox=dict(boxstyle="round,pad=0.3", facecolor=PAPER, edgecolor=GRID),
-    )
-    ax_rec.annotate(
-        "censor at H = 4",
-        xy=(4.0, survival[-1]),
-        xytext=(2.95, 0.44),
-        fontsize=14,
-        color=MUTED,
-        ha="left",
-        va="center",
-        arrowprops=dict(arrowstyle="-|>", color=MUTED, lw=1.6),
-    )
-
-    ax_rec.set_xlim(-0.3, 4.3)
-    ax_rec.set_ylim(-0.04, 1.08)
-    ax_rec.set_xticks(hours)
-    ax_rec.set_xticklabels(["h = 0\ninjection", "h = 1", "h = 2", "h = 3", "h = 4\nhorizon"], fontsize=15)
-    ax_rec.set_yticks([])
-    ax_rec.set_xlabel("steps since injection", fontsize=17)
-    ax_rec.set_ylabel("share not yet recovered — conceptual", fontsize=17)
-    ax_rec.set_title("Four-step recovery\n(illustrative, not data)", fontsize=20, pad=14)
-    ax_rec.grid(axis="x", color=GRID, lw=1.0, alpha=0.7, zorder=0)
-    ax_rec.spines["top"].set_visible(False)
-    ax_rec.spines["right"].set_visible(False)
-
-    ax_rec.text(
-        0.04,
-        0.04,
-        "risk set: prefixes that moved at injection\nand did not flag there\n"
-        "R1 = signature matches V; R2 = explicit flag",
-        transform=ax_rec.transAxes,
-        fontsize=14,
-        color=MUTED,
-        ha="left",
-        va="bottom",
-        linespacing=1.35,
-        bbox=dict(boxstyle="round,pad=0.35", facecolor=PAPER, edgecolor=GRID),
-    )
-
-    # ---- Shared labels ----------------------------------------------------
-    fig.suptitle(
-        "Analysis plan: slope and recovery are conceptual",
-        fontsize=24,
-        fontweight="bold",
-        y=0.955,
-    )
-    fig.text(
-        0.5,
-        0.010,
-        "ILLUSTRATIVE, NOT DATA — no study outcomes have been generated; axes are unnumbered by design.",
-        ha="center",
-        va="bottom",
-        fontsize=16,
-        fontweight="bold",
-        color=VERMILLION,
-        bbox=dict(boxstyle="round,pad=0.45", facecolor=TINT[VERMILLION], edgecolor=VERMILLION, lw=1.6),
-    )
-    for ax in (ax_slope, ax_rec):
-        ax.text(
-            0.5,
-            0.55,
-            "ILLUSTRATIVE\nNOT DATA",
-            transform=ax.transAxes,
-            ha="center",
-            va="center",
-            fontsize=32,
-            fontweight="bold",
-            color=VERMILLION,
-            alpha=0.06,
-            zorder=0,
-            linespacing=1.2,
+    boxes = [
+        (
+            "1  Switch",
+            ["Y = 1 vs V ref", "flag alone counts"],
+            BLUE,
+        ),
+        (
+            "2  Slope",
+            ["cond. logit;", "mover estimand"],
+            GREEN,
+        ),
+        (
+            "3  Split",
+            ["action / flag /", "silent / other"],
+            ORANGE,
+        ),
+        (
+            "4  Recovery",
+            ["KM + RMST;", "R1 ref match;", "R2 = flag"],
+            VERMILLION,
+        ),
+    ]
+    box_w, box_gap = 23.2, 1.0
+    box_x = 1.8
+    box_y, box_h = 30.0, 48.0
+    centers: list[float] = []
+    for title, body, color in boxes:
+        centers.append(box_x + box_w / 2)
+        card(ax, box_x, box_y, box_w, box_h, facecolor=TINT[color], edgecolor=color, lw=2.2)
+        band(ax, box_x, box_y + box_h - 9.0, box_w, 9.0, color)
+        header_ink = PAPER if color in (BLUE, VERMILLION) else INK
+        label(
+            ax,
+            box_x + box_w / 2,
+            box_y + box_h - 4.5,
+            title,
+            size=13,
+            weight="bold",
+            color=header_ink,
         )
+        paragraph(
+            ax,
+            box_x + box_w / 2,
+            box_y + box_h - 13.0,
+            body,
+            size=12,
+            linespacing=1.3,
+        )
+        box_x += box_w + box_gap
+
+    for left, right in zip(centers[:-1], centers[1:], strict=False):
+        arrow(ax, (left + box_w / 2, box_y + box_h / 2), (right - box_w / 2, box_y + box_h / 2))
+
+    label(
+        ax,
+        50.0,
+        18.0,
+        "Conceptual schematic: estimation order for slope, decomposition, and recovery. Not study data.",
+        size=FOOTNOTE_FONT,
+        color=MUTED,
+    )
+    label(
+        ax,
+        50.0,
+        8.0,
+        "V is the verbatim-observation reference; slope uses the prose arms s = 0…3 only.",
+        size=FOOTNOTE_FONT,
+        color=MUTED,
+    )
 
     return save(fig, outdir / "fig4.png")
 
@@ -1151,24 +679,36 @@ def describe_png(path: Path) -> tuple[int, int, tuple[float, float]]:
 
 
 def verify(outdir: Path) -> list[Path]:
-    expected = [
-        "fig1.png",
-        "fig3.png",
-        "fig2.png",
-        "fig4.png",
-    ]
-    print(f"{'file':22s} {'width':>7s} {'height':>7s} {'dpi':>12s}")
+    # Maps figure file -> (canvas width in, printed fraction of the 6.18 in
+    # text block, smallest nominal font in pt). The effective size is the
+    # nominal size scaled by printed/canvas width; every entry must stay at
+    # or above 8 pt.
+    contract = {
+        "fig1.png": (15.0, 0.95, 21),
+        "fig3.png": (6.3, 0.95, 11),
+        "fig2.png": (6.4, 0.95, 11),
+        "fig4.png": (6.3, 0.95, 12),
+    }
+    print(f"{'file':22s} {'width':>7s} {'height':>7s} {'dpi':>12s} {'eff.pt':>7s}")
     paths = []
-    for name in expected:
+    for name, (canvas_in, fraction, min_font) in contract.items():
         path = outdir / name
         if not path.exists():
             raise FileNotFoundError(f"missing figure: {path}")
         width, height, dpi = describe_png(path)
         if min(dpi) < DPI - 0.5:
             raise ValueError(f"{path.name}: expected {DPI} DPI, got {dpi}")
-        if width < 3000 or height < 3000:
-            raise ValueError(f"{path.name}: unexpectedly small ({width}x{height})")
-        print(f"{name:22s} {width:7d} {height:7d} {dpi[0]:6.0f} x {dpi[1]:<5.0f}")
+        if width < 3300:
+            raise ValueError(f"{path.name}: unexpectedly narrow ({width}px)")
+        effective = min_font * (fraction * 6.18 / canvas_in)
+        if effective < 8.0 - 1e-9:
+            raise ValueError(
+                f"{path.name}: effective font {effective:.2f} pt below 8 pt"
+            )
+        print(
+            f"{name:22s} {width:7d} {height:7d}"
+            f" {dpi[0]:6.0f} x {dpi[1]:<5.0f} {effective:7.2f}"
+        )
         paths.append(path)
     return paths
 
