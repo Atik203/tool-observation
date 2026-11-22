@@ -283,8 +283,8 @@
   every arm greedily on an 18~GB H200 slice. The pre-registered content-sensitivity claim is not
   made: three gate criteria failed. The parser-failure rate is 1.55\% against the 1\% protocol
   threshold, the severity audit's $s2/s3$ decision-changing share is 88.3\% against 90\%, and crude
-  recovery is 27.3/34.7/27.2\% by model against 50\% (Kaplan--Meier 32.4/47.6/28.2\% as a secondary
-  with a competing-risk caveat). Within that bound, we report a measured shift among movers: the
+  recovery is 27.3/34.7/27.2\% by model against 50\% (Kaplan--Meier 32.4/47.6/28.2\% on the run
+  risk set as a secondary with a competing-risk caveat). Within that bound, we report a measured shift among movers: the
   pooled conditional-logistic slope of the switch indicator on severity is 0.877 (95\% CI
   0.770--0.998), positive in all three models, with tier odds ratios against the prose placebo of
   1.27 (non-critical), 4.60 (critical), and 11.21 (critical plus contradiction). Linearity is
@@ -1787,7 +1787,10 @@ parse failure and 58/353 in a final answer. The recovery parse-failure rate is 5
 event or an early terminal state. Treating final answers and parse failures as non-recoveries
 is the crude itself (co-primary); counting the 0--6 semantic returns missed by hash-exact R1
 coding moves crude by at most 1.7 points, and the never-run bounds (33 Ministral and 48 Qwen
-semantic switchers predate the rescored parser and have no sequences) stay below 39\%. The
+semantic switchers predate the rescored parser and have no sequences) stay below 39\%. The only
+bound that crosses 50\% is the extreme parse-as-recovery counterfactual for Ministral (66.3\% on
+the primary transient-$s3$ cell), which would require every generation failure to be a recovery
+and is reported as an uninformative upper bound, not an estimate. The
 secondary sets reach crude 25.4/33.1/22.9\% (transient $s=2$) and 31.7/35.3/23.9\% (persistent
 $s=3$). The persistent arm is
 near-inert (the re-applied false value recurred in only a handful of steps, and the prompts are
