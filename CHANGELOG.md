@@ -9,6 +9,15 @@ the v1.0 dataset and paper release.
 
 ## Dataset releases
 
+### [1.0.2] - 2026-11-23
+
+- Path-leak errata: the v1.0.1 distributed copies exposed absolute build-machine/server
+  paths (16 occurrences in 8 files). The release builder now replaces repository roots,
+  server home directory prefixes, and drive-rooted paths with `[repo]` in every staged
+  text file, records the counts in `path_rescan.json`, and L1 fails on any residual.
+  Generated source artifacts are unchanged. Version DOI `10.5281/zenodo.24449882`
+  (concept `10.5281/zenodo.24449466`); v1.0.1 (`10.5281/zenodo.24449467`) is superseded.
+
 ### [1.0.1] - 2026-11-23
 
 - Redacted one scrubber-artifact email fragment (given name + digits) in the distributed release
