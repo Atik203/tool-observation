@@ -1,6 +1,6 @@
 # Roadmap — Tool-Result Errors in Language-Model Agents
 
-**Status:** confirmatory study complete; Q1 hardening and release done (2026-11-23). DOI `10.5281/zenodo.24449467`.
+**Status:** confirmatory study complete; Q1 hardening and release done (2026-11-23). DOI `10.5281/zenodo.24449882` (concept `10.5281/zenodo.24449466`; v1.0.1 superseded by the v1.0.2 path-leak errata).
 **Scope:** three open-weight 8–9B models, τ-bench airline and retail, next-decision sensitivity, and four-step recovery.
 **Compute:** 8.9 GPU-hours used of the 45-hour H200 MIG 1g.18gb allocation; $0 cash; no paid API.
 **Review basis:** `docs/reviews/2026-11-22/WEAKNESS_REGISTER.md`.
@@ -18,8 +18,8 @@
 | **P2 — Main run** | ✅ | G2 | 21,611 generations; 8.9 GPU-hours |
 | **P3 — Labels and analysis** | ✅ | G3 / G4 | β 0.877; three gate criteria failed |
 | **P4 — Paper revision** | ✅ | Review register P0/P1 cleared | 36-page measurement paper; 11 main + 14 supplement tables; 248-word abstract |
-| **P5 — Release and submission** | 🔄 | Release + submission checklist | DOI `10.5281/zenodo.24449467`; 138-file package; clean-room compile; author sign-offs pending |
-| **P6 — Q1/A\* hardening** | ✅ | Register V1–V7 closed | Record integrity A-007–A-011; unified v2 numbers; PII redaction v1.0.1; row-level refits; renderer-2 bound |
+| **P5 — Release and submission** | 🔄 | Release + submission checklist | DOI `10.5281/zenodo.24449882`; 139-file v1.0.2 package; clean-room compile; author sign-offs pending |
+| **P6 — Q1/A\* hardening** | ✅ | Register V1–V7 closed | Record integrity A-007–A-011; unified v2 numbers; PII redaction v1.0.1; path scrub v1.0.2; row-level refits; renderer-2 bound |
 
 ---
 

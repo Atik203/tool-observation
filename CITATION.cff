@@ -9,10 +9,12 @@ abstract: >-
   complete: pooled conditional-logit slope 0.877 [0.770, 0.998] with three
   failed gate criteria (parser 1.55% vs 1%, severity s2/s3 88.3% vs 90%,
   crude recovery on the semantic risk set 24.4/32.9/21.3% vs 50%); no causal or content-sensitivity
-  claim. Dataset v1.0.1 published at DOI 10.5281/zenodo.24449467 (scrubbed, redacted
-  derived data only; one scrubber-artifact identity is replaced at build time). An
-  exploratory second deterministic renderer on 150 prefixes is included as a descriptive
-  robustness check; it is never pooled with the confirmatory estimate.
+  claim. Dataset v1.0.2 published at DOI 10.5281/zenodo.24449882 (concept DOI
+  10.5281/zenodo.24449466; supersedes v1.0.1, 10.5281/zenodo.24449467, which leaked
+  absolute build-machine/server paths). Scrubbed, redacted derived data only; one
+  scrubber-artifact identity is replaced at build time and absolute paths are replaced
+  by [repo]. An exploratory second deterministic renderer on 150 prefixes is included
+  as a descriptive robustness check; it is never pooled with the confirmatory estimate.
 authors:
   - family-names: Rahaman
     given-names: Md. Atikur
@@ -21,8 +23,10 @@ authors:
   - family-names: Tuhin
     given-names: Ohidujjaman
     orcid: "https://orcid.org/0000-0002-8776-7145"
-version: 1.0.1
-doi: "10.5281/zenodo.24449467"
+version: 1.0.2
+doi: "10.5281/zenodo.24449882"
+# Concept DOI (all versions): 10.5281/zenodo.24449466. v1.0.1
+# (10.5281/zenodo.24449467) is superseded because of a path leak.
 date-released: "2026-11-23"
 repository-code: "https://github.com/Atik203/tool-observation"
 url: "https://github.com/Atik203/tool-observation"

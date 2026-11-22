@@ -54,7 +54,9 @@ triggers an automatic production deployment.
   sharing one model family; human verification is deferred.
 - **Pending:** human 40-item G0 audit (≥36/40), human verification of the label-free audits, and
   the ethics determination. The frozen `toolresult800_v1` manifest is present. The dataset is
-  archived at DOI <https://doi.org/10.5281/zenodo.24449467>.
+  archived at DOI <https://doi.org/10.5281/zenodo.24449882> (concept DOI
+<https://doi.org/10.5281/zenodo.24449466>; v1.0.1 is superseded because it leaked
+absolute build-machine/server paths).
 
 ## The question
 

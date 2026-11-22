@@ -59,7 +59,8 @@ Scrubber-artifact email fragments (a bare scrubber token followed by an unsaniti
 name plus digits on the reserved `example.com` domain) survived the harvest scrub in the frozen
 prefix set; because the freeze is bit-identical, they remain in the gitignored frozen source,
 which is **not distributed**. The release builder replaces every match with
-`person_redacted_0001` in every staged file on every build (D-046, v1.0.1) and records the
+`person_redacted_0001` in every staged file on every build (D-046, v1.0.1); absolute
+repository/server paths are replaced by `[repo]` (v1.0.2, D-050). It records the
 counts in `pii_rescan.json` and `release_record.json`. The automated re-scan reports zero
 identifier hits; the independent human re-scan is still pending (see
 `docs/submission/checklist.md`). If you believe PII is present in a ToolResult-800 artifact,

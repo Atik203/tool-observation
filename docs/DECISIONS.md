@@ -6,6 +6,28 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-050 - P6.5 Phase C path-leak errata: build-time path scrub, v1.0.2 DOI
+
+- **Date:** 2026-11-23
+- **Status:** accepted (release packaging; no analysis, sample, estimand, or manifest change)
+- **Context:** the published v1.0.1 archive leaked absolute paths: `labels/g1_calibration_v3.json`
+  carried the server home directory prefix and four analysis JSONs plus `labels/g0_report.md`
+  carried the drive-rooted build repository root. Sixteen occurrences across eight files.
+  Zenodo record 24449467 is public and immutable.
+- **Decision:**
+  - Add a build-time path scrub to `scripts/18_build_release.py`, applied to staged copies
+    after the D-046 PII redaction and before ledger hashes and checksums. Repository roots,
+    server home directory prefixes, and drive-rooted paths are replaced by `[repo]`.
+    The source artifacts are not modified; the scrub is
+    deterministic and idempotent, and `path_rescan.json` records counts and residual hits.
+  - Add L1 check `path-rescan` and a regression test over every release tree and zip.
+  - Publish v1.0.2 as a new version of concept DOI `10.5281/zenodo.24449466`; version DOI
+    `10.5281/zenodo.24449882`. v1.0.1 remains published but is superseded and disclosed as
+    leaking paths.
+- **Consequences:** package file count rises to 137 checksummed / 139 total; L1 is 19/19 and
+  L2 25/25. No numeric result, manifest, or frozen artifact changes. The earlier `[repo]`
+  substitution is visible in released provenance fields but preserves the relative path.
+
 ## D-049 - P6.5 Phase B release: DOI mint, renderer-2 inclusion, package-alone L1
 
 - **Date:** 2026-11-23

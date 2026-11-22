@@ -1,4 +1,4 @@
-# License verification — ToolResult-800 v1.0.1 (2026-11-23; v1.0.0 → v1.0.1 redaction errata)
+# License verification - ToolResult-800 v1.0.2 (2026-11-23; v1.0.0 → v1.0.1 redaction errata → v1.0.2 path-leak errata)
 
 ## Upstream τ-bench (data source)
 
@@ -6,7 +6,7 @@
   `59a200c6d575d595120f1cb70fea53cef0632f6b` (`data/manifests/source_pin.json`).
 - License: **MIT**, "Copyright (c) 2024 Sierra" — full text fetched verbatim from the
   upstream repository on 2026-11-22 and bundled at
-  `release/ToolResult-800-v1.0.1/licenses/TAU_BENCH_LICENSE_MIT`.
+  `release/ToolResult-800-v1.0.2/licenses/TAU_BENCH_LICENSE_MIT`.
 - Citation: the τ-bench paper/repository must be cited by any use (see `DATA_LICENSE.md`).
 
 ## Target-model outputs (released as scrubbed derived text only)

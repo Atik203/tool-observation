@@ -7,7 +7,8 @@
   manifest's `freeze.git_commit` carry the same full hash; the earlier
   `1675376` here was a typo, corrected 2026-11-22 under P6.1.
 - **External registry:** none. The deposit is in-repo until the release DOI
-  (now minted: `10.5281/zenodo.24449467`, 2026-11-23): `prereg/PREREGISTRATION.md`
+  (now v1.0.2: `10.5281/zenodo.24449882`, 2026-11-23; concept DOI
+  `10.5281/zenodo.24449466`): `prereg/PREREGISTRATION.md`
   (frozen) + `prereg/AMENDMENTS.md`
   (A-001–A-011) + `data/manifests/toolresult800_v1.json` (hash sidecar).
   A-007–A-011 record post-freeze analysis-record items (decisions and the
@@ -31,7 +32,12 @@
   prefixes, 60–120-item human audit) is future work.
 - **Provenance:** multi-role agent panel, author-overseen.
 
-## P6.5 Phase A packaging note (2026-11-23)
+## P6.5 Phase A packaging note (2026-11-23; historical, superseded)
+
+This note describes the v1.0.1 pre-publication snapshot. Its statement that the
+exploratory P6.7 second-renderer runs are excluded applies only to that snapshot;
+Phase B (below) and v1.0.2 include them. Kept verbatim as a record of the packaging
+sequence.
 
 - **Release rebuilt:** `release/ToolResult-800-v1.0.1/` — 127 checksummed files (129
   files including `SHA256SUMS` and `release_record.json`), built by
@@ -68,7 +74,11 @@
   metadata in `docs/submission/doi_record.md`. The token in `.env` was read only
   at mint time (in-process) and was never printed or committed.
 
-## P6.5 Phase B publication note (2026-11-23)
+## P6.5 Phase B publication note (2026-11-23; superseded by Phase C)
+
+This note describes the published v1.0.1 record, which was later found to leak
+absolute build-machine/server paths. It is kept as the historical publication
+record; v1.0.2 (Phase C below) supersedes it.
 
 - **Package:** `release/ToolResult-800-v1.0.1/` — 136 checksummed files (138 with
   `SHA256SUMS` and `release_record.json`). Adds the exploratory P6.7
@@ -84,6 +94,29 @@
 - **DOI:** `10.5281/zenodo.24449467`; resolver verified. Zenodo caps a record at
   100 files, so the record holds the release archive + `SHA256SUMS`; every archive
   entry was re-checked against `SHA256SUMS` after download.
+
+## P6.5 Phase C path-leak errata (2026-11-23)
+
+- **What leaked:** v1.0.1's distributed copies carried the build repository root
+  (13 occurrences in six files) and the GPU-server home directory prefix
+  (3 occurrences in `labels/g1_calibration_v3.json`).
+  The published Zenodo record 24449467 is immutable; the leak is disclosed here and in
+  the changelog.
+- **Fix:** the builder now scrubs every staged text file at build time: repository
+  roots, server home directory prefixes, and drive-rooted paths become `[repo]`.
+  The scrub is deterministic and idempotent;
+  `path_rescan.json` records 16 occurrences in 8 files and 0 residual. Generated source
+  artifacts outside the release are unchanged.
+- **Package:** `release/ToolResult-800-v1.0.2/` — 137 checksummed files (139 including
+  `SHA256SUMS` and `release_record.json`). L1 19/19 on the package alone (new
+  `path-rescan` check); L2 25/25 with six CPU-only producer reruns.
+- **Clean-room compile:** 14-file Overleaf zip, 36 pages, 0 undefined references,
+  0 undefined citations, 0 LaTeX warnings; the remaining output is 2 font warnings and
+  46 pdfTeX duplicate-destination notices.
+- **DOI:** version DOI `10.5281/zenodo.24449882` (record 24449882), published as a new
+  version under concept DOI `10.5281/zenodo.24449466`; resolver and archive checksums
+  verified after upload. v1.0.1 (`10.5281/zenodo.24449467`) is superseded and remains
+  immutable.
 
 ## T7 staging note (2026-11-22, P4.7/P5)
 

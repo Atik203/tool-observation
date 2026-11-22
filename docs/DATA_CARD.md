@@ -1,8 +1,11 @@
 # Data card — ToolResult-800
 
-**Status:** v1.0.1 released (2026-11-23; redaction errata over v1.0.0). DOI
-`10.5281/zenodo.24449467` (resolver: https://doi.org/10.5281/zenodo.24449467); the release
+**Status:** v1.0.2 released (2026-11-23; path-leak errata over v1.0.1, which superseded
+v1.0.0's PII redaction errata). Version DOI `10.5281/zenodo.24449882` (resolver:
+https://doi.org/10.5281/zenodo.24449882); concept DOI `10.5281/zenodo.24449466`. The release
 date is the DOI registration date. Hashes below are from the frozen manifest, not estimates.
+v1.0.1 (`10.5281/zenodo.24449467`) remains published and immutable but is superseded and
+should not be cited for the package bytes.
 
 ---
 
@@ -12,15 +15,15 @@ date is the DOI registration date. Hashes below are from the frozen manifest, no
 |---|---|
 | Name | ToolResult-800 |
 | Full title | Counterfactual Tool-Observation dataset, 800 frozen prefixes |
-| Version | 1.0.1 (released 2026-11-23 on DOI registration; supersedes v1.0.0 redaction errata) |
+| Version | 1.0.2 (released 2026-11-23 on DOI registration; supersedes v1.0.1 path-leak errata, which superseded v1.0.0) |
 | Repository | https://github.com/Atik203/tool-observation |
 | Dataset brand | ToolResult-800 (the repository is `tool-observation`) |
 | Study | Tool-Result Errors in Language-Model Agents |
 | Maintainer | Md. Atikur Rahaman (mrahaman2310298@bscse.uiu.ac.bd) |
 | License | Dual: CC BY 4.0 for project data additions; MIT for the repository code; upstream τ-bench MIT |
 | Release date | 2026-11-23 (= DOI registration date) |
-| DOI | `10.5281/zenodo.24449467` (https://doi.org/10.5281/zenodo.24449467) |
-| Package | `release/ToolResult-800-v1.0.1/` — 136 checksummed files (138 files with `SHA256SUMS` and `release_record.json`); 18/18 L1 validated |
+| DOI | `10.5281/zenodo.24449882` (https://doi.org/10.5281/zenodo.24449882); concept DOI `10.5281/zenodo.24449466` |
+| Package | `release/ToolResult-800-v1.0.2/` — 137 checksummed files (139 files with `SHA256SUMS` and `release_record.json`); 19/19 L1 validated |
 | Manifest hash | `d6e034d7f1132b314ad1f82bf14faa0f6762975ee7b404b54cc365acfac5487a` (`data/manifests/toolresult800_v1.json` + sidecar) |
 | Preregistration hash | `e0d107c6` (freeze commit 1673856, tag prereg-freeze-v1; no external registry; record in `prereg/DEPOSIT_NOTE.md`) |
 
@@ -35,8 +38,8 @@ transient and persistent injection.
 
 The dataset contains **800 primary prefixes** (400 airline, 400 retail) plus an **80-prefix
 reserve** that is not part of the primary analysis. The confirmatory analysis is complete and frozen;
-target-model outputs are released in v1.0.1 as scrubbed derived text (no weights, no raw trajectories).
-The distributed copy is redacted; the frozen source is not distributed (see §6 and §11).
+target-model outputs are released in v1.0.2 as scrubbed derived text (no weights, no raw trajectories).
+The distributed copy is redacted and path-scrubbed; the frozen source is not distributed (see §6 and §11).
 
 Executed envelope (G2 complete, within the 45 GPU-hour / 200 GB stop line): **21,611 generations**
 (13,200 base + 7,211 recovery + 1,200 jitter), 8.9 GPU-hours on the university H200 slice, \$0 cash.
@@ -112,6 +115,13 @@ unredacted participant identifiers** (the corresponding-author contact email in 
 and this card is intentional and allowlisted). The independent human re-scan is still pending;
 report suspected PII privately per `SECURITY.md`.
 
+Absolute build-machine and server paths are also removed from the distributed copy. v1.0.1
+leaked the build repository root in `labels/g0_report.md` and four analysis JSONs, and the
+GPU-server home prefix in `labels/g1_calibration_v3.json` (16 occurrences in 8 files). The
+v1.0.2 builder replaces every repository root and server home prefix with `[repo]` in every
+staged text file, and `path_rescan.json` records the per-file counts. The generated source
+artifacts are unchanged; only the released copies are scrubbed.
+
 ## 7. Licensing and attribution
 
 - ToolResult-800 data additions: CC BY 4.0 (`DATA_LICENSE.md`).
@@ -149,16 +159,19 @@ within-prefix contrasts and for benchmarking detection/flagging behavior.
 
 ## 10. Maintenance
 
-- Version 1.0.1 is frozen; corrections require a new version and a changelog entry.
-- Errata are published in the repository and linked from the DOI record; v1.0.1 is the PII
-  redaction errata over v1.0.0 (`CHANGELOG.md` in the release package).
+- Version 1.0.2 is frozen; corrections require a new version and a changelog entry.
+- Errata are published in the repository and linked from the DOI record; v1.0.2 is the
+  path-leak errata over v1.0.1, which was the PII redaction errata over v1.0.0
+  (`CHANGELOG.md` in the release package).
 - The manifest and checksums are the authoritative record.
 - Contact: mrahaman2310298@bscse.uiu.ac.bd.
 
-## 11. Release contents (v1.0.1)
+## 11. Release contents (v1.0.2)
 
-Packaged and published at `release/ToolResult-800-v1.0.1/` (136 files; DOI
-`10.5281/zenodo.24449467`; deposit record at `docs/submission/doi_record.md`):
+Packaged and published at `release/ToolResult-800-v1.0.2/` (139 files; version DOI
+`10.5281/zenodo.24449882`, concept DOI `10.5281/zenodo.24449466`; deposit record at
+`docs/submission/doi_record.md`). `path_rescan.json` records the atomic path scrub
+(16 occurrences in 8 files; 0 residual):
 
 - `manifests/` — frozen manifest + SHA-256 sidecar, perturbation records, source pin.
 - `frozen/prefixes.jsonl` — 880 scrubbed prefixes with five arm observations each, in the
@@ -187,10 +200,11 @@ Packaged and published at `release/ToolResult-800-v1.0.1/` (136 files; DOI
 - `ATTRIBUTION.md`, `DATA_LICENSE.md`, `CHANGELOG.md`, `TABLE_MAP.md` (all 25 paper tables:
   11 main + S1–S14, in paper order), `VALIDATION.md` (one-command validation),
   `paper_audit.json` (paper-side label/reconciliation snapshot used by L1), `SHA256SUMS`,
-  `release_record.json`, `pii_rescan.json` (including `n_redactions`).
+  `release_record.json`, `pii_rescan.json` (including `n_redactions`), `path_rescan.json`
+  (path-scrub counts and the 0-residual result).
 
-Validate: `make validate-release` (18/18 L1 on the package alone; `--rerun` with repo ledgers
-reruns the six CPU-only analysis producers for 24/24). The G0 harvest audit is an AI pre-audit
+Validate: `make validate-release` (19/19 L1 on the package alone; `--rerun` with repo ledgers
+reruns the six CPU-only analysis producers for 25/25). The G0 harvest audit is an AI pre-audit
 (40/40) adopted by the author with human verification deferred (D-021, A-005); the freeze stands
 provisional on that item. The automated identifier re-scan is clean (reserved-domain
 placeholders, synthetic-token echoes, and the redaction count reported in `pii_rescan.json`);

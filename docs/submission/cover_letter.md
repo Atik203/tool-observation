@@ -29,11 +29,13 @@ criterion. Within that bound we report a measured shift among movers (pooled slo
 refit whose intervals overlap the assigned effects, cluster-robust inference checks, and an
 exploratory blinded task-utility endpoint.
 
-**Reproducibility.** The v1.0 release is staged with a DOI deposit record: scrubbed prefixes,
-perturbation records, ledger extracts, audit packets/sheets, all analysis JSONs, preregistration
-+ amendments, upstream MIT notice, and model-output license verification — with a
-table-to-artifact map and a one-command validator (`make validate-release`, including producer
-reruns that rebuild the T2–T6 analysis JSONs bit-identical). The G0
+**Reproducibility.** The v1.0.2 release is published at DOI
+[10.5281/zenodo.24449882](https://doi.org/10.5281/zenodo.24449882) (concept DOI
+10.5281/zenodo.24449466): scrubbed prefixes, perturbation records, ledger extracts, audit
+packets/sheets, all analysis JSONs, preregistration + amendments, upstream MIT notice, and
+model-output license verification - with a table-to-artifact map and a one-command validator
+(`make validate-release`, including producer reruns that rebuild the T2-T6 analysis JSONs
+bit-identical). The distributed copy is PII-redacted and path-scrubbed. The G0
 harvest audit is an AI pre-audit with human verification deferred; all ratings are AI-agent
 produced, author-overseen — both stated in the paper, with a held-out human audit as future work.
 
