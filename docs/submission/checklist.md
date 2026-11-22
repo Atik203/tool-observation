@@ -1,7 +1,8 @@
-# P5 submission checklist — ToolResult-800 v1.0
+# P5 submission checklist — ToolResult-800 v1.0.1
 
-Status 2026-11-22 (Task 7). Items marked [x] are complete and evidenced; items marked [ ]
-require author action and name the artifact that unblocks them.
+Status 2026-11-23 (Task 5, P6.5 Phase A). Items marked [x] are complete and evidenced; items
+marked [ ] require author action (or remain human-gated) and name the artifact that unblocks
+them.
 
 ## Manuscript
 
@@ -17,27 +18,29 @@ require author action and name the artifact that unblocks them.
 - [x] 6 keywords (journal cap); 4 highlights ≤85 chars (`docs/submission/highlights.md`).
 - [x] Fig. 4 is a labeled conceptual schematic (T5); no draft stamps; no `\pending{}` uses.
 - [x] PDF metadata title matches; byline/ORCID/CRediT reconciled (pending signatures below).
-- [ ] Clean-room compile from the 14-file Overleaf zip — **cannot run here (no TeX
-  toolchain on this host)**. Zip built and checksummed
-  (`dist/toolresults-overleaf.zip`, see report); compile must be confirmed on Overleaf
-  before submission. Structural checks substitute locally: 75/75 labels defined, all
-  floats cited, all cite keys resolve.
+- [x] Clean-room compile from the 14-file Overleaf zip with the installed TeX Live 2026:
+  `latexmk -pdf -interaction=nonstopmode -halt-on-error toolresults.tex` in a fresh temp
+  directory — 35 pages, 0 undefined references, 0 undefined citations, 0 BibTeX warnings
+  (`dist/toolresults-overleaf.zip` refreshed from the current `paper/` tree).
+  Structural checks also pass locally: 75/75 labels defined, all floats cited, all cite keys
+  resolve (`pytest tests/test_release.py`).
 
 ## Release / DOI
 
-- [x] Release staged: `release/ToolResult-800-v1.0/` (123 files), manifest hash chain ok,
+- [x] Release staged: `release/ToolResult-800-v1.0.1/` (127 files), manifest hash chain ok,
   SHA256SUMS verified, automated identifier re-scan clean (`pii_rescan.json`).
-- [ ] Table-to-artifact map covers all 25 table labels (11 main-text, 14 supplementary; `TABLE_MAP.md`)
-  — **pending T5 repoint of the 14 moved labels**.
+- [x] Table-to-artifact map covers all 25 table labels (11 main-text, S1–S14 supplementary;
+  `TABLE_MAP.md`), with `tab:recovery` on the v2 semantic set and one v1 note.
 - [x] One-command validation implemented and passing: `make validate-release` 17/17 L1,
-  22/22 with `--rerun` (T4 inference regen included).
-- [x] License verification recorded (`licenses/`, `docs/submission/license_verification.md`).
+  23/23 with `--rerun` (six CPU-only producers, P6.3 refits included).
+- [x] License verification recorded (`licenses/`, `docs/submission/license_verification.md`);
+  dual license recorded (data CC BY 4.0, code MIT).
 - [x] Data card corrected (no "human labels" claim; G0 provisional; release inventory).
 - [x] AI disclosure names sessions/dates/prompts/interface/hypothesis-blinding + T6
   single-agent part (paper Declarations).
 - [ ] DOI minted and recorded in `CITATION.cff` + data card — **author action**
-  (deposit record ready: `docs/submission/doi_record.md`).
-- [ ] Repository tag + GitHub release match v1.0 — **author action**.
+  (deposit record prepared and ready: `docs/submission/doi_record.md`).
+- [ ] Repository tag + GitHub release match v1.0.1 — **author action**.
 - [ ] Second-person checksum verification — **author action**.
 
 ## Human-gated items (cannot be completed by the agent)

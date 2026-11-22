@@ -64,6 +64,68 @@ def test_table_map_covers_all_labels() -> None:
     assert labels == mapped
     assert len(mapped) == 25
 
+    tex = _tex()
+    supp_at = tex.index("\\section*{Supplementary tables}")
+    main_labels = set(re.findall(r"\\label\{(tab:[^}]+)\}", tex[:supp_at]))
+    supp_ordered = list(dict.fromkeys(re.findall(r"\\label\{(tab:[^}]+)\}", tex[supp_at:])))
+    mapped_main = [row["label"] for row in build_release.TABLE_MAP if row["section"] == "main"]
+    mapped_supp = [row["label"] for row in build_release.TABLE_MAP if row["section"] == "supplement"]
+    assert len(mapped_main) == 11 and set(mapped_main) == main_labels
+    assert mapped_supp == supp_ordered and len(mapped_supp) == 14
+    assert [row["table_no"] for row in build_release.TABLE_MAP if row["section"] == "main"] == [
+        str(i) for i in range(1, 12)
+    ]
+    assert [row["table_no"] for row in build_release.TABLE_MAP if row["section"] == "supplement"] == [
+        f"S{i}" for i in range(1, 15)
+    ]
+    for row in build_release.TABLE_MAP:
+        assert row["section"] in ("main", "supplement"), row["label"]
+        assert row["kind"] in ("measured", "protocol", "definitional"), row["label"]
+
+
+def test_table_map_recovery_uses_v2_semantic_set() -> None:
+    """tab:recovery points at the v2 semantic set; v1 is only the note."""
+    row = next(row for row in build_release.TABLE_MAP if row["label"] == "tab:recovery")
+    assert row["section"] == "main" and row["table_no"] == "11"
+    assert "g4_recovery_v2.json" in row["artifact"]
+    assert "24.4/32.9/21.3" in row["keys"]
+    assert "28.2/44.6/22.0" in row["keys"]
+    assert "27.3/34.7/27.2" in row["keys"]
+    assert "reconciliation" in row["keys"]
+
+
+def test_release_stages_p63_refits_and_ledger_hashes() -> None:
+    staged = {dst: src for src, dst in build_release.stage_files()}
+    for name in (
+        "analysis/rowlevel_refits.json",
+        "analysis/wrong_direction.json",
+        "analysis/new_evidence.json",
+        "analysis/severity_sensitivity.json",
+        "analysis/inference_robustness.json",
+    ):
+        assert name in staged, name
+        assert staged[name].is_file(), name
+    have_traces = any(dst.startswith("traces/") for dst in staged)
+    assert have_traces
+    # The exploratory P6.7 second-renderer runs are not part of v1.0.1.
+    assert not any("renderer2" in dst for dst in staged)
+    assert hasattr(build_release, "ledger_hashes_json")
+
+
+def test_artifact_provenance_notes_bind_bytes() -> None:
+    """Each documented artifact note matches the bytes on disk."""
+    import hashlib
+
+    notes = build_release.ARTIFACT_PROVENANCE_NOTES
+    assert any(note["artifact"] == "analysis/rowlevel_refits.json" for note in notes)
+    for note in notes:
+        path = _REPO / "artifacts" / note["artifact"].split("/", 1)[1]
+        if not path.is_file():
+            continue
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        assert digest == note["sha256"], note["artifact"]
+        assert note["generated_commit"] in note["note"]
+
 
 def test_every_float_cited() -> None:
     tex = _tex()

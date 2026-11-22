@@ -89,105 +89,134 @@ VOLATILE_KEYS = frozenset({"recorded_utc", "git_commit"})
 # ---------------------------------------------------------------------------
 # kind: measured (recomputable from a bundled artifact), protocol
 # (pre-registered rule, no data artifact), definitional (no data artifact).
+# section/table_no: the paper's split — 11 main-text tables (numbered 1-11)
+# and 14 supplementary tables (S1-S14, ``\section*{Supplementary tables}``).
 
 TABLE_MAP: list[dict[str, str]] = [
-    {"label": "tab:neighbors", "title": "Nearest-neighbor comparison (11 studies + this study)",
+    # --- main text (Tables 1-11) ---
+    {"label": "tab:neighbors", "section": "main", "table_no": "1",
+     "title": "Nearest-neighbor comparison (11 studies + this study)",
      "artifact": "paper/ref.bib (arXiv IDs verified 2026-11-22)", "keys": "neighbor entries + tab:neighbors rows",
      "producer": "manual (T5; verified against arXiv abs pages)", "kind": "definitional"},
-    {"label": "tab:notation", "title": "Notation (one meaning per symbol in this paper)",
+    {"label": "tab:notation", "section": "main", "table_no": "2",
+     "title": "Notation (one meaning per symbol in this paper)",
      "artifact": "none (definitional)", "keys": "symbols used in eq:*",
      "producer": "manual (T5 collision renames)", "kind": "definitional"},
-    {"label": "tab:supply", "title": "G0 harvest supply and freeze counts",
-     "artifact": "artifacts/audit/g0_report.md; manifests/toolresult800_v1.json; labels/g0_audit_result.json",
-     "keys": "13,605 candidates; 5,516 eligible; 99.91% replay; 800+80 sample",
-     "producer": "scripts/00_pin_source.py..06_freeze.py", "kind": "measured"},
-    {"label": "tab:arms", "title": "Arm design and perturbation counts",
+    {"label": "tab:arms", "section": "main", "table_no": "3",
+     "title": "Arm design and perturbation counts",
      "artifact": "manifests/toolresult800_v1.json; manifests/perturbations.jsonl",
      "keys": "4,400 arms; 2,640 perturbations; 100% s=0 value-set equality",
      "producer": "scripts/06_freeze.py; 07_render.py", "kind": "measured"},
-    {"label": "tab:models", "title": "Target model trio and serving caps",
+    {"label": "tab:models", "section": "main", "table_no": "4",
+     "title": "Target model trio and serving caps",
      "artifact": "configs/models.yaml (pinned revisions); costs/main_cost.json",
      "keys": "repos + revisions + served seq caps 8/4/4",
      "producer": "manual (D-016/D-019; verified 2026-11-22 against HF API)",
      "kind": "measured"},
-    {"label": "tab:gates", "title": "Gate criteria (protocol)",
-     "artifact": "docs/GATES.md (protocol, frozen pre-run)", "keys": "G0-G4 thresholds",
-     "producer": "protocol (no data artifact)", "kind": "protocol"},
-    {"label": "tab:gate-status", "title": "Gate outcomes (observed vs criterion)",
-     "artifact": "labels/g1_calibration_v3.json; analysis/g3_analysis.json; analysis/g4_recovery.json; labels/scrub_report.json; prereg/AMENDMENTS.md (A-004/A-005); prereg/DEPOSIT_NOTE.md",
-     "keys": "G0 provisional; G1 amended pass; G3 3 fails; G4 fail",
-     "producer": "scripts/08_audit.py; 08c_blind_audit_score.py; 13_analyze.py; 14_recovery_report.py",
+    {"label": "tab:gate-status", "section": "main", "table_no": "5",
+     "title": "Gate outcomes (observed vs criterion)",
+     "artifact": "labels/g1_calibration_v3.json; analysis/g3_analysis.json; analysis/g4_recovery_v2.json; labels/scrub_report.json; prereg/AMENDMENTS.md (A-004/A-005); prereg/DEPOSIT_NOTE.md",
+     "keys": "G0 provisional; G1 amended pass; G3 3 fails; G4 fail (v2 semantic crude 24.4/32.9/21.3%)",
+     "producer": "scripts/08_audit.py; 08c_blind_audit_score.py; 13_analyze.py; 15_recovery_reestimate.py",
      "kind": "measured"},
-    {"label": "tab:envelope", "title": "Planned vs executed generation envelope",
-     "artifact": "traces/** (21,611 rows); costs/main_cost.json",
-     "keys": "13,200 base + 7,211 recovery + 1,200 jitter; 8.9 GPU-h",
-     "producer": "scripts/09_run.py; 09a_run_all.py; 09b_recovery.py", "kind": "measured"},
-    {"label": "tab:pilot", "title": "Pilot screening signal (N=60, synthetic)",
-     "artifact": "paper (pilot ledger predates frozen pipeline; screening only, D-003)",
-     "keys": "54/60 consult; 0/60 placebo jitter; 5/60 error switch; 8.3pp [1.3,15.3]; p=.0625",
-     "producer": "pilot (not pooled with confirmatory)", "kind": "measured"},
-    {"label": "tab:g1", "title": "G1 calibration outcomes",
-     "artifact": "labels/g1_calibration_v3.json",
-     "keys": "parse 96.7-100%; s0-vs-s1 jitter 10.5-13.3%; s3 35.6-56.1%; refusal 0-1.7%",
-     "producer": "calibration harness (D-024/D-025/D-026)", "kind": "measured"},
-    {"label": "tab:hypotheses", "title": "H1-H7 status",
-     "artifact": "analysis/prereg_secondary.json; analysis/g3_analysis.json; analysis/g4_recovery.json; analysis/inference_robustness.json",
+    {"label": "tab:hypotheses", "section": "main", "table_no": "6",
+     "title": "H1-H7 status",
+     "artifact": "analysis/prereg_secondary.json; analysis/g3_analysis.json; analysis/g4_recovery_v2.json; analysis/inference_robustness.json",
      "keys": "H5 pooled McNemar b=431/c=93 p=5.3e-53; H4 crude cited from v2",
      "producer": "scripts/13_analyze.py; 16_inference_robustness.py", "kind": "measured"},
-    {"label": "tab:primary", "title": "Primary conditional-logit slope (+ CI column)",
+    {"label": "tab:primary", "section": "main", "table_no": "7",
+     "title": "Primary conditional-logit slope (+ CI column)",
      "artifact": "analysis/g3_analysis.json; analysis/prereg_secondary.json",
      "keys": "pooled 0.877 [0.770,0.998]; 3/3 positive, Holm-significant",
      "producer": "scripts/13_analyze.py", "kind": "measured"},
-    {"label": "tab:tiers", "title": "Tier odds ratios (assigned severity)",
+    {"label": "tab:tiers", "section": "main", "table_no": "8",
+     "title": "Tier odds ratios (assigned severity)",
      "artifact": "analysis/prereg_secondary.json",
      "keys": "s1 1.27; s2 4.60; s3 11.21",
      "producer": "scripts/13_analyze.py", "kind": "measured"},
-    {"label": "tab:diagnostics", "title": "Linearity diagnostics (quadratic + categorical LRT)",
-     "artifact": "analysis/prereg_secondary.json; analysis/inference_robustness.json",
-     "keys": "pooled categorical LRT 25.03 p=3.7e-6; quadratic 10.31 p=1.3e-3",
-     "producer": "scripts/13_analyze.py; 16_inference_robustness.py", "kind": "measured"},
-    {"label": "tab:missing", "title": "Missingness by model x arm x parse",
-     "artifact": "analysis/missingness_marginal.json; traces/**",
-     "keys": "525 = 326 unparsed prose + 199 V-unparsed-filtered; 205 hard + 250 refusals",
-     "producer": "scripts/13_analyze.py (T5 reconciliation)", "kind": "measured"},
-    {"label": "tab:typology", "title": "Switch typology (strata mover classes)",
-     "artifact": "analysis/switch_typology.json",
-     "keys": "47.8% never; 23.9% always; 19.0% dose-responsive; 9.3% placebo",
-     "producer": "scripts/13_analyze.py", "kind": "measured"},
-    {"label": "tab:armrates", "title": "Per-arm switch rates",
-     "artifact": "analysis/g3_analysis.json",
-     "keys": "arm_table any/n per model|arm; s0 19.8/31.9/38.1%",
-     "producer": "scripts/13_analyze.py", "kind": "measured"},
-    {"label": "tab:audit", "title": "Blind audit outcomes (severity/outcome/recovery)",
+    {"label": "tab:audit", "section": "main", "table_no": "9",
+     "title": "Blind audit outcomes (severity/outcome/recovery)",
      "artifact": "labels/blind_audit_result.json; labels/panel_record.json",
      "keys": "severity 88.3% (FAIL); outcome k=.987 PPV 1.00; recovery k=.92/.918",
      "producer": "scripts/08c_blind_audit_score.py; verification panel (D-043)",
      "kind": "measured"},
-    {"label": "tab:panel", "title": "Verification panel agreement",
-     "artifact": "labels/panel_record.json; labels/second_rater_agreement.json",
-     "keys": "outcome 158/160; recovery 66/80; severity 114/120 + 108/120; second-rater a=.917/k=.942/k=.918",
-     "producer": "verification panel (D-043)", "kind": "measured"},
-    {"label": "tab:fieldtypes", "title": "Field-class switch/silent shares (all seven classes)",
+    {"label": "tab:fieldtypes", "section": "main", "table_no": "10",
+     "title": "Field-class switch/silent shares (all seven classes)",
      "artifact": "analysis/field_taxonomy.json",
      "keys": "identifiers 45.0%; money 45.6%; temporal 10/17; count 5/19; other 110/247",
      "producer": "artifacts/analysis/field_taxonomy.py (T5)", "kind": "measured"},
-    {"label": "tab:wrongdir", "title": "Wrong-direction endpoint (exclusive classes)",
+    {"label": "tab:recovery", "section": "main", "table_no": "11",
+     "title": "Recovery by H=4 on the v2 semantic risk set (crude primary + KM secondary)",
+     "artifact": "analysis/g4_recovery_v2.json; analysis/g4_recovery.json (v1 reconciliation note only)",
+     "keys": "crude 24.4/32.9/21.3% (54/221; 116/353; 80/376); KM 28.2/44.6/22.0%; one v1 hash-set reconciliation note 27.3/34.7/27.2% (72/264; 141/406; 112/412) = semantic events + hash-only 18/25/32",
+     "producer": "scripts/15_recovery_reestimate.py; 14_recovery_report.py", "kind": "measured"},
+    # --- supplementary (Tables S1-S14) ---
+    {"label": "tab:supply", "section": "supplement", "table_no": "S1",
+     "title": "G0 harvest supply and freeze counts",
+     "artifact": "artifacts/audit/g0_report.md; manifests/toolresult800_v1.json; labels/g0_audit_result.json",
+     "keys": "13,605 candidates; 5,516 eligible; 99.91% replay; 800+80 sample",
+     "producer": "scripts/00_pin_source.py..06_freeze.py", "kind": "measured"},
+    {"label": "tab:gates", "section": "supplement", "table_no": "S2",
+     "title": "Gate criteria (protocol)",
+     "artifact": "docs/GATES.md (protocol, frozen pre-run)", "keys": "G0-G4 thresholds",
+     "producer": "protocol (no data artifact)", "kind": "protocol"},
+    {"label": "tab:envelope", "section": "supplement", "table_no": "S3",
+     "title": "Planned vs executed generation envelope",
+     "artifact": "traces/** (21,611 rows); costs/main_cost.json",
+     "keys": "13,200 base + 7,211 recovery + 1,200 jitter; 8.9 GPU-h",
+     "producer": "scripts/09_run.py; 09a_run_all.py; 09b_recovery.py", "kind": "measured"},
+    {"label": "tab:pilot", "section": "supplement", "table_no": "S4",
+     "title": "Pilot screening signal (N=60, synthetic)",
+     "artifact": "paper (pilot ledger predates frozen pipeline; screening only, D-003)",
+     "keys": "54/60 consult; 0/60 placebo jitter; 5/60 error switch; 8.3pp [1.3,15.3]; p=.0625",
+     "producer": "pilot (not pooled with confirmatory)", "kind": "measured"},
+    {"label": "tab:g1", "section": "supplement", "table_no": "S5",
+     "title": "G1 calibration outcomes",
+     "artifact": "labels/g1_calibration_v3.json",
+     "keys": "parse 96.7-100%; s0-vs-s1 jitter 10.5-13.3%; s3 35.6-56.1%; refusal 0-1.7%",
+     "producer": "calibration harness (D-024/D-025/D-026)", "kind": "measured"},
+    {"label": "tab:diagnostics", "section": "supplement", "table_no": "S6",
+     "title": "Linearity diagnostics (quadratic + categorical LRT)",
+     "artifact": "analysis/prereg_secondary.json; analysis/inference_robustness.json",
+     "keys": "pooled categorical LRT 25.03 p=3.7e-6; quadratic 10.31 p=1.3e-3",
+     "producer": "scripts/13_analyze.py; 16_inference_robustness.py", "kind": "measured"},
+    {"label": "tab:missing", "section": "supplement", "table_no": "S7",
+     "title": "Missingness by model x arm x parse",
+     "artifact": "analysis/missingness_marginal.json; traces/**",
+     "keys": "525 = 326 unparsed prose + 199 V-unparsed-filtered; 205 hard + 250 refusals",
+     "producer": "scripts/13_analyze.py (T5 reconciliation)", "kind": "measured"},
+    {"label": "tab:typology", "section": "supplement", "table_no": "S8",
+     "title": "Switch typology (strata mover classes)",
+     "artifact": "analysis/switch_typology.json",
+     "keys": "47.8% never; 23.9% always; 19.0% dose-responsive; 9.3% placebo",
+     "producer": "scripts/13_analyze.py", "kind": "measured"},
+    {"label": "tab:armrates", "section": "supplement", "table_no": "S9",
+     "title": "Per-arm switch rates",
+     "artifact": "analysis/g3_analysis.json",
+     "keys": "arm_table any/n per model|arm; s0 19.8/31.9/38.1%",
+     "producer": "scripts/13_analyze.py", "kind": "measured"},
+    {"label": "tab:panel", "section": "supplement", "table_no": "S10",
+     "title": "Verification panel agreement",
+     "artifact": "labels/panel_record.json; labels/second_rater_agreement.json",
+     "keys": "outcome 158/160; recovery 66/80; severity 114/120 + 108/120; second-rater a=.917/k=.942/k=.918",
+     "producer": "verification panel (D-043)", "kind": "measured"},
+    {"label": "tab:wrongdir", "section": "supplement", "table_no": "S11",
+     "title": "Wrong-direction endpoint (exclusive classes)",
      "artifact": "analysis/wrong_direction.json",
      "keys": "1258/1964 = 64.1% [61.9,66.1]; caught 30; ambiguous 676",
      "producer": "scripts/17_wrong_direction.py", "kind": "measured"},
-    {"label": "tab:utility", "title": "Task-utility endpoint (exploratory, single-agent coded)",
+    {"label": "tab:utility", "section": "supplement", "table_no": "S12",
+     "title": "Task-utility endpoint (exploratory, single-agent coded)",
      "artifact": "analysis/new_evidence.json; packets/task_utility_*.json",
      "keys": "adequate s0 55.7% -> s3 28.7%; harmful 15.7% -> 38.3%; McNemar b=42/c=11 p=2.2e-5; k=.92 (36/38)",
      "producer": "scripts/16_task_utility.py (T6; GPU 0.0h)", "kind": "measured"},
-    {"label": "tab:recovery", "title": "Recovery by H=4 (crude primary + KM secondary)",
-     "artifact": "analysis/g4_recovery.json; analysis/g4_recovery_v2.json",
-     "keys": "crude 27.3/34.7/27.2% (72/264; 141/406; 112/412); KM 32.4/47.6/28.2%",
-     "producer": "scripts/14_recovery_report.py; 15_recovery_reestimate.py", "kind": "measured"},
-    {"label": "tab:recovery_all", "title": "Recovery all cells (transient + persistent, v2 KM)",
+    {"label": "tab:recovery_all", "section": "supplement", "table_no": "S13",
+     "title": "Recovery all cells (transient + persistent, v2 KM)",
      "artifact": "analysis/g4_recovery_v2.json",
      "keys": "9-cell n/Events/crude/KM/RMST/t12; t12 range 4.7-10.9",
      "producer": "scripts/15_recovery_reestimate.py", "kind": "measured"},
-    {"label": "tab:sensitivity", "title": "Recovery sensitivity (censoring/never-run/parse bounds)",
+    {"label": "tab:sensitivity", "section": "supplement", "table_no": "S14",
+     "title": "Recovery sensitivity (censoring/never-run/parse bounds)",
      "artifact": "analysis/g4_recovery_v2.json",
      "keys": "never-run bounds <39%; parse-as-recovery 66.3% Ministral uninformative upper bound",
      "producer": "scripts/15_recovery_reestimate.py", "kind": "measured"},
@@ -239,6 +268,7 @@ ANALYSIS_JSONS = [
     "prereg_secondary.json", "prereg_secondary.md",
     "severity_sensitivity.json", "inference_robustness.json",
     "wrong_direction.json", "new_evidence.json",
+    "rowlevel_refits.json",
     "field_taxonomy.json", "field_taxonomy.md",
     "switch_typology.json", "missingness_marginal.json",
     "jitter_stability_llama_3_1_8b_instruct_awq.json",
@@ -258,9 +288,30 @@ TASK_UTILITY_FILES = [
 RERUN_PRODUCERS: list[tuple[str, str, list[str]]] = [
     ("scripts/15_recovery_reestimate.py", "g4_recovery_v2.json", []),
     ("scripts/14_severity_sensitivity.py", "severity_sensitivity.json", []),
+    ("scripts/19_rowlevel_refits.py", "rowlevel_refits.json", []),
     ("scripts/16_inference_robustness.py", "inference_robustness.json", []),
     ("scripts/17_wrong_direction.py", "wrong_direction.json", []),
     ("scripts/16_task_utility.py", "new_evidence.json", ["analyze"]),
+]
+
+# Provenance notes for artifacts whose documentation text was corrected after
+# the recorded generation run (numeric content unchanged). Build-time hashes
+# bind the distributed bytes to the recorded commit.
+ARTIFACT_PROVENANCE_NOTES: list[dict[str, str]] = [
+    {
+        "artifact": "analysis/rowlevel_refits.json",
+        "generated_commit": "8e6f536",
+        "sha256": "965805eac2791a0d40757777d537db4205c4d4c046d6b2732c2f272c9dbedfcb",
+        "note": "Generated at 8e6f536 (the commit recorded inside the artifact, "
+        "2026-11-23 02:24 +0600). The reconciliation.note wording is the "
+        "text-only correction later committed as 7f0169d ('prefix-resampling "
+        "sensitivity, design_valid=false, not a cluster bootstrap'); it was "
+        "present in the working tree at generation, so the recorded commit and "
+        "the note text differ by ten minutes of history. No number changed. The "
+        "SHA-256 above is the distributed file and is re-checked at build time; "
+        "a rerun at the current tree reproduces every field except "
+        "recorded_utc/git_commit.",
+    },
 ]
 
 # ---------------------------------------------------------------------------
@@ -583,6 +634,11 @@ def _ledger_extract_paths() -> list[tuple[Path, str]]:
         rel = path.relative_to(RUNS_DIR)
         if "_backup" in rel.parts:
             continue
+        if "renderer2" in rel.parts:
+            # Exploratory P6.7 second-renderer runs (D-048): not part of the
+            # confirmatory v1.0.1 package. Including them is a separate deposit
+            # decision (they need their own analysis artifact).
+            continue
         if "calibration" in rel.parts and "calibration_v3" not in rel.parts:
             continue  # superseded first calibration pass; v3 is the reported one
         name = path.name
@@ -623,30 +679,61 @@ def stage_files() -> list[tuple[Path, str]]:
 
 
 def table_map_md() -> str:
+    n_main = sum(1 for row in TABLE_MAP if row["section"] == "main")
+    n_supp = sum(1 for row in TABLE_MAP if row["section"] == "supplement")
     lines = [
         "# Table-to-artifact map — ToolResult-800 v1.0.1",
         "",
-        "Every numbered paper table traces to a bundled artifact (or is marked",
-        "definitional/protocol with no data artifact). Kinds: **measured**",
-        "(recomputable from the listed artifact), **protocol** (pre-registered",
-        "rule), **definitional** (no data artifact).",
+        f"All {len(TABLE_MAP)} paper tables are mapped: {n_main} main-text tables",
+        f"(Table 1–{n_main}) and {n_supp} supplementary tables (S1–S{n_supp},",
+        "the paper's `\\section*{Supplementary tables}`). Every table traces to a",
+        "bundled artifact (or is marked definitional/protocol with no data",
+        "artifact). Kinds: **measured** (recomputable from the listed artifact),",
+        "**protocol** (pre-registered rule), **definitional** (no data artifact).",
         "",
-        "| Paper table | Title | Kind | Source artifact(s) | Key fields | Producer |",
-        "|---|---|---|---|---|---|",
+        "| Position | Label | Title | Kind | Source artifact(s) | Key fields | Producer |",
+        "|---|---|---|---|---|---|---|",
     ]
     for row in TABLE_MAP:
+        position = f"Table {row['table_no']}"
         lines.append(
-            f"| `{row['label']}` | {row['title']} | {row['kind']} | "
+            f"| {position} | `{row['label']}` | {row['title']} | {row['kind']} | "
             f"{row['artifact']} | {row['keys']} | {row['producer']} |"
         )
     lines += [
         "",
         "Measured tables are rechecked by `scripts/18_build_release.py --validate`",
         "(L1 reconciliations + L2 producer reruns). Definitional and protocol",
-        "tables have no data artifact by construction.",
+        "tables have no data artifact by construction. `tab:recovery` reports the",
+        "v2 semantic risk set; the v1 run-time hash set appears only in the single",
+        "reconciliation note and is checked as such.",
         "",
     ]
     return "\n".join(lines)
+
+
+def ledger_hashes_json(root: Path) -> dict:
+    """SHA-256 record for every distributed ledger extract (post-redaction)."""
+    rows: list[dict[str, object]] = []
+    for path in sorted((root / "traces").rglob("*.jsonl")):
+        rows.append({
+            "path": path.relative_to(root).as_posix(),
+            "bytes": path.stat().st_size,
+            "sha256": sha256_file(path),
+        })
+    return {
+        "stage": "ledger_extracts",
+        "generated_utc": utc_now(),
+        "n_files": len(rows),
+        "total_bytes": sum(int(row["bytes"]) for row in rows),
+        "note": "SHA-256 of every distributed ledger extract after the v1.0.1 "
+        "release-copy redaction (D-046). Base decision ledgers, recovery step "
+        "and event ledgers, jitter runs, and the reported G1 calibration_v3 "
+        "runs; the superseded first calibration pass, *_backup files, and the "
+        "exploratory P6.7 second-renderer runs (D-048) are excluded. The raw "
+        "run tree is not distributed.",
+        "files": rows,
+    }
 
 
 def validation_md() -> str:
@@ -662,14 +749,25 @@ One-command validation (no GPU, stdlib Python only):
   complete (every file listed exactly once); frozen manifest hash chain
   (prefixes / perturbations / sample / source pin / preregistration /
   field registry / renderer + sidecar); JSON-to-JSON reconciliations
-  behind every measured table (crude recovery triple, hash-vs-semantic
-  bridge, severity 7/11/16 re-derived from the verification sheets, exact
-  McNemar and LRT recomputes, wrong-direction partition, utility counts,
-  g3 totals, H5); `TABLE_MAP.md` covers all 25 paper tables; identifier
+  behind every measured table (v2 semantic crude/KM recovery triple plus
+  the single v1 hash-set reconciliation, hash-vs-semantic bridge, severity
+  7/11/16 re-derived from the verification sheets, exact McNemar and LRT
+  recomputes, wrong-direction partition, utility counts, g3 totals, H5);
+  `TABLE_MAP.md` covers all 25 paper tables (11 main + S1–S14); identifier
   re-scan clean.
-- **L2 (`--rerun`, needs the repo with run ledgers):** reruns the five
-  CPU-only analysis producers and diffs the rebuilt JSONs against the
-  released copies (volatile `recorded_utc`/`git_commit` ignored).
+- **L2 (`--rerun`, needs the repo with run ledgers):** reruns the six
+  CPU-only analysis producers (including `19_rowlevel_refits.py`, P6.3) and
+  diffs the rebuilt JSONs against the released copies (volatile
+  `recorded_utc`/`git_commit` ignored).
+
+Artifact provenance: `analysis/rowlevel_refits.json` was generated at commit
+`8e6f536` (SHA-256 `965805ea…dbedfcb`, recorded in `release_record.json`).
+Its `reconciliation.note` carries the text-only correction later committed as
+`7f0169d` (prefix-resampling sensitivity, `design_valid: false`, not a cluster
+bootstrap); the wording was in the working tree at generation, so the recorded
+commit lags the note text by ten minutes of history. No number changed, and a
+rerun at the current tree reproduces every field except
+`recorded_utc`/`git_commit`.
 
 `frozen/prefixes.jsonl` is the redacted release derivative: the builder
 replaces every match of the scrubber-artifact identity class in every staged
@@ -719,6 +817,21 @@ def release_changelog_md() -> str:
   the guard test in `tests/test_release.py` fail on reintroduction of the
   fragment.
 
+### Packaging (P6.5)
+
+- `TABLE_MAP.md` now records the paper's split: 11 main-text tables (1–11)
+  and 14 supplementary tables (S1–S14), with `tab:recovery` pointing at the
+  v2 semantic risk set and the v1 hash set marked as the single reconciliation
+  note.
+- Added `analysis/rowlevel_refits.json` (P6.3 row-level refits; generated at
+  `8e6f536`, SHA-256 `965805ea…dbedfcb`, provenance note in
+  `release_record.json`).
+- Added `traces/ledger_hashes.json`: SHA-256 and byte size for every
+  distributed ledger extract, computed after redaction.
+- L1 now checks the v2 crude/KM triple (24.4/32.9/21.3; 28.2/44.6/22.0) and
+  the v1 decomposition (54+18=72, 116+25=141, 80+32=112); L2 reruns six
+  producers including `19_rowlevel_refits.py`.
+
 ## v1.0.0 — 2026-11-22
 
 - First staged public release: 880 scrubbed prefixes, manifests,
@@ -743,6 +856,18 @@ def build_package(out: Path, force: bool = False) -> dict:
     if missing:
         print(f"[18_build_release] FAIL: missing inputs ({len(missing)}): {missing[:8]}")
         return {"ok": False, "reason": "missing", "missing": missing}
+
+    # Provenance notes bind a distributed artifact to the exact bytes that were
+    # generated at the recorded commit; a silent regeneration fails the build.
+    stale_notes = []
+    for note in ARTIFACT_PROVENANCE_NOTES:
+        name = note["artifact"].split("/", 1)[1]
+        actual = sha256_file(ANALYSIS_DIR / name)
+        if actual != note["sha256"]:
+            stale_notes.append(f"{note['artifact']}: {actual} != {note['sha256']}")
+    if stale_notes:
+        print(f"[18_build_release] FAIL: provenance hash mismatch {stale_notes}")
+        return {"ok": False, "reason": "provenance-hash", "details": stale_notes}
 
     manifest = json.loads((MANIFEST_DIR / "toolresult800_v1.json").read_text(encoding="utf-8"))
     if not manifest.get("audit", {}).get("gate_pass"):
@@ -829,6 +954,14 @@ def build_package(out: Path, force: bool = False) -> dict:
     print(f"[18_build_release] redacted {redaction['n_occurrences']} occurrence(s) "
           f"in {redaction['n_files']} file(s)")
 
+    # Ledger extracts are distributed as scrubbed, redacted copies; record their
+    # post-redaction hashes alongside them so the provenance travels with the
+    # traces (the release-wide SHA256SUMS below covers them again).
+    ledger_hashes = ledger_hashes_json(out)
+    write_json(out / "traces" / "ledger_hashes.json", ledger_hashes)
+    print(f"[18_build_release] ledger hashes: {ledger_hashes['n_files']} files, "
+          f"{ledger_hashes['total_bytes']} bytes")
+
     files = sorted(
         p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
     )
@@ -849,6 +982,12 @@ def build_package(out: Path, force: bool = False) -> dict:
         "renderer_hash": manifest.get("renderer_hash"),
         "source_pin_hash": manifest.get("source_pin_hash"),
         "redaction": redaction,
+        "ledger_hashes": {
+            "path": "traces/ledger_hashes.json",
+            "n_files": ledger_hashes["n_files"],
+            "total_bytes": ledger_hashes["total_bytes"],
+        },
+        "artifact_provenance_notes": ARTIFACT_PROVENANCE_NOTES,
         "n_files": len(files),
         "files": {f: sha256_file(out / f) for f in files},
     }
@@ -1053,22 +1192,61 @@ def validate_tree(root: Path, rerun: bool = False) -> dict:
     else:
         check("sha256sums", True, "skipped (live tree has no SHA256SUMS)")
 
-    # --- g4 crude triple + v2 bridge ---
+    # --- g4 v2 semantic recovery triple (main tab:recovery) + v1 note ---
+    # The paper's primary recovery table reports the v2 semantic risk set
+    # (crude 24.4/32.9/21.3, KM 28.2/44.6/22.0). The v1 run-time hash set may
+    # appear only as the single reconciliation note, whose numbers must
+    # decompose exactly into semantic events + hash-only events.
     try:
-        g4 = _load(root, "analysis/g4_recovery.json")
         ids = (
             "qwen3_5_9b_instruct_awq",
             "ministral_3_8b_instruct_2512_awq",
             "llama_3_1_8b_instruct_awq",
         )
-        got = tuple(
-            (g4["groups"][f"{m}|transient_s3"]["exponential"]["events"],
-             g4["groups"][f"{m}|transient_s3"]["exponential"]["n"])
+        v2 = _load(root, "analysis/g4_recovery_v2.json")
+        v2_cells = [v2["groups"][f"{m}|transient_s3"] for m in ids]
+        v2_events = tuple((cell["events"], cell["n"]) for cell in v2_cells)
+        v2_rates = tuple(round(100.0 * cell["crude"]["rate"], 1) for cell in v2_cells)
+        v2_km = tuple(round(100.0 * cell["km_recovered_h4"], 1) for cell in v2_cells)
+        g4 = _load(root, "analysis/g4_recovery.json")
+        v1_events = tuple(
+            (
+                g4["groups"][f"{m}|transient_s3"]["exponential"]["events"],
+                g4["groups"][f"{m}|transient_s3"]["exponential"]["n"],
+            )
             for m in ids
         )
-        check("g4-crude-triple", got == ((72, 264), (141, 406), (112, 412)), str(got))
-        v2 = _load(root, "analysis/g4_recovery_v2.json")
         bridge = v2.get("hash_bridge", {})
+        decomposition = tuple(
+            (
+                bridge[f"{m}|transient_s3"].get("analysis_events"),
+                bridge[f"{m}|transient_s3"].get("hash_only_events"),
+                bridge[f"{m}|transient_s3"].get("g4_events"),
+            )
+            for m in ids
+        )
+        tex = (REPO_ROOT / "paper" / "toolresults.tex").read_text(encoding="utf-8")
+        marker = "Run-risk-set (v1) reconciliation"
+        note_count = tex.count(marker)
+        outside = tex
+        if note_count == 1:
+            start = tex.index(marker)
+            end = tex.find("\n\n", start)
+            if end != -1:
+                outside = tex[:start] + tex[end:]
+        check(
+            "g4-crude-triple",
+            v2_events == ((54, 221), (116, 353), (80, 376))
+            and v2_rates == (24.4, 32.9, 21.3)
+            and v2_km == (28.2, 44.6, 22.0)
+            and v1_events == ((72, 264), (141, 406), (112, 412))
+            and decomposition == ((54, 18, 72), (116, 25, 141), (80, 32, 112))
+            and note_count == 1
+            and "27.3/34.7/27.2" not in outside
+            and "32.4/47.6/28.2" not in outside,
+            f"v2 crude {v2_rates} KM {v2_km} events {v2_events}; "
+            f"v1 note {v1_events} x{note_count}",
+        )
         bridge_bad = [
             k for k, cell in bridge.items()
             if cell.get("g4_events") != cell.get("bridge_events_sum")
@@ -1229,13 +1407,28 @@ def validate_tree(root: Path, rerun: bool = False) -> dict:
         f"{clopper_pearson_lower(9, 9):.4f}",
     )
 
-    # --- TABLE_MAP covers all 25 paper tables ---
+    # --- TABLE_MAP covers all 25 paper tables, main/supplement split ---
     try:
         tex = (REPO_ROOT / "paper" / "toolresults.tex").read_text(encoding="utf-8")
         labels = sorted(set(re.findall(r"\\label\{(tab:[^}]+)\}", tex)))
-        mapped = sorted(row["label"] for row in TABLE_MAP)
-        check("table-map-coverage", labels == mapped, f"{len(labels)} labels, {len(mapped)} mapped")
-    except OSError as exc:
+        supp_at = tex.index("\\section*{Supplementary tables}")
+        main_labels = set(re.findall(r"\\label\{(tab:[^}]+)\}", tex[:supp_at]))
+        supp_ordered = list(
+            dict.fromkeys(re.findall(r"\\label\{(tab:[^}]+)\}", tex[supp_at:]))
+        )
+        mapped_main = [row["label"] for row in TABLE_MAP if row["section"] == "main"]
+        mapped_supp = [row["label"] for row in TABLE_MAP if row["section"] == "supplement"]
+        supp_nos = [row["table_no"] for row in TABLE_MAP if row["section"] == "supplement"]
+        check(
+            "table-map-coverage",
+            sorted(mapped_main + mapped_supp) == labels
+            and set(mapped_main) == main_labels
+            and len(mapped_main) == 11
+            and mapped_supp == supp_ordered
+            and supp_nos == [f"S{i}" for i in range(1, 15)],
+            f"{len(mapped_main)} main + {len(mapped_supp)} supplement",
+        )
+    except (OSError, ValueError) as exc:
         check("table-map-coverage", False, str(exc))
 
     # --- identifier re-scan ---

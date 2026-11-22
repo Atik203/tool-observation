@@ -30,6 +30,41 @@
   prefixes, 60–120-item human audit) is future work.
 - **Provenance:** multi-role agent panel, author-overseen.
 
+## P6.5 Phase A packaging note (2026-11-23)
+
+- **Release rebuilt:** `release/ToolResult-800-v1.0.1/` — 127 checksummed files (129
+  files including `SHA256SUMS` and `release_record.json`), built by
+  `scripts/18_build_release.py --build` with release-copy redaction on (D-046). Adds
+  `analysis/rowlevel_refits.json` (P6.3) and `traces/ledger_hashes.json` (SHA-256 +
+  byte size of every distributed ledger extract, computed after redaction). The
+  exploratory P6.7 second-renderer runs (D-048) are excluded pending a separate
+  deposit decision.
+- **Table map:** all 25 paper tables mapped as 11 main-text (1–11) and 14
+  supplementary (S1–S14, the paper's `\section*{Supplementary tables}`).
+  `tab:recovery` points at the v2 semantic risk set; the v1 hash set is the single
+  reconciliation note (27.3/34.7/27.2 crude; 32.4/47.6/28.2 KM, decomposing as
+  54+18=72, 116+25=141, 80+32=112).
+- **Artifact provenance:** `analysis/rowlevel_refits.json` was generated at commit
+  `8e6f536` (SHA-256 `965805ea…dbedfcb`); its `reconciliation.note` is the text-only
+  correction later committed as `7f0169d`. No number changed; a rerun reproduces every
+  field except `recorded_utc`/`git_commit`.
+- **Validation:** 17/17 L1 on the staged package; 23/23 with `--rerun` (six CPU-only
+  producers rebuilt: `g4_recovery_v2`, `severity_sensitivity`, `rowlevel_refits`,
+  `inference_robustness`, `wrong_direction`, `new_evidence`). Automated identifier
+  re-scan clean (0 hits); the independent human re-scan remains pending.
+- **Clean-room compile:** the 14-file Overleaf zip compiled with TeX Live 2026 via
+  `latexmk -pdf` — 35 pages, 0 undefined references, 0 undefined citations, 0 BibTeX
+  warnings.
+- **Licenses (dual):** data CC BY 4.0 (`DATA_LICENSE.md`); code MIT (`LICENSE`,
+  `CITATION.cff`); upstream τ-bench MIT.
+- **Related identifiers for the deposit:** repository
+  https://github.com/Atik203/tool-observation; upstream τ-bench @
+  `59a200c6d575d595120f1cb70fea53cef0632f6b`; this prereg freeze commit `1673856`,
+  tag `prereg-freeze-v1`, hash `e0d107c6`, bundled under `prereg/` in the package.
+- **DOI:** not minted. Phase A prepares the record in
+  `docs/submission/doi_record.md`; the author uploads to Zenodo and mints in Phase B.
+  The token in `.env` is read only at mint time and is never printed or committed.
+
 ## T7 staging note (2026-11-22, P4.7/P5)
 
 - **Release staged:** `release/ToolResult-800-v1.0/` (123 files) built by

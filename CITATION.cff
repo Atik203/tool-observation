@@ -9,8 +9,8 @@ abstract: >-
   complete: pooled conditional-logit slope 0.877 [0.770, 0.998] with three
   failed gate criteria (parser 1.55% vs 1%, severity s2/s3 88.3% vs 90%,
   crude recovery on the semantic risk set 24.4/32.9/21.3% vs 50%); no causal or content-sensitivity
-  claim. Dataset v1.0.1 staged for DOI release (scrubbed, redacted derived data
-  only; one scrubber-artifact identity is replaced at build time).
+  claim. Dataset v1.0.1 packaged for DOI release (scrubbed, redacted derived
+  data only; one scrubber-artifact identity is replaced at build time).
 authors:
   - family-names: Rahaman
     given-names: Md. Atikur
@@ -23,7 +23,11 @@ version: 1.0.1
 date-released: 2026-11-23
 repository-code: "https://github.com/Atik203/tool-observation"
 url: "https://github.com/Atik203/tool-observation"
-license: MIT
+# Dual license: MIT for the code, CC BY 4.0 for the project data additions
+# (upstream tau-bench is MIT; see ATTRIBUTION.md and DATA_LICENSE.md).
+license:
+  - MIT
+  - CC-BY-4.0
 keywords:
   - llm-agents
   - tool-use
@@ -32,3 +36,23 @@ keywords:
   - reproducibility
   - dataset
 type: software
+references:
+  - type: software
+    title: "tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains"
+    authors:
+      - family-names: Yao
+        given-names: Shunyu
+      - family-names: Shinn
+        given-names: Noah
+      - family-names: Razavi
+        given-names: Pedram
+      - family-names: Narasimhan
+        given-names: Karthik
+    repository-code: "https://github.com/sierra-research/tau-bench"
+    version: "59a200c6d575d595120f1cb70fea53cef0632f6b"
+    year: 2024
+  - type: generic
+    title: "ToolResult-800 preregistration freeze (tag prereg-freeze-v1, hash e0d107c6)"
+    repository-code: "https://github.com/Atik203/tool-observation"
+    version: "1673856cc6cd335ae9fd8b0132343082f167077a"
+    year: 2026
