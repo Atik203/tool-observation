@@ -33,6 +33,12 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   compile 36 pages with 0 undefined references/citations and 0 BibTeX warnings. No
   prereg amendment: the frozen manifest, sample, estimand, and confirmatory results are
   untouched.
+- **Outcome (2026-11-23):** DOI `10.5281/zenodo.24449467` (record 24449467, concept
+  24449466) published with the archive
+  `ToolResult-800-v1.0.1.zip` (SHA-256
+  `83fadce666d034b8c53bdfc3bfe4c10f1b684c421fb6090c5de96dd66c89fa85`) and
+  `SHA256SUMS`; both downloaded bytes matched and all 136 archive entries verified
+  against `SHA256SUMS` after upload.
 
 ---
 

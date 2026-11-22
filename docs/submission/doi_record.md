@@ -11,7 +11,7 @@ are the same `SHA256SUMS` (136 entries). Verification evidence is in the mint lo
 The Zenodo token lives only in `.env` (key `zendo_token`, the account's actual key name) and
 was read in-process at mint time; it was never printed, logged, echoed, or committed.
 
-## Phase A evidence (2026-11-23)
+## Release evidence (2026-11-23)
 
 - **Package:** `release/ToolResult-800-v1.0.1/` — 136 checksummed files (138 files
   including `SHA256SUMS` and `release_record.json`); `SHA256SUMS` verified against
@@ -83,8 +83,11 @@ was read in-process at mint time; it was never printed, logged, echoed, or commi
     submission; the dataset is its supplement, described in the Data-availability bullet)
 - **Manifest hash (authoritative):**
   `d6e034d7f1132b314ad1f82bf14faa0f6762975ee7b404b54cc365acfac5487a`
-- **Package checksum:** `release/ToolResult-800-v1.0.1/SHA256SUMS` (136 entries);
-  archive `ToolResult-800-v1.0.1.zip` SHA-256 recorded in the mint log below.
+- **Package checksum:** `release/ToolResult-800-v1.0.1/SHA256SUMS` (136 entries;
+  SHA-256 `8ce5248a44658e34dabb0fd7e4bd9a2c07ab4ee12d4ff258886ced33dd250f79`).
+  Deposited archive `ToolResult-800-v1.0.1.zip` SHA-256
+  `83fadce666d034b8c53bdfc3bfe4c10f1b684c421fb6090c5de96dd66c89fa85`
+  (6,944,006 bytes, 138 entries).
 - **Notable artifact provenance:** `analysis/rowlevel_refits.json` was generated at
   commit `8e6f536` (2026-11-23 02:24 +0600), SHA-256
   `965805eac2791a0d40757777d537db4205c4d4c046d6b2732c2f272c9dbedfcb`. Its
@@ -111,10 +114,19 @@ was read in-process at mint time; it was never printed, logged, echoed, or commi
 ### Verification details
 
 - Record: <https://zenodo.org/records/24449467>; DOI
-  <https://doi.org/10.5281/zenodo.24449467>.
-- Uploaded files: `ToolResult-800-v1.0.1.zip` and `SHA256SUMS` (2 files; Zenodo's
-  100-file record cap forces a single archive).
+  <https://doi.org/10.5281/zenodo.24449467>; concept DOI
+  <https://doi.org/10.5281/zenodo.24449466>. Resolver returned HTTP 200 at the
+  record URL on 2026-11-23; DataCite CSL JSON content negotiation returned a
+  `dataset` with the same title and DOI.
+- Uploaded files: `ToolResult-800-v1.0.1.zip` (6,944,006 bytes, MD5
+  `e8c361448d4b59a472942470cf333d00`) and `SHA256SUMS` (14,158 bytes, MD5
+  `0842c738ab798791ec644dd5c6c2e81a`) — 2 files; Zenodo's 100-file record cap
+  forces a single archive. Both downloads were re-hashed after upload and match
+  the local bytes (SHA-256 and MD5).
 - Archive verification: the zip was downloaded from Zenodo, extracted, and every one of
-  its 136 entries was checked against the `SHA256SUMS` inside the archive and against
-  the deposited top-level `SHA256SUMS`; 0 mismatches. The archive's own SHA-256 is
-  recorded here and in the report.
+  its 136 checksummed entries was checked against the `SHA256SUMS` inside the archive
+  and against the deposited top-level `SHA256SUMS`; 0 mismatches, 0 missing, 0 extra.
+- Archive SHA-256: `83fadce666d034b8c53bdfc3bfe4c10f1b684c421fb6090c5de96dd66c89fa85`.
+- Package build commit: `074d217` (the release-content commit; the package's
+  `release_record.json` records this commit, `doi` field
+  `10.5281/zenodo.24449467`, and 136 files).
