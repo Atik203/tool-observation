@@ -27,12 +27,13 @@ def _tex() -> str:
 
 
 def test_doi_recorded_consistently() -> None:
-    """One DOI, four surfaces: CFF, data card, deposit record, paper."""
-    doi = "10.5281/zenodo.24449467"
+    """One DOI, five surfaces: CFF, data card, deposit record, prereg, paper."""
+    doi = "10.5281/zenodo.24449882"
     for rel in (
         "CITATION.cff",
         "docs/DATA_CARD.md",
         "docs/submission/doi_record.md",
+        "prereg/DEPOSIT_NOTE.md",
         "paper/toolresults.tex",
     ):
         text = (_REPO / rel).read_text(encoding="utf-8")
@@ -41,6 +42,13 @@ def test_doi_recorded_consistently() -> None:
     assert 'cff-version: 1.2.0' in citation
     assert 'date-released: "2026-11-23"' in citation
     assert "doi:" in citation
+    assert "version: 1.0.2" in citation
+    # Concept DOI keeps the version lineage explicit on every surface.
+    concept = "10.5281/zenodo.24449466"
+    assert concept in citation
+    assert concept in (_REPO / "docs" / "submission" / "doi_record.md").read_text(
+        encoding="utf-8"
+    )
     record = (_REPO / "docs" / "submission" / "doi_record.md").read_text(encoding="utf-8")
     # The .env key is zendo_token; never the misspelling used in early drafts.
     assert "`zendo_token`" in record
@@ -431,6 +439,53 @@ def test_release_pii_redaction_guard() -> None:
         if build_release._SCRUBBER_RESIDUAL.search(text)
     ]
     assert offenders == [], f"scrubber residual in release file(s): {offenders}"
+
+
+# Absolute-path leak detectors (v1.0.2). The drive-path rules require a
+# path-shaped token so JSON-escaped prose such as "DC:\n" or "THY2DG:\n"
+# (a model output line ending) is not mistaken for an absolute path.
+_ABSOLUTE_PATH_PATTERNS = (
+    re.compile(r"/home/"),
+    re.compile(r"/Users/"),
+    re.compile(r"[A-Za-z]:[\\/]{1,2}PROJECT[\\/]{1,2}tool-observation"),
+    re.compile(r"(?<![A-Za-z0-9])[A-Za-z]:[\\/]{1,2}Users[\\/]{1,2}[^\\/\s\"'`]+"),
+    re.compile(r"(?<![A-Za-z0-9])[A-Za-z]:\\{1,2}(?:[^\\\s\"'`<>|]{2,}\\)+"),
+)
+
+
+def test_path_scrub_deterministic_and_idempotent() -> None:
+    """The scrub replaces roots, keeps relative structure, and is a no-op twice."""
+    text = (
+        '{"ledger": "G:\\\\PROJECT\\\\tool-observation\\\\data\\\\runs\\\\x.jsonl"}'
+        '\n{"ledger": "G:/PROJECT/tool-observation/data/runs/y.jsonl"}'
+        '\n{"ledger": "/home/server/tool-observation/data/runs/z.jsonl"}'
+        '\n{"home": "/home/server"}'
+    )
+    scrubbed, n = build_release.scrub_paths(text)
+    assert n == 4
+    assert "G:" not in scrubbed and "/home/" not in scrubbed
+    assert "[repo]\\\\data\\\\runs\\\\x.jsonl" in scrubbed
+    assert "[repo]/data/runs/y.jsonl" in scrubbed
+    assert "[repo]/data/runs/z.jsonl" in scrubbed
+    assert '"[repo]"' in scrubbed
+    again, n_again = build_release.scrub_paths(scrubbed)
+    assert n_again == 0 and again == scrubbed
+    # Model-output prose that merely looks like a drive colon stays intact.
+    prose = "Reservation THY2DG:\\nAddress: DC:\\n123 Main St"
+    assert build_release.scrub_paths(prose) == (prose, 0)
+    assert build_release.scan_path_leaks(prose) == []
+
+
+def test_release_contains_no_absolute_paths() -> None:
+    """No release file may leak a build-machine or server absolute path."""
+    offenders: list[str] = []
+    for path, text in _release_texts():
+        for pattern in _ABSOLUTE_PATH_PATTERNS:
+            if pattern.search(text):
+                offenders.append(
+                    f"{path.relative_to(_REPO).as_posix()}: {pattern.pattern}"
+                )
+    assert offenders == [], f"absolute path leak(s): {offenders[:20]}"
 
 
 def test_redaction_preserves_line_endings(tmp_path: Path) -> None:

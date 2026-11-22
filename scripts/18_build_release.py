@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-"""Stage 18 — build + validate the ToolResult-800 v1.0.1 public release package.
+"""Stage 18 — build + validate the ToolResult-800 v1.0.2 public release package.
 
-Builds the staged release tree ``release/ToolResult-800-v1.0.1/`` (gitignored;
+Builds the staged release tree ``release/ToolResult-800-v1.0.2/`` (gitignored;
 uploaded to the DOI record, never committed) and validates it with one
 command::
 
@@ -49,6 +49,13 @@ Allowlist: exactly one corresponding-author contact email in
 automated scan does NOT replace the pending independent human re-scan
 (see ``docs/submission/checklist.md``).
 
+Path rule (v1.0.2): every staged text file also passes a build-time path
+scrub before checksums are written. Absolute repository roots and server
+home directory prefixes (``G:\\PROJECT\\tool-observation``,
+``/home/<user>/tool-observation``, ``/home/<user>``, and drive-rooted
+paths) are replaced with ``[repo]``; ``path_rescan.json`` records the
+per-file counts, and L1 fails if any path pattern survives.
+
 Provenance: multi-role agent panel, author-overseen (the T6 packet
 contents bundled here are single-agent coded, author-overseen, as
 disclosed in the paper and D-044).
@@ -85,11 +92,13 @@ from toolobs.paths import (  # noqa: E402
 )
 from toolobs.provenance import git_commit, utc_now, write_json  # noqa: E402
 
-PACKAGE_NAME = "ToolResult-800-v1.0.1"
-PACKAGE_VERSION = "1.0.1"
-BUILDER_VERSION = "stage-18 v3"
-# Reserved on Zenodo at deposit creation; resolves once the record is published.
-PACKAGE_DOI = "10.5281/zenodo.24449467"
+PACKAGE_NAME = "ToolResult-800-v1.0.2"
+PACKAGE_VERSION = "1.0.2"
+BUILDER_VERSION = "stage-18 v4"
+# Reserved on Zenodo when this version's draft was created (concept DOI
+# 10.5281/zenodo.24449466); resolves once the record is published.
+PACKAGE_DOI = "10.5281/zenodo.24449882"
+CONCEPT_DOI = "10.5281/zenodo.24449466"
 VOLATILE_KEYS = frozenset({"recorded_utc", "git_commit"})
 
 # ---------------------------------------------------------------------------
@@ -592,6 +601,140 @@ def apply_redactions(root: Path) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Release-copy path scrub (v1.0.2)
+# ---------------------------------------------------------------------------
+
+# v1.0.1 leaked the build machine's repository root and the GPU server home
+# directory into distributed provenance fields (``ledger`` keys in four
+# analysis JSONs and ``g1_calibration_v3.json``) and one generated report
+# (``labels/g0_report.md``). The artifacts themselves are unchanged; only the
+# staged release copies are scrubbed, at build time, so a rebuild cannot
+# reintroduce the class. ``[repo]`` is deliberately not a valid path prefix,
+# which makes a second application a no-op (idempotent) and keeps the
+# residual structure (``[repo]/data/runs/...``) readable.
+PATH_SCRUB_TOKEN = "[repo]"
+_WIN_SEP = r"[\\/]{1,2}"
+
+PATH_SCRUB_PATTERNS: tuple[re.Pattern[str], ...] = (
+    # Drive-rooted checkout under the project parent, with backslashes or
+    # forward slashes and one or two separators (JSON escaping).
+    re.compile(
+        r"[A-Za-z]:" + _WIN_SEP + r"PROJECT" + _WIN_SEP + r"tool-observation"
+    ),
+    # A user-home checkout on a drive, ending in the repository directory.
+    re.compile(
+        r"[A-Za-z]:" + _WIN_SEP + r"Users" + _WIN_SEP
+        + r"[^\\/\s\"'`]+" + _WIN_SEP + r"tool-observation"
+    ),
+    # Server home plus the repository checkout, then a bare server home.
+    re.compile(r"/home/[A-Za-z0-9._-]+/tool-observation"),
+    re.compile(r"/home/[A-Za-z0-9._-]+"),
+    # Any remaining absolute drive path with at least two segments. The
+    # lookbehind and the two-character segment rule keep JSON-escaped prose
+    # such as "DC:\n" or "THY2DG:\n" from matching; no such false positive
+    # would be scrubbed, but the detector shares the same guard.
+    re.compile(
+        r"(?<![A-Za-z0-9])[A-Za-z]:" + _WIN_SEP
+        + r"[^\\/\s\"'`<>|]{2,}(?:\\{1,2}[^\\/\s\"'`<>|]{2,})+"
+    ),
+)
+
+# Residual detector used by the build and by L1. It is intentionally broader
+# than the scrub patterns where the shapes are unambiguous (``/home/`` and
+# ``/Users/``), and path-shaped otherwise.
+PATH_LEAK_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"/home/"),
+    re.compile(r"/Users/"),
+    re.compile(r"[A-Za-z]:" + _WIN_SEP + r"PROJECT" + _WIN_SEP + r"tool-observation"),
+    re.compile(
+        r"(?<![A-Za-z0-9])[A-Za-z]:" + _WIN_SEP + r"Users" + _WIN_SEP
+        + r"[^\\/\s\"'`]+"
+    ),
+    re.compile(
+        r"(?<![A-Za-z0-9])[A-Za-z]:\\{1,2}(?:[^\\\s\"'`<>|]{2,}\\)+"
+    ),
+)
+
+PATH_SCRUB_NOTE = (
+    "Absolute repository roots and server home directory prefixes in staged "
+    "release copies are replaced by [repo] at build time; the frozen and "
+    "generated source artifacts are not modified. The replacement is "
+    "deterministic and idempotent, and path_rescan.json records the per-file "
+    "occurrence counts and confirms that no path pattern survives."
+)
+
+
+def scrub_paths(text: str) -> tuple[str, int]:
+    """Apply the release-copy path scrub to one text blob.
+
+    Returns the scrubbed text and the number of replaced occurrences.
+    Deterministic and idempotent: ``[repo]`` matches no pattern.
+    """
+    n = 0
+    for pattern in PATH_SCRUB_PATTERNS:
+        n += len(pattern.findall(text))
+        text = pattern.sub(PATH_SCRUB_TOKEN, text)
+    return text, n
+
+
+def scan_path_leaks(text: str) -> list[str]:
+    """Return the absolute-path patterns still present in ``text``."""
+    return [pattern.pattern for pattern in PATH_LEAK_PATTERNS if pattern.search(text)]
+
+
+def apply_path_scrub(root: Path) -> tuple[dict, list[str]]:
+    """Scrub every staged text file under ``root`` in place.
+
+    Returns (metadata dict safe to publish, residual hit list).
+    """
+    changed: dict[str, int] = {}
+    total = 0
+    for path in sorted(root.rglob("*")):
+        if not path.is_file():
+            continue
+        if path.name not in _TEXT_NAMES and path.suffix.lower() not in _TEXT_SUFFIXES:
+            continue
+        try:
+            text = path.read_bytes().decode("utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        scrubbed, n = scrub_paths(text)
+        if n:
+            path.write_bytes(scrubbed.encode("utf-8"))
+            changed[path.relative_to(root).as_posix()] = n
+            total += n
+    stats = {
+        "token": PATH_SCRUB_TOKEN,
+        "n_occurrences": total,
+        "n_files": len(changed),
+        "files": changed,
+        "rule": "absolute repository roots and server home directory prefixes "
+        "replaced by [repo] in staged release copies",
+        "frozen_source_unchanged": True,
+        "note": PATH_SCRUB_NOTE,
+    }
+    return stats, residual_path_leaks(root)
+
+
+def residual_path_leaks(root: Path) -> list[str]:
+    """Scan every staged text file for surviving absolute paths."""
+    hits: list[str] = []
+    for path in sorted(root.rglob("*")):
+        if not path.is_file():
+            continue
+        if path.name not in _TEXT_NAMES and path.suffix.lower() not in _TEXT_SUFFIXES:
+            continue
+        try:
+            text = path.read_bytes().decode("utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        rel = path.relative_to(root).as_posix()
+        for match in scan_path_leaks(text):
+            hits.append(f"{rel}: {match}")
+    return hits
+
+
+# ---------------------------------------------------------------------------
 # Staging
 # ---------------------------------------------------------------------------
 
@@ -618,7 +761,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-MODEL_LICENSES_MD = """# Model output licenses — ToolResult-800 v1.0.1
+MODEL_LICENSES_MD = """# Model output licenses — ToolResult-800 v1.0.2
 
 Verified 2026-11-22 against the HuggingFace API for the exact pinned
 revisions in `configs/models.yaml` (revision SHAs match the served weights).
@@ -735,7 +878,7 @@ def table_map_md() -> str:
     n_main = sum(1 for row in TABLE_MAP if row["section"] == "main")
     n_supp = sum(1 for row in TABLE_MAP if row["section"] == "supplement")
     lines = [
-        "# Table-to-artifact map — ToolResult-800 v1.0.1",
+        "# Table-to-artifact map — ToolResult-800 v1.0.2",
         "",
         f"All {len(TABLE_MAP)} paper tables are mapped: {n_main} main-text tables",
         f"(Table 1–{n_main}) and {n_supp} supplementary tables (S1–S{n_supp},",
@@ -779,8 +922,8 @@ def ledger_hashes_json(root: Path) -> dict:
         "generated_utc": utc_now(),
         "n_files": len(rows),
         "total_bytes": sum(int(row["bytes"]) for row in rows),
-        "note": "SHA-256 of every distributed ledger extract after the v1.0.1 "
-        "release-copy redaction (D-046). Base decision ledgers, recovery step "
+        "note": "SHA-256 of every distributed ledger extract after the v1.0.2 "
+        "release-copy redaction (D-046) and path scrub. Base decision ledgers, recovery step "
         "and event ledgers, jitter runs, the reported G1 calibration_v3 runs, "
         "and the exploratory P6.7 second-renderer runs (D-048). The superseded "
         "first calibration pass and *_backup files are excluded; the raw run "
@@ -790,7 +933,7 @@ def ledger_hashes_json(root: Path) -> dict:
 
 
 def validation_md() -> str:
-    return """# Validation — ToolResult-800 v1.0.1
+    return """# Validation — ToolResult-800 v1.0.2
 
 One-command validation (no GPU, stdlib Python only):
 
@@ -807,9 +950,9 @@ One-command validation (no GPU, stdlib Python only):
   7/11/16 re-derived from the verification sheets, exact McNemar and LRT
   recomputes, wrong-direction partition, utility counts, g3 totals, H5);
   `TABLE_MAP.md` covers all 25 paper tables (11 main, ordered, + S1–S14);
-  identifier re-scan clean. The paper-side label order and the single v1
-  reconciliation note are carried in `paper_audit.json`, so this level
-  needs no repository checkout.
+  identifier re-scan clean; absolute-path re-scan clean (v1.0.2). The
+  paper-side label order and the single v1 reconciliation note are carried
+  in `paper_audit.json`, so this level needs no repository checkout.
 - **L2 (`--rerun`, needs the repo with run ledgers):** reruns the six
   CPU-only analysis producers (including `19_rowlevel_refits.py`, P6.3) and
   diffs the rebuilt JSONs against the released copies (volatile
@@ -831,6 +974,14 @@ commit lags the note text by ten minutes of history. No number changed, and a
 rerun at the current tree reproduces every field except
 `recorded_utc`/`git_commit`.
 
+`path_rescan.json` records the v1.0.2 build-time path scrub: absolute
+repository roots and server home directory prefixes are replaced by
+`[repo]` in every staged text file (16 occurrences in 8 files in this
+build, including `labels/g1_calibration_v3.json` and the `ledger` fields
+of four analysis JSONs). The generated artifacts are not modified; only
+the distributed copies are. Counts are per occurrence; the L1
+`path-rescan` check requires zero surviving matches.
+
 `frozen/prefixes.jsonl` is the redacted release derivative: the builder
 replaces every match of the scrubber-artifact identity class in every staged
 file at build time (D-046), records the counts here and in
@@ -849,6 +1000,33 @@ one entry per scanned value, so a string echoed in both `decision_json` and
 
 def release_changelog_md() -> str:
     return """# Changelog — ToolResult-800
+
+## v1.0.2 — 2026-11-23
+
+### Fixed (path leak)
+
+- Replaced absolute build-machine and server paths in the distributed copies
+  with `[repo]`: the repository roots (backslash and forward-slash forms),
+  the GPU-server home directory prefix, and drive-rooted paths.
+  Affected v1.0.1 files: `labels/g1_calibration_v3.json` (3 server-home
+  ledger paths), `analysis/g3_analysis.json`, `analysis/g3_analysis_all880.json`,
+  `analysis/g3_partial_pipeline_check.json`, the three
+  `analysis/jitter_stability_*.json`, and `labels/g0_report.md` (13 `G:\\`
+  paths). The scrub is applied to staged copies at build time, is
+  deterministic and idempotent, and is recorded in `path_rescan.json`
+  (16 occurrences in 8 files; 0 residual).
+- The generated analysis/report sources outside the release are unchanged;
+  the frozen and record artifacts are bit-identical to v1.0.1 apart from the
+  scrubbed path strings.
+- v1.0.1 (DOI `10.5281/zenodo.24449467`) remains published and immutable but
+  is superseded by v1.0.2 (DOI `10.5281/zenodo.24449882`) and should not be
+  cited for the package bytes.
+
+### Validation
+
+- L1 now includes a `path-rescan` check that fails on any surviving server
+  home or repository-rooted absolute path; `tests/test_release.py` adds the
+  same guard over every release tree and zip under `release/`.
 
 ## v1.0.1 — 2026-11-23
 
@@ -993,14 +1171,17 @@ def build_package(out: Path, force: bool = False) -> dict:
         MODEL_LICENSES_MD, encoding="utf-8"
     )
     (out / "README.md").write_text(
-        "# ToolResult-800 v1.0.1\n\n"
+        "# ToolResult-800 v1.0.2\n\n"
         "Scrubbed derived data for the fixed-prefix measurement study of tool-result "
         "errors (800 primary + 80 reserve prefixes, five arms, three models). "
         "Raw trajectories, PII, weights, caches, and run logs are excluded. "
         "Scrubber-artifact identities are redacted in this copy at build time "
-        "(D-046); the frozen source is not distributed.\n\n"
+        "(D-046), and absolute build-machine/server paths are replaced by "
+        "`[repo]` (v1.0.2 path scrub); the frozen source is not distributed.\n\n"
         f"Staged: {utc_now()} (builder {BUILDER_VERSION}, commit {git_commit()}).\n"
-        f"DOI: {PACKAGE_DOI}.\n"
+        f"DOI: {PACKAGE_DOI} (concept DOI {CONCEPT_DOI}; supersedes v1.0.1 "
+        "10.5281/zenodo.24449467, withdrawn from recommendation because of a "
+        "path leak).\n"
         "Validate: `python scripts/18_build_release.py --validate --root <this dir>`.\n"
         "Every paper table traces via `TABLE_MAP.md`; every number traces to "
         "`manifests/`, `traces/`, `labels/`, or `analysis/`.\n",
@@ -1024,44 +1205,20 @@ def build_package(out: Path, force: bool = False) -> dict:
     print(f"[18_build_release] redacted {redaction['n_occurrences']} occurrence(s) "
           f"in {redaction['n_files']} file(s)")
 
-    # Ledger extracts are distributed as scrubbed, redacted copies; record their
-    # post-redaction hashes alongside them so the provenance travels with the
-    # traces (the release-wide SHA256SUMS below covers them again).
+    # Path scrub (v1.0.2) runs before the ledger hashes and release checksums,
+    # so every recorded hash covers the scrubbed bytes. It is a no-op for an
+    # already-clean tree, which keeps rebuilds idempotent.
+    path_scrub, path_hits = apply_path_scrub(out)
+    print(f"[18_build_release] path scrub: {path_scrub['n_occurrences']} occurrence(s) "
+          f"in {path_scrub['n_files']} file(s); {len(path_hits)} residual pattern(s)")
+
+    # Ledger extracts are distributed as scrubbed, redacted, path-scrubbed
+    # copies; record their hashes alongside them so the provenance travels with
+    # the traces (the release-wide SHA256SUMS below covers them again).
     ledger_hashes = ledger_hashes_json(out)
     write_json(out / "traces" / "ledger_hashes.json", ledger_hashes)
     print(f"[18_build_release] ledger hashes: {ledger_hashes['n_files']} files, "
           f"{ledger_hashes['total_bytes']} bytes")
-
-    files = sorted(
-        p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
-    )
-    files = [f for f in files if f not in ("SHA256SUMS", "release_record.json")]
-    (out / "SHA256SUMS").write_text(
-        "".join(f"{sha256_file(out / f)}  {f}\n" for f in files), encoding="utf-8"
-    )
-    record = {
-        "package": PACKAGE_NAME,
-        "version": PACKAGE_VERSION,
-        "builder": BUILDER_VERSION,
-        "created_utc": utc_now(),
-        "git_commit": git_commit(),
-        "doi": PACKAGE_DOI,
-        "manifest_hash": sha256_file(MANIFEST_DIR / "toolresult800_v1.json"),
-        "prereg_hash": manifest.get("prereg_hash"),
-        "field_registry_hash": manifest.get("field_registry_hash"),
-        "renderer_hash": manifest.get("renderer_hash"),
-        "source_pin_hash": manifest.get("source_pin_hash"),
-        "redaction": redaction,
-        "ledger_hashes": {
-            "path": "traces/ledger_hashes.json",
-            "n_files": ledger_hashes["n_files"],
-            "total_bytes": ledger_hashes["total_bytes"],
-        },
-        "artifact_provenance_notes": ARTIFACT_PROVENANCE_NOTES,
-        "n_files": len(files),
-        "files": {f: sha256_file(out / f) for f in files},
-    }
-    write_json(out / "release_record.json", record)
 
     hits, placeholders, echoes, allowlisted = pii_rescan(out)
     pii_report = {
@@ -1096,28 +1253,95 @@ def build_package(out: Path, force: bool = False) -> dict:
         "(docs/submission/checklist.md).",
     }
     write_json(out / "pii_rescan.json", pii_report)
-    # pii_rescan.json must be checksummed too.
-    files.append("pii_rescan.json")
-    (out / "SHA256SUMS").write_text(
-        "".join(f"{sha256_file(out / f)}  {f}\n" for f in sorted(files)), encoding="utf-8"
+
+    path_report = {
+        "scanned_utc": utc_now(),
+        "token": PATH_SCRUB_TOKEN,
+        "n_occurrences": path_scrub["n_occurrences"],
+        "n_files": path_scrub["n_files"],
+        "files": path_scrub["files"],
+        "n_hits": len(path_hits),
+        "hits": sorted(path_hits),
+        "rule": path_scrub["rule"],
+        "frozen_source_unchanged": True,
+        "note": PATH_SCRUB_NOTE,
+        "detector_classes": [
+            "server home directory prefix",
+            "workstation user-home prefix",
+            "build repository root (drive or forward-slash form)",
+            "drive-rooted repo checkout under a user home",
+            "absolute drive path",
+        ],
+    }
+    write_json(out / "path_rescan.json", path_report)
+    # Re-scan after writing the report so the published tree, report included,
+    # is what "0 residual" describes.
+    path_hits = residual_path_leaks(out)
+    path_report["n_hits"] = len(path_hits)
+    path_report["hits"] = sorted(path_hits)
+    if path_hits:
+        write_json(out / "path_rescan.json", path_report)
+
+    files = sorted(
+        p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()
     )
-    record["n_files"] = len(files)
-    record["files"] = {f: sha256_file(out / f) for f in sorted(files)}
-    record["pii_placeholders"] = len(placeholders)
-    record["pii_synthetic_echoes"] = len(echoes)
-    record["pii_email_allowlist"] = allowlisted
+    files = [f for f in files if f not in ("SHA256SUMS", "release_record.json")]
+    (out / "SHA256SUMS").write_text(
+        "".join(f"{sha256_file(out / f)}  {f}\n" for f in files), encoding="utf-8"
+    )
+    record = {
+        "package": PACKAGE_NAME,
+        "version": PACKAGE_VERSION,
+        "builder": BUILDER_VERSION,
+        "created_utc": utc_now(),
+        "git_commit": git_commit(),
+        "doi": PACKAGE_DOI,
+        "concept_doi": CONCEPT_DOI,
+        "manifest_hash": sha256_file(MANIFEST_DIR / "toolresult800_v1.json"),
+        "prereg_hash": manifest.get("prereg_hash"),
+        "field_registry_hash": manifest.get("field_registry_hash"),
+        "renderer_hash": manifest.get("renderer_hash"),
+        "source_pin_hash": manifest.get("source_pin_hash"),
+        "redaction": redaction,
+        "path_scrub": path_scrub,
+        "path_rescan": {
+            "path": "path_rescan.json",
+            "n_occurrences": path_scrub["n_occurrences"],
+            "n_files": path_scrub["n_files"],
+            "n_hits": len(path_hits),
+        },
+        "ledger_hashes": {
+            "path": "traces/ledger_hashes.json",
+            "n_files": ledger_hashes["n_files"],
+            "total_bytes": ledger_hashes["total_bytes"],
+        },
+        "artifact_provenance_notes": ARTIFACT_PROVENANCE_NOTES,
+        "n_files": len(files),
+        "files": {f: sha256_file(out / f) for f in files},
+        "pii_placeholders": len(placeholders),
+        "pii_synthetic_echoes": len(echoes),
+        "pii_email_allowlist": allowlisted,
+    }
     write_json(out / "release_record.json", record)
     if hits:
         print(f"[18_build_release] FAIL: PII re-scan hits ({len(hits)}):")
         for hit in hits:
             print(f"  {hit}")
         return {"ok": False, "reason": "pii", "hits": hits}
+    if path_hits:
+        print(f"[18_build_release] FAIL: path re-scan hits ({len(path_hits)}):")
+        for hit in path_hits:
+            print(f"  {hit}")
+        return {"ok": False, "reason": "path", "hits": path_hits}
     print(f"[18_build_release] PII re-scan clean ({len(files)} files; "
           f"{redaction['n_occurrences']} redaction(s), "
           f"{len(placeholders)} placeholders, {len(echoes)} synthetic echoes noted)")
+    print(f"[18_build_release] path re-scan clean ({len(files)} files; "
+          f"{path_scrub['n_occurrences']} path occurrence(s) scrubbed)")
     print(f"[18_build_release] wrote {out} ({len(files)} files)")
     return {"ok": True, "n_files": len(files), "out": str(out),
-            "redactions": redaction["n_occurrences"]}
+            "redactions": redaction["n_occurrences"],
+            "path_scrubs": path_scrub["n_occurrences"]}
 
 
 # ---------------------------------------------------------------------------
@@ -1529,6 +1753,21 @@ def validate_tree(root: Path, rerun: bool = False) -> dict:
         check("renderer2-ledgers", not bad, f"{len(expected)} ledgers" + (f" bad={bad[:3]}" if bad else ""))
     except (FileNotFoundError, KeyError, ValueError) as exc:
         check("renderer2-ledgers", False, str(exc))
+
+    # --- absolute-path re-scan (staged package; v1.0.2) ---
+    if (root / "frozen").is_dir():
+        path_hits = residual_path_leaks(root)
+        check(
+            "path-rescan",
+            not path_hits,
+            f"{len(path_hits)} hit(s)" + (f": {path_hits[:5]}" if path_hits else ""),
+        )
+    else:
+        check(
+            "path-rescan",
+            True,
+            "skipped (live tree; the path scrub applies to staged copies)",
+        )
 
     # --- identifier re-scan ---
     if (root / "frozen" / "prefixes.jsonl").is_file() or (root / "data").is_dir():
