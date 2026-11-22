@@ -190,3 +190,6 @@ node_modules
 # Annotation trial outputs
 annotations/_trial/*
 !annotations/_trial/README.md
+
+# Local LaTeX build products
+paper/out/
