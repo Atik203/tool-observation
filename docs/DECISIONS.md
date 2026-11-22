@@ -119,7 +119,8 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
      to the conditional logit, so s1/s2/s3 are compared with the clean original s0 baseline
      while inactive rows keep their own nuisance coefficient; this is the interval analogue
      of the old point-only dilution correction. Two versions: (a) audited-only, using the
-     observed 60 critical items (the 43 not flagged stay active); (b) extrapolated, drawing
+     50 main audited items (10 reserve items are outside the analysis sample; the 43 main
+     audited items not flagged stay active); (b) extrapolated, drawing
      arm-specific donor-unused rates from a Jeffreys Beta posterior for the 30 s2 and 30 s3
      audited items and applying them only to the 1,550 unaudited main-sample critical items
      (1,600 main critical combos minus 50 audited main combos), M=40 imputations, pooled
