@@ -53,6 +53,13 @@ references:
     year: 2024
   - type: generic
     title: "ToolResult-800 preregistration freeze (tag prereg-freeze-v1, hash e0d107c6)"
+    authors:
+      - family-names: Rahaman
+        given-names: Md. Atikur
+        orcid: "https://orcid.org/0009-0008-2945-4117"
+      - family-names: Tuhin
+        given-names: Ohidujjaman
+        orcid: "https://orcid.org/0000-0002-8776-7145"
     repository-code: "https://github.com/Atik203/tool-observation"
     version: "1673856cc6cd335ae9fd8b0132343082f167077a"
     year: 2026
