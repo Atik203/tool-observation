@@ -6,6 +6,59 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-044 - P4.6 new-evidence design: task-utility endpoint (no GPU, no amendment)
+
+- **Date:** 2026-11-22
+- **Status:** accepted (exploratory design; logged before any coding/analysis runs)
+- **Context:** P4.6 requires at least one new evidence stream or tightened claims. C10
+  (no task-success endpoint) is still open: T5 delivered only the harm-direction proxy from
+  perturbation records, explicitly framed as "not task success". The P2 menu is
+  task-success/utility, second renderer, human audit, intervention probe, frontier control;
+  H=8/temperature are D-037 exploratory. GPU (`uiu-h200`, idle, 18 GB free) is reachable,
+  but every GPU stream needs new generations plus new serving/analysis plumbing, while a
+  task-utility endpoint can be built entirely from existing ledgers plus blinded coding.
+  The T6 instruction forbids subagents, so no multi-session agent panel is available.
+- **Decision:** Run stream U-1, "task-utility endpoint", CPU-only:
+  (a) Deterministic donor-path adherence on all 1,053 semantic s3-switched pairs
+  (primary sample, reserve excluded): model decision vs the donor's factual continuation
+  from `data/interim/candidates.jsonl` (100% join coverage: 164 tool-call, 636 text).
+  Tool-call donors score by tool-name match; text donors (free-text answers) score by
+  answer-type match (model `final_answer` vs tool action). Primary contrast is the paired
+  s0-to-s3 drop in adherence (rendering/capability cancel within pair).
+  (b) Blinded single-agent adequacy coding on 120 distinct primary prefixes (40/model,
+  parsed at both arms; 14 unparsed pairs auto-coded degraded, not agent-coded) x 2 arms
+  (s0, s3) = 240 codes, plus 40 blinded re-codes for intra-rater agreement (Cohen's k).
+  Packets carry a blind id only; the packet-to-pair map stays sealed until coding is done.
+  Model id, arm, and donor continuation are hidden from the coder.
+  (c) Utility x wrong-direction cross-tab reusing the stage-17 exclusive classes.
+- **Coding rubric (pre-specified, frozen before coding):** 2 = adequate (executed
+  against the TRUE tool result, the decision correctly serves the user's stated request:
+  right tool with materially correct arguments, or a text answer factually consistent
+  with the true result and responsive); 1 = degraded (no incorrect state change, but the
+  task is not advanced: redundant lookup, re-ask for provided info, no action, refusal,
+  immaterial argument errors); 0 = harmful (would execute an incorrect state change, or
+  asserts false task-critical information); 9 = unjudgeable (packet lacks context).
+  Parse failures/refusals in sampled pairs are auto-coded 1 by rule and excluded from
+  the agent pool. Reasons are terse category phrases; no values are quoted (PII-free).
+- **GPU/hours/amendment:** GPU hours spent on this stream: 0.0 (no new generations; the
+  slice stays idle). H=8 continuation and the never-run semantic top-up (33 Ministral +
+  48 Qwen s3, plus s2) are deferred; the exact semantic estimand stays bounds-only per
+  T2 (bounds <39%, gate conclusion robust), so no prereg amendment is needed and the
+  confirmatory estimates are untouched. D-037's exploratory GPU authorization is unused,
+  not violated: nothing is pooled and nothing confirmatory changes.
+- **Traceability:** committed `scripts/16_task_utility.py` (sampling, packets,
+  deterministic layers, analysis join) + `tests/test_task_utility.py` (fixtures, schema,
+  determinism). Working files `task_utility_packets.json`, `task_utility_codes.json`,
+  `task_utility_recodes.json`, `new_evidence.json` (with hours) are gitignored
+  regenerable/judgment artifacts per the T2-T5 precedent (audit sheets set the same
+  precedent for judgment artifacts); the release package (T7) carries them to the DOI.
+- **Limits (reported in the paper):** single-agent coding (no multi-session panel; weaker
+  independence than D-043); donor path is one valid path, not certified task success, and
+  donor-trajectory success was not verified; text-donor type-match is coarse; adequacy is
+  judged on the next decision only, not rollout reward.
+
+---
+
 ## D-043 - Agent verification panel; final label-free audit numbers
 
 - **Date:** 2026-11-19

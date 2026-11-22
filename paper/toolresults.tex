@@ -1941,6 +1941,73 @@ or change action where the design anticipated harm, while explicit skepticism is
   \end{tabular}
 \end{table}
 
+\subsection{Task-utility endpoint (exploratory)}
+
+Deviation from the donor is not task error, so P4.6 added a task-utility stream with no new
+generations (GPU 0.0\,h; CPU-only reanalysis plus blinded coding;
+\texttt{scripts/16\_task\_utility.py}; design logged in D-044 before coding;
+\texttt{artifacts/analysis/new\_evidence.json}). It has two layers. First, deterministic
+donor-path adherence on all 1{,}039 semantic $s=3$-switched pairs with parsed decisions at
+both arms (primary sample; 14 unparsed pairs auto-coded degraded and excluded from agent
+coding): each decision is scored against the donor factual continuation (tool-name match for
+the 245 tool-call donors, answer-type match for the 794 free-text donors). Adherence is
+flat: 29.1\% [26.4, 31.9] at $s=0$ versus 28.9\% [26.2, 31.7] at $s=3$ (paired exact
+McNemar $p=.89$; 53.5\% on tool donors both arms; 21.5\% versus 21.3\% on text donors).
+The donor path is a narrow reference both arms usually miss, so the cheap deterministic
+proxy is insensitive: the corruption changes \emph{which} non-donor decision is taken, not
+the match rate.
+
+Second, blinded adequacy coding of the next decision against the TRUE tool result and the
+user request on 120 distinct prefixes (40/model, parsed at both arms) $\times$ 2 arms
+(240 codes), plus 40 blinded re-codes. Packets carry a blind id only (model, arm, and donor
+hidden); the rubric (D-044) is 2~=~adequate, 1~=~degraded (no incorrect state change),
+0~=~harmful (incorrect state change or false task-critical information), 9~=~unjudgeable.
+Coding is single-agent, author-overseen (T6 forbids subagents, so no multi-session panel;
+weaker than the D-043 panel), with the re-code pass in the same session; the re-code
+agreement is therefore intra-rater, not independent replication.
+
+On the 115 judgeable pairs, adequate decisions fall from 55.7\% [46.5, 64.4] at $s=0$ to
+28.7\% [21.2, 37.6] at $s=3$, and harmful decisions rise from 15.7\% [10.1, 23.4] to
+38.3\% [29.9, 47.4] (paired adequate-vs-not McNemar $b=42$, $c=11$,
+$p=2.2\times10^{-5}$; Table~\ref{tab:utility}). The adequate drop is largest for Ministral
+(60.5\% to 21.1\%; harmful 18.4\% to 50.0\%) and smallest for Llama (34.2\% to 26.3\%;
+harmful 21.1\% to 23.7\%); Qwen falls from 71.8\% to 38.5\% adequate (harmful 7.7\% to
+41.0\%). Utility tracks the stage-17 classes: among $s=3$ switches coded wrong-direction,
+77.8\% (63/81) [67.6, 85.5] are degraded or harmful at $s=3$, versus 55.9\% (19/34)
+[39.5, 71.1] among caught/ambiguous. Donor-match and adequacy barely overlap (8 of 115
+pairs both match the donor and code adequate), confirming the deterministic proxy carries
+almost no utility signal. Re-coding agrees on 38/40 items ($\kappa=.92$; the two
+disagreements involve a 9).
+
+Limits. Baseline adequacy is modest (55.7\% adequate and 15.7\% harmful at $s=0$), so the
+injected error roughly doubles harm rather than creating it from nothing. The donor path is
+one valid path and donor-trajectory success was not verified; text-donor type-match is
+coarse. Adequacy is judged on the next decision only, not rollout reward. The single-agent,
+same-session protocol cannot support population claims; the Wilson intervals are
+measurement uncertainty on this sample, not a general harm rate.
+
+\begin{table}[pos=htbp]
+  \centering
+  \caption{Task-utility endpoint (exploratory; \texttt{artifacts/analysis/new\_evidence.json}).
+  Agent adequacy on 115 judgeable $s=0$/$s=3$ pairs (120 sampled; 5 pairs carry a 9) and
+  deterministic donor-path adherence on all 1{,}039 switched pairs. Intervals are Wilson
+  95\%; McNemar is the paired exact test.}
+  \label{tab:utility}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    \textbf{Sample} & \textbf{n} & \textbf{Adequate} & \textbf{Degraded} & \textbf{Harmful} \\
+    \midrule
+    Agent $s=0$ & 115 & 55.7\% [46.5, 64.4] & 28.7\% [21.2, 37.5] & 15.7\% [10.1, 23.4] \\
+    Agent $s=3$ & 115 & 28.7\% [21.2, 37.6] & 33.0\% [25.1, 42.1] & 38.3\% [29.9, 47.4] \\
+    \midrule
+    \textbf{Sample} & \textbf{n} & \textbf{Match $s=0$} & \textbf{Match $s=3$} & \textbf{McNemar $p$} \\
+    \midrule
+    Donor adherence & 1{,}039 & 29.1\% [26.4, 31.9] & 28.9\% [26.2, 31.7] & .89 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \paragraph{Recovery}.\
 
 Recovery is reported as crude cumulative incidence Events/n (primary), with
