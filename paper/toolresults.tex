@@ -834,7 +834,13 @@ wrong value is not the same failure as one that quietly repeats it. Arm-level ra
 corresponding sample means, for example
 $\hat\pi_a=n_a^{-1}\sum_{p,m}Y_{p,m,a}$ with $n_a$ the number of labeled rows in arm $a$. The
 strict and lenient sensitivity analyses replace $Y$ with, respectively, a signature difference
-that ignores flags and an action-only switch; the slope is refitted under each coding.
+that ignores flags and an action-only switch; the slope is refitted under each coding. The
+strict coding is the signature-only $Y$ of the preregistered outcome definition (flags
+excluded); because it leaves the slope unchanged (0.876 vs 0.877) and the flag/other
+components ($Y^{F}$, $Y^{O}$) are decomposed separately, the outcome-definition difference is
+handled by this reported sensitivity, with no prereg amendment
+(\texttt{artifacts/analysis/inference\_robustness.json};
+\texttt{prereg/DEPOSIT\_NOTE.md}).
 
 \noindent\textbf{Primary estimand}.\
 
@@ -913,7 +919,16 @@ switch at $s=2$ but not $s=3$, the two-sided $p$-value is
   2\sum_{j=0}^{\min(b,c)}\binom{b+c}{j}2^{-(b+c)},
   \label{eq:mcnemar}
 \end{equation}
-and the one-sided version sums only to $b$ \cite{mcnemar1947}. The severity audit's monotonicity
+and the one-sided version sums only to $b$ \cite{mcnemar1947}. The per-model
+exact McNemar tests are the primary paired contrast: within one model each prefix contributes
+exactly one $s=2$-vs-$s=3$ pair, so prefixes are the independent units and no cross-model
+clustering applies. The pooled exact test over 2{,}251 model-prefix pairs is secondary, because
+up to three pairs share one prefix and the exact $p=2.1\times10^{-20}$ is anti-conservative for
+prefix-level inference. Two cluster-robust checks bound the concern: a model-stratified
+(CMH-style) McNemar agrees ($\chi^2=81.67$, $p=1.6\times10^{-19}$), and a design-effect grid
+with at most $m=3$ pairs per prefix keeps the pooled contrast significant at every correlation
+($\rho=0.5$: $\chi^2=40.83$, $p=1.7\times10^{-10}$;
+\texttt{artifacts/analysis/inference\_robustness.json}). The severity audit's monotonicity
 test is Jonckheere--Terpstra \cite{jonckheere1954},
 \begin{equation}
   J=\sum_{k<l}\ \sum_{x\in G_k}\ \sum_{y\in G_l}
@@ -1307,7 +1322,10 @@ reported values match the frozen artifacts. Manifests are the reproducibility sp
 in the paper is expected to cite a manifest row and a ledger row, and the release packager
 refuses to build without a passed audit and a PII re-scan. The workflow follows reproducibility
 guidance that combines preregistration, artifact manifests, and leakage checks
-\cite{nosek2018,munafo2017,pineau,kapoor2023}.
+\cite{nosek2018,munafo2017,pineau,kapoor2023}. The preregistration freeze (commit 1675376,
+tag prereg-freeze-v1, hash \texttt{e0d107c6}; no external registry) and the no-new-amendment
+record for this analysis are in \texttt{prereg/DEPOSIT\_NOTE.md}; amendments A-001--A-006 are
+in \texttt{prereg/AMENDMENTS.md}.
 
 \section{Results}\label{sec:results}
 
@@ -1476,7 +1494,7 @@ The switch typology is reported separately (\texttt{artifacts/analysis/switch\_t
 ($s0=s1=0$, $s2$ or $s3=1$), and 9.3\% are placebo switchers (Table~\ref{tab:typology}). The claim is bounded to the prose
 arms s0--s3: the raw-JSON arm V is excluded because the format effect is large (20.3--45.6\%,
 D-026). An earlier analysis under the pre-fix automatic coder gave $\hat\beta = 0.684$
-[0.584, 0.797]; the same post-fix coder on all 880 prefixes gives 0.867 [0.760, 0.988]
+[0.584, 0.797] (artifact not retained; A-006); the same post-fix coder on all 880 prefixes gives 0.867 [0.760, 0.988]
 (\texttt{g3\_analysis\_all880.json}), so the coder change accounts for most of the movement and
 the reserve exclusion for the remainder. The blind audit then found and corrected the labeling
 defect (D-028, A-006), and the estimate above is the corrected one. All three are positive and all
@@ -1519,9 +1537,15 @@ The categorical-vs-linear likelihood-ratio test (Table~\ref{tab:diagnostics}) re
 ($\chi^2(2) = 25.03$, $p = 3.7\times10^{-6}$; Qwen $p = 1.0\times10^{-4}$, Ministral $p=.017$,
 Llama $p=.274$), and the quadratic term is positive ($b = 0.143$, cluster SE $0.036$,
 $p = 7.4\times10^{-5}$). Tier odds ratios against $s0$ are 1.27 [1.04, 1.55] (s1), 4.60
-[3.58, 5.99] (s2), and 11.21 [8.38, 15.30] (s3). The $s2$-vs-$s3$ McNemar test is
-$p = 2.1\times10^{-20}$ pooled (per model $1.1\times10^{-7}$, $2.6\times10^{-10}$,
-$5.8\times10^{-5}$). The pattern is a threshold at $s2$, not a graded per-level law. Domain
+[3.58, 5.99] (s2), and 11.21 [8.38, 15.30] (s3). The $s2$-vs-$s3$ McNemar contrast is
+primary per model ($p=1.1\times10^{-7}$, $2.6\times10^{-10}$,
+$5.8\times10^{-5}$) and secondary pooled ($p = 2.1\times10^{-20}$ over 2{,}251
+model-prefix pairs); the pooled value survives a prefix-cluster design-effect grid to
+$\rho=0.5$ and a model-stratified check (Section~\ref{sec:method};
+\texttt{artifacts/analysis/inference\_robustness.json}). No new bootstrap LRT was run
+(row-level refits need the run ledgers, which are not in the repo); the resampling
+robustness is the 2{,}000-replicate prefix-cluster bootstrap tier-OR intervals, whose
+$s2$/$s3$ intervals exclude one in every model while the Qwen $s1$ interval includes one. The pattern is a threshold at $s2$, not a graded per-level law. Domain
 slopes are 0.74 [0.59, 0.93] (airline) and 0.99 [0.83, 1.17] (retail); the domain interaction is
 $p=.035$ (exploratory, driven by Ministral) and the donor interaction is null ($p=.61$). Under
 lenient tool-or-verb coding the pooled slope is 0.43 [0.30, 0.57] versus 0.88 [0.77, 1.00] under
@@ -1540,7 +1564,9 @@ $s0$ through a contaminated $s1$ to $s2$, steepening at $s2$, not a step from a 
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Linearity and paired diagnostics by sample.}
+  \caption{Linearity and paired diagnostics by sample. Per-model McNemar tests are the
+  primary paired contrast; the pooled McNemar $p$ is secondary (prefix-cluster caveat in
+  Section~\ref{sec:method}).}
   \label{tab:diagnostics}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
@@ -1704,7 +1730,11 @@ agreed at $\alpha = .917$ (severity), $\kappa = .942$ (outcome), and $\kappa = .
 (recovery endpoint / step); against the primary severity consensus, $\alpha = .946$. The sessions
 share one underlying model family, and two of the three severity sessions are identical on
 116/120 items, so $\alpha = .911$ is consistency among near-duplicate readings, not independent
-human reliability. The panel record is
+human reliability. The post-fix audit is explicitly in-sample: the corrected coder was conformed
+on the same 160 outcome items later used to certify $\kappa=.987$ and PPV $=1.00$, so no fresh
+held-out check exists. The held-out plan is a 60--120-item human audit on reserve prefixes in
+future work; until then the agreement statistics are reproducibility evidence, not independent
+validation. The panel record is
 \texttt{artifacts/audit/verification/panel\_record.json}.
 
 \begin{table}[pos=htbp]
@@ -1823,8 +1853,15 @@ for all three primary groups ($p=.0047$, $<10^{-4}$, $.0006$), and the fitted ha
 (4.7--10.9 steps across groups) exceed the horizon in
 every group. Endpoint composition differs by model: 78/80 Llama recoveries are R1 (signature
 reversion), 43/54 Qwen, but only 38/116 Ministral---most Ministral recoveries are explicit flags
-(78), not reversion. Marginal log-rank tests find no difference between the transient and persistent curves
-(pooled $p=.49$) or between $s2$ and $s3$ ($p=.52$). The gate fails on every point estimate of the primary set, and the ``Ministral close'' reading of the KM secondary is retired: Ministral's gate statistic is crude 32.9\% [28.2, 37.9], not KM 44.6\%. The curve and RMST stand; the
+(78), not reversion. The marginal log-rank tests are descriptive, not within-prefix inference:
+the risk sets share prefixes, so independence fails by design. They find no difference between
+the transient and persistent curves (pooled $p=.49$; model-stratified $p=.47$) or between $s2$
+and $s3$ ($p=.52$; stratified $p=.52$). The within-prefix check is the exact paired McNemar on
+the $H=4$ recovery indicator: $s2$-vs-$s3$ per-model $p=.33/.46/.85$ (Llama/Ministral/Qwen),
+transient-vs-persistent $p=1.0/.625/1.0$. Neither the marginal nor the paired test rejects
+equality in either contrast
+(\texttt{artifacts/analysis/inference\_robustness.json}, recomputed from
+\texttt{artifacts/analysis/recovery\_deep.json}). The gate fails on every point estimate of the primary set, and the ``Ministral close'' reading of the KM secondary is retired: Ministral's gate statistic is crude 32.9\% [28.2, 37.9], not KM 44.6\%. The curve and RMST stand; the
 half-life is labelled exploratory. The curves flatten before $H=4$; recovery estimates trace to
 \texttt{artifacts/analysis/g4\_recovery\_v2.json}.
 
