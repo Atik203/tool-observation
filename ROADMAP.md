@@ -1,250 +1,141 @@
-# Roadmap - Tool-Result Errors in Language-Model Agents
+# Roadmap — Tool-Result Errors in Language-Model Agents
 
-**Status:** pre-confirmatory scaffold, v0.1.0 (2026-11-09).
-**Scope:** open-weight 8–9B models, τ-bench airline and retail, next-decision sensitivity, and
-4-step recovery. Thirty-five to forty-five GPU-hours on the university H200 1g.18gb slice
-(18 GB VRAM).
-**Cash:** $0; the university provides the GPU. No paid API, no second GPU. Operational stop:
-45 GPU-hours or 200 GB storage.
-**Planning horizon:** 18 weeks, part-time team of 3-4.
+**Status:** confirmatory study complete; manuscript in revision (2026-11-22).
+**Scope:** three open-weight 8–9B models, τ-bench airline and retail, next-decision sensitivity, and four-step recovery.
+**Compute:** 8.9 GPU-hours used of the 45-hour H200 MIG 1g.18gb allocation; $0 cash; no paid API.
+**Review basis:** `docs/reviews/2026-11-22/WEAKNESS_REGISTER.md`.
 
----
-
-## 0. Current progress (2026-11-18)
-
-**Status: main run complete; blind audits checked by an agent verification panel (D-043; G0
-verification deferred, D-021); G3 slope passes with the severity s2/s3 criterion failing, G3
-parser and G4 recovery gates fail.**
-
-| G0 stage | Status | Evidence |
-|---|---|---|
-| Pin τ-bench | **DONE** | commit `59a200c`, 4 trajectory + 6 task-DB hashes, harness digest; `data/manifests/source_pin.json` |
-| Parse | **DONE** | 1,980 trajectories, 13,605 candidates, 11,318 JSON-parseable; `data/interim/candidates.jsonl` |
-| Scrub + relevance | **DONE (draft policy)** | 5,516 eligible (airline 1,434; retail 4,082); 0 PII leaks; `data/interim/eligible.jsonl` |
-| Replay | **DONE** | 5,511/5,516 eligible matches (99.91%); full-pool 87.39% due to historical `get_user_details` `province`/`state` drift; `data/interim/replay_matched.jsonl` |
-| Sample | **DONE** | 800 primary + 80 reserve; 400/400 domain; cap-10 airline 442, retail 1,144; `data/interim/sample.jsonl` |
-| Render + perturb | **DONE** | 4,400 arms (880 × 5); 2,640 perturbation records (880 each s=1/2/3); 100% s=0 value-set equality; `data/interim/rendered.jsonl`, `data/interim/perturbations.jsonl` |
-| Calibration selection | **DONE** | 60 prefixes (30 airline + 30 retail), disjoint from the 880; `data/interim/calibration.jsonl` |
-| Freeze dry-run | **DONE** | Manifest shape validates: 800+80, 4,400 arms, 2,640 perturbations, 60 calibration; `artifacts/audit/freeze_dry_run.json` |
-| Inference core | **DONE (CPU)** | Next-decision prompt, JSON parser, ledger, fake backend, lazy vLLM adapter; calibration gate evaluator; CPU tests pass |
-| Prompt rendering | **DONE (pre-freeze)** | Prompt v3 renders plain-text call history and a final instruction turn; valid JSON on all three models; D-020 |
-| Context + length audit | **DONE** | Longest prompt 20,682 tokens + 1,024 decision; 24k context adopted; synthetic 2×20k prompts pass on all three; D-019 |
-| Batched generation | **DONE (CPU)** | Same-domain batches of 8 through the backend; test asserts batch sizes; shared calibration ledgers deduplicated |
-| Analysis core | **DONE (CPU)** | Outcome labels, pure-Python conditional-logit slope with prefix-cluster bootstrap, recovery/KM/RMST/Weibull; synthetic tests pass |
-| Cross-platform reproduction | **DONE** | Local and H200 normalized hashes match for sample, rendered arms, perturbations, and calibration |
-| Frozen prefix payload | **DONE** | 880 scrubbed prefixes, 23 MB, five arm observations; frozen manifest `toolresult800_v1.json` (SHA-256 `d6e034d7…`) |
-| Release packager | **DONE (gated)** | `10_release.py` verifies manifest/payload hashes and PII, then copies only scrubbed derived data; refuses without a passed audit |
-| Model trio update | **DONE** | Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ pinned and fit-checked at 0.85/24k; Qwen3.5 thinking disabled; Ministral/Llama eager, 4 sequences |
-| AI pre-audit | **DONE (draft)** | 40/40 mechanical checks pass; official sheet filled from the AI draft under D-021 |
-| Human audit | **PROVISIONAL** | Author adopted the 40/40 AI pre-audit; final verification deferred until after experiments (D-021) |
-| Freeze | **DONE** | `data/manifests/toolresult800_v1.json` + SHA-256 sidecar; 800+80, 4,400 arms, 2,640 perturbations, 60 calibration |
-| G1 calibration | **DONE (pass)** | Qwen parse 98.3%, negative-control jitter 11.9%, s3 35.6%; Ministral 100%, 13.3%, 55.0%; Llama 96.7%, 10.5%, 56.1%; V/s0 format jitter 20.3/36.7/45.6% reported separately (D-026) |
-| G2 base run | **DONE** | 4,400 rendered arms × 3 models complete (13,200 generations, 880 prefixes incl. 80 reserve); parse 95.2/96.8/97.6% (ok/total, parser v4); refusal 4.5/1.2/0.0%; recovery 7,211 rows; jitter 1,200 rows |
-| G3 analysis | **DONE (partial)** | Pooled beta 0.877 (SE 0.059, p=2.3e-49; 800 primary prefixes, reserve excluded); all three models positive and Holm-significant; bootstrap CI [0.770, 0.998]; silent share 21.3%; label-free audits (severity α .911, outcome κ .987, silent PPV 1.0, recovery κ .920/.917, stability 1.000/.990/.989, D-039/D-043); severity s2/s3 decision-changing 88.3% (FAIL); parser failure 1.55% (FAIL) |
-| G4 recovery | **DONE (gate fail)** | Recovery by H=4: 32.4/47.6/28.2% (Qwen/Ministral/Llama, transient s=3, 800 primary prefixes; censor at last follow-up); below 50% gate (Ministral close); Weibull rejected for 2/3; half-life exploratory (`artifacts/analysis/g4_recovery.md`) |
-| H200 environment | **DONE** | vLLM 0.33.0 / torch 2.14.0; all three pass the 24k fit check; G1 complete; G2 main + recovery + jitter complete; CUDA report discrepancy logged in D-031 |
-
-The ten-day table below is the original plan. Intermediate files are now JSONL rather than
-parquet, and the 6,500/1,500 relevance figures are planning inputs, not G0 gates; the
-authoritative floor is ≥880 eligible and ≥440/domain (`docs/GATES.md`).
+**Legend:** ✅ done · 🔄 in progress · ⏳ todo
 
 ---
 
-## 1. Claim boundary
+## 0. At a glance
 
-### What we intend to claim, if every gate passes
-
-A **bounded causal result**: within a frozen real τ-bench prefix, changing the content of the
-tool observation changes the probability that an open-weight 8–9B agent's next decision departs
-from its verbatim-observation continuation, and the change is ordered by the pre-specified
-severity level. The study also estimates a pooled recovery half-life over four steps for a
-transient injection, with a Weibull shape check. The result is conditional on three model
-families, two τ-bench domains, and the exact renderer and perturbation rubric frozen at G0.
-
-### What we will not claim
-
-- A universal constant or "law" that holds for all models, tasks, or tool formats.
-- A ranking of models by sensitivity or recovery speed. The design is not powered for that.
-- Transfer to frontier or API models; we test open-weight 8–9B families only.
-- An effect on end-to-end task success or on the extensive margin of tool use.
-- External validity to live web/API tools. τ-bench observations are deterministic benchmark
-  outputs, not live services.
-
-### What would falsify the claim
-
-Any one of the following converts the paper from a sensitivity result to a measurement or null
-result:
-
-1. Pooled slope **β ≤ 0.1 logit/level**, or a negative slope.
-2. Placebo jitter **> 20%** (the s=0 arm is not stable).
-3. s=3 switch rate **> 80%** (ceiling: everything moves, so severity is not graded) or **< 10%**
-   (insensitivity).
-4. Model slopes with **opposite signs**, or a positive slope in fewer than **2 of 3** models.
-5. **No recovery** by H=4 in at least 50% of the s=3 risk set, or a Weibull shape clearly
-   different from 1 (p < .01).
-6. A **task × severity interaction that reverses sign** between airline and retail.
-7. Severity labels fail the construct audit: s=1 (non-critical) moves decisions as much as s=2,
-   or Krippendorff α < .75 after one rubric revision.
-
-A flat or null result is still publishable as a measurement paper with the ToolResult-800 dataset. It
-will not be reframed post hoc as a positive law.
-
----
-
-## 2. Phase plan
-
-| Phase | Weeks | Work | Exit gate | Main output |
-|---|---:|---|---|---|
-| **P0 — Harvest and freeze** | 1–2 | Pin τ-bench, parse, PII scrub, relevance labeling, replay, stratified sample, freeze 800 + 80 reserve, 40-item audit, preregistration | **G0** | `toolresult800_v1` frozen manifest, G0 report, prereg draft |
-| **P1 — Calibration** | 3 | 60-prefix × 3-model calibration on the H200 slice; parser and prompt-format fixes; refusal check | **G1** | Calibration ledger, pass/fail report, frozen prompt + parser version |
-| **P2 — Main run** | 4–7 | 34,800-generation envelope: base, transient recovery, persistent recovery, jitter repeats; ledger every generation | **G2** | Raw continuations, recovery traces, run ledger, GPU-hour/storage report |
-| **P3 — Labels and analysis** | 6–10 | Human severity audit (120 items), outcome audit (160 items), recovery audit (80 sequences), automatic coding, slope and survival models | **G3 / G4** | κ/α report, slope table, recovery curves, analysis notebook |
-| **P4 — Paper** | 9–14 | Draft, internal review, figures, limitations, reproducibility appendix | Internal review pass | Paper draft, figures, tables |
-| **P5 — Release** | 15–18 | ToolResult-800 packaging, license audit, PII re-scan, DOI, repository release, artifact check | Release checklist | Public ToolResult-800 v1.0, tagged repo, DOI |
-
-Phases overlap deliberately: P3 begins as soon as the first main-run shard lands, and P4 begins
-when the primary slope is estimable, not when every exploratory analysis is finished.
-
-### Contingency
-
-| Trigger | Response |
-|---|---|
-| G0 eligible < 880, or < 440/domain before audit | Fallback to **500 prefixes / 2 models**; keep 400/100 domain split and drop the persistent arm first |
-| G0 post-audit < 400/domain | Re-sample from reserve and the eligible pool; if still short, fall back as above |
-| Replay match < 98% | Fix the replay harness before sampling; do not relax the threshold |
-| G1 parse < 95% | Fix the parser and rerun calibration; no main-run start |
-| G1 placebo jitter > 20% | Fix prompt/decoding; if still high, stop and report a measurement failure |
-| G1 s=3 switch > 80% | Reduce severity compounding; re-audit s=3 plausibility |
-| H200 slice unavailable, or 18 GB fit fails | Wait for the allocation; reduce batch/context first; if still infeasible, reduce N or drop persistent with a logged decision/amendment. Do not book a paid rental without a new decision. |
-| Main run reaches 45 GPU-hours or 200 GB storage | Stop immediately, analyze completed shards, disclose the shortfall |
-| Outcome κ < .70 after one revision | Downgrade to action-level Y^A only; do not make the content-sensitivity claim |
-| Recovery events < 50% by H=4 | Report RMST and the recovery curve; label t½ exploratory |
-| Team capacity drops | Protect G0–G2 and the primary slope; cut the optional template-transfer arm and exploratory interactions |
-
----
-
-## 3. Ten-day G0 sprint
-
-G0 is CPU-only, $0 cash, and runs before any GPU allocation.
-
-| Day | Task | Output | Acceptance check |
-|---:|---|---|---|
-| 1 | Pin τ-bench commit; record URL, license, SHA-256 of each trajectory file; vendor the tool/environment harness | `configs/harvest.yaml` pin filled; `data/upstream/PIN.json` | Pin resolves; four trajectory files hash-match; MIT notice retained |
-| 2 | Parse all trajectories into candidate post-tool decision points | `data/interim/candidates.parquet` | Every candidate has trajectory ID, task ID, trial, donor, domain, step, tool, raw observation, factual continuation |
-| 3 | PII scrub; exclude profile tools; tokenize names/emails/addresses/phones/payment IDs | `data/interim/scrubbed.parquet` + scrub report | 0 raw emails/phones in scan; excluded-tool count reported |
-| 4 | Decision-relevance labeling: value-used proxy between observation scalars and donor continuation | `data/interim/eligible.parquet` | ≥ 6,500 eligible; airline ≥ 1,500; no prefix with zero used field |
-| 5 | Build replay harness against task DB; replay first 50 prefixes | Replay report v0 | Tool-call replay executes; mismatch taxonomy documented |
-| 6 | Full replay verification over eligible pool | `data/interim/replay.parquet` | ≥ 98% normalized match on retained prefixes |
-| 7 | Stratified sample: cap 10/task, 880 selected, 800 primary + 80 reserve | `data/manifests/sample_880.json` | 400/400 domain target; donor and step strata reported |
-| 8 | Build perturbation records and deterministic prose renderer; verify s=0 value-set identity with V | `data/manifests/perturbations.jsonl`, renderer hash | 100% s=0 value-set equality; every s=1/2/3 record has JSON path, true value, false value, criticality, expected action change |
-| 9 | Human audit of 40 random prefixes (eligibility, PII, relevance, replay) | `artifacts/audit/g0_audit.csv` | **≥ 36/40 (90%)**; every failure categorized |
-| 10 | Freeze manifest, write G0 report, finalize preregistration v1.0 | `data/manifests/toolresult800_v1.json`, `prereg/PREREGISTRATION.md`, G0 report | Hashes recorded; no target-model outcome seen; prereg locked |
-
-**G0 freeze rule:** after day 10, `data/manifests/toolresult800_v1.json`, the perturbation records, the
-renderer version, the field registry, and the analysis plan are immutable. Any later change is a
-logged prereg amendment and is reported in the paper.
-
----
-
-## 4. Gates
-
-| Gate | When | Criteria | Fail action |
+| Phase | Status | Exit gate | Current output |
 |---|---|---|---|
-| **G0 — Harvest/freeze** | End of week 2 | ≥ 880 eligible prefixes; ≥ 440/domain pre-audit; ≥ 400/domain post-audit; replay ≥ 98%; 40-item audit ≥ 36/40 | Fallback 500/2 models or stop |
-| **G1 — Calibration** | Week 3 | Parse ≥ 95%; placebo jitter ≤ 20%; s=3 switch 10–80%; format refusal < 5% per model | Fix and rerun; no main-run start |
-| **G2 — Main run** | Weeks 4–7 | Stop at **45 GPU-hours or 200 GB storage**, whichever first; ledger complete | Analyze completed shards; disclose |
-| **G3 — Analysis** | Weeks 8–10 | Pooled β > 0; positive in ≥ 2/3 models with the same sign; severity α ≥ .75; outcome κ ≥ .80 (or adjudicated ≥ .70 with downgrade); recovery κ ≥ .75 | Null/measurement paper; no law claim |
-| **G4 — Recovery** | Weeks 9–10 | ≥ 50% of the s=3 risk set recovers by H=4; Weibull shape not rejected (p ≥ .01) | Report RMST/curve; t½ exploratory only |
-
-The gates are sequential. G1 cannot start before G0 freezes. G2 cannot start before G1 passes.
-G3/G4 are analysis gates and cannot be re-run on a different sample without a prereg amendment.
+| **P0 — Harvest and freeze** | ✅ | G0 (audit provisional) | 880 prefixes, 5 arms, 2,640 perturbations, manifest hash |
+| **P1 — Calibration** | ✅ | G1 (amended under A-004) | 60 prefixes × 3 models; prompt/parser frozen |
+| **P2 — Main run** | ✅ | G2 | 21,611 generations; 8.9 GPU-hours |
+| **P3 — Labels and analysis** | ✅ | G3 / G4 | β 0.877; three gate criteria failed |
+| **P4 — Paper revision** | 🔄 | Review register P0/P1 cleared | 26-page draft; not submission-ready |
+| **P5 — Release and submission** | ⏳ | Release + submission checklist | DOI, artifact package, cover letter |
 
 ---
 
-## 5. Budget
+## 1. Completed phases (collapsed)
 
-| Item | Specification | Cost |
-|---|---|---:|
-| University H200 | 35–45 GPU-hours on the `uiu-h200` H200 1g.18gb slice (18 GB VRAM) | **$0 cash** |
-| Storage / egress | Within the 200 GB project allocation; ~60 GB expected | **$0 cash** |
-| Annotation | ~200 judgments by team members, no cash | **$0** |
-| Contingency | None; no paid rental or paid API | **$0** |
-| **Total** | University-provided GPU; operational stop at 45 GPU-hours / 200 GB | **$0 cash** |
-| Local CPU | Harvest, replay, analysis, writing: 20–30 h on the local machine | $0 |
-| Paid API | None | $0 |
+| Phase | What was completed | Evidence |
+|---|---|---|
+| **P0** | 13,605 candidates → 5,516 eligible → 5,511 replay-matched → 880 sampled (800 primary + 80 reserve); 4,400 arms; 2,640 perturbation records; 100% s=0 value-set equality; frozen manifest `toolresult800_v1.json` (SHA-256 `d6e034d7…`); G0 audit is an AI pre-audit 40/40 with human verification deferred (D-021). | `data/manifests/toolresult800_v1.json`; `artifacts/audit/g0_report.md`; `artifacts/audit/freeze_dry_run.json` |
+| **P1** | 60 disjoint prefixes × 3 models; parse 98.3 / 100 / 96.7%; gated negative-control jitter 11.9 / 13.3 / 10.5%; original V-vs-s0 format jitter 20.3 / 36.7 / 45.6% failed and was replaced by A-004 after calibration (post-freeze, not blind). | `artifacts/audit/g1_calibration_v3.json`; D-026, D-041, A-004 |
+| **P2** | 13,200 base generations + 7,211 recovery rows + 1,200 jitter rows = 21,611; 8.9 GPU-hours; no paid API; ledger per generation. | `data/runs/main/*/ledger.jsonl`; `artifacts/cost/` |
+| **P3** | Pooled β 0.877 (SE 0.059, 95% CI [0.770, 0.998]); 3/3 positive, Holm-significant; silent share 21.3% (419/1,964); label-free audits α .911, κ .987, recovery κ .920/.917. Gate failures: parser 1.55%, severity s2/s3 88.3%, recovery 27.3/34.7/27.2% crude (KM 32.4/47.6/28.2). | `artifacts/analysis/g3_analysis.json`; `g4_recovery.json`; `artifacts/audit/blind_audit_result.json`; D-039/D-043 |
 
-The stop line is 45 GPU-hours or 200 GB storage, not a cash cap. There is no second GPU and no
-paid API fallback. The 18 GB slice is below the older 24 GB assumption; verify the pinned model,
-24k context, and batch fit before G1/G2.
+The detailed 25-row G0 table and ten-day sprint from the original plan are retired; the evidence above is the record.
 
 ---
 
-## 6. Deliverables
+## 2. Gate record (actual)
 
-1. **ToolResult-800** — 800 frozen real τ-bench prefixes (400 airline / 400 retail) with message hashes,
-   observation hashes, perturbation records, arm assignments, and renderer version.
-2. **Frozen manifests** — sample, perturbations, field registry, replay hashes, and preregistration
-   hash, all under `data/manifests/`.
-3. **Raw traces** — one ledger row per generation (34,800 envelope) with model, arm, prefix,
-   step, prompt hash, output, parser result, latency, GPU-hours, and storage accounting. Ledgers
-   stay local until scrubbed and packaged.
-4. **Reproducibility package** — pinned environment, H200 environment record, run scripts,
-   analysis notebook, figure-generation code, and a one-command validation target.
-5. **Preregistration** — design, estimands, gates, multiplicity sequence, and amendments log.
-6. **Paper draft** — bounded claim, pilot disclosure, confirmatory results or null, limitations,
-   and a data statement.
+| Gate | Status | Observed | Consequence |
+|---|---|---|---|
+| **G0** | ✅ completed, provisional | AI pre-audit 40/40; human 40-item audit deferred (D-021); manifest hash verified | Freeze stands; human audit remains a disclosed deviation |
+| **G1** | ✅ completed, amended | Original V-vs-s0 format jitter failed at 20.3–45.6%; A-004 replaced it with s0-vs-s1 negative control 10.5–13.3% after calibration, not blind | Main run proceeded under A-004; original criterion must be reported as failed |
+| **G2** | ✅ | 21,611 rows; 8.9 GPU-hours; within 45-hour / 200 GB stop line | Sample complete; recovery conditional on switching |
+| **G3** | ❌ | Slope passes; parser failure 1.55% (fail); severity s2/s3 88.3% (fail); outcome κ .987 (pass); silent PPV 1.00 point, exact lower bound .66 | Measurement paper; no content-sensitivity claim |
+| **G4** | ❌ | Crude recovery 27.3/34.7/27.2% by H=4 (KM 32.4/47.6/28.2); Weibull shape rejected 2/3 | Report curve/RMST; half-life exploratory; remove “Ministral close” unless failure-treated estimate is close |
 
 ---
 
-## 7. Risks and mitigations
+## 3. P4 — Paper revision (🔄)
+
+**Goal:** make the manuscript a credible measurement paper with a consistent claim boundary, corrected recovery estimand, honest audit provenance, and a reproducible artifact.
+
+| Workstream | Status | Work | Exit criterion |
+|---|---|---|---|
+| **P4.1 Claim and positioning** | ⏳ | Retitle away from “Causal Study”; rewrite abstract to lead with the measurement and the failures; cite and differentiate 2025–26 nearest neighbors; add comparison table; drop “no controlled estimate” | Title, abstract, intro, results, conclusion use one claim; novelty is a stated combination, not a vacuum |
+| **P4.2 Recovery re-estimation** | ⏳ | Use crude event share for the gate; rebuild risk set from semantic switches; report hash-vs-semantic overlap; add censoring-reason table; treat final answers/parse failures as failures in sensitivity; recompute RMST/\(t_{1/2}\) | Recovery table reconciles `Events/n`; gate verdict under both conventions; no “Ministral close” claim unless supported |
+| **P4.3 Severity and audit robustness** | ⏳ | Report 7/11/16 of 60 donor-unused; reclassify and re-estimate tier ORs; report s1 OR 1.27 and marginal +1.1 pp; silent share as lower bound and recall-adjusted; PPV lower bound .66; human 40-item subset or rename “consistency check” | Abstract/results/audit table carry the same caveats; tier ORs have a bounded sensitivity |
+| **P4.4 Inference and integrity** | ⏳ | G1/A-004 history; remove “no threshold changed”; reconcile failure count (three vs four); add H1–H7 status table; report H5; cluster-robust McNemar/LRT; paired recovery test; freeze/deposit prereg; held-out audit after coder fix | Gate-status table is internally consistent; prereg deposited; audit circularity disclosed or resolved |
+| **P4.5 Craft, figures, references** | 🔄 | Remove Fig. 4 “no study outcomes” stamp or replace it; clear all `\pending{}` blocks; reconcile byline/CRediT; fix G1 table, recovery range 28.2–47.6, Intro “two vs three”; regenerate figures at print size with ≥8 pt effective fonts; cite orphan floats; trim tables; fix notation collisions; add 2025–26 refs | No draft artifacts; every float cited; 0 undefined; effective fonts ≥8 pt; references current |
+| **P4.6 New evidence** | ⏳ | 100–200 prefix task-success/utility endpoint; second deterministic renderer; human audit 60–120 items; intervention probe; one frontier/on-policy control | At least one new evidence stream, or every claim tightened to the current scope |
+| **P4.7 Reproducibility and release prep** | ⏳ | Publish scrubbed artifacts/ledger extracts with DOI; implement or remove “one-command validation”; add table-to-artifact map; correct data card; complete PII audit; verify model licenses; name AI models/versions/dates in disclosure | External reader can reproduce the reported tables; DOI resolves; PII/licensing cleared |
+
+**P4 exit:** all P0 findings in the weakness register closed; P1 findings either closed or explicitly scoped; clean 26-page build; no claim exceeds the gate record.
+
+---
+
+## 4. P5 — Release and submission (⏳)
+
+1. Freeze author list, ORCIDs, CRediT, and corresponding author.
+2. Resolve ethics determination and AI-use statement; correct “author team” wording.
+3. Mint DOI; publish data card, manifest, scrubbed prefixes/observations/perturbations, audit packets, analysis JSONs, and ledger extracts.
+4. Verify τ-bench MIT notice and all three model output licenses.
+5. Build the 14-file Overleaf package (`toolresults.tex`, `ref.bib`, class files, `fig1–fig10.png`) and clean-room compile.
+6. Write cover letter and journal-specific highlights; check keyword limit.
+7. Submit; archive the submission checklist and gate record.
+
+**P5 exit:** DOI resolves; clean-room compile from the package; submission checklist signed.
+
+---
+
+## 5. Claim boundary (current)
+
+**What the study supports.** A bounded, renderer-local, mover-weighted measurement: within a frozen real τ-bench prefix, changing the prose observation changes the probability that the next decision departs from the faithful-prose continuation; the assigned-severity gradient is positive but threshold-like; format sensitivity is 20–46% in calibration and 19.8–38.1% in the main run; silent propagation is at least 21.3% of critical-arm switches; persistence is 27.2–34.7% crude recovery by H=4.
+
+**What it does not support.** A causal content-sensitivity claim (G3 parser and severity gates failed); a task-success effect; a model ranking; transfer to frontier/API models, live tools, or other renderers; a universal dose–response law.
+
+**What would change the claim.** A crude recovery ≥50%; a parser rate <1%; a severity audit ≥90% with independent raters; a stable slope under a second renderer and a task-success endpoint. None is currently met.
+
+---
+
+## 6. Budget (actual)
+
+| Item | Actual |
+|---|---|
+| H200 MIG 1g.18gb | 8.9 GPU-hours of 45 (≈20%) |
+| Cash | $0 |
+| Paid API | $0 |
+| Storage | within 200 GB project allocation |
+| Annotation | AI-agent sessions, author-overseen; no cash |
+
+---
+
+## 7. Live risks
 
 | Risk | Why it matters | Mitigation |
 |---|---|---|
-| **τ-bench contamination** | Public tasks may be memorized; baseline reliance could be inflated | Report verbatim-arm accuracy and s=0 jitter; within-prefix contrast remains valid; optional 120-prefix template-transfer arm only if within the GPU-hour/storage caps; state domain scope |
-| **Donor-prefix off-policy** | Target models continue gpt-4o/sonnet histories | Prefixes are fixed and shared across arms; stratify by donor; report donor-specific slopes; do not let target models generate prefixes |
-| **Severity construct validity** | If s=1 moves decisions like s=2, "dose" is not a dose | Three-rater blind audit; α ≥ .75; s=1 negative control; s=3 plausibility check; collapse levels if it fails |
-| **Model-format refusal** | A model may refuse the forced next-decision format | Calibration refusal gate < 5%; prompt/grammar fix before main run; document exclusions |
-| **H200 availability** | The shared slice may be busy or the 18 GB fit may fail | Wait for the allocation; reduce batch/context first; reduce N or drop persistent with a logged decision/amendment; do not book a paid rental without a new decision |
-| **Replay mismatch** | A non-replayable observation is not a real environment output | ≥ 98% normalized match; mismatch taxonomy; fix harness before sampling; never relax silently |
-| **PII leakage** | τ-bench trajectories contain user profile data | Exclude profile tools; scrub stable synthetic tokens; 40-item human PII audit; re-scan before release; never commit raw trajectories |
-| **Recovery state drift** | Replaying four steps may diverge from the donor episode | Continue with the real environment, not the donor transcript; log state hashes; report divergence rate; transient primary |
-| **GPU-hour/storage overrun** | The H200 allocation and 200 GB project space are finite | Hard stop at 45 GPU-hours or 200 GB; per-shard ledger; no second GPU; no cash contingency |
-| **Analysis overreach** | Many secondary contrasts invite post-hoc stories | Fixed-sequence gate; preregistered primaries; heterogeneity exploratory; no model ranking; null reported as null |
+| **Recovery estimand** | KM vs crude changes the gate margin and the “close” claim | P4.2 re-estimation; report both |
+| **Claim/audit integrity** | Title/abstract overclaim; AI-only audit | P4.1/P4.3; measurement framing; human subset or “consistency check” |
+| **Reproducibility** | Artifacts gitignored; no DOI | P4.7; publish scrubbed package |
+| **PII/licensing** | Release risk; model output terms | Human PII audit; license verification |
+| **Reference recency** | 2024 maximum at a 2026 submission | P4.1/P4.5; add verified 2025–26 work |
+| **Scope / no task success** | Deviation ≠ harm | P4.6 endpoint or tighten every claim |
+| **Human audit capacity** | G0 and label audits deferred | Complete a 40-item human subset before submission |
 
 ---
 
 ## 8. Out of scope
 
 - A universal law of observation sensitivity.
-- Ranking models, model families, or providers.
-- Frontier, proprietary, or API models.
-- End-to-end task success, pass@k, or user satisfaction.
+- Ranking models, families, or providers.
+- Frontier, proprietary, or API models (except one exploratory control if P4.6).
+- End-to-end task success at full 800-prefix scale.
 - Live APIs, web browsing, or non-deterministic tools.
-- Training, fine-tuning, preference optimization, or agent policy improvement.
-- Multi-agent interaction, debate, or tool selection strategy.
-
-These are follow-up questions, not hidden claims of this study.
+- Training, fine-tuning, preference optimization, or policy improvement.
+- Multi-agent interaction, debate, or tool-selection strategy.
 
 ---
 
 ## 9. Change control
 
-- **No post-freeze changes** to the sample, perturbations, field registry, renderer, prompts,
-  or analysis plan after G0. The freeze hash is recorded in `data/manifests/toolresult800_v1.json`.
-- Any necessary deviation is written to `docs/DECISIONS.md` and to the prereg amendments log
-  (`prereg/AMENDMENTS.md`) **before** the affected analysis is run.
-- Amendments state the trigger, the change, the analyses affected, and whether the change was
-  made blind to target-model outcomes.
-- Out-of-sequence or unlogged analyses are labeled exploratory and cannot support the primary
-  claim.
-- The paper reports every amendment and every gate outcome, including failures.
-- Code changes after freeze are allowed only for reproducibility fixes that do not alter the
-  frozen artifacts; they are recorded in `CHANGELOG.md`.
+- No post-freeze changes to sample, perturbations, field registry, renderer, prompts, or analysis plan without a logged decision and, where required, a prereg amendment.
+- Every deviation goes in `docs/DECISIONS.md` and `prereg/AMENDMENTS.md` before the affected analysis.
+- Every reported number traces to a ledger, manifest, or analysis artifact; the weakness register is the current audit trail.
+- The paper reports every gate outcome, including failures and amendments.
 
 ---
 
 ## 10. Definition of done
 
-A phase is done only when: the code is merged with tests, the relevant docs are updated, the
-gate report is written, and every reported number traces to a ledger or manifest row. A gate
-that is not met is still "done" when the failure and its consequence are documented.
+A phase is done only when code is merged with tests, docs are updated, the gate report is written, and every reported number traces to a ledger, manifest, or artifact. A failed gate is still “done” when the failure and its consequence are documented. For P4, “done” additionally means the weakness register’s P0 items are closed and no claim exceeds the gate record.

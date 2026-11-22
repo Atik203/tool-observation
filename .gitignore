@@ -100,8 +100,6 @@ hf_cache/
 # ---------------------------------------------------------------------------
 # Secrets and credentials
 # ---------------------------------------------------------------------------
-.env
-.env.*
 !.env.example
 *.pem
 *.key
@@ -166,7 +164,6 @@ release/toolresult800-v1/
 Thumbs.db
 desktop.ini
 .idea/
-.vscode/
 *.swp
 *.swo
 *~
@@ -187,4 +184,5 @@ scratch/
 .deps/
 
 .vercel
-.env*
+config.bat
+node_modules

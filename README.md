@@ -6,16 +6,16 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](pyproject.toml)
 
-> **Research status: confirmatory data collected; analyses provisional (2026-11-18).**
+> **Research status: confirmatory study complete; manuscript in revision (2026-11-22).**
 > The G0 pipeline and freeze are complete: 13,605 candidates → 5,516 eligible → 5,511
 > replay-matched → 880 sampled (800 primary + 80 reserve). The three-model main run
 > (13,200 generations), the 10% seed-repeat shard, and the recovery sequences are complete.
 > The preregistered G3 slope passes (pooled beta 0.877, 95% CI [0.770, 0.998]); the G3
-> parser-failure criterion (1.55% vs <1%) and the G4 recovery gate (32–48% vs ≥50%) fail and
-> are reported as failures. The audit gates were blind-rated in a label-free round and checked
-> by an agent verification panel (D-043); the severity audit's s2/s3 decision-changing criterion
-> also fails (88.3% vs ≥90%). The G0 sheet verification remains deferred (D-021). The 60-prefix
-> pilot remains a screening signal, **not** a dose-response law.
+> parser-failure criterion (1.55% vs <1%), the severity s2/s3 decision-changing criterion
+> (88.3% vs ≥90%), and the G4 recovery gate (27.3–34.7% crude; KM 32.4–47.6% vs ≥50%) fail
+> and are reported as failures. The audit gates were rated by AI-agent sessions sharing one
+> model family, not by human raters; the G0 sheet verification remains deferred (D-021). The
+> 60-prefix pilot remains a screening signal, **not** a dose-response law.
 
 ## Live site
 
@@ -45,13 +45,15 @@ triggers an automatic production deployment.
   implemented and CPU-tested. No study prefix has been run on GPU.
 - **Frozen payload/release:** 880 scrubbed prefixes with five arm observations are built
   (preview); the release packager verifies hashes and PII and refuses without a passed audit.
-- **GPU:** vLLM 0.33.0 / torch 2.14.0 installed in the project venv. The updated trio
+- **GPU:** vLLM 0.33.0 / torch 2.14.0 installed in the project venv. The trio
   (Qwen3.5-9B, Ministral-3-8B, Llama-3.1-8B AWQ) passed non-study fit checks at
-  0.85/24k/batch 4; Qwen3.5 runs with its thinking block disabled. No study workload has run.
-- **Audit:** an AI pre-audit passes 40/40 mechanical checks; the official human sheet remains
-  blank and the gate is not claimed.
-- **Pending:** human 40-item audit (≥36/40) and the frozen `toolresult800_v1` manifest; G1
-  calibration starts only after both pass.
+  0.85/24k/batch 4; Qwen3.5 runs with its thinking block disabled. The main run, recovery,
+  and jitter shards are complete (8.9 GPU-hours of the 45-hour allocation).
+- **Audit:** an AI pre-audit passes 40/40 mechanical checks; the official human G0 sheet remains
+  blank and the gate is not claimed. Label-free audit ratings were produced by AI-agent sessions
+  sharing one model family; human verification is deferred.
+- **Pending:** human 40-item G0 audit (≥36/40), human verification of the label-free audits,
+  release DOI, and the ethics determination. The frozen `toolresult800_v1` manifest is present.
 
 ## The question
 
