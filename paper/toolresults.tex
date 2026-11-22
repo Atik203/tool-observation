@@ -278,21 +278,22 @@
   Tool-using language-model agents read tool outputs and act on them, but end-to-end benchmarks
   score the finished episode and cannot show whether an agent noticed a wrong price, date, or
   identifier. We report a frozen fixed-prefix study of that moment: 800 real $\tau$-bench prefixes
-  (400 airline, 400 retail), each ending after a tool observation, varying the observation across
-  four prose arms: faithful paraphrase, one non-critical change, one plausible critical error, and
+  (400 airline, 400 retail), each ending after a tool observation, with four prose arms: faithful
+  paraphrase, one non-critical change, one plausible critical error, and
   a critical error with a second contradiction. Three open-weight 8--9B models answer greedily on
-  an 18~GB H200 slice. The pre-registered content-sensitivity claim is not made: three gate
+  an 18~GB H200 slice. The pre-registered content-sensitivity claim is withheld: three gate
   criteria failed. Parser failures are 1.55\% against the 1\% threshold, the severity audit's
   $s2/s3$ decision-changing share is 88.3\% against 90\%, and crude recovery on the semantic risk
   set is 24.4/32.9/21.3\% by model against 50\% (Kaplan--Meier 28.2/44.6/22.0\% is secondary and
   censoring-inflated). Within that bound, the pooled conditional-logistic slope of the switch
   indicator on severity is 0.877 (95\% CI 0.770--0.998), positive in all three models, with tier
-  ORs 1.27/4.60/11.21. These are assigned-severity effects; a row-level realized-severity refit
-  gives 4.45--4.56 and 11.38--11.86 for the critical tiers, intervals overlapping the assigned
-  values. Linearity is rejected, so the slope marks a threshold at $s=2$. At least 21.3\% of
+  ORs 1.27/4.60/11.21 (the $s1$ control is not inert, $p=.019$). These are assigned-severity
+  effects; an extrapolated row-level realized-severity refit gives 4.45--4.56 and 11.38--11.86 for
+  the critical tiers, intervals overlapping the assigned values. Linearity is rejected, so the
+  slope marks a threshold at $s=2$. At least 21.3\% of
   1{,}964 critical-arm switches silently repeat the injected value (recall-adjusted
-  $\approx$28.5\%). Re-serializing identical values shifts 20.3--45.6\% of calibration decisions,
-  so format alone matters. Audits were blind and label-free but AI-operated and author-overseen;
+  $\approx$28.5\%). Re-serializing identical values shifts 20.3--45.6\% of calibration decisions;
+  format alone matters. Audits were blind and label-free but AI-operated and author-overseen;
   the G0 human verification remains deferred, so the freeze is provisional.
 \end{abstract}
 
@@ -1504,9 +1505,10 @@ $5.8\times10^{-5}$) and secondary pooled ($p = 2.1\times10^{-20}$ over 2{,}251
 model-prefix pairs); the pooled value survives a prefix-cluster design-effect grid to
 $\rho=0.5$ and a model-stratified check (Section~\ref{sec:method};
 \texttt{artifacts/analysis/inference\_robustness.json}). Row-level refits from the local ledgers
-reproduce these tests with a cluster-robust null bootstrap (categorical 25.03, quadratic 10.31;
-$p<.01$ at the 1/151 resolution floor) and supply design-robust Manski bounds for the $s3-s2$ and
-$s3-s0$ contrasts ([.004,.115] and [.101,.209], both excluding zero;
+give a design-valid prefix-cluster robust Wald test (categorical 30.63, quadratic 15.71) and a
+prefix-resampling null bootstrap as a sensitivity (categorical 25.03, quadratic 10.31; $p<.01$ at
+the 1/151 resolution floor), and supply design-robust Manski bounds for the $s3-s2$ and $s3-s0$
+contrasts ([.004,.115] and [.101,.209], both excluding zero;
 \texttt{artifacts/analysis/rowlevel\_refits.json}); the resampling
 robustness here is the 2{,}000-replicate prefix-cluster bootstrap tier-OR intervals, whose
 $s2$/$s3$ intervals exclude one in every model while the Qwen $s1$ interval includes one. The pattern is a threshold at $s2$, not a graded per-level law. Domain
@@ -1613,13 +1615,15 @@ noise runs both ways. A bounded dilution sensitivity
 ratios treating donor-unused critical-arm rows as switching at the pooled $s1$ rate: the
 observed marginal ORs of 1.56 ($s2$) and 2.02 ($s3$) rise to 1.64/2.19, 1.70/2.31, and
 1.79/2.52 under $m=7/60$, $11/60$, and $16/60$, and the marginal $s1$--$s2$ gap widens from
-9.0 to 12.3 points at the blind-verifier bound. Correcting the
-assigned doses therefore steepens the marginal $s1$--$s2$ contrast under every pass; that marginal
-adjustment is superseded as a correction by the row-level refit. The estimand is labelled
-assigned-severity throughout: the conditional tier ORs 1.27/4.60/11.21 are contrasts over assigned
-arms, and a row-level realized-severity refit gives 4.45--4.56 ($s2$) and 11.38--11.86 ($s3$)
-across the three audit passes, against the assigned 4.60 and 11.21, with every interval overlapping
-the assigned estimate; the assigned odds ratios are therefore not materially attenuated. The
+9.0 to 12.3 points at the blind-verifier bound. That bounded adjustment acts on the marginal
+scale; it does not re-estimate the conditional tier ORs and is superseded as a correction by the
+row-level refit below. The estimand is labelled assigned-severity throughout: the conditional tier
+ORs 1.27/4.60/11.21 are contrasts over assigned arms. An extrapolated row-level realized-severity
+refit (the 60 audited critical items observed, the 1{,}550 unaudited critical items imputed under
+arm-specific audit rates) gives 4.45--4.56 ($s2$) and 11.38--11.86 ($s3$) across the three audit
+passes, against the assigned 4.60 and 11.21, with every interval overlapping; audited-only realized
+refits give 4.66--4.74 ($s2$) and 11.23--11.42 ($s3$). The assigned odds ratios are therefore not
+materially attenuated on either variant. The
 per-level magnitudes are read as descriptive rather than as a calibrated dose--response function
 (\texttt{artifacts/analysis/rowlevel\_refits.json}, which records SHA-256 for the 15 ledger files
 and 11 auxiliary inputs it reads).
@@ -1775,12 +1779,9 @@ pairs both match the donor and code adequate), confirming the deterministic prox
 almost no utility signal. Re-coding agrees on 36 of 38 items ($\kappa=.92$; 2 further
 pairs excluded for a 9).
 
-Limits. Baseline adequacy is modest (55.7\% adequate and 15.7\% harmful at $s=0$), so the
-injected error roughly doubles harm rather than creating it from nothing. The donor path is
-one valid path and donor-trajectory success was not verified; text-donor type-match is
-coarse. Adequacy is judged on the next decision only, not rollout reward. The single-agent,
-same-session protocol cannot support population claims; the Wilson intervals are
-measurement uncertainty on this sample, not a general harm rate.
+Its limits---modest baseline adequacy, an unverified single donor path, next-decision-only
+judgement, and the single-agent same-session protocol---are carried in
+Section~\ref{sec:limitations}.
 
 
 \paragraph{Recovery}.\
@@ -1924,10 +1925,11 @@ and +6.2 percentage points for $s2-s0$, $s3-s0$, and $s3-s2$) answer the populat
 question and are reported separately from the within-stratum slope. Second, the assigned severity
 is measured rather than perfectly manipulated. The audit finds 7--16 of 60 donor-unused items in the critical
 arms and 3/30 decision-changing items in $s1$, so $\beta$ is a weighted contrast between intended and
-realized doses, not a clean per-level effect parameter. The row-level realized-severity refit leaves
-the assigned odds ratios essentially unchanged (4.45--4.56 and 11.38--11.86 versus 4.60/11.21, every
-interval overlapping), so attribution to assigned severity is retained; the earlier point-only
-dilution adjustment is superseded, and the per-level magnitudes are not materially attenuated. The
+realized doses, not a clean per-level effect parameter. The extrapolated row-level realized-severity
+refit leaves the assigned odds ratios essentially unchanged (4.45--4.56 and 11.38--11.86 versus
+4.60/11.21; audited-only 4.66--4.74 and 11.23--11.42; every interval overlapping), so attribution
+to assigned severity is retained; the earlier point-only dilution adjustment is superseded, and the
+per-level magnitudes are not materially attenuated. The
 sign is stable across every audit pass and coding, but the per-level magnitudes should not be read
 as a calibrated dose--response law. The decomposition changes the interpretation of a positive slope. A slope driven by detection is
 a slope in which the agent notices the conflict; a slope driven by silent propagation is a slope
@@ -2014,6 +2016,13 @@ corrected once, after the blind audit found a defect (D-028, A-006); the pre-fix
 reported
 above. The G1 placebo criterion was amended post-freeze under A-004 (not blind to the G1 values,
 D-041); the analysis gates were not re-thresholded after the confirmatory run.
+
+The exploratory task-utility endpoint adds its own limits. Baseline adequacy is modest (55.7\%
+adequate and 15.7\% harmful at $s=0$), so the injected error roughly doubles harm rather than
+creating it from nothing. The donor path is one valid path and donor-trajectory success was not
+verified; text-donor type-match is coarse. Adequacy is judged on the next decision only, not
+rollout reward. The single-agent, same-session protocol cannot support population claims; the
+Wilson intervals are measurement uncertainty on this sample, not a general harm rate.
 
 \section{Conclusion}\label{sec:conclusion}
 
@@ -2285,8 +2294,8 @@ Supplementary tables use an S prefix and are cited from the main text by label.
 
 \begin{table}[pos=htbp]
   \centering
-  \caption{Recovery by $H=4$ across model and risk-set groups (Kaplan--Meier secondary;
-  crude primary in Table~\ref{tab:recovery}; semantic risk sets).}
+  \caption{Recovery by $H=4$ across model and risk-set groups (recovery complement
+  $1-S_{\mathrm{KM}}(4)$; crude primary in Table~\ref{tab:recovery}; semantic risk sets).}
   \label{tab:recovery_all}
   \small
   \begin{tabular}{lrrr}

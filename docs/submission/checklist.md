@@ -27,7 +27,8 @@ require author action and name the artifact that unblocks them.
 
 - [x] Release staged: `release/ToolResult-800-v1.0/` (123 files), manifest hash chain ok,
   SHA256SUMS verified, automated identifier re-scan clean (`pii_rescan.json`).
-- [x] Table-to-artifact map covers all 25 table labels (11 main-text, 14 supplementary; `TABLE_MAP.md`).
+- [ ] Table-to-artifact map covers all 25 table labels (11 main-text, 14 supplementary; `TABLE_MAP.md`)
+  — **pending T5 repoint of the 14 moved labels**.
 - [x] One-command validation implemented and passing: `make validate-release` 17/17 L1,
   22/22 with `--rerun` (T4 inference regen included).
 - [x] License verification recorded (`licenses/`, `docs/submission/license_verification.md`).

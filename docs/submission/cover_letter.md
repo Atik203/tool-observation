@@ -37,7 +37,7 @@ reruns that rebuild the T2–T6 analysis JSONs bit-identical). The G0
 harvest audit is an AI pre-audit with human verification deferred; all ratings are AI-agent
 produced, author-overseen — both stated in the paper, with a held-out human audit as future work.
 
-**Fit.** The manuscript includes 2025–26 neighbors (all arXiv IDs verified 2026-11-22).
+**Fit.** The manuscript cites 2025–26 neighbors (all arXiv IDs verified 2026-11-22).
 Highlights and keywords are within limits. Suggested handling: reviewers familiar with agent evaluation, measurement
 methodology, and preregistered ML experimentation.
 
