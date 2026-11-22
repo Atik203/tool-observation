@@ -167,5 +167,10 @@ was read in-process at mint time; it was never printed, logged, echoed, or commi
   `traces/ledger_hashes.json`), and `SHA256SUMS`/`release_record.json` covering them
   differ. `release_record.json` records `doi` `10.5281/zenodo.24449882`,
   `concept_doi` `10.5281/zenodo.24449466`, and 137 files.
+- Metadata revision: a metadata-only edit (legacy deposition API, same DOI) restored the
+  record license (`cc-by-4.0`), keywords, notes, language, and Zenodo publisher after the
+  first publish; the files were not changed (identical sizes and checksums, verified via
+  the API). Concept DOI `10.5281/zenodo.24449466` resolves (HTTP 200) to the latest
+  version page.
 - v1.0.1 record 24449467 is unchanged and still resolves; it is superseded, not
   deleted.
