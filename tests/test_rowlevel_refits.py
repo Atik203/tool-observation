@@ -134,6 +134,20 @@ def test_bootstrap_lrt_smoke_is_bounded() -> None:
         assert 0.0 <= result[key] <= 1.0
 
 
+def test_bootstrap_declares_sensitivity_role() -> None:
+    records = _synthetic_records(prefixes=10, seed=13)
+    groups = rowlevel.groups_from_records(records)
+    by_prefix = rowlevel.groups_by_prefix(
+        groups, sorted({record[0] for record in records})
+    )
+    observed = rowlevel.fit_designs(groups)
+    result = rowlevel.bootstrap_lrt(
+        by_prefix, observed, reps=2, seed=14, label="fixture"
+    )
+    assert result["design_valid"] is False
+    assert "prefix-resampling sensitivity" in result["role"]
+
+
 def test_mcnemar_exact_known_values() -> None:
     assert rowlevel.mcnemar_exact(0, 0) == 1.0
     assert abs(rowlevel.mcnemar_exact(5, 0) - 0.0625) < 1e-12
@@ -256,6 +270,11 @@ def _synthetic_inputs(
 
 
 def test_severity_reclassification_end_to_end_fixture(monkeypatch) -> None:
+    # NOTE(unguarded): this fixture exercises main-sample audited combos only.
+    # The reserve-audited branch (10 of the 60 audit items) is not separately
+    # fixtured; the real 50 main + 10 reserve split is recorded in the artifact.
+    # A reserve fixture would need a second synthetic audit population and was
+    # judged not worth the extra test cost.
     prefixes = [f"airline-claude35sonnet-t{i:02d}-r01-s001-task" for i in range(24)]
     models = ["model-a"]
     labels = []

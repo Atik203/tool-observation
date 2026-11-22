@@ -567,7 +567,12 @@ def bootstrap_lrt(
     seed: int,
     label: str,
 ) -> dict[str, Any]:
-    """Prefix-cluster null parametric bootstrap for both severity LRTs."""
+    """Prefix-resampling sensitivity for both severity LRTs (design_valid=false).
+
+    This is not a cluster bootstrap: prefixes are resampled, but outcomes are
+    simulated independently within strata, so within-cluster residual
+    correlation is not carried.
+    """
     keys = sorted(prefix_groups)
     if not keys or reps <= 0:
         return {
@@ -2165,8 +2170,9 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "assigned_severity_pooled_linear_beta": severity["pooled"]["linear"]["beta"],
             "note": (
                 "These reproduce prereg_secondary.json / g3_analysis.json; the new "
-                "cluster bootstrap and reclassification refits are sensitivity analyses, "
-                "not replacements for the preregistered primary estimates."
+                "prefix-resampling sensitivity (design_valid=false) and reclassification "
+                "refits are sensitivity analyses, not replacements for the preregistered "
+                "primary estimates."
             ),
         },
         "runtime": {
