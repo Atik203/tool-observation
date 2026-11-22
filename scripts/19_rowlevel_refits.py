@@ -572,6 +572,12 @@ def bootstrap_lrt(
     if not keys or reps <= 0:
         return {
             "label": label,
+            "role": (
+                "prefix-resampling sensitivity, not a cluster bootstrap: outcomes are "
+                "simulated independently within strata, so within-cluster residual "
+                "correlation is not carried"
+            ),
+            "design_valid": False,
             "reps_requested": 0,
             "reps_valid": 0,
             "bootstrap_p_categorical_vs_linear": 1.0,
@@ -606,6 +612,11 @@ def bootstrap_lrt(
     p_quad = (1.0 + sum(value >= observed_quad for value in null_quad)) / (1.0 + len(null_quad))
     return {
         "label": label,
+        "role": (
+            "prefix-resampling sensitivity, not a cluster bootstrap: outcomes are simulated "
+            "independently within strata, so within-cluster residual correlation is not carried"
+        ),
+        "design_valid": False,
         "reps_requested": reps,
         "reps_valid": len(null_cat),
         "observed_lrt_categorical_vs_linear": observed_cat,
