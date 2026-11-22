@@ -31,7 +31,7 @@ What ``--validate`` checks (works on the staged tree OR the live repo tree):
   severity 7/11/16 from the verification sheets, exact McNemar/LRT
   recomputes, wrong-direction partition, utility counts, g3 totals, H5);
   TABLE_MAP covers all 25 paper tables; identifier re-scan clean.
-- L2 (``--rerun``, repo ledgers present): rerun the six analysis producers
+- L2 (``--rerun``, repo ledgers present): rerun the five analysis producers
   (13/14/15/16/17/16-task-utility; CPU-only, seeded) into a temp dir and
   diff against the released copies ignoring volatile keys
   (``recorded_utc``, ``git_commit``).
@@ -582,12 +582,15 @@ One-command validation (no GPU, stdlib Python only):
   McNemar and LRT recomputes, wrong-direction partition, utility counts,
   g3 totals, H5); `TABLE_MAP.md` covers all 25 paper tables; identifier
   re-scan clean.
-- **L2 (`--rerun`, needs the repo with run ledgers):** reruns the six
+- **L2 (`--rerun`, needs the repo with run ledgers):** reruns the five
   CPU-only analysis producers and diffs the rebuilt JSONs against the
   released copies (volatile `recorded_utc`/`git_commit` ignored).
 
 A clean automated scan does not replace the pending independent human
 PII re-scan before public release (see `docs/submission/checklist.md`).
+`pii_rescan.json` lists every placeholder/echo occurrence (duplicates retained:
+one entry per scanned value, so a string echoed in both `decision_json` and
+`output_text` counts twice); `n_*` counts match the list lengths.
 """
 
 
@@ -700,12 +703,16 @@ def build_package(out: Path, force: bool = False) -> dict:
     hits, placeholders, echoes, allowlisted = pii_rescan(out)
     pii_report = {
         "scanned_utc": utc_now(),
+        "counting_rule": "Counts and lists are per scanned-value occurrence "
+        "(duplicates retained: one entry per JSON value / CSV cell / text "
+        "line, so a string echoed in both decision_json and output_text "
+        "counts twice); n_* match the list lengths.",
         "n_hits": len(hits),
-        "hits": hits,
+        "hits": sorted(hits),
         "n_placeholders": len(placeholders),
-        "placeholders": sorted(set(placeholders)),
+        "placeholders": sorted(placeholders),
         "n_synthetic_echoes": len(echoes),
-        "synthetic_echoes": sorted(set(echoes)),
+        "synthetic_echoes": sorted(echoes),
         "echo_note": "Synthetic echoes embed only scrubber tokens "
         "(person_/user_/email_ + 12 hex); the PII map is never released, so "
         "they are not re-identifiable. The person_0f41e336893e.ahmed6699 "

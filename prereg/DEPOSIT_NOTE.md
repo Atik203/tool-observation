@@ -37,7 +37,7 @@
   (manifest chain, SHA256SUMS, crude triple, v2 bridge + Wilson, severity
   7/11/16, McNemar/LRT/H5 recomputes, wrong-direction partition, g3 totals,
   utility counts, PPV bound, table-map coverage, PII re-scan) and 22/22 with
-  `--rerun` (all six producers rebuilt bit-identical modulo
+  `--rerun` (all five producers rebuilt bit-identical modulo
   `recorded_utc`/`git_commit` — this doubles as the T4 inference-JSON regen).
 - **DOI:** still pending author upload (no external registry yet). Deposit record
   with DataCite metadata is in `docs/submission/doi_record.md`; the DOI lands

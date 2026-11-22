@@ -32,7 +32,7 @@ cluster-robust inference checks, and an exploratory blinded task-utility endpoin
 perturbation records, ledger extracts, audit packets/sheets, all analysis JSONs, preregistration
 + amendments, upstream MIT notice, and model-output license verification — with a
 table-to-artifact map (25 tables) and a one-command validator (`make validate-release`: 22/22
-checks, including producer reruns that rebuild every analysis JSON bit-identical). The G0
+checks, including producer reruns that rebuild the five T2–T6 analysis JSONs bit-identical). The G0
 harvest audit is an AI pre-audit with human verification deferred; all ratings are AI-agent
 produced, author-overseen — both stated in the paper, with a held-out human audit as future work.
 
@@ -41,8 +41,9 @@ included, all arXiv IDs verified 2026-11-22). Highlights (4 bullets, ≤85 chars
 are within limits. Suggested handling: reviewers familiar with agent evaluation, measurement
 methodology, and preregistered ML experimentation.
 
-The work is original, not under consideration elsewhere, and all authors approve submission.
-No competing interests; no external funding (university H200 slice in kind).
+The work is original and not under consideration elsewhere; submission follows author
+sign-off on the byline/ORCID/CRediT freeze (`docs/submission/authorship.md`; O.T. e-mail
+still TBD). No competing interests; no external funding (university H200 slice in kind).
 
 Sincerely,
 Md. Atikur Rahaman (corresponding author), Ohidujjaman Tuhin

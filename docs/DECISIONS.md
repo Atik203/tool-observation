@@ -31,14 +31,14 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   L1 on the package alone (manifest chain, SHA256SUMS, crude triple, v2 bridge + Wilson,
   severity 7/11/16, exact McNemar/LRT/H5 recomputes, wrong-direction partition, g3
   totals, utility counts, PPV bound, 25-table map coverage, identifier re-scan);
-  L2 `--rerun` reruns all six producers and diffs modulo `recorded_utc`/`git_commit`.
+  L2 `--rerun` reruns all five producers and diffs modulo `recorded_utc`/`git_commit`.
   Result 2026-11-22: 17/17 L1, 22/22 with rerun — this closes the T4 regen item (all
-  six JSONs rebuilt bit-identical).
+  five JSONs rebuilt bit-identical).
 - **Manifest gate enforced:** the builder refuses without `audit.gate_pass` (same rule
   as `10_release.py`); the manifest itself records `label_source:
   ai_preaudit_deferred_human`, so the provisionality travels with the package.
-- **M8 second half (prereg/config hashes):** not added to every producer/artifact
-  (would require touching six frozen-by-convention producers for metadata only);
+- **M8 second half (prereg/config hashes):** not added to every producer
+  (would require touching the frozen-by-convention producers for metadata only);
   instead `release_record.json` binds prereg/field-registry/renderer/source-pin/manifest
   hashes to every bundled file, and the paper sentence now states that. The run ledgers
   already carry manifest/prompt/renderer versions and the JSONs carry `git_commit`.
@@ -57,8 +57,9 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   offered as an editor-directed option in the cover letter path, not taken unilaterally.
 - **Bib (T5 old-et-al closed by fixing, not justifying):** full author lists verified
   against arXiv abs pages 2026-11-22 for toolllm (19), webarena (12), sycophancy (19),
-  agentbench (22), plus toolscan (18) and toolbehonest (13) completed; taubench confirmed
-  4-author complete; BFCL URL resolves (V4, updated 2026-04-12); only remaining et-al is
+  agentbench (22), tool_survey (41), agent_survey (13), helm (~50), toolscan (18), and
+  toolbehonest (13); taubench confirmed 4-author complete and apibank confirmed complete;
+  BFCL URL resolves (V4, updated 2026-04-12); only remaining et-al is
   the 100+-author Llama herd (file convention, noted).
 - **Fig. 4 verified T5-done:** `figures/fig4.png` is the stamp-free conceptual schematic;
   caption states "(not study data)". No local TeX compile exists on this host

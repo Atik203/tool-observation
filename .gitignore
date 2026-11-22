@@ -153,6 +153,7 @@ paper/*.abs
 paper/*.fls
 paper/*.fdb_latexmk
 release/CTO-800-*/
+release/ToolResult-800-*/
 release/*.zip
 release/*.tar.gz
 release/toolresult800-v1/

@@ -15,7 +15,7 @@ release date is the DOI registration date. Hashes below are from the frozen mani
 | Repository | https://github.com/Atik203/tool-observation |
 | Dataset brand | ToolResult-800 (the repository is `tool-observation`) |
 | Study | Tool-Result Errors in Language-Model Agents |
-| Maintainer | Atikur Rahaman (atikurrahaman0305@gmail.com) |
+| Maintainer | Md. Atikur Rahaman (mrahaman2310298@bscse.uiu.ac.bd) |
 | License | CC BY 4.0 for project additions; upstream τ-bench MIT |
 | Release date | TBD (= DOI registration date) |
 | DOI | TBD (`docs/submission/doi_record.md`) |
@@ -135,7 +135,7 @@ within-prefix contrasts and for benchmarking detection/flagging behavior.
 - Version 1.0 is frozen; corrections require a new version and a changelog entry.
 - Errata are published in the repository and linked from the DOI record.
 - The manifest and checksums are the authoritative record.
-- Contact: atikurrahaman0305@gmail.com.
+- Contact: mrahaman2310298@bscse.uiu.ac.bd.
 
 ## 11. Release contents (v1.0)
 
@@ -158,7 +158,7 @@ Staged at `release/ToolResult-800-v1.0/` (uploaded to the DOI record; see
   `SHA256SUMS`, `release_record.json`, `pii_rescan.json`.
 
 Validate: `make validate-release` (L1 on the package alone; `--rerun` with repo ledgers
-rebuilds all six analysis JSONs and diffs). The G0 harvest audit is an AI pre-audit (40/40)
+rebuilds the five T2–T6 analysis JSONs and diffs). The G0 harvest audit is an AI pre-audit (40/40)
 adopted by the author with human verification deferred (D-021, A-005); the freeze stands
 provisional on that item. The automated identifier re-scan is clean (reserved-domain
 placeholders, synthetic-token echoes, and one scrubber-artifact fragment noted in

@@ -1376,7 +1376,7 @@ The analysis code is versioned; run ledgers carry the manifest, prompt, and rend
 versions, and every analysis artifact records the producing commit. The primary conditional-logit fit, the prefix-cluster bootstrap, and the
 recovery estimators are implemented in pure Python and tested on synthetic fixtures, so the
 analysis can be reproduced without a GPU. A one-command validation target
-(\texttt{make validate-release}, \texttt{scripts/18\_build\_release.py --validate}) reruns the six
+(\texttt{make validate-release}, \texttt{scripts/18\_build\_release.py --validate}) reruns the five
 CPU-only analysis producers, diffs the rebuilt JSONs against the released copies, rechecks every
 manifest hash, reconciles the table-to-artifact map (\texttt{TABLE\_MAP.md}), and rescans the
 package for identifiers. Manifests are the reproducibility spine: every table

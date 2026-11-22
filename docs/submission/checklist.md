@@ -11,7 +11,8 @@ require author action and name the artifact that unblocks them.
   27.3/34.7/27.2%); G1 original criterion reported as failed (A-004/D-041).
 - [x] 25 tables all cited; 10 figures all cited; 0 undefined refs; 0 duplicate labels
   (`pytest tests/test_release.py`).
-- [x] 69/69 bib entries cited; 4 legacy author lists completed from arXiv (2026-11-22);
+- [x] 69/69 bib entries cited; 9 author lists completed from arXiv (4 legacy
+  `[VERIFY CITATION]` + tool_survey/agent_survey/helm + toolscan/toolbehonest);
   BFCL URL verified; only remaining "et al." is the 100+-author Llama herd.
 - [x] 6 keywords (journal cap); 4 highlights ≤85 chars (`docs/submission/highlights.md`).
 - [x] Fig. 4 is a labeled conceptual schematic (T5); no draft stamps; no `\pending{}` uses.
