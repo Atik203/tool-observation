@@ -1,0 +1,73 @@
+﻿item_id,task,evidence_text,agent_label
+OUT-005,outcome,"Reference: {""tool"": ""search_direct_flight"", ""arguments"": {""origin"": ""SEA"", ""destination"": ""JFK"", ""date"": ""2024-05-28""}}
+Model: {""tool"": ""search_direct_flight"", ""arguments"": {""origin"": ""SEA"", ""destination"": ""JFK"", ""date"": ""2024-05-28""}}
+Injected false value: (none)",Y=0; YA=0; YF=0; YU=0
+OUT-010,outcome,"Reference: {""tool"": ""transfer_to_human_agents"", ""arguments"": {""summary"": ""User wants to cancel travel insurance for a specific reservation, but cannot be done through the system""}}
+Model: {""tool"": ""transfer_to_human_agents"", ""arguments"": {""summary"": ""User wants to cancel insurance for a specific reservation, but cannot be done through automated means""}}
+Injected false value: (none)",Y=0; YA=0; YF=0; YU=0
+OUT-016,outcome,"Reference: {""tool"": ""exchange_delivered_order_items"", ""arguments"": {""item_ids"": [""8384507844"", ""8538875209""], ""new_item_ids"": [""5320792178"", ""2439754078""], ""order_id"": ""#W6390527"", ""payment_method_id"": ""payment_2d79c0359c1c""}}
+Model: {""tool"": ""exchange_delivered_order_items"", ""arguments"": {""item_ids"": [""8384507844"", ""8538875209""], ""new_item_ids"": [""5320792178"", ""2439754078""], ""order_id"": ""#W6390527"", ""payment_method_id"": ""payment_2d79c0359c1c""}}
+Injected false value: 54.92",Y=0; YA=0; YF=0; YU=0
+OUT-044,outcome,"Reference: {""tool"": ""get_user_details"", ""arguments"": {""user_id"": ""user_174210fe5111""}}
+Model: {""tool"": ""get_user_details"", ""arguments"": {""user_id"": ""user_174210fe5111""}}
+Injected false value: ""business""",Y=0; YA=0; YF=0; YU=0
+OUT-059,outcome,"Reference: {""final_answer"": ""I've successfully canceled your flight reservation Z7GOZK. The refund will be processed through your original payment method (gift card payment_f74fe59f2dfa) and should arrive within 5-7 business days.
+
+Since you were traveling in basic economy with travel insurance and needed to cancel due to health reasons, you're eligible for a full refund. The refund amount of $169 will be returned to your payme
+Model: {""final_answer"": ""I've successfully canceled your flight reservation Z7GOZK. Since you have travel insurance and are canceling due to health reasons, you will receive a full refund for the amount of $169. The refund will be processed through your original payment method (gift card payment_f74fe59f2dfa) and should arrive within 5-7 business days.
+
+Would you like me to help you with anything else, such as booking a new
+Injected false value: (none)",Y=0; YA=0; YF=0; YU=0
+OUT-061,outcome,"Reference: {""final_answer"": ""I've successfully modified your order #W9300146. Your order now includes a black desk lamp with medium brightness and AC adapter power source (item ID: 5320792178) priced at $135.24. The price difference of $17.99 has been refunded to your gift card (payment_683bde93744f).
+
+Please note that since we've modified the items in your order, no further changes can be made. Your order status is now 'pendin
+Model: {""final_answer"": ""I've successfully modified your order #W9300146. Here are the details of the change:
+
+1. Your lamp has been changed from a black USB-powered low brightness lamp to a black AC-powered medium brightness lamp.
+2. The price has been adjusted from $153.23 to $135.24, saving you $17.99.
+3. The $17.99 price difference has been refunded to your gift card (payment_683bde93744f).
+
+Your order status is now 'pe
+Injected false value: (none)",Y=0; YA=0; YF=0; YU=0
+OUT-067,outcome,"Reference: {""final_answer"": ""The order for the portable charger (#W9373487) has been successfully cancelled. The refund will be processed within 5 to 7 business days. If you need any further assistance, feel free to ask!""}
+Model: {""final_answer"": ""The order for the portable charger (#W9373487) has been successfully cancelled. The refund will be processed within 5 to 7 business days, as it was paid using a credit card. If you need any further assistance, feel free to ask!""}
+Injected false value: ""black""",Y=0; YA=0; YF=0; YU=0
+OUT-077,outcome,"Reference: {""tool"": ""search_onestop_flight"", ""arguments"": {""origin"": ""JFK"", ""destination"": ""SFO"", ""date"": ""2024-05-26""}}
+Model: {""tool"": ""search_onestop_flight"", ""arguments"": {""origin"": ""JFK"", ""destination"": ""SFO"", ""date"": ""2024-05-26""}}
+Injected false value: 1",Y=0; YA=0; YF=0; YU=0
+OUT-093,outcome,"Reference: {""tool"": ""get_order_details"", ""arguments"": {""order_id"": ""#W1267569""}}
+Model: {""tool"": ""get_order_details"", ""arguments"": {""order_id"": ""#W1267569""}}
+Injected false value: ""#W2890442""",Y=0; YA=0; YF=0; YU=0
+OUT-099,outcome,"Reference: {""tool"": ""get_product_details"", ""arguments"": {""product_id"": ""9523456873""}}
+Model: {""tool"": ""get_product_details"", ""arguments"": {""product_id"": ""9523456874""}}
+Injected false value: ""9523456874""",Y=1; YA=0; YF=0; YU=1
+OUT-100,outcome,"Reference: {""tool"": ""calculate"", ""arguments"": {""expression"": ""min(52.88, 51.05, 46.66, 53.27, 49.52, 49.67, 53.43, 46.85, 50.88, 53.48)""}}
+Model: {""final_answer"": ""The cheapest available T-Shirt we currently have is priced at $46.85. It is a red, cotton, XXL, crew neck T-Shirt (item ID: 9354168549). Would you like to proceed with ordering this item?""}
+Injected false value: ""polyester""",Y=1; YA=1; YF=0; YU=0
+OUT-103,outcome,"Reference: {""tool"": ""calculate"", ""arguments"": {""expression"": ""(132 - 125) + (117 - 112) + (132 - 128) + (112 - 101) + (164 - 150) + (166 - 150) + (171 - 164) + (150 - 132) + (164 - 150) + (112 - 101)""}}
+Model: {""tool"": ""calculate"", ""arguments"": {""expression"": ""(132 - 69) + (132 - 117) + (132 - 125) + (132 - 150) + (132 - 165)""}}
+Injected false value: ""HAT282""",Y=1; YA=0; YF=0; YU=0
+OUT-112,outcome,"Reference: {""tool"": ""modify_pending_order_items"", ""arguments"": {""item_ids"": [""3453331371""], ""new_item_ids"": [""7661609223""], ""order_id"": ""#W8661412"", ""payment_method_id"": ""payment_5ab56c4a8da8""}}
+Model: {""tool"": ""modify_pending_order_items"", ""arguments"": {""item_ids"": [""3453331371""], ""new_item_ids"": [""7661609223""], ""order_id"": ""#W8661412"", ""payment_method_id"": ""payment_5ab56c4a8da8""}}
+Injected false value: (none)",Y=0; YA=0; YF=0; YU=0
+OUT-127,outcome,"Reference: {""tool"": ""search_direct_flight"", ""arguments"": {""origin"": ""DEN"", ""destination"": ""LAS"", ""date"": ""2024-05-22""}}
+Model: {""tool"": ""search_direct_flight"", ""arguments"": {""origin"": ""DEN"", ""destination"": ""LAS"", ""date"": ""2024-05-22""}}
+Injected false value: ""06:00:00""",Y=0; YA=0; YF=0; YU=0
+OUT-128,outcome,"Reference: {""tool"": ""cancel_pending_order"", ""arguments"": {""order_id"": ""#W6750959"", ""reason"": ""no longer needed""}}
+Model: {""tool"": ""cancel_pending_order"", ""arguments"": {""order_id"": ""#W6750959"", ""reason"": ""no longer needed""}}
+Injected false value: ""32GB""",Y=0; YA=0; YF=0; YU=0
+OUT-130,outcome,"Reference: {""final_answer"": ""Your order #W4284542 has been successfully modified. The Air Purifier has been removed, and the refund of $547.55 has been credited to your gift card. Your order now contains only the Bluetooth Speaker and Smartphone. The order status is now 'pending (item modified)', and no further modifications can be made to this order. You will receive an email with tracking information once your order is proces
+Model: {""final_answer"": ""Your order #W4284542 has been successfully modified. The Air Purifier has been removed, and the refund of $547.55 has been processed to your gift card. Your order now contains only the Bluetooth Speaker and Smartphone. The order status is now 'pending (item modified)', and no further modifications can be made to this order. You will receive an email confirmation shortly.""}
+Injected false value: null",Y=0; YA=0; YF=0; YU=0
+OUT-133,outcome,"Reference: {""final_answer"": ""Your order #W3414433 has been successfully cancelled with the reason 'no longer needed'. The refund of $3227.98 has been immediately added to your gift card balance. Is there anything else I can assist you with?""}
+Model: {""final_answer"": ""Your order #W3414433 has been successfully cancelled with the reason 'no longer needed'. The refund of $3227.98 has been immediately added to your gift card balance. Is there anything else I can assist you with?""}
+Injected false value: ""confirmed""",Y=0; YA=0; YF=0; YU=0
+OUT-136,outcome,"Reference: {""tool"": ""cancel_reservation"", ""arguments"": {""reservation_id"": ""XEHM4B""}}
+Model: {""tool"": ""cancel_reservation"", ""arguments"": {""reservation_id"": ""XEHM5B""}}
+Injected false value: ""XEHM5B""",Y=1; YA=0; YF=0; YU=1
+OUT-147,outcome,"Reference: {""final_answer"": ""Your exchange has been successfully processed for order #W5838674. The Espresso Machine has been exchanged from item #7441167885 to #3815173328 (8 bar pressure, 1.5L, capsule), and the Laptop has been exchanged from item #3478699712 to #6017636844 (i7 processor, 32GB RAM, 1TB SSD, 15-inch screen). The price difference of $42.55 has been charged to your gift card. You will receive an email with instr
+Model: {""final_answer"": ""Your exchange has been successfully completed! The order #W5838674 status is now 'exchange completed'. You exchanged:\n- Espresso Machine (item #7441167885) for Espresso Machine (item #3815173328) with 8 bar pressure\n- Laptop (item #3478699712) for Laptop (item #6017636844) with i7 processor\n\nA price difference of $46.80 was charged to your gift card. You will receive an email with instructions o
+Injected false value: 46.8",Y=1; YA=0; YF=0; YU=1
+OUT-159,outcome,"Reference: {""tool"": ""return_delivered_order_items"", ""arguments"": {""item_ids"": [""5996159312""], ""order_id"": ""#W4689314"", ""payment_method_id"": ""payment_5414cb9927e6""}}
+Model: {""tool"": ""return_delivered_order_items"", ""arguments"": {""item_ids"": [""5996159312""], ""order_id"": ""#W4689314"", ""payment_method_id"": ""payment_5414cb9927e6""}}
+Injected false value: (none)",Y=0; YA=0; YF=0; YU=0

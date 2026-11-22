@@ -186,3 +186,6 @@ scratch/
 .vercel
 config.bat
 node_modules
+# Annotation trial outputs
+annotations/_trial/*
+!annotations/_trial/README.md

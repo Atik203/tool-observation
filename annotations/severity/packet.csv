@@ -1,0 +1,6844 @@
+﻿item_id,domain,json_path,true_value,false_value,json_path_2,true_value_2,false_value_2,observation_excerpt,donor_continuation
+SEV-001,airline,$.destination,"""LAS""","""LAX""",$.flights[2].origin,"""LAS""","""LAX""","Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-07T19:04:46
+- destination:
+  - LAX
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-14
+    - destination:
+      - DEN
+    - flight_number:
+      - HAT238
+    - origin:
+      - ORD
+    - price:
+      - 96
+  - [1]:
+    - date:
+      - 2024-05-14
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT290
+    - origin:
+      - DEN
+    - price:
+      - 64
+  - [2]:
+    - date:
+      - 2024-05-16
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT266
+    - origin:
+      - LAX
+    - price:
+      - 70
+  - [3]:
+    - date:
+      - 2024-05-16
+    - destination:
+      - ORD
+    - flight_number:
+      - HAT044
+    - origin:
+      - IAH
+    - price:
+      - 76
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - ORD
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3444ab55f487
+    - ","{""content"":""\n\nI see that this is a basic economy round-trip reservation from Chicago (ORD) to Las Vegas (LAS). Unfortunately, I notice that your ticket is in basic economy class, which has restrictions on changes. Basic economy tickets cannot be modified according to our policy. \n\nHowever, I see that you have travel insurance on this reservation. Given that this is a family emergency and you have travel insurance, you have two options:\n\n1. You can cancel this reservation and book a new one"
+SEV-002,retail,$.items[3].name,"""Garden Hose""","""Water Bottle""",$.payment_history[1].amount,4.430000000000007,5.09,"Observation:
+- address:
+  - address1:
+    - address_344e18d2263f
+  - address2:
+    - address_e49649d20504
+  - city:
+    - address_5a59a6d68755
+  - country:
+    - USA
+  - state:
+    - FL
+  - zip:
+    - address_e0963209b43a
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 4806644905
+    - name:
+      - Vacuum Cleaner
+    - options:
+      - bagged/bagless:
+        - bagless
+      - features:
+        - cordless
+      - type:
+        - robotic
+    - price:
+      - 658.89
+    - product_id:
+      - 1762337868
+  - [1]:
+    - item_id:
+      - 8349903180
+    - name:
+      - Portable Charger
+    - options:
+      - capacity:
+        - 20000mAh
+      - color:
+        - black
+      - output:
+        - Wireless
+    - price:
+      - 102.07
+    - product_id:
+      - 6942297802
+  - [2]:
+    - item_id:
+      - 9494281769
+    - name:
+      - E-Reader
+    - options:
+      - connectiv","{""content"":""\n\nEverything has been taken care of! Here's a summary of what's been completed:\n\n1. Skateboard Exchange:\n   - Your order #W3792453 is now marked for exchange\n   - You'll receive email instructions for returning your current 31-inch skateboard\n   - The new 28-inch bamboo skateboard with graphic design will be sent to you\n   - A refund of $20.70 will be processed to your PayPal account\n\n2. Garden Hose Modification:\n   - Your pending order #W2575533 has been updated with the "
+SEV-003,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-03T06:57:21
+- destination:
+  - DFW
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-10
+    - destination:
+      - DFW
+    - flight_number:
+      - HAT231
+    - origin:
+      - EWR
+    - price:
+      - 123
+  - [1]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT142
+    - origin:
+      - DFW
+    - price:
+      - 192
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - EWR
+- passengers:
+  - [0]:
+    - dob:
+      - dob_22ed9bd2d413
+    - first_name:
+      - person_9830a26c6ab6
+    - last_name:
+      - person_c04e232922eb
+- payment_history:
+  - [0]:
+    - amount:
+      - 345
+    - payment_id:
+      - payment_e7f104b28455
+- reservation_id:
+  - 5BGGWZ
+- total_baggages:
+  - 1
+- user_id:
+  - user_29811ecaca36","{""content"":""I have reviewed your reservations, and here are the details:\n\n1. **Reservation ID: MFRB94**\n   - **Trip Type:** Round Trip\n   - **Origin:** MCO\n   - **Destination:** LGA\n   - **Dates:** May 27, 2024 - May 30, 2024\n\n2. **Reservation ID: PUNERT**\n   - **Trip Type:** One Way\n   - **Origin:** BOS\n   - **Destination:** DEN\n   - **Date:** May 22, 2024\n\n3. **Reservation ID: HSR97W**\n   - **Trip Type:** One Way\n   - **Origin:** ORD\n   - **Destination:** SFO\n   - **Date:** M"
+SEV-004,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- [0]:
+  - [0]:
+    - available_seats:
+      - basic_economy:
+        - 12
+      - business:
+        - 5
+      - economy:
+        - 14
+    - date:
+      - 2024-05-28
+    - destination:
+      - ORD
+    - flight_number:
+      - HAT105
+    - origin:
+      - DEN
+    - prices:
+      - basic_economy:
+        - 84
+      - business:
+        - 440
+      - economy:
+        - 132
+    - scheduled_arrival_time_est:
+      - 10:00:00
+    - scheduled_departure_time_est:
+      - 08:00:00
+    - status:
+      - available
+  - [1]:
+    - available_seats:
+      - basic_economy:
+        - 13
+      - business:
+        - 2
+      - economy:
+        - 5
+    - date:
+      - 2024-05-28
+    - destination:
+      - PHL
+    - flight_number:
+      - HAT139
+    - origin:
+      - ORD
+    - prices:
+      - basic_economy:
+        - 52
+      - business:
+        - 370
+      - economy:
+        - 115
+    - scheduled","{""content"":""\n\n<antml:function_calls>\n<antml:invoke name=\""think\"">\n<antml:parameter name=\""thought\"">Let me calculate the estimated refund for each reservation based on the difference between business and economy class:\n\n1. JG7FMM (2 passengers):\nOriginal business price paid: $7,136\nNew economy price (approx): $140 + $101 = $241 per person\nRefund estimate: $7,136 - ($241 * 2) = $6,654\n\n2. 2FBBAH (1 passenger, round trip):\nOriginal business price paid: $4,420\nNew economy price (appro"
+SEV-005,retail,$.items[1].item_id,"""8886009523""","""8886009524""",$.items[2].options.strap material,"""metal""","""silicone""","Observation:
+- address:
+  - address1:
+    - address_03377611f0e2
+  - address2:
+    - address_49756be83b11
+  - city:
+    - address_90b9a8242756
+  - country:
+    - USA
+  - state:
+    - NY
+  - zip:
+    - address_253fb4046eb8
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 7869640094
+    - name:
+      - Jigsaw Puzzle
+    - options:
+      - difficulty level:
+        - expert
+      - pieces:
+        - 2000
+      - theme:
+        - animals
+    - price:
+      - 47.59
+    - product_id:
+      - 1808611083
+  - [1]:
+    - item_id:
+      - 8886009524
+    - name:
+      - Wristwatch
+    - options:
+      - dial color:
+        - blue
+      - strap material:
+        - silicone
+    - price:
+      - 1944.02
+    - product_id:
+      - 6066914160
+  - [2]:
+    - item_id:
+      - 9112290483
+    - name:
+      - Wristwatch
+    - options:
+      - dial color:
+        - blue
+      - strap ma","{""content"":""\n\nGreat, the shipping address has been updated. Now, for the watch change, I need your confirmation. Please confirm (yes) if you want to:\n- Change the silicone strap watch with blue dial (item ID: 8886009523) to\n- Metal strap watch with white dial (item ID: 2407258246)\n\nThe price difference of $121.20 will be refunded to your credit card (ending in 1065). Would you like to proceed with this change?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-006,airline,$[0].available_seats.economy,14,15,,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 8
+    - business:
+      - 6
+    - economy:
+      - 15
+  - destination:
+    - SFO
+  - flight_number:
+    - HAT023
+  - origin:
+    - JFK
+  - prices:
+    - basic_economy:
+      - 69
+    - business:
+      - 364
+    - economy:
+      - 162
+  - scheduled_arrival_time_est:
+    - 20:00:00
+  - scheduled_departure_time_est:
+    - 14:00:00
+  - status:
+    - available","{""content"":""\n\n<antml:function_calls>\n<antml:invoke name=\""search_direct_flight\"">\n<antml:parameter name=\""origin\"">SFO</antml:parameter>\n<antml:parameter name=\""destination\"">JFK</antml:parameter>\n<antml:parameter name=\""date\"">2024-05-28</antml:parameter>\n</antml:invoke>\n</antml:function_calls>"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":[{""function"":{""arguments"":{""date"":""2024-05-28"",""destination"":""JFK"",""origin"":""SFO""},""name"":""search_direct_flight""},""id"":""0""}]}"
+SEV-007,airline,$.nonfree_baggages,0,1,,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-08T14:32:07
+- destination:
+  - DFW
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-26
+    - destination:
+      - DFW
+    - flight_number:
+      - HAT113
+    - origin:
+      - SEA
+    - price:
+      - 117
+  - [1]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - ATL
+    - flight_number:
+      - HAT282
+    - origin:
+      - DFW
+    - price:
+      - 140
+  - [2]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT239
+    - origin:
+      - ATL
+    - price:
+      - 158
+- insurance:
+  - no
+- nonfree_baggages:
+  - 1
+- origin:
+  - SEA
+- passengers:
+  - [0]:
+    - dob:
+      - dob_79501dbc6dd0
+    - first_name:
+      - person_b1a38147d887
+    - last_name:
+      - person_396a7857ea92
+  - [1]:
+    - dob:
+      - dob_9262f2637fbb
+    - first_name:
+      - perso","{""content"":""Your reservation UM3OG5 is a round-trip from Seattle (SEA) to Dallas (DFW) with a stop in Atlanta (ATL). Here are the details:\n\n- **Flights:**\n  - SEA to DFW on 2024-05-26, Flight HAT113\n  - DFW to ATL on 2024-05-28, Flight HAT282\n  - ATL to SEA on 2024-05-28, Flight HAT239\n\n- **Cabin:** Economy\n- **Passengers:**\n  - Omar Rossi (DOB: 1970-06-06)\n  - Liam Lee (DOB: 1989-08-12)\n\n- **Baggage:** 0 checked bags\n- **Insurance:** No\n- **Payment:** Paid with a gift card (ID: gi"
+SEV-008,retail,$.items[2].options.color,"""grey""","""black""",,,,"Observation:
+- address:
+  - address1:
+    - address_8b57ed64e98f
+  - address2:
+    - address_e9c32904b038
+  - city:
+    - address_32b762631aef
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_6868d2e3b7f6
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 7602931732
+      - [1]:
+        - 9570044148
+      - [2]:
+        - 6857426243
+    - tracking_id:
+      - [0]:
+        - 907614527588
+- items:
+  - [0]:
+    - item_id:
+      - 7602931732
+    - name:
+      - Electric Kettle
+    - options:
+      - capacity:
+        - 1L
+      - color:
+        - black
+      - material:
+        - stainless steel
+    - price:
+      - 153.25
+    - product_id:
+      - 1075968781
+  - [1]:
+    - item_id:
+      - 9570044148
+    - name:
+      - Mechanical Keyboard
+    - options:
+      - backlight:
+        - none
+      - size:
+        - full size
+      - switch type:
+        - linear
+  ","{""content"":""\n\nI've found your orders. Let me break down what I've found:\n\n1. Skateboard - Found in order #W3792453 (delivered) - $200.80\n2. Garden Hose - Found in order #W7181492 (delivered) - $96.35\n3. Backpack - Found in order #W7181492 (delivered) - $193.38\n4. Keyboard - Found in order #W5565470 (delivered) - $231.37\n5. Pet Bed - Found in order #W5565470 (delivered) - $196.53\n\nThe total potential refund amount would be $918.43. All these items are from delivered orders and are eligi"
+SEV-009,airline,$.flights[2].origin,"""SEA""","""SFO""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-14T16:03:16
+- destination:
+  - SFO
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-26
+    - destination:
+      - SFO
+    - flight_number:
+      - HAT023
+    - origin:
+      - JFK
+    - price:
+      - 53
+  - [1]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT204
+    - origin:
+      - SFO
+    - price:
+      - 71
+  - [2]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - JFK
+    - flight_number:
+      - HAT021
+    - origin:
+      - SFO
+    - price:
+      - 65
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - JFK
+- passengers:
+  - [0]:
+    - dob:
+      - dob_21a586e8517b
+    - first_name:
+      - person_848a59ec306a
+    - last_name:
+      - person_8470850ea7ae
+  - [1]:
+    - dob:
+      - dob_17f7bcc9de3f
+    - first_name:
+      - pe","{""content"":""\n\nI notice this is a round trip reservation from JFK to SFO (with a connection through SEA on the return) for 3 passengers. Let me search for direct business class flights for your dates.\n\n<antml:function_calls>\n<antml:invoke name=\""search_direct_flight\"">\n<antml:parameter name=\""origin\"">JFK</antml:parameter>\n<antml:parameter name=\""destination\"">SFO</antml:parameter>\n<antml:parameter name=\""date\"">2024-05-26</antml:parameter>\n</antml:invoke>\n</antml:function_calls>"",""role"
+SEV-010,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_faea6be3dbc9
+  - address2:
+    - address_d5dc6cd3f676
+  - city:
+    - address_2ae9064ebecc
+  - country:
+    - USA
+  - state:
+    - WA
+  - zip:
+    - address_d546d9868948
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 3358616356
+    - tracking_id:
+      - [0]:
+        - 758823963547
+- items:
+  - [0]:
+    - item_id:
+      - 3358616356
+    - name:
+      - Cycling Helmet
+    - options:
+      - color:
+        - red
+      - size:
+        - S
+      - ventilation:
+        - low
+    - price:
+      - 197.33
+    - product_id:
+      - 7765186836
+- order_id:
+  - #W3947049
+- payment_history:
+  - [0]:
+    - amount:
+      - 197.33
+    - payment_method_id:
+      - payment_5ace3483191d
+    - transaction_type:
+      - payment
+- status:
+  - delivered
+- user_id:
+  - user_78626c8e481c","{""content"":""\n\nI found your helmet! It's in order #W3947049. The order details show:\n- A red Cycling Helmet, size S, with low ventilation\n- The order has been delivered\n- It was purchased for $197.33\n\nSince the order is delivered, we can proceed with the exchange. Could you please tell me what specific options you'd like for the new helmet? I'll need to know what size, color, and ventilation level you prefer for the exchange.\n\n<antml:function_calls>\n<antml:invoke name=\""get_product_deta"
+SEV-011,retail,$.items[0].price,109.27,125.66,$.status,"""cancelled""","""confirmed""","Observation:
+- address:
+  - address1:
+    - address_53d5d3194acd
+  - address2:
+    - address_36dc305a81e5
+  - city:
+    - address_551a9c288929
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_a0954980b7f9
+- cancel_reason:
+  - no longer needed
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 4063401924
+    - name:
+      - Portable Charger
+    - options:
+      - capacity:
+        - 20000mAh
+      - color:
+        - blue
+      - output:
+        - Wireless
+    - price:
+      - 125.66
+    - product_id:
+      - 6942297802
+- order_id:
+  - #W9373487
+- payment_history:
+  - [0]:
+    - amount:
+      - 109.27
+    - payment_method_id:
+      - payment_8382a4697604
+    - transaction_type:
+      - payment
+  - [1]:
+    - amount:
+      - 109.27
+    - payment_method_id:
+      - payment_8382a4697604
+    - transaction_type:
+      - refund
+- status:
+  - confirmed
+- us","{""content"":""The order for the portable charger has been successfully cancelled, and the amount of $109.27 has been refunded to your gift card balance. If there's anything else you need help with, feel free to let me know!"",""role"":""assistant""}"
+SEV-012,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_fd54f6281f4f
+  - address2:
+    - address_f3797ccaa261
+  - city:
+    - address_2ae9064ebecc
+  - country:
+    - USA
+  - state:
+    - WA
+  - zip:
+    - address_c361c3f60def
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 5855700373
+    - name:
+      - Bluetooth Speaker
+    - options:
+      - battery life:
+        - 10 hours
+      - color:
+        - black
+      - water resistance:
+        - yes
+    - price:
+      - 293.46
+    - product_id:
+      - 4768869376
+  - [1]:
+    - item_id:
+      - 3076708684
+    - name:
+      - Air Purifier
+    - options:
+      - features:
+        - quiet operation
+      - filter type:
+        - HEPA
+      - room size:
+        - medium
+    - price:
+      - 535.97
+    - product_id:
+      - 3821016478
+- order_id:
+  - #W6729841
+- payment_history:
+  - [0]:
+    - amount:
+      - 829.43
+    - pa","{""content"":""Your most recent order, with order ID #W6729841, had a total payment of $829.43. If you need any more details or assistance, feel free to ask!"",""role"":""assistant""}"
+SEV-013,airline,$[1].flight_number,"""HAT136""","""HAT137""",,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 10
+    - business:
+      - 19
+    - economy:
+      - 20
+  - destination:
+    - ATL
+  - flight_number:
+    - HAT057
+  - origin:
+    - JFK
+  - prices:
+    - basic_economy:
+      - 62
+    - business:
+      - 480
+    - economy:
+      - 109
+  - scheduled_arrival_time_est:
+    - 09:30:00
+  - scheduled_departure_time_est:
+    - 07:00:00
+  - status:
+    - available
+- [1]:
+  - available_seats:
+    - basic_economy:
+      - 15
+    - business:
+      - 3
+    - economy:
+      - 17
+  - destination:
+    - ATL
+  - flight_number:
+    - HAT137
+  - origin:
+    - JFK
+  - prices:
+    - basic_economy:
+      - 67
+    - business:
+      - 209
+    - economy:
+      - 156
+  - scheduled_arrival_time_est:
+    - 21:30:00
+  - scheduled_departure_time_est:
+    - 19:00:00
+  - status:
+    - available
+- [2]:
+  - available_seats:
+    - basic_economy:
+     ","{""content"":""\n\nHere are the flight durations for your upcoming trips:\n\n1. KC18K6 (May 21):\n   - MSP to EWR: 3 hours\n   - EWR to CLT: 2 hours\n\n2. S61CZX (May 23-25):\n   - LAX to EWR: 5 hours 30 minutes (long-haul flight)\n   - EWR to CLT: 2 hours\n   - CLT to EWR: 2 hours\n   - EWR to LAX: 5 hours 30 minutes (long-haul flight)\n\n3. H8Q05L (May 24):\n   - JFK to ATL: 2 hours 30 minutes\n\n4. NM1VX1 (May 25-27):\n   - MSP to EWR: 3 hours\n   - EWR to MSP: 3 hours\n\nThe longest flights are"
+SEV-014,airline,$.origin,"""EWR""","""IAH""",$.destination,"""LAX""","""LGA""","Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-09T13:43:03
+- destination:
+  - LGA
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-21
+    - destination:
+      - MIA
+    - flight_number:
+      - HAT202
+    - origin:
+      - EWR
+    - price:
+      - 94
+  - [1]:
+    - date:
+      - 2024-05-21
+    - destination:
+      - LAX
+    - flight_number:
+      - HAT232
+    - origin:
+      - MIA
+    - price:
+      - 80
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - IAH
+- passengers:
+  - [0]:
+    - dob:
+      - dob_bc1f942e5393
+    - first_name:
+      - person_94655e5080be
+    - last_name:
+      - person_396a7857ea92
+  - [1]:
+    - dob:
+      - dob_d21ea6114eee
+    - first_name:
+      - person_e02be86c347a
+    - last_name:
+      - person_270469b8f4f7
+  - [2]:
+    - dob:
+      - dob_549388717c67
+    - first_name:
+      - person_e3f8ede96ad0
+    - ","{""content"":""\n\nI see your current flight is from EWR to LAX with a connection in MIA on May 21st. However, I notice this is a basic economy ticket, which unfortunately cannot be modified according to our policy. The only options for basic economy tickets are:\n\n1. Cancel within 24 hours of booking (which has passed since this was booked on May 9th)\n2. Cancel if you have travel insurance (which wasn't purchased for this reservation)\n\nGiven your situation with your mother's health, I would re"
+SEV-015,airline,$[1].scheduled_arrival_time_est,"""21:00:00""","""19:00:00""",,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 7
+    - business:
+      - 7
+    - economy:
+      - 1
+  - destination:
+    - PHL
+  - flight_number:
+    - HAT139
+  - origin:
+    - ORD
+  - prices:
+    - basic_economy:
+      - 65
+    - business:
+      - 395
+    - economy:
+      - 114
+  - scheduled_arrival_time_est:
+    - 19:00:00
+  - scheduled_departure_time_est:
+    - 17:00:00
+  - status:
+    - available
+- [1]:
+  - available_seats:
+    - basic_economy:
+      - 20
+    - business:
+      - 14
+    - economy:
+      - 3
+  - destination:
+    - PHL
+  - flight_number:
+    - HAT271
+  - origin:
+    - ORD
+  - prices:
+    - basic_economy:
+      - 83
+    - business:
+      - 338
+    - economy:
+      - 174
+  - scheduled_arrival_time_est:
+    - 19:00:00
+  - scheduled_departure_time_est:
+    - 19:00:00
+  - status:
+    - available
+- [2]:
+  - available_seats:
+    - basic_economy:
+      - ","{""content"":""\n\nI found three direct flights available on May 26th from Chicago O'Hare to Philadelphia:\n\n1. HAT289: Departure 5:00 AM EST, Arrival 7:00 AM EST\n   - Basic Economy: $83\n   - Economy: $161\n   - Business: $253\n\n2. HAT139: Departure 5:00 PM EST, Arrival 7:00 PM EST\n   - Basic Economy: $65\n   - Economy: $114\n   - Business: $395\n\n3. HAT271: Departure 7:00 PM EST, Arrival 9:00 PM EST\n   - Basic Economy: $83\n   - Economy: $174\n   - Business: $338\n\nTo proceed with the book"
+SEV-016,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-05T05:10:43
+- destination:
+  - PHX
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-20
+    - destination:
+      - DTW
+    - flight_number:
+      - HAT176
+    - origin:
+      - CLT
+    - price:
+      - 51
+  - [1]:
+    - date:
+      - 2024-05-20
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT097
+    - origin:
+      - DTW
+    - price:
+      - 77
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - CLT
+- passengers:
+  - [0]:
+    - dob:
+      - dob_1fec4f2ee5c2
+    - first_name:
+      - person_9830a26c6ab6
+    - last_name:
+      - person_3022484ca3b6
+- payment_history:
+  - [0]:
+    - amount:
+      - 128
+    - payment_id:
+      - payment_de833e4c900c
+- reservation_id:
+  - PEP4E0
+- total_baggages:
+  - 0
+- user_id:
+  - user_38832f4366d3","{""content"":""\n\nI've checked your reservation a third time, and I must confirm that the records definitively show:\n1. Your total payment was $128 (which only covers the flight costs: $51 for CLT-DTW + $77 for DTW-PHX)\n2. If insurance had been purchased, there would be an additional $30 charge in your payment history\n3. The insurance status is explicitly marked as \""no\"" in the system\n\nEven though your sister helped you book it at the same time as other family members, each reservation is pr"
+SEV-017,retail,$.order_id,"""#W9389413""","""#W9389414""",,,,"Observation:
+- address:
+  - address1:
+    - address_afbedca862fd
+  - address2:
+    - address_cb45e455df82
+  - city:
+    - address_353b2efe8697
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_6fcbffdc3b85
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 4127323219
+      - [1]:
+        - 2554056026
+      - [2]:
+        - 6342039236
+      - [3]:
+        - 5047954489
+    - tracking_id:
+      - [0]:
+        - 967556659983
+- items:
+  - [0]:
+    - item_id:
+      - 4127323219
+    - name:
+      - Hiking Boots
+    - options:
+      - material:
+        - synthetic
+      - size:
+        - 10
+      - waterproof:
+        - no
+    - price:
+      - 251.82
+    - product_id:
+      - 7363354090
+  - [1]:
+    - item_id:
+      - 2554056026
+    - name:
+      - Smart Watch
+    - options:
+      - band material:
+        - metal
+      - color:
+        - gold
+      - display:
+       ","{""content"":""Upon reviewing the details, it appears that the watch is not part of the delivered order #W9389413. The items in that order include a Smart Watch, but not the wristwatch you mentioned.\n\nThe wristwatch was indeed part of the cancelled order #W5199551, which is why it cannot be returned.\n\nIf you have any other questions or need further assistance, please let me know!"",""role"":""assistant""}"
+SEV-018,retail,$.items[0].name,"""Luggage Set""","""Water Bottle""",,,,"Observation:
+- address:
+  - address1:
+    - address_4787f1853955
+  - address2:
+    - address_144f86e21aef
+  - city:
+    - address_6d5e0028676a
+  - country:
+    - USA
+  - state:
+    - AZ
+  - zip:
+    - address_c3a17f8d4a62
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 7160999700
+    - name:
+      - Water Bottle
+    - options:
+      - color:
+        - red
+      - material:
+        - softshell
+      - piece count:
+        - 2-piece
+    - price:
+      - 499.29
+    - product_id:
+      - 5426915165
+  - [1]:
+    - item_id:
+      - 9320099340
+    - name:
+      - Smart Watch
+    - options:
+      - band material:
+        - leather
+      - color:
+        - black
+      - display:
+        - AMOLED
+    - price:
+      - 375.03
+    - product_id:
+      - 6945232052
+  - [2]:
+    - item_id:
+      - 9665100170
+    - name:
+      - Jigsaw Puzzle
+    - options:
+      - difficulty le","{""content"":""I found your pending order #W3361211, which includes a \""Luggage Set.\"" However, please note that you can only modify items to a new item of the same product type with different options. You cannot change the product type, such as from a luggage set to a coat.\n\nIf you would like to modify the options of the luggage set, please let me know the new options you prefer. If you need further assistance, feel free to ask!"",""role"":""assistant""}"
+SEV-019,airline,$.cabin,"""economy""","""business""",,,,"Observation:
+- cabin:
+  - business
+- created_at:
+  - 2024-05-12T09:36:29
+- destination:
+  - MCO
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-22
+    - destination:
+      - ATL
+    - flight_number:
+      - HAT268
+    - origin:
+      - JFK
+    - price:
+      - 430
+  - [1]:
+    - date:
+      - 2024-05-22
+    - destination:
+      - MCO
+    - flight_number:
+      - HAT010
+    - origin:
+      - ATL
+    - price:
+      - 412
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - JFK
+- passengers:
+  - [0]:
+    - dob:
+      - dob_29c001393af3
+    - first_name:
+      - person_0f41e336893e
+    - last_name:
+      - person_226ee52c0f7e
+  - [1]:
+    - dob:
+      - dob_35d51f793f61
+    - first_name:
+      - person_1d41ab69e607
+    - last_name:
+      - person_4fd85f5dd4fd
+- payment_history:
+  - [0]:
+    - amount:
+      - 490
+    - payment_id:
+      - payment_1ea0cea98938","{""content"":""\n\nYour reservation has been successfully upgraded to business class. Here's a summary of the changes:\n- Cabin class changed from economy to business\n- The fare difference has been charged to your credit card ending in 7334\n- Your baggage allowance as a silver member in business class is now 3 free checked bags per passenger\n\nIs there anything else you need assistance with?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-020,airline,$[1][1].status,"""available""","""unavailable""",,,,"Observation:
+- [0]:
+  - [0]:
+    - available_seats:
+      - basic_economy:
+        - 12
+      - business:
+        - 10
+      - economy:
+        - 14
+    - date:
+      - 2024-05-21
+    - destination:
+      - DFW
+    - flight_number:
+      - HAT004
+    - origin:
+      - ATL
+    - prices:
+      - basic_economy:
+        - 96
+      - business:
+        - 302
+      - economy:
+        - 101
+    - scheduled_arrival_time_est:
+      - 16:00:00
+    - scheduled_departure_time_est:
+      - 14:00:00
+    - status:
+      - available
+  - [1]:
+    - available_seats:
+      - basic_economy:
+        - 16
+      - business:
+        - 5
+      - economy:
+        - 10
+    - date:
+      - 2024-05-21
+    - destination:
+      - LAX
+    - flight_number:
+      - HAT124
+    - origin:
+      - DFW
+    - prices:
+      - basic_economy:
+        - 51
+      - business:
+        - 266
+      - economy:
+        - 112
+    - schedul","{""content"":""\n\nI can see there are several flight options available. Before we proceed with any changes, I'll need to:\n\n1. Confirm you want to upgrade your cabin to economy for all flights in your itinerary\n2. Know if you want to keep your original departure flights (LAX to ATL) or if you want to modify those as well\n3. Have you provide a payment method from your profile for the cabin upgrade and any flight changes\n\nWould you please confirm these details, and let me know if you'd like to "
+SEV-021,airline,$.LAX,"""Los Angeles""","""Atlanta""",$.SFO,"""San Francisco""","""Atlanta""","Observation:
+- ATL:
+  - Atlanta
+- BOS:
+  - Boston
+- CLT:
+  - Charlotte
+- DEN:
+  - Denver
+- DFW:
+  - Dallas
+- DTW:
+  - Detroit
+- EWR:
+  - Newark
+- IAH:
+  - Houston
+- JFK:
+  - New York
+- LAS:
+  - Las Vegas
+- LAX:
+  - Atlanta
+- LGA:
+  - LaGuardia
+- MCO:
+  - Orlando
+- MIA:
+  - Miami
+- MSP:
+  - Minneapolis
+- ORD:
+  - Chicago
+- PHL:
+  - Philadelphia
+- PHX:
+  - Phoenix
+- SEA:
+  - Seattle
+- SFO:
+  - Atlanta","{""content"":""\n\nFrom New York (JFK), I can search for direct flights to these West Coast cities:\n- Los Angeles (LAX)\n- San Francisco (SFO)\n- Seattle (SEA)\n\nLet me search for flights to each destination on May 20th:\n\n<antml:function_calls>\n<antml:invoke name=\""search_direct_flight\"">\n<antml:parameter name=\""origin\"">JFK</antml:parameter>\n<antml:parameter name=\""destination\"">LAX</antml:parameter>\n<antml:parameter name=\""date\"">2024-05-20</antml:parameter>\n</antml:invoke>\n</antml:func"
+SEV-022,airline,$.flights[1].destination,"""PHX""","""SEA""",$.destination,"""PHX""","""SEA""","Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-05T12:06:15
+- destination:
+  - SEA
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-06
+    - destination:
+      - SFO
+    - flight_number:
+      - HAT034
+    - origin:
+      - LAX
+    - price:
+      - 159
+  - [1]:
+    - date:
+      - 2024-05-06
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT123
+    - origin:
+      - SFO
+    - price:
+      - 194
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - LAX
+- passengers:
+  - [0]:
+    - dob:
+      - dob_617b3a3a9e72
+    - first_name:
+      - person_c3898523b9ad
+    - last_name:
+      - person_2f8c7f5cc9bb
+- payment_history:
+  - [0]:
+    - amount:
+      - 353
+    - payment_id:
+      - payment_31b0a2670147
+- reservation_id:
+  - CYPIDV
+- total_baggages:
+  - 0
+- user_id:
+  - user_3904cbe515b2","{""content"":""\n\nI've found your reservation (3JA7XV) with the delayed flight HAT045 from Phoenix to Seattle today. I see that:\n1. This is a business class reservation\n2. There are 4 passengers on this booking\n3. This is part of a longer itinerary (PHX-SEA-BOS-MCO-PHX)\n\nSince you're flying business class and experienced a significant delay that caused you to miss your business meeting, I can help you with compensation for the inconvenience. Would you like me to:\n\n1. Issue a compensation ce"
+SEV-023,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-08T11:24:52
+- destination:
+  - SEA
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-23
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT190
+    - origin:
+      - IAH
+    - price:
+      - 126
+  - [1]:
+    - date:
+      - 2024-05-23
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT047
+    - origin:
+      - LAS
+    - price:
+      - 139
+  - [2]:
+    - date:
+      - 2024-05-26
+    - destination:
+      - JFK
+    - flight_number:
+      - HAT021
+    - origin:
+      - SEA
+    - price:
+      - 148
+  - [3]:
+    - date:
+      - 2024-05-27
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT279
+    - origin:
+      - JFK
+    - price:
+      - 114
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - IAH
+- passengers:
+  - [0]:
+    - dob:
+      - dob_8c614bb700d5
+    - fi","{""content"":""\n\nI found your reservation! You have a round-trip flight from Houston (IAH) to Seattle (SEA) on May 23rd, currently in economy class. Your return flight is through JFK on May 26th-27th.\n\nWhat changes would you like to make to your reservation? I can help you with:\n1. Changing the flight times (keeping the same cities)\n2. Upgrading or changing the cabin class\n3. Adding checked baggage\n4. Modifying passenger information\n\nPlease let me know what specific changes you'd like to "
+SEV-024,retail,$.items[1].item_id,"""3076708684""","""3076708685""",,,,"Observation:
+- address:
+  - address1:
+    - address_fd54f6281f4f
+  - address2:
+    - address_f3797ccaa261
+  - city:
+    - address_2ae9064ebecc
+  - country:
+    - USA
+  - state:
+    - WA
+  - zip:
+    - address_c361c3f60def
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 5855700373
+    - name:
+      - Bluetooth Speaker
+    - options:
+      - battery life:
+        - 10 hours
+      - color:
+        - black
+      - water resistance:
+        - yes
+    - price:
+      - 293.46
+    - product_id:
+      - 4768869376
+  - [1]:
+    - item_id:
+      - 3076708685
+    - name:
+      - Air Purifier
+    - options:
+      - features:
+        - quiet operation
+      - filter type:
+        - HEPA
+      - room size:
+        - medium
+    - price:
+      - 535.97
+    - product_id:
+      - 3821016478
+- order_id:
+  - #W6729841
+- payment_history:
+  - [0]:
+    - amount:
+      - 829.43
+    - pa","{""content"":""Your most recent order, with order ID **#W6729841**, had a total payment of $829.43. If you need any more details or assistance, feel free to ask!"",""role"":""assistant""}"
+SEV-025,airline,$.destination,"""LAS""","""LAX""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-09T15:14:07
+- destination:
+  - LAX
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-11
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT006
+    - origin:
+      - BOS
+    - price:
+      - 87
+  - [1]:
+    - date:
+      - 2024-05-11
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT018
+    - origin:
+      - SEA
+    - price:
+      - 96
+  - [2]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT040
+    - origin:
+      - LAS
+    - price:
+      - 63
+  - [3]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - BOS
+    - flight_number:
+      - HAT253
+    - origin:
+      - SEA
+    - price:
+      - 52
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - BOS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_ef550abdc724
+    - ","{""content"":""Thank you for providing the information. I see that you have a reservation with ID \""4OG6T3\"" for a round-trip flight from Boston (BOS) to Las Vegas (LAS) with a stop in Seattle (SEA). Since you are a gold member and have travel insurance, I can offer you a certificate as compensation for the delay.\n\nWould you like me to proceed with issuing a $50 certificate for the inconvenience? Please confirm if you would like to proceed."",""role"":""assistant""}"
+SEV-026,airline,$.flights[1].origin,"""CLT""","""DEN""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-07T18:40:38
+- destination:
+  - DTW
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-15
+    - destination:
+      - CLT
+    - flight_number:
+      - HAT043
+    - origin:
+      - EWR
+    - price:
+      - 67
+  - [1]:
+    - date:
+      - 2024-05-15
+    - destination:
+      - DTW
+    - flight_number:
+      - HAT167
+    - origin:
+      - DEN
+    - price:
+      - 78
+  - [2]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - MSP
+    - flight_number:
+      - HAT210
+    - origin:
+      - DTW
+    - price:
+      - 84
+  - [3]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT141
+    - origin:
+      - MSP
+    - price:
+      - 57
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - EWR
+- passengers:
+  - [0]:
+    - dob:
+      - dob_494b198e249a
+    - f","{""content"":""\n\nBefore proceeding with the cancellation, I need to check a few things based on the reservation details:\n1. This is a basic economy reservation\n2. It was booked on May 7, 2024 (more than 24 hours ago)\n3. There is no travel insurance\n4. Some flights are scheduled for today (May 15, 2024)\n\nGiven that this is a basic economy reservation booked more than 24 hours ago without travel insurance, I regret to inform you that I cannot cancel this reservation according to our cancellat"
+SEV-027,airline,$.destination,"""PHX""","""SEA""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-05T05:10:43
+- destination:
+  - SEA
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-20
+    - destination:
+      - DTW
+    - flight_number:
+      - HAT176
+    - origin:
+      - CLT
+    - price:
+      - 51
+  - [1]:
+    - date:
+      - 2024-05-20
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT097
+    - origin:
+      - DTW
+    - price:
+      - 77
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - CLT
+- passengers:
+  - [0]:
+    - dob:
+      - dob_1fec4f2ee5c2
+    - first_name:
+      - person_9830a26c6ab6
+    - last_name:
+      - person_3022484ca3b6
+- payment_history:
+  - [0]:
+    - amount:
+      - 128
+    - payment_id:
+      - payment_de833e4c900c
+- reservation_id:
+  - PEP4E0
+- total_baggages:
+  - 0
+- user_id:
+  - user_38832f4366d3","{""content"":""\n\nI can see from your reservation details that travel insurance was not purchased for this reservation. The reservation shows:\n- Reservation ID: PEP4E0\n- One-way flight from CLT to PHX on May 20, 2024\n- Basic Economy cabin\n- Insurance status: No\n\nIf you believe you purchased insurance but it's not showing up, I'll need to transfer you to a human agent who can investigate this discrepancy with the payment records.\n\n<antml:function_calls>\n<antml:invoke name=\""transfer_to_hum"
+SEV-028,airline,$.payment_history[0].amount,348,400,$.flights[0].destination,"""PHL""","""PHX""","Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-15T15:00:00
+- destination:
+  - PHL
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-26
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT271
+    - origin:
+      - ORD
+    - price:
+      - 174
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - ORD
+- passengers:
+  - [0]:
+    - dob:
+      - dob_7390c6561d97
+    - first_name:
+      - person_9830a26c6ab6
+    - last_name:
+      - person_8470850ea7ae
+  - [1]:
+    - dob:
+      - dob_410ad7af8e65
+    - first_name:
+      - person_f50dff648997
+    - last_name:
+      - person_469a3952e144
+- payment_history:
+  - [0]:
+    - amount:
+      - 400
+    - payment_id:
+      - payment_a5876d5ae693
+- reservation_id:
+  - HATHAT
+- total_baggages:
+  - 0
+- user_id:
+  - user_102f248232b4","{""content"":""\n\nGreat news! Your flight has been successfully booked. Here are your reservation details:\n\nReservation ID: HATHAT\n- Flight: HAT271 on May 26th, 2024\n- Chicago O'Hare (ORD) to Philadelphia (PHL)\n- Departure: 7:00 PM EST\n- Arrival: 9:00 PM EST\n- Passengers: Sophia Silva and Kevin Smith\n- Total paid: $348 (charged to credit card ending in 7238)\n\nYour confirmation details have been sent to your email at [email redacted] Is there anything else you need assistance"
+SEV-029,airline,$.reservation_id,"""HATHAT""","""HATHAA""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-15T15:00:00
+- destination:
+  - LAS
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-16
+    - destination:
+      - DEN
+    - flight_number:
+      - HAT238
+    - origin:
+      - ORD
+    - price:
+      - 71
+  - [1]:
+    - date:
+      - 2024-05-16
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT084
+    - origin:
+      - DEN
+    - price:
+      - 85
+  - [2]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT266
+    - origin:
+      - LAS
+    - price:
+      - 54
+  - [3]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - ORD
+    - flight_number:
+      - HAT044
+    - origin:
+      - IAH
+    - price:
+      - 60
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - ORD
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3444ab55f487
+    - ","{""content"":""\n\nYour reservation has been successfully booked! Here are the details:\n\nReservation ID: HATHAT\nTotal paid: $300 (charged to your credit card ending in 8056)\n\nItinerary:\n1. May 16, 2024:\n   - HAT238: ORD to DEN, departure 2:00 AM\n   - HAT084: DEN to LAS, arrival 6:00 AM\n\n2. May 18, 2024:\n   - HAT266: LAS to IAH, departure 1:00 PM\n   - HAT044: IAH to ORD, arrival 10:30 PM\n\nThe reservation includes travel insurance, and you can cancel or modify your reservation if needed"
+SEV-030,retail,$.status,"""pending""","""delivered""",$.items[4].name,"""Action Camera""","""Water Bottle""","Observation:
+- address:
+  - address1:
+    - address_afbedca862fd
+  - address2:
+    - address_cb45e455df82
+  - city:
+    - address_353b2efe8697
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_6fcbffdc3b85
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 5855700373
+    - name:
+      - Bluetooth Speaker
+    - options:
+      - battery life:
+        - 10 hours
+      - color:
+        - black
+      - water resistance:
+        - yes
+    - price:
+      - 293.46
+    - product_id:
+      - 4768869376
+  - [1]:
+    - item_id:
+      - 9408160950
+    - name:
+      - Smart Watch
+    - options:
+      - band material:
+        - leather
+      - color:
+        - gold
+      - display:
+        - LCD
+    - price:
+      - 381.26
+    - product_id:
+      - 6945232052
+  - [2]:
+    - item_id:
+      - 4422467033
+    - name:
+      - Dumbbell Set
+    - options:
+      - materia","{""content"":""\n\nI can help you modify the delivery address for your order since it's still in \""pending\"" status. Could you please provide the new delivery address details? I'll need:\n1. Street address (address line 1)\n2. Apartment/Suite number if applicable (address line 2)\n3. City\n4. State\n5. ZIP code\n6. Country\n\nPlease provide these details so I can update the shipping address for your order."",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-031,retail,$.address.state,"""IN""","""IA""",$.payment_history[0].amount,1023.16,1176.63,"Observation:
+- address:
+  - address1:
+    - address_74a5dd7c896b
+  - address2:
+    - address_88308d86e380
+  - city:
+    - address_c6502b0406c2
+  - country:
+    - USA
+  - state:
+    - IA
+  - zip:
+    - address_dd2a23b88d94
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 4579334072
+      - [1]:
+        - 1421289881
+      - [2]:
+        - 6117189161
+      - [3]:
+        - 4947717507
+    - tracking_id:
+      - [0]:
+        - 574297338433
+- items:
+  - [0]:
+    - item_id:
+      - 4579334072
+    - name:
+      - Water Bottle
+    - options:
+      - capacity:
+        - 750ml
+      - color:
+        - black
+      - material:
+        - glass
+    - price:
+      - 54.85
+    - product_id:
+      - 8310926033
+  - [1]:
+    - item_id:
+      - 1421289881
+    - name:
+      - Mechanical Keyboard
+    - options:
+      - backlight:
+        - none
+      - size:
+        - 80%
+      - switch type:
+  ","{""content"":""\n\nI've processed the return for the first order (#W5490111). The refund of $1,023.16 will be issued to your credit card ending in 7285 within 5-7 business days. You'll receive an email with instructions on how to return the items.\n\nNow for the second order (#W7387996), would you like to proceed with returning the Gaming Mouse, with the refund of $158.89 going back to your PayPal account? Please confirm with \""yes\"" to proceed."",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":"
+SEV-032,airline,$.insurance,"""yes""","""no""",$.origin,"""JFK""","""LAS""","Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-03T15:12:00
+- destination:
+  - ATL
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-24
+    - destination:
+      - ATL
+    - flight_number:
+      - HAT268
+    - origin:
+      - JFK
+    - price:
+      - 74
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - LAS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_1b4c61c66653
+    - first_name:
+      - person_63df0ede39bd
+    - last_name:
+      - person_96f25caf1b61
+- payment_history:
+  - [0]:
+    - amount:
+      - 104
+    - payment_id:
+      - payment_a5876d5ae693
+- reservation_id:
+  - H8Q05L
+- total_baggages:
+  - 0
+- user_id:
+  - user_102f248232b4","{""content"":""Your reservation is for a one-way basic economy flight from JFK to ATL on May 24, 2024, with travel insurance purchased. Since you have travel insurance, you are eligible to cancel the flight due to a change of plans.\n\nWould you like to proceed with the cancellation? Please confirm by saying \""yes.\"""",""role"":""assistant""}"
+SEV-033,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - business
+- created_at:
+  - 2024-05-14T06:33:04
+- destination:
+  - PHL
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-24
+    - destination:
+      - ORD
+    - flight_number:
+      - HAT227
+    - origin:
+      - ATL
+    - price:
+      - 112
+  - [1]:
+    - date:
+      - 2024-05-24
+    - destination:
+      - PHL
+    - flight_number:
+      - HAT139
+    - origin:
+      - ORD
+    - price:
+      - 104
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - ATL
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3fbb143d9329
+    - first_name:
+      - person_0f41e336893e
+    - last_name:
+      - person_d837556a6b2f
+- payment_history:
+  - [0]:
+    - amount:
+      - 2787
+    - payment_id:
+      - payment_c0e52603772c
+  - [1]:
+    - amount:
+      - -2571
+    - payment_id:
+      - payment_c0e52603772c
+- reservation_id:
+  - M05KNL
+- total_baggages:
+  -","{""content"":""Your reservation has been successfully updated. Here are the new details:\n\n- **Flight 1:** ATL to ORD on flight HAT227, departing on 2024-05-24, in economy class.\n- **Flight 2:** ORD to PHL on flight HAT139, departing on 2024-05-24, in economy class.\n- **Total Cost:** $216\n- **Refund:** $2571 has been refunded to your original payment method.\n\nIf you need any further assistance, feel free to ask. Have a great trip!"",""role"":""assistant""}"
+SEV-034,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-14T09:52:38
+- destination:
+  - LGA
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-20
+    - destination:
+      - CLT
+    - flight_number:
+      - HAT243
+    - origin:
+      - PHL
+    - price:
+      - 166
+  - [1]:
+    - date:
+      - 2024-05-20
+    - destination:
+      - LGA
+    - flight_number:
+      - HAT024
+    - origin:
+      - CLT
+    - price:
+      - 162
+  - [2]:
+    - date:
+      - 2024-05-23
+    - destination:
+      - PHL
+    - flight_number:
+      - HAT206
+    - origin:
+      - LGA
+    - price:
+      - 102
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - PHL
+- passengers:
+  - [0]:
+    - dob:
+      - dob_592cc1b95ab7
+    - first_name:
+      - person_864c39c831e6
+    - last_name:
+      - person_49f0e07abd63
+- payment_history:
+  - [0]:
+    - amount:
+      - 430
+    - payment_id:
+    ","{""content"":""\n\nI've found your reservations. You have:\n\n1. MZDDS4: MIA-LAX-EWR-MIA round trip, departing May 17\n2. 60RX9E: MSP-EWR one way, departing May 25\n3. S5IK51: EWR-MSP-MCO one way, departing May 15 (today)\n4. OUEA45: LAS-PHX-DTW one way from May 12 (past flight)\n5. Q69X3R: PHL-CLT-LGA round trip, departing May 20\n\nCould you please tell me which reservation you'd like to cancel and the reason for cancellation?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-035,airline,$.flights[0].date,"""2024-05-03""","""2024-05-04""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-02T03:20:50
+- destination:
+  - DFW
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-04
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT108
+    - origin:
+      - CLT
+    - price:
+      - 156
+  - [1]:
+    - date:
+      - 2024-05-03
+    - destination:
+      - DFW
+    - flight_number:
+      - HAT213
+    - origin:
+      - EWR
+    - price:
+      - 117
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - CLT
+- passengers:
+  - [0]:
+    - dob:
+      - dob_bc1f942e5393
+    - first_name:
+      - person_94655e5080be
+    - last_name:
+      - person_396a7857ea92
+  - [1]:
+    - dob:
+      - dob_c044c32f80b7
+    - first_name:
+      - person_63df0ede39bd
+    - last_name:
+      - person_8a021005729b
+  - [2]:
+    - dob:
+      - dob_be774306efc8
+    - first_name:
+      - person_5f8efae2b7f8
+    - las","{""content"":""\n\nAfter checking all your reservations, I can see that the EWR to LAX flight on May 21st is actually part of the first reservation we looked at (OWZ4XL), and it does include three passengers. I don't see any solo flight reservation for that route and date.\n\nIs it possible that:\n1. The reservation was made under a different user ID?\n2. Or there might have been a misunderstanding about the booking?\n\nSince this is about visiting your sick mother, we want to make sure we're worki"
+SEV-036,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-05T23:00:15
+- destination:
+  - MSP
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - MCO
+    - flight_number:
+      - HAT235
+    - origin:
+      - BOS
+    - price:
+      - 350
+  - [1]:
+    - date:
+      - 2024-05-19
+    - destination:
+      - MSP
+    - flight_number:
+      - HAT298
+    - origin:
+      - MCO
+    - price:
+      - 499
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - BOS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_07abd7b730cc
+    - first_name:
+      - person_a06b9af8c4f1
+    - last_name:
+      - person_95e2ec02eaf8
+  - [1]:
+    - dob:
+      - dob_945ff36c6f85
+    - first_name:
+      - person_7bb0603f3e10
+    - last_name:
+      - person_352fb6153597
+- payment_history:
+  - [0]:
+    - amount:
+      - 498
+    - payment_id:
+      - payment_3d65b3f9e0d6
+","{""content"":""Two checked bags have been successfully added to your reservation under your Gold membership, with no additional charge. If there's anything else you need, feel free to let me know!"",""role"":""assistant""}"
+SEV-037,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - business
+- created_at:
+  - 2024-05-14T06:33:04
+- destination:
+  - PHL
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-24
+    - destination:
+      - DFW
+    - flight_number:
+      - HAT004
+    - origin:
+      - ATL
+    - price:
+      - 122
+  - [1]:
+    - date:
+      - 2024-05-24
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT142
+    - origin:
+      - DFW
+    - price:
+      - 121
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - ATL
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3fbb143d9329
+    - first_name:
+      - person_0f41e336893e
+    - last_name:
+      - person_d837556a6b2f
+- payment_history:
+  - [0]:
+    - amount:
+      - 2787
+    - payment_id:
+      - payment_c0e52603772c
+  - [1]:
+    - amount:
+      - -2544
+    - payment_id:
+      - payment_c0e52603772c
+- reservation_id:
+  - M05KNL
+- total_baggages:
+  -","{""content"":""Your reservation has been successfully updated to the new flights arriving at Newark (EWR):\n\n- **Flight 1:** ATL to DFW\n  - Flight Number: HAT004\n  - Departure: 14:00 EST\n  - Arrival: 16:00 EST\n  - Price: $122\n\n- **Flight 2:** DFW to EWR\n  - Flight Number: HAT142\n  - Departure: 18:00 EST\n  - Arrival: 21:30 EST\n  - Price: $121\n\nThe total price is $243, and a refund of $2,544 will be processed back to your original payment method (gift card).\n\nIf you have any more quest"
+SEV-038,airline,$[0].origin,"""MSP""","""ORD""",$[2].origin,"""MSP""","""ORD""","Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 9
+    - business:
+      - 17
+    - economy:
+      - 17
+  - destination:
+    - EWR
+  - flight_number:
+    - HAT141
+  - origin:
+    - ORD
+  - prices:
+    - basic_economy:
+      - 79
+    - business:
+      - 241
+    - economy:
+      - 130
+  - scheduled_arrival_time_est:
+    - 17:00:00
+  - scheduled_departure_time_est:
+    - 14:00:00
+  - status:
+    - available
+- [1]:
+  - available_seats:
+    - basic_economy:
+      - 10
+    - business:
+      - 16
+    - economy:
+      - 15
+  - destination:
+    - EWR
+  - flight_number:
+    - HAT196
+  - origin:
+    - MSP
+  - prices:
+    - basic_economy:
+      - 56
+    - business:
+      - 475
+    - economy:
+      - 125
+  - scheduled_arrival_time_est:
+    - 14:00:00
+  - scheduled_departure_time_est:
+    - 11:00:00
+  - status:
+    - available
+- [2]:
+  - available_seats:
+    - basic_economy:
+     ","{""content"":null,""role"":""assistant"",""tool_calls"":[{""function"":{""arguments"":""{\""origin\"":\""EWR\"",\""destination\"":\""MSP\"",\""date\"":\""2024-05-27\""}"",""name"":""search_direct_flight""},""id"":""call_dhYivf6VRUVJfU9DItC2EQ95"",""type"":""function""}]}"
+SEV-039,airline,$.cabin,"""economy""","""business""",$.reservation_id,"""H9ZU1C""","""H9ZU2C""","Observation:
+- cabin:
+  - business
+- created_at:
+  - 2024-05-01T04:50:18
+- destination:
+  - IAH
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-24
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT192
+    - origin:
+      - person_16060e3d2c33
+    - price:
+      - 174
+  - [1]:
+    - date:
+      - 2024-05-25
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT166
+    - origin:
+      - EWR
+    - price:
+      - 125
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - person_16060e3d2c33
+- passengers:
+  - [0]:
+    - dob:
+      - dob_8771a2ba00b6
+    - first_name:
+      - person_483da344ace7
+    - last_name:
+      - person_e2d47a72e041
+  - [1]:
+    - dob:
+      - dob_f16a38ee94c6
+    - first_name:
+      - person_0a765d1e2e78
+    - last_name:
+      - person_fbc1ead0fd70
+  - [2]:
+    - dob:
+      - dob_135dd3d4debf
+    - first_name:
+     ","{""content"":""Your reservation H9ZU1C is eligible for cancellation since it was created on 2024-05-01, which is more than 24 hours ago, and it does not have travel insurance. However, since it's an economy class reservation, it can be canceled without insurance only if the airline canceled the flight. \n\nSince the reason for cancellation is to adjust passengers, and the airline has not canceled the flight, I cannot proceed with the cancellation. You may need to contact a human agent for further a"
+SEV-040,retail,$.exchange_price_difference,16.23,17.85,,,,"Observation:
+- address:
+  - address1:
+    - address_a622b1db5041
+  - address2:
+    - address_ecfd016041dc
+  - city:
+    - address_aef34528282a
+  - country:
+    - USA
+  - state:
+    - NC
+  - zip:
+    - address_9b36c4d0f8e2
+- exchange_items:
+  - [0]:
+    - 8384507844
+- exchange_new_items:
+  - [0]:
+    - 7624783998
+- exchange_payment_method_id:
+  - payment_2d79c0359c1c
+- exchange_price_difference:
+  - 17.85
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 8384507844
+      - [1]:
+        - 1615379700
+      - [2]:
+        - 8538875209
+    - tracking_id:
+      - [0]:
+        - 745984883162
+- items:
+  - [0]:
+    - item_id:
+      - 8384507844
+    - name:
+      - Desk Lamp
+    - options:
+      - brightness:
+        - medium
+      - color:
+        - white
+      - power source:
+        - USB
+    - price:
+      - 137.94
+    - product_id:
+      - 6817146515
+  - [1]:
+    - item_id:
+    ","{""content"":""\n\nGreat! I've processed your exchange request for the desk lamp. Here's what happens next:\n\n1. Your order status has been updated to \""exchange requested\""\n2. You'll receive an email with instructions on how to return your current desk lamp\n3. The price difference of $16.23 will be charged to your PayPal account\n4. Your new black, high-brightness desk lamp will be sent once the return is processed\n\nIs there anything else I can help you with today?"",""role"":""assistant"",""tool_c"
+SEV-041,airline,$.flights[0].destination,"""PHL""","""PHX""",$.flights[0].origin,"""ORD""","""PHL""","Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-08T19:01:02
+- destination:
+  - PHL
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-10
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT271
+    - origin:
+      - PHL
+    - price:
+      - 160
+  - [1]:
+    - date:
+      - 2024-05-11
+    - destination:
+      - ORD
+    - flight_number:
+      - HAT197
+    - origin:
+      - PHL
+    - price:
+      - 100
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - ORD
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3f8774f267df
+    - first_name:
+      - person_9830a26c6ab6
+    - last_name:
+      - person_8470850ea7ae
+- payment_history:
+  - [0]:
+    - amount:
+      - 260
+    - payment_id:
+      - payment_27eb52fad1c4
+- reservation_id:
+  - WUNA5K
+- total_baggages:
+  - 1
+- user_id:
+  - user_102f248232b4","{""content"":""\n\nI've found all your recent reservations from this month. Could you please confirm which of these flights was cancelled? I see reservations for:\n\n1. NM1VX1: MSP-EWR round trip for May 25-27\n2. KC18K6: MSP-CLT one way for May 21\n3. S61CZX: LAX-CLT round trip for May 23-25\n4. H8Q05L: JFK-ATL one way for May 24\n5. WUNA5K: ORD-PHL round trip for May 10-11\n\nAlso, I notice that your profile shows as a regular member, not Gold as you mentioned. Could you please clarify this discr"
+SEV-042,airline,$[9][1].available_seats.economy,14,15,,,,"Observation:
+- [0]:
+  - [0]:
+    - available_seats:
+      - basic_economy:
+        - 8
+      - business:
+        - 16
+      - economy:
+        - 9
+    - date:
+      - 2024-05-24
+    - destination:
+      - LGA
+    - flight_number:
+      - HAT110
+    - origin:
+      - ATL
+    - prices:
+      - basic_economy:
+        - 62
+      - business:
+        - 496
+      - economy:
+        - 105
+    - scheduled_arrival_time_est:
+      - 16:30:00
+    - scheduled_departure_time_est:
+      - 14:00:00
+    - status:
+      - available
+  - [1]:
+    - available_seats:
+      - basic_economy:
+        - 16
+      - business:
+        - 10
+      - economy:
+        - 8
+    - date:
+      - 2024-05-24
+    - destination:
+      - PHL
+    - flight_number:
+      - HAT132
+    - origin:
+      - LGA
+    - prices:
+      - basic_economy:
+        - 61
+      - business:
+        - 287
+      - economy:
+        - 190
+    - scheduled","{""content"":""\n\nI found several options for May 24th. The cheapest economy option would be:\n- Flight HAT110 from ATL to LGA at 2:00 PM (arriving 4:30 PM) - $105\n- Connected with Flight HAT132 from LGA to PHL at 5:00 PM (arriving 6:00 PM) - $190\n\nTotal cost in economy would be $295.\n\nWould you like me to proceed with changing your reservation to these flights in economy class? Please confirm with a \""yes\"" if you want me to make these changes. Also, since this is a flight change with a diff"
+SEV-043,airline,$[1].destination,"""JFK""","""LAS""",,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 1
+    - business:
+      - 7
+    - economy:
+      - 11
+  - destination:
+    - JFK
+  - flight_number:
+    - HAT025
+  - origin:
+    - IAH
+  - prices:
+    - basic_economy:
+      - 99
+    - business:
+      - 368
+    - economy:
+      - 149
+  - scheduled_arrival_time_est:
+    - 07:30:00
+  - scheduled_departure_time_est:
+    - 04:00:00
+  - status:
+    - available
+- [1]:
+  - available_seats:
+    - basic_economy:
+      - 16
+    - business:
+      - 12
+    - economy:
+      - 5
+  - destination:
+    - LAS
+  - flight_number:
+    - HAT068
+  - origin:
+    - IAH
+  - prices:
+    - basic_economy:
+      - 50
+    - business:
+      - 245
+    - economy:
+      - 107
+  - scheduled_arrival_time_est:
+    - 14:30:00
+  - scheduled_departure_time_est:
+    - 11:00:00
+  - status:
+    - available
+- [2]:
+  - available_seats:
+    - basic_economy:
+      -","{""content"":""\n\n<antml:function_calls>\n<antml:invoke name=\""search_direct_flight\"">\n<antml:parameter name=\""origin\"">JFK</antml:parameter>\n<antml:parameter name=\""destination\"">SFO</antml:parameter>\n<antml:parameter name=\""date\"">2024-05-19</antml:parameter>\n</antml:invoke>\n</antml:function_calls>"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":[{""function"":{""arguments"":{""date"":""2024-05-19"",""destination"":""SFO"",""origin"":""JFK""},""name"":""search_direct_flight""},""id"":""0""}]}"
+SEV-044,airline,$.payment_history[0].amount,510,586,,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-13T03:26:54
+- destination:
+  - MIA
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-27
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT228
+    - origin:
+      - LAX
+    - price:
+      - 76
+  - [1]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - MIA
+    - flight_number:
+      - HAT202
+    - origin:
+      - EWR
+    - price:
+      - 54
+  - [2]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT192
+    - origin:
+      - MIA
+    - price:
+      - 67
+  - [3]:
+    - date:
+      - 2024-05-29
+    - destination:
+      - LAX
+    - flight_number:
+      - HAT041
+    - origin:
+      - EWR
+    - price:
+      - 58
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - LAX
+- passengers:
+  - [0]:
+    - dob:
+      - dob_ef550abdc724
+    - f","{""content"":""\n\nI've now checked both of your recent reservations in our system:\n\n1. Reservation 4OG6T3 (BOS-LAS): Shows 1 passenger (Noah Muller)\n2. Reservation SDZQKO (LAX-MIA): Shows 2 passengers\n\nNeither reservation shows 3 passengers. As an airline agent, I can only work with the information that is officially recorded in our system. If you believe there is an error in the system, I recommend that you be transferred to a human agent who can investigate this discrepancy further.\n\nWoul"
+SEV-045,retail,$.items[1].options.color,"""blue""","""black""",$.items[1].options.battery life,"""8 hours""","""20 hours""","Observation:
+- address:
+  - address1:
+    - address_dac462368c15
+  - address2:
+    - address_99feb04f202f
+  - city:
+    - address_32b762631aef
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_6ffd661eeedb
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 6254646215
+    - name:
+      - Makeup Kit
+    - options:
+      - brand:
+        - Brand B
+      - kit size:
+        - basic
+      - skin tone:
+        - dark
+    - price:
+      - 248.85
+    - product_id:
+      - 5149340237
+  - [1]:
+    - item_id:
+      - 6077640618
+    - name:
+      - Wireless Earbuds
+    - options:
+      - battery life:
+        - 20 hours
+      - color:
+        - black
+      - water resistance:
+        - not resistant
+    - price:
+      - 242.92
+    - product_id:
+      - 9924732112
+  - [2]:
+    - item_id:
+      - 8323284863
+    - name:
+      - Office Chair
+    - options:
+      - ","{""content"":""The color of the wireless earbuds in your order #W5061109 has been successfully changed to blue with 8 hours of battery life and no water resistance. The price difference of $13.75 has been refunded to your PayPal account.\n\nIf there's anything else you need help with, feel free to let me know!"",""role"":""assistant""}"
+SEV-046,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 8
+    - business:
+      - 6
+    - economy:
+      - 14
+  - destination:
+    - SFO
+  - flight_number:
+    - HAT023
+  - origin:
+    - JFK
+  - prices:
+    - basic_economy:
+      - 69
+    - business:
+      - 364
+    - economy:
+      - 162
+  - scheduled_arrival_time_est:
+    - 20:00:00
+  - scheduled_departure_time_est:
+    - 14:00:00
+  - status:
+    - available","{""content"":""\n\n<antml:function_calls>\n<antml:invoke name=\""search_direct_flight\"">\n<antml:parameter name=\""origin\"">SFO</antml:parameter>\n<antml:parameter name=\""destination\"">JFK</antml:parameter>\n<antml:parameter name=\""date\"">2024-05-28</antml:parameter>\n</antml:invoke>\n</antml:function_calls>"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":[{""function"":{""arguments"":{""date"":""2024-05-28"",""destination"":""JFK"",""origin"":""SFO""},""name"":""search_direct_flight""},""id"":""0""}]}"
+SEV-047,airline,$.reservation_id,"""Z7GOZK""","""Z8GOZK""",$.status,"""cancelled""","""confirmed""","Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-13T19:41:32
+- destination:
+  - EWR
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT188
+    - origin:
+      - EWR
+    - price:
+      - 52
+  - [1]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT207
+    - origin:
+      - IAH
+    - price:
+      - 87
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - EWR
+- passengers:
+  - [0]:
+    - dob:
+      - dob_9130cb022278
+    - first_name:
+      - person_e02be86c347a
+    - last_name:
+      - person_d25724dba3d8
+- payment_history:
+  - [0]:
+    - amount:
+      - 169
+    - payment_id:
+      - payment_f74fe59f2dfa
+  - [1]:
+    - amount:
+      - -169
+    - payment_id:
+      - payment_f74fe59f2dfa
+- reservation_id:
+  - Z8GOZK
+- status:
+  - confi","{""content"":""Your reservation with ID **Z7GOZK** has been successfully cancelled due to health reasons covered by your travel insurance. The refund will be processed to your original payment method within 5 to 7 business days. If you need further assistance, feel free to ask!"",""role"":""assistant""}"
+SEV-048,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- name:
+  - Digital Camera
+- product_id:
+  - 8940227892
+- variants:
+  - 1804581713:
+    - available:
+      - yes
+    - item_id:
+      - 1804581713
+    - options:
+      - resolution:
+        - 30MP
+      - storage:
+        - SD card
+      - zoom:
+        - 3x
+    - price:
+      - 2875.61
+  - 2284404181:
+    - available:
+      - no
+    - item_id:
+      - 2284404181
+    - options:
+      - resolution:
+        - 20MP
+      - storage:
+        - SD card
+      - zoom:
+        - 5x
+    - price:
+      - 3204.43
+  - 3892645120:
+    - available:
+      - no
+    - item_id:
+      - 3892645120
+    - options:
+      - resolution:
+        - 30MP
+      - storage:
+        - CF card
+      - zoom:
+        - 10x
+    - price:
+      - 3070.64
+  - 4326528037:
+    - available:
+      - yes
+    - item_id:
+      - 4326528037
+    - options:
+      - resolution:
+        - 24MP
+      - storage:
+        - CF c","{""content"":""\n\nI apologize, but I can see that all of our digital cameras are actually priced significantly higher than $537. The most affordable option is $2,714.51 (24MP, 5x zoom, CF card storage). All other models range from about $2,800 to $3,300.\n\nSince this is quite different from your budget, you might want to:\n1. Consider the Action Camera, which might be in a different price range (I can check those details for you)\n2. Wait for the bookshelf to be delivered, process the return, and"
+SEV-049,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_74a5dd7c896b
+  - address2:
+    - address_88308d86e380
+  - city:
+    - address_c6502b0406c2
+  - country:
+    - USA
+  - state:
+    - IN
+  - zip:
+    - address_dd2a23b88d94
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 5796612084
+    - tracking_id:
+      - [0]:
+        - 200246490130
+- items:
+  - [0]:
+    - item_id:
+      - 5796612084
+    - name:
+      - Gaming Mouse
+    - options:
+      - color:
+        - RGB
+      - connectivity:
+        - wired
+      - sensor type:
+        - optical
+    - price:
+      - 158.89
+    - product_id:
+      - 5713490933
+- order_id:
+  - #W7387996
+- payment_history:
+  - [0]:
+    - amount:
+      - 158.89
+    - payment_method_id:
+      - payment_571f589eedce
+    - transaction_type:
+      - payment
+- status:
+  - delivered
+- user_id:
+  - user_e520db3fee59","{""content"":""\n\nI can see both of your orders have been delivered:\n\nOrder #W5490111 contains:\n1. Water Bottle (Black, Glass, 750ml) - $54.85\n2. Mechanical Keyboard (80%, Linear switch) - $268.77\n3. Action Camera (4K, Silver) - $481.50\n4. Backpack (Green, Medium, Leather) - $218.04\n\nOrder #W7387996 contains:\n1. Gaming Mouse (RGB, Wired) - $158.89\n\nCould you please let me know:\n1. Which order and which specific items you would like to return?\n2. How would you like to receive the refun"
+SEV-050,retail,"$.variants[""7747408585""].price",249.01,286.36,$.name,"""Smart Thermostat""","""Water Bottle""","Observation:
+- name:
+  - Water Bottle
+- product_id:
+  - 4896585277
+- variants:
+  - 2791467853:
+    - available:
+      - no
+    - item_id:
+      - 2791467853
+    - options:
+      - color:
+        - stainless steel
+      - compatibility:
+        - Google Assistant
+    - price:
+      - 242.53
+  - 3377900078:
+    - available:
+      - yes
+    - item_id:
+      - 3377900078
+    - options:
+      - color:
+        - white
+      - compatibility:
+        - Apple HomeKit
+    - price:
+      - 260.68
+  - 4953074738:
+    - available:
+      - yes
+    - item_id:
+      - 4953074738
+    - options:
+      - color:
+        - black
+      - compatibility:
+        - Amazon Alexa
+    - price:
+      - 226.02
+  - 4983901480:
+    - available:
+      - yes
+    - item_id:
+      - 4983901480
+    - options:
+      - color:
+        - black
+      - compatibility:
+        - Apple HomeKit
+    - price:
+      - 262.47
+  - 624314","{""content"":""Here is the available option for a smart thermostat compatible with Google Assistant:\n\n- **Color: Black**\n  - Item ID: 7747408585\n  - Price: $249.01\n\nWould you like to proceed with this option? If so, please confirm the item you'd like to exchange for and the payment method to handle any price difference."",""role"":""assistant""}"
+SEV-051,airline,$.flights[0].destination,"""PHL""","""PHX""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-08T19:01:02
+- destination:
+  - PHL
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-10
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT271
+    - origin:
+      - ORD
+    - price:
+      - 160
+  - [1]:
+    - date:
+      - 2024-05-11
+    - destination:
+      - ORD
+    - flight_number:
+      - HAT197
+    - origin:
+      - PHL
+    - price:
+      - 100
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - ORD
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3f8774f267df
+    - first_name:
+      - person_9830a26c6ab6
+    - last_name:
+      - person_8470850ea7ae
+- payment_history:
+  - [0]:
+    - amount:
+      - 260
+    - payment_id:
+      - payment_27eb52fad1c4
+- reservation_id:
+  - WUNA5K
+- total_baggages:
+  - 1
+- user_id:
+  - user_102f248232b4","{""content"":""\n\nI've found all your recent reservations from this month. Could you please confirm which of these flights was cancelled? I see reservations for:\n\n1. NM1VX1: MSP-EWR round trip for May 25-27\n2. KC18K6: MSP-CLT one way for May 21\n3. S61CZX: LAX-CLT round trip for May 23-25\n4. H8Q05L: JFK-ATL one way for May 24\n5. WUNA5K: ORD-PHL round trip for May 10-11\n\nAlso, I notice that your profile shows as a regular member, not Gold as you mentioned. Could you please clarify this discr"
+SEV-052,airline,$.reservation_id,"""YAX4DR""","""YAX5DR""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-05T23:00:15
+- destination:
+  - MSP
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - MCO
+    - flight_number:
+      - HAT235
+    - origin:
+      - BOS
+    - price:
+      - 122
+  - [1]:
+    - date:
+      - 2024-05-19
+    - destination:
+      - MSP
+    - flight_number:
+      - HAT298
+    - origin:
+      - MCO
+    - price:
+      - 127
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - BOS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_07abd7b730cc
+    - first_name:
+      - person_a06b9af8c4f1
+    - last_name:
+      - person_95e2ec02eaf8
+  - [1]:
+    - dob:
+      - dob_945ff36c6f85
+    - first_name:
+      - person_7bb0603f3e10
+    - last_name:
+      - person_352fb6153597
+- payment_history:
+  - [0]:
+    - amount:
+      - 498
+    - payment_id:
+      - payment_3d65b3f9e0d6
+","{""content"":""\n\nI can see your reservation details. This is a one-way economy flight from Boston (BOS) to Minneapolis (MSP) with a stop in Orlando (MCO), scheduled for May 18-19, 2024, for two passengers.\n\nWhat changes would you like to make to your reservation? I can help you with:\n1. Changing the flights (keeping the same origin and destination)\n2. Changing the cabin class\n3. Adding checked baggage\n4. Updating passenger information\n\nPlease let me know what specific changes you'd like t"
+SEV-053,retail,$.items[2].price,46.0,52.9,,,,"Observation:
+- address:
+  - address1:
+    - address_6bb36f06a18a
+  - address2:
+    - address_be8a3c041d29
+  - city:
+    - address_4a50ec619f78
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_a3544d3c73de
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 9335834276
+      - [1]:
+        - 7717598293
+      - [2]:
+        - 6245746168
+      - [3]:
+        - 6130713659
+      - [4]:
+        - 8176740019
+    - tracking_id:
+      - [0]:
+        - 778196182846
+- items:
+  - [0]:
+    - item_id:
+      - 9335834276
+    - name:
+      - Electric Kettle
+    - options:
+      - capacity:
+        - 2L
+      - color:
+        - black
+      - material:
+        - glass
+    - price:
+      - 137.92
+    - product_id:
+      - 1075968781
+  - [1]:
+    - item_id:
+      - 7717598293
+    - name:
+      - Grill
+    - options:
+      - features:
+        - rotisserie
+      - size:
+        - m","{""content"":""I found the order containing your jigsaw puzzle. Here are the details:\n\n- **Order ID**: #W8353027\n- **Product**: Jigsaw Puzzle\n- **Pieces**: 1500\n- **Theme**: Animals\n- **Difficulty Level**: Intermediate\n- **Price**: $46.00\n- **Status**: Delivered\n\nTo proceed with the exchange, please let me know the new theme and the number of pieces you would like for the puzzle. Also, ensure that the new puzzle is of the same product type."",""role"":""assistant""}"
+SEV-054,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-09T15:14:07
+- destination:
+  - LAS
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-11
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT006
+    - origin:
+      - BOS
+    - price:
+      - 87
+  - [1]:
+    - date:
+      - 2024-05-11
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT018
+    - origin:
+      - SEA
+    - price:
+      - 96
+  - [2]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT040
+    - origin:
+      - LAS
+    - price:
+      - 63
+  - [3]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - BOS
+    - flight_number:
+      - HAT253
+    - origin:
+      - SEA
+    - price:
+      - 52
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - BOS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_ef550abdc724
+    - ","{""content"":""\n\nI see that you have a round-trip reservation in basic economy from Boston (BOS) to Las Vegas (LAS) with connections in Seattle (SEA). I can see this was booked on May 9th. Since you're a gold member, have travel insurance, and are experiencing a delay, you may be eligible for compensation if you'd like to change or cancel your reservation. \n\nWould you like to:\n1. Change your flights to different times/dates\n2. Cancel your reservation\n3. Keep the current reservation\n\nPlease"
+SEV-055,retail,$.status,"""return requested""","""return completed""",$.items[4].options.capacity,"""1.5L""",,"Observation:
+- address:
+  - address1:
+    - address_ea0268cc85ea
+  - address2:
+    - address_f6a6d7324a83
+  - city:
+    - address_7d9f35cdd38a
+  - country:
+    - USA
+  - state:
+    - CA
+  - zip:
+    - address_d38b8814c67b
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 3320557165
+      - [1]:
+        - 2698416822
+      - [2]:
+        - 8098621301
+      - [3]:
+        - 7228247242
+      - [4]:
+        - 7441167885
+    - tracking_id:
+      - [0]:
+        - 848454071657
+- items:
+  - [0]:
+    - item_id:
+      - 3320557165
+    - name:
+      - Electric Toothbrush
+    - options:
+      - battery type:
+        - AA batteries
+      - color:
+        - blue
+      - speed settings:
+        - high
+    - price:
+      - 188.67
+    - product_id:
+      - 7352963235
+  - [1]:
+    - item_id:
+      - 2698416822
+    - name:
+      - Electric Kettle
+    - options:
+      - capacity:
+        - 1.5L","{""content"":""\n\nI've successfully submitted your return request. Here's what happens next:\n\n1. Your order status has been updated to \""return requested\""\n2. You will receive a follow-up email with detailed instructions on how and where to return the items\n3. Once the items are received and processed, a refund of $781.65 (total for the four returned items) will be processed to your Visa card ending in 8991\n4. Please note that refunds to credit cards typically take 5-7 business days to proces"
+SEV-056,airline,$.reservation_id,"""M61CQM""","""M62CQM""",$.cabin,"""economy""","""business""","Observation:
+- cabin:
+  - business
+- created_at:
+  - 2024-05-05T04:17:23
+- destination:
+  - SEA
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-15
+    - destination:
+      - ATL
+    - flight_number:
+      - HAT223
+    - origin:
+      - ORD
+    - price:
+      - 173
+  - [1]:
+    - date:
+      - 2024-05-15
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT039
+    - origin:
+      - ATL
+    - price:
+      - 180
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - ORD
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3d1dded40d3d
+    - first_name:
+      - person_0a765d1e2e78
+    - last_name:
+      - person_c04e232922eb
+  - [1]:
+    - dob:
+      - dob_55e832a29c34
+    - first_name:
+      - person_16060e3d2c33
+    - last_name:
+      - person_19085611f351
+  - [2]:
+    - dob:
+      - dob_d5eb00a49133
+    - first_name:
+      - person_0466b186f02b
+    - las","{""content"":""\n\nI can see that flight HAT039 is part of your reservation M61CQM, traveling from Atlanta to Seattle today. Since you're a silver member flying in economy class and experiencing a delay, you may be eligible for compensation if you'd like to change or cancel your reservation. Would you like to:\n\n1. Change your flight to a different available flight today\n2. Cancel your reservation (though please note this would require travel insurance, which I see isn't included in this reservat"
+SEV-057,airline,$.insurance,"""no""","""yes""",,,,"Observation:
+- cabin:
+  - business
+- created_at:
+  - 2024-05-04T19:48:34
+- destination:
+  - LAS
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-06
+    - destination:
+      - MIA
+    - flight_number:
+      - HAT014
+    - origin:
+      - JFK
+    - price:
+      - 1678
+  - [1]:
+    - date:
+      - 2024-05-06
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT288
+    - origin:
+      - MIA
+    - price:
+      - 1690
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - JFK
+- passengers:
+  - [0]:
+    - dob:
+      - dob_1ba9e56ce408
+    - first_name:
+      - person_848a59ec306a
+    - last_name:
+      - person_352fb6153597
+- payment_history:
+  - [0]:
+    - amount:
+      - 3368
+    - payment_id:
+      - payment_cf304710e2f7
+- reservation_id:
+  - DGZSYX
+- total_baggages:
+  - 1
+- user_id:
+  - user_119813f6df4c","{""content"":""\n\nI found your ATL to JFK flight (reservation ID: D1EW9B). Here are the details:\n- Flight date: May 17, 2024\n- Cabin: Basic Economy\n- No travel insurance\n- Booking date: May 4, 2024\n\nI apologize, but I won't be able to help you cancel this reservation because:\n1. It's a basic economy ticket\n2. It was booked more than 24 hours ago (booked on May 4)\n3. You don't have travel insurance\n\nAccording to our policy, basic economy tickets can only be cancelled if:\n- The cancellat"
+SEV-058,airline,$.flights[0].origin,"""DTW""","""EWR""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-11T19:32:36
+- destination:
+  - SEA
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT097
+    - origin:
+      - EWR
+    - price:
+      - 158
+  - [1]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT251
+    - origin:
+      - PHX
+    - price:
+      - 141
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - DTW
+- passengers:
+  - [0]:
+    - dob:
+      - dob_540df60a9f84
+    - first_name:
+      - person_94655e5080be
+    - last_name:
+      - person_8a021005729b
+  - [1]:
+    - dob:
+      - dob_314d903fb4c3
+    - first_name:
+      - person_b32ab310c479
+    - last_name:
+      - person_e2d47a72e041
+- payment_history:
+  - [0]:
+    - amount:
+      - 658
+    - payment_id:
+      - payment_99324cb78101","{""content"":""Here are the details for booking a flight for Ivan Smith:\n\n- **Trip Type:** Round trip\n- **Origin:** Detroit Metropolitan Wayne County Airport (DTW)\n- **Destination:** Seattle-Tacoma International Airport (SEA)\n- **Cabin Class:** Economy\n- **Flights:**\n  - **Flight 1:** DTW to PHX on 2024-05-17, Flight Number: HAT097\n  - **Flight 2:** PHX to SEA on 2024-05-17, Flight Number: HAT251\n- **Passenger:** Ivan Smith, Date of Birth: 1986-03-14\n- **Membership Tier:** Gold\n- **Check"
+SEV-059,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_696863ffba43
+  - address2:
+    - address_58d35e99f286
+  - city:
+    - address_32b762631aef
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_1220eb8b9b79
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 5606522780
+    - name:
+      - Bicycle
+    - options:
+      - color:
+        - red
+      - frame size:
+        - large
+      - type:
+        - mountain
+    - price:
+      - 1902.67
+    - product_id:
+      - 9783735446
+  - [1]:
+    - item_id:
+      - 1120917161
+    - name:
+      - Grill
+    - options:
+      - features:
+        - none
+      - size:
+        - portable
+      - type:
+        - electric
+    - price:
+      - 953.39
+    - product_id:
+      - 6819683148
+  - [2]:
+    - item_id:
+      - 5635439102
+    - name:
+      - Headphones
+    - options:
+      - color:
+        - blue
+      - connectivit","{""content"":""\n\nYour order address has been successfully updated. Now, let me check the available tablet options for you.\n\n<antml:function_calls>\n<antml:invoke name=\""get_product_details\"">\n<antml:parameter name=\""product_id\"">8024098596</antml:parameter>\n</antml:invoke>\n</antml:function_calls>"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":[{""function"":{""arguments"":{""product_id"":""8024098596""},""name"":""get_product_details""},""id"":""0""}]}"
+SEV-060,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_4b53dbeaf8f1
+  - address2:
+    - address_71d3fb559886
+  - city:
+    - address_26ccae491608
+  - country:
+    - USA
+  - state:
+    - CA
+  - zip:
+    - address_3d3f94fd6722
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 4913411651
+      - [1]:
+        - 6268080249
+      - [2]:
+        - 7127170374
+      - [3]:
+        - 9612497925
+    - tracking_id:
+      - [0]:
+        - 568007704518
+- items:
+  - [0]:
+    - item_id:
+      - 4913411651
+    - name:
+      - Tablet
+    - options:
+      - color:
+        - black
+      - screen size:
+        - 7-inch
+      - storage:
+        - 128GB
+    - price:
+      - 941.03
+    - product_id:
+      - 8024098596
+  - [1]:
+    - item_id:
+      - 6268080249
+    - name:
+      - E-Reader
+    - options:
+      - connectivity:
+        - Wi-Fi
+      - screen size:
+        - 7-inch
+      - storage:
+     ","{""content"":""\n\nI found your delivered order #W1679211 that contains a tablet along with other items. This order includes:\n1. A Tablet (black, 7-inch)\n2. An E-Reader\n3. A Jigsaw Puzzle\n4. A T-Shirt\n\nTo process the return, I'll need:\n1. Your confirmation that this is the correct order\n2. Your preferred payment method for the refund (you can choose either your PayPal account or the original payment method which was PayPal)\n3. Confirmation of which items you want to return (I assume it's t"
+SEV-061,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_7b2ea3c4487b
+  - address2:
+    - address_7081b8ef95c7
+  - city:
+    - address_551a9c288929
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_85b16e8219b4
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 5081446110
+    - tracking_id:
+      - [0]:
+        - 820626058356
+- items:
+  - [0]:
+    - item_id:
+      - 5081446110
+    - name:
+      - Perfume
+    - options:
+      - gender:
+        - men
+      - scent family:
+        - woody
+      - size:
+        - 30ml
+    - price:
+      - 322.52
+    - product_id:
+      - 6858788497
+- order_id:
+  - #W1671835
+- payment_history:
+  - [0]:
+    - amount:
+      - 322.52
+    - payment_method_id:
+      - payment_da041d210199
+    - transaction_type:
+      - payment
+- status:
+  - delivered
+- user_id:
+  - user_3b3c062e1737","{""content"":null,""role"":""assistant"",""tool_calls"":[{""function"":{""arguments"":""{\""product_id\"":\""6858788497\""}"",""name"":""get_product_details""},""id"":""call_gggZRZ4Xvzym9L2ptuPJB2lu"",""type"":""function""}]}"
+SEV-062,airline,$[6][0].origin,"""SFO""","""ATL""",,,,"Observation:
+- [0]:
+  - [0]:
+    - available_seats:
+      - basic_economy:
+        - 5
+      - business:
+        - 10
+      - economy:
+        - 5
+    - date:
+      - 2024-05-28
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT082
+    - origin:
+      - SFO
+    - prices:
+      - basic_economy:
+        - 54
+      - business:
+        - 404
+      - economy:
+        - 135
+    - scheduled_arrival_time_est:
+      - 03:00:00+1
+    - scheduled_departure_time_est:
+      - 23:00:00
+    - status:
+      - available
+  - [1]:
+    - available_seats:
+      - basic_economy:
+        - 11
+      - business:
+        - 16
+      - economy:
+        - 18
+    - date:
+      - 2024-05-29
+    - destination:
+      - JFK
+    - flight_number:
+      - HAT025
+    - origin:
+      - IAH
+    - prices:
+      - basic_economy:
+        - 58
+      - business:
+        - 399
+      - economy:
+        - 133
+    - schedu","{""content"":""\n\nI've found the following business class options:\n\nOutbound (May 26):\n- Direct flight HAT023: JFK to SFO, departing 2:00 PM EST\n\nReturn (May 28):\nThe most economical business class return option would be:\n- HAT204: SFO to SEA, departing 8:00 AM EST\n- HAT100: SEA to JFK, departing 1:00 PM EST\n\nBefore I proceed with the change, please note:\n1. This would change your cabin to business class\n2. You'll keep the same dates and route through SEA\n3. Since you're changing from"
+SEV-063,airline,$[4][0].origin,"""ATL""","""BOS""",,,,"Observation:
+- [0]:
+  - [0]:
+    - available_seats:
+      - basic_economy:
+        - 12
+      - business:
+        - 10
+      - economy:
+        - 14
+    - date:
+      - 2024-05-21
+    - destination:
+      - DFW
+    - flight_number:
+      - HAT004
+    - origin:
+      - ATL
+    - prices:
+      - basic_economy:
+        - 96
+      - business:
+        - 302
+      - economy:
+        - 101
+    - scheduled_arrival_time_est:
+      - 16:00:00
+    - scheduled_departure_time_est:
+      - 14:00:00
+    - status:
+      - available
+  - [1]:
+    - available_seats:
+      - basic_economy:
+        - 16
+      - business:
+        - 5
+      - economy:
+        - 10
+    - date:
+      - 2024-05-21
+    - destination:
+      - LAX
+    - flight_number:
+      - HAT124
+    - origin:
+      - DFW
+    - prices:
+      - basic_economy:
+        - 51
+      - business:
+        - 266
+      - economy:
+        - 112
+    - schedul","{""content"":""\n\nI notice that you currently have a round-trip reservation with 2 passengers (you and Mason Lopez). Your return flights are already scheduled for May 21st. I can help you upgrade to economy class and modify your itinerary. Here's what I propose to do:\n\n1. Upgrade your cabin from basic economy to regular economy\n2. Keep your outbound flights as they are (LAX-ORD-ATL on May 13-14)\n3. For your return on May 21st, I can book you on these flights:\n   - HAT004 (ATL-DFW) departing 2"
+SEV-064,retail,$.items[0].name,"""Jigsaw Puzzle""","""Water Bottle""",,,,"Observation:
+- address:
+  - address1:
+    - address_03377611f0e2
+  - address2:
+    - address_49756be83b11
+  - city:
+    - address_90b9a8242756
+  - country:
+    - USA
+  - state:
+    - NY
+  - zip:
+    - address_253fb4046eb8
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 7869640094
+    - name:
+      - Water Bottle
+    - options:
+      - difficulty level:
+        - expert
+      - pieces:
+        - 2000
+      - theme:
+        - animals
+    - price:
+      - 47.59
+    - product_id:
+      - 1808611083
+  - [1]:
+    - item_id:
+      - 8886009523
+    - name:
+      - Wristwatch
+    - options:
+      - dial color:
+        - blue
+      - strap material:
+        - silicone
+    - price:
+      - 1944.02
+    - product_id:
+      - 6066914160
+  - [2]:
+    - item_id:
+      - 9112290483
+    - name:
+      - Wristwatch
+    - options:
+      - dial color:
+        - blue
+      - strap mat","{""content"":""\n\nNow for the watch change. Since this is a price difference that results in a refund, it will go back to your original payment method (credit card ending in 1065). The refund will take 5-7 business days to process.\n\nPlease confirm with 'yes' if you'd like me to change your blue silicone strap watch to the white dial metal strap watch."",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-065,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 11
+    - business:
+      - 8
+    - economy:
+      - 3
+  - destination:
+    - MIA
+  - flight_number:
+    - HAT130
+  - origin:
+    - DEN
+  - prices:
+    - basic_economy:
+      - 85
+    - business:
+      - 399
+    - economy:
+      - 165
+  - scheduled_arrival_time_est:
+    - 06:00:00
+  - scheduled_departure_time_est:
+    - 02:00:00
+  - status:
+    - available
+- [1]:
+  - available_seats:
+    - basic_economy:
+      - 15
+    - business:
+      - 1
+    - economy:
+      - 12
+  - destination:
+    - MIA
+  - flight_number:
+    - HAT255
+  - origin:
+    - DEN
+  - prices:
+    - basic_economy:
+      - 91
+    - business:
+      - 377
+    - economy:
+      - 108
+  - scheduled_arrival_time_est:
+    - 11:00:00
+  - scheduled_departure_time_est:
+    - 07:00:00
+  - status:
+    - available","{""content"":null,""role"":""assistant"",""tool_calls"":[{""function"":{""arguments"":""{\""origin\"":\""MIA\"",\""destination\"":\""DEN\"",\""date\"":\""2024-05-30\""}"",""name"":""search_direct_flight""},""id"":""call_4XakSLet42tgKm0MvUg2WOCE"",""type"":""function""}]}"
+SEV-066,airline,$.destination,"""SEA""","""SFO""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-05T04:17:23
+- destination:
+  - SFO
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-15
+    - destination:
+      - ATL
+    - flight_number:
+      - HAT223
+    - origin:
+      - ORD
+    - price:
+      - 173
+  - [1]:
+    - date:
+      - 2024-05-15
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT039
+    - origin:
+      - ATL
+    - price:
+      - 180
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - ORD
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3d1dded40d3d
+    - first_name:
+      - person_0a765d1e2e78
+    - last_name:
+      - person_c04e232922eb
+  - [1]:
+    - dob:
+      - dob_55e832a29c34
+    - first_name:
+      - person_16060e3d2c33
+    - last_name:
+      - person_19085611f351
+  - [2]:
+    - dob:
+      - dob_d5eb00a49133
+    - first_name:
+      - person_0466b186f02b
+    - last","{""content"":""\n\nI've found your reservation (M61CQM) with flight HAT039 from Atlanta to Seattle today. I can see that:\n1. You're a silver member\n2. You're traveling in economy class\n3. You have 3 passengers on this reservation\n4. You don't have travel insurance\n\nSince this is a delayed flight and you're a silver member, if you need to change or cancel your reservation due to this delay, you would be eligible for compensation in the form of a $150 certificate ($50 × 3 passengers). Would you"
+SEV-067,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-04T06:04:48
+- destination:
+  - SFO
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - JFK
+    - flight_number:
+      - HAT085
+    - origin:
+      - IAH
+    - price:
+      - 177
+  - [1]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - SFO
+    - flight_number:
+      - HAT023
+    - origin:
+      - JFK
+    - price:
+      - 146
+  - [2]:
+    - date:
+      - 2024-05-22
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT278
+    - origin:
+      - SFO
+    - price:
+      - 180
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - IAH
+- passengers:
+  - [0]:
+    - dob:
+      - dob_23aa549e9c18
+    - first_name:
+      - person_15a9b20b6741
+    - last_name:
+      - person_d837556a6b2f
+- payment_history:
+  - [0]:
+    - amount:
+      - 533
+    - payment_id:
+   ","{""content"":""\n\nI can see your reservation. It's a round-trip economy flight from Houston (IAH) to San Francisco (SFO) with a stop in New York (JFK) on May 18th, and returning directly to Houston on May 22nd.\n\nWhat changes would you like to make to your reservation? I can help you with:\n1. Changing the flights (keeping the same origin and destination)\n2. Changing the cabin class\n3. Adding checked baggage\n4. Updating passenger information\n\nPlease let me know what specific changes you'd li"
+SEV-068,retail,$.payment_history[0].amount,829.43,953.84,,,,"Observation:
+- address:
+  - address1:
+    - address_fd54f6281f4f
+  - address2:
+    - address_f3797ccaa261
+  - city:
+    - address_2ae9064ebecc
+  - country:
+    - USA
+  - state:
+    - WA
+  - zip:
+    - address_c361c3f60def
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 5855700373
+    - name:
+      - Bluetooth Speaker
+    - options:
+      - battery life:
+        - 10 hours
+      - color:
+        - black
+      - water resistance:
+        - yes
+    - price:
+      - 293.46
+    - product_id:
+      - 4768869376
+  - [1]:
+    - item_id:
+      - 3076708684
+    - name:
+      - Air Purifier
+    - options:
+      - features:
+        - quiet operation
+      - filter type:
+        - HEPA
+      - room size:
+        - medium
+    - price:
+      - 535.97
+    - product_id:
+      - 3821016478
+- order_id:
+  - #W6729841
+- payment_history:
+  - [0]:
+    - amount:
+      - 953.84
+    - pa","{""content"":""Your most recent order, with order ID #W6729841, has a total payment of $829.43. If you need any more information or assistance, feel free to ask!"",""role"":""assistant""}"
+SEV-069,retail,$.items[1].price,231.37,266.08,,,,"Observation:
+- address:
+  - address1:
+    - address_8b57ed64e98f
+  - address2:
+    - address_e9c32904b038
+  - city:
+    - address_32b762631aef
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_6868d2e3b7f6
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 7602931732
+      - [1]:
+        - 9570044148
+      - [2]:
+        - 6857426243
+    - tracking_id:
+      - [0]:
+        - 907614527588
+- items:
+  - [0]:
+    - item_id:
+      - 7602931732
+    - name:
+      - Electric Kettle
+    - options:
+      - capacity:
+        - 1L
+      - color:
+        - black
+      - material:
+        - stainless steel
+    - price:
+      - 153.25
+    - product_id:
+      - 1075968781
+  - [1]:
+    - item_id:
+      - 9570044148
+    - name:
+      - Mechanical Keyboard
+    - options:
+      - backlight:
+        - none
+      - size:
+        - full size
+      - switch type:
+        - linear
+  ","{""content"":""\n\nI've found your orders. Let me break down what I've found:\n\n1. Skateboard - Found in order #W3792453 (delivered) - $200.80\n2. Garden Hose - Found in order #W7181492 (delivered) - $96.35\n3. Backpack - Found in order #W7181492 (delivered) - $193.38\n4. Keyboard - Found in order #W5565470 (delivered) - $231.37\n5. Pet Bed - Found in order #W5565470 (delivered) - $196.53\n\nThe total potential refund amount would be $918.43. All these items are from delivered orders and are eligi"
+SEV-070,retail,$.Mechanical Keyboard,"""1656367028""","""1656367029""",$.Notebook,"""2892623495""","""2892623496""","Observation:
+- Action Camera:
+  - 3377618313
+- Air Purifier:
+  - 3821016478
+- Backpack:
+  - 2524789262
+- Bicycle:
+  - 9783735446
+- Bluetooth Speaker:
+  - 4768869376
+- Bookshelf:
+  - 8600330539
+- Coffee Maker:
+  - 7996920482
+- Cycling Helmet:
+  - 7765186836
+- Desk Lamp:
+  - 6817146515
+- Digital Camera:
+  - 8940227892
+- Dumbbell Set:
+  - 7233192239
+- E-Reader:
+  - 3801771308
+- Electric Kettle:
+  - 1075968781
+- Electric Toothbrush:
+  - 7352963235
+- Espresso Machine:
+  - 4354588079
+- Fleece Jacket:
+  - 8560156827
+- Gaming Mouse:
+  - 5713490933
+- Garden Hose:
+  - 6679515468
+- Grill:
+  - 6819683148
+- Headphones:
+  - 6992792935
+- Hiking Boots:
+  - 7363354090
+- Indoor Security Camera:
+  - 2985987096
+- Jigsaw Puzzle:
+  - 1808611083
+- LED Light Bulb:
+  - 2696197613
+- Laptop:
+  - 4760268021
+- Luggage Set:
+  - 5426915165
+- Makeup Kit:
+  - 5149340237
+- Mechanical Keyboard:
+  - 1656367029
+- Notebook:
+","{""content"":""\n\nNow, let me look up these specific items. Let me check the keyboard first since I can see you have that product ID from the list.\n\n<antml:function_calls>\n<antml:invoke name=\""get_product_details\"">\n<antml:parameter name=\""product_id\"">1656367028</antml:parameter>\n</antml:invoke>\n</antml:function_calls>"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":[{""function"":{""arguments"":{""product_id"":""1656367028""},""name"":""get_product_details""},""id"":""0""}]}"
+SEV-071,airline,$.cabin,"""business""","""economy""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-13T05:37:57
+- destination:
+  - SEA
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-13
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT214
+    - origin:
+      - MCO
+    - price:
+      - 1377
+  - [1]:
+    - date:
+      - 2024-05-14
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT045
+    - origin:
+      - PHX
+    - price:
+      - 1712
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - MCO
+- passengers:
+  - [0]:
+    - dob:
+      - dob_29c001393af3
+    - first_name:
+      - person_0f41e336893e
+    - last_name:
+      - person_226ee52c0f7e
+  - [1]:
+    - dob:
+      - dob_a681b28190a3
+    - first_name:
+      - person_0f41e336893e
+    - last_name:
+      - person_1967d4da9c91
+- payment_history:
+  - [0]:
+    - amount:
+      - 6178
+    - payment_id:
+      - payment_1ea0cea989","{""content"":""The reservation with ID NQNU5R has been successfully cancelled. The refund will be processed to your original payment method within 5 to 7 business days.\n\nIf there's anything else you need assistance with, feel free to let me know!"",""role"":""assistant""}"
+SEV-072,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_5e248ef0ec9a
+  - address2:
+    - address_77cc75a9902e
+  - city:
+    - address_f89d52c36fe3
+  - country:
+    - USA
+  - state:
+    - DC
+  - zip:
+    - address_9ef58fdf862c
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 6065192424
+    - name:
+      - Tablet
+    - options:
+      - color:
+        - gold
+      - screen size:
+        - 8-inch
+      - storage:
+        - 128GB
+    - price:
+      - 989.7
+    - product_id:
+      - 8024098596
+- order_id:
+  - #W3586556
+- payment_history:
+  - [0]:
+    - amount:
+      - 989.7
+    - payment_method_id:
+      - payment_b357294af5fb
+    - transaction_type:
+      - payment
+- status:
+  - pending
+- user_id:
+  - user_494639523469","{""content"":""\n\nI found your recent order with the luggage set - it's order #W3361211. This order is currently in \""pending\"" status and includes a 2-piece red softshell luggage set along with other items (Smart Watch, Jigsaw Puzzle, and Office Chair).\n\nAs I mentioned earlier, I cannot change the luggage set to a coat as they are different product types. However, since the order is still pending, you have two options:\n\n1. Cancel the entire order and place a new order with the items you want\"
+SEV-073,airline,$.flights[0].origin,"""ORD""","""PHL""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-15T15:00:00
+- destination:
+  - PHL
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-26
+    - destination:
+      - PHL
+    - flight_number:
+      - HAT289
+    - origin:
+      - PHL
+    - price:
+      - 161
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - ORD
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3f8774f267df
+    - first_name:
+      - person_9830a26c6ab6
+    - last_name:
+      - person_8470850ea7ae
+  - [1]:
+    - dob:
+      - dob_410ad7af8e65
+    - first_name:
+      - person_f50dff648997
+    - last_name:
+      - person_469a3952e144
+- payment_history:
+  - [0]:
+    - amount:
+      - 322
+    - payment_id:
+      - payment_ff0a7df18229
+- reservation_id:
+  - HATHAT
+- total_baggages:
+  - 0
+- user_id:
+  - user_102f248232b4","{""content"":""\n\nGreat! Your reservation has been confirmed. Here are the details:\n\nReservation ID: HATHAT\n- Flight: HAT289 on May 26th, 2024\n- Departure: ORD at 5:00 AM\n- Arrival: PHL at 7:00 AM\n- Two economy class tickets\n- $322 has been charged to your certificate\n\nYou can use this reservation ID (HATHAT) for any future changes or inquiries about this booking. Is there anything else you need assistance with?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-074,retail,$.items[0].price,1902.67,2188.07,,,,"Observation:
+- address:
+  - address1:
+    - address_21d135372a73
+  - address2:
+    - address_a07a48e20dcf
+  - city:
+    - address_32b762631aef
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_df5e1057663a
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 5606522780
+    - name:
+      - Bicycle
+    - options:
+      - color:
+        - red
+      - frame size:
+        - large
+      - type:
+        - mountain
+    - price:
+      - 2188.07
+    - product_id:
+      - 9783735446
+  - [1]:
+    - item_id:
+      - 1120917161
+    - name:
+      - Grill
+    - options:
+      - features:
+        - none
+      - size:
+        - portable
+      - type:
+        - electric
+    - price:
+      - 953.39
+    - product_id:
+      - 6819683148
+  - [2]:
+    - item_id:
+      - 5635439102
+    - name:
+      - Headphones
+    - options:
+      - color:
+        - blue
+      - connectivit","{""content"":""\n\nI see that the order with the tablet (#W1603792) is still showing as \""pending\"" in our system. Since it hasn't been delivered yet, we can modify the order rather than doing an exchange. Let me check what other tablet options are available.\n\n<antml:function_calls>\n<antml:invoke name=\""get_product_details\"">\n<antml:parameter name=\""product_id\"">8024098596</antml:parameter>\n</antml:invoke>\n</antml:function_calls>"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":[{""functio"
+SEV-075,airline,$.flights[0].price,122,140,,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-05T23:00:15
+- destination:
+  - MSP
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - MCO
+    - flight_number:
+      - HAT235
+    - origin:
+      - BOS
+    - price:
+      - 140
+  - [1]:
+    - date:
+      - 2024-05-19
+    - destination:
+      - MSP
+    - flight_number:
+      - HAT298
+    - origin:
+      - MCO
+    - price:
+      - 127
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - BOS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_07abd7b730cc
+    - first_name:
+      - person_a06b9af8c4f1
+    - last_name:
+      - person_95e2ec02eaf8
+  - [1]:
+    - dob:
+      - dob_945ff36c6f85
+    - first_name:
+      - person_7bb0603f3e10
+    - last_name:
+      - person_352fb6153597
+- payment_history:
+  - [0]:
+    - amount:
+      - 498
+    - payment_id:
+      - payment_3d65b3f9e0d6
+","{""content"":""\n\nI've successfully added 2 checked bags to your reservation. Since you're a Gold member flying in economy, these bags are included in your free baggage allowance, so there was no additional charge.\n\nIs there anything else I can help you with?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-076,airline,$.reservation_id,"""H8Q05L""","""H8Q06L""",$.payment_history[1].amount,163,187,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-03T15:12:00
+- destination:
+  - ATL
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-24
+    - destination:
+      - ATL
+    - flight_number:
+      - HAT268
+    - origin:
+      - JFK
+    - price:
+      - 237
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - JFK
+- passengers:
+  - [0]:
+    - dob:
+      - dob_1b4c61c66653
+    - first_name:
+      - person_63df0ede39bd
+    - last_name:
+      - person_96f25caf1b61
+- payment_history:
+  - [0]:
+    - amount:
+      - 104
+    - payment_id:
+      - payment_a5876d5ae693
+  - [1]:
+    - amount:
+      - 187
+    - payment_id:
+      - payment_27eb52fad1c4
+- reservation_id:
+  - H8Q06L
+- total_baggages:
+  - 0
+- user_id:
+  - user_102f248232b4","{""content"":""\n\nI've successfully upgraded your reservation H8Q05L to business class. The upgrade charge of $163 has been processed to your gift card, which should now have $111 remaining ($274 - $163).\n\nYou have one more reservation that could be upgraded:\n- NM1VX1: MSP-EWR round trip on May 25-27 (Basic Economy)\n\nWould you like to proceed with upgrading this last reservation as well?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-077,retail,$.order_id,"""#W4923227""","""#W4923228""",$.payment_history[0].transaction_type,"""payment""","""refund""","Observation:
+- address:
+  - address1:
+    - address_02f216184b19
+  - address2:
+    - address_76b99074ef10
+  - city:
+    - address_6d5e0028676a
+  - country:
+    - USA
+  - state:
+    - AZ
+  - zip:
+    - address_6a874d184840
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 7751905257
+    - name:
+      - Bluetooth Speaker
+    - options:
+      - battery life:
+        - 10 hours
+      - color:
+        - red
+      - water resistance:
+        - yes
+    - price:
+      - 321.18
+    - product_id:
+      - 4768869376
+- order_id:
+  - #W4923228
+- payment_history:
+  - [0]:
+    - amount:
+      - 321.18
+    - payment_method_id:
+      - payment_2131f73a1ca5
+    - transaction_type:
+      - refund
+  - [1]:
+    - amount:
+      - 321.18
+    - payment_method_id:
+      - payment_a77d72a37f0d
+    - transaction_type:
+      - payment
+  - [2]:
+    - amount:
+      - 321.18
+    - payment_metho","{""content"":""The payment method for your pending order #W4923227 has been successfully updated. Your gift card balance of $60 will be applied, and the remaining amount will be charged to your Visa credit card ending in 8902. If you have any more questions or need further assistance, feel free to ask!"",""role"":""assistant""}"
+SEV-078,airline,$.status,"""cancelled""","""confirmed""",$.reservation_id,"""UDMOP1""","""UDMOP2""","Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-09T11:34:16
+- destination:
+  - SFO
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT134
+    - origin:
+      - SFO
+    - price:
+      - 89
+  - [1]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - SFO
+    - flight_number:
+      - HAT032
+    - origin:
+      - PHX
+    - price:
+      - 52
+  - [2]:
+    - date:
+      - 2024-05-29
+    - destination:
+      - PHL
+    - flight_number:
+      - HAT280
+    - origin:
+      - SFO
+    - price:
+      - 55
+  - [3]:
+    - date:
+      - 2024-05-29
+    - destination:
+      - SFO
+    - flight_number:
+      - HAT199
+    - origin:
+      - PHL
+    - price:
+      - 55
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - SFO
+- passengers:
+  - [0]:
+    - dob:
+      - dob_1e657c8c7f20
+    - f","{""content"":""\n\nYour reservation UDMOP1 has been successfully cancelled. The refund of $251 will be processed back to your original payment method (gift card ending in 7998) within 5-7 business days.\n\nIs there anything else I can help you with?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-079,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_b990b4d75521
+  - address2:
+    - address_5fd8ff6ec426
+  - city:
+    - address_01889ba4bbcd
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_f55f1e1e796a
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 5996159312
+    - tracking_id:
+      - [0]:
+        - 689944590938
+- items:
+  - [0]:
+    - item_id:
+      - 5996159312
+    - name:
+      - Digital Camera
+    - options:
+      - resolution:
+        - 24MP
+      - storage:
+        - SD card
+      - zoom:
+        - 3x
+    - price:
+      - 2895.55
+    - product_id:
+      - 8940227892
+- order_id:
+  - #W4689314
+- payment_history:
+  - [0]:
+    - amount:
+      - 2895.55
+    - payment_method_id:
+      - payment_5414cb9927e6
+    - transaction_type:
+      - payment
+- status:
+  - delivered
+- user_id:
+  - user_9890058d3f2f","{""content"":""I found the order for the digital camera. Here are the details:\n\n- **Order ID:** #W4689314\n- **Item:** Digital Camera\n- **Price:** $2895.55\n- **Status:** Delivered\n- **Payment Method:** Mastercard ending in 8484\n\nTo proceed with the return, please confirm the following details:\n- **Order ID:** #W4689314\n- **Item to be returned:** Digital Camera\n- **Refund to:** Original payment method (Mastercard ending in 8484) or an existing gift card\n\nOnce you confirm, I'll initiate t"
+SEV-080,airline,$.reservation_id,"""9MRJD4""","""9MRJD5""",$.flights[2].price,579,665,"Observation:
+- cabin:
+  - business
+- created_at:
+  - 2024-05-05T00:38:24
+- destination:
+  - LAX
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-06
+    - destination:
+      - SFO
+    - flight_number:
+      - HAT009
+    - origin:
+      - PHX
+    - price:
+      - 1398
+  - [1]:
+    - date:
+      - 2024-05-06
+    - destination:
+      - LAX
+    - flight_number:
+      - HAT273
+    - origin:
+      - SFO
+    - price:
+      - 1798
+  - [2]:
+    - date:
+      - 2024-05-13
+    - destination:
+      - SFO
+    - flight_number:
+      - HAT094
+    - origin:
+      - LAX
+    - price:
+      - 665
+  - [3]:
+    - date:
+      - 2024-05-13
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT123
+    - origin:
+      - SFO
+    - price:
+      - 1560
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - PHX
+- passengers:
+  - [0]:
+    - dob:
+      - dob_b479001be4b1
+    -","{""content"":""\n\nHere are your upcoming flights (excluding the two you want to cancel):\n1. Reservation 7WPL39: DEN → DFW → EWR on May 28\n2. Reservation 3EMQJ6: ORD → ATL → SEA on May 25, returning SEA → JFK → ORD on May 29-30\n\nReservation A90KR2 was for May 14 (yesterday) and 9MRJD4 was for May 6-13 (last week).\n\nRegarding the total cost for the cabin upgrade of XEHM4B, the additional charge was $288 which has been charged to your credit card ending in 2135.\n\nWould you like me to proceed "
+SEV-081,retail,$.address.state,"""PA""","""RI""",,,,"Observation:
+- address:
+  - address1:
+    - address_9c0e785eed18
+  - address2:
+    - address_efbb41849a53
+  - city:
+    - address_bf6ae3300983
+  - country:
+    - USA
+  - state:
+    - RI
+  - zip:
+    - address_75bca79871ac
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 9647292434
+    - name:
+      - T-Shirt
+    - options:
+      - color:
+        - purple
+      - material:
+        - polyester
+      - size:
+        - S
+      - style:
+        - v-neck
+    - price:
+      - 53.48
+    - product_id:
+      - 9523456873
+- order_id:
+  - #W6247578
+- payment_history:
+  - [0]:
+    - amount:
+      - 53.27
+    - payment_method_id:
+      - payment_6529811b38eb
+    - transaction_type:
+      - payment
+  - [1]:
+    - amount:
+      - 0.20999999999999375
+    - payment_method_id:
+      - payment_6529811b38eb
+    - transaction_type:
+      - payment
+- status:
+  - pending (item modified)","{""content"":""\n\nGreat! The first order has been successfully modified. \n\nNow, let's handle Order #W4776164 (the blue S cotton v-neck shirt). Here are the change details:\n- Original item: Blue S cotton v-neck T-shirt (item ID: 8349118980) at $53.43\n- New item: Purple S polyester v-neck T-shirt (item ID: 9647292434) at $53.48\n- Price difference: You'll need to pay an additional $0.05\n- This will be charged to your MasterCard ending in 2478\n\nWould you like to proceed with this change? Pleas"
+SEV-082,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- [0]:
+  - [0]:
+    - available_seats:
+      - basic_economy:
+        - 9
+      - business:
+        - 15
+      - economy:
+        - 2
+    - date:
+      - 2024-05-17
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT006
+    - origin:
+      - BOS
+    - prices:
+      - basic_economy:
+        - 71
+      - business:
+        - 355
+      - economy:
+        - 104
+    - scheduled_arrival_time_est:
+      - 08:30:00
+    - scheduled_departure_time_est:
+      - 03:00:00
+    - status:
+      - available
+  - [1]:
+    - available_seats:
+      - basic_economy:
+        - 0
+      - business:
+        - 12
+      - economy:
+        - 7
+    - date:
+      - 2024-05-17
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT018
+    - origin:
+      - SEA
+    - prices:
+      - basic_economy:
+        - 75
+      - business:
+        - 474
+      - economy:
+        - 100
+    - scheduled_","{""content"":""\n\nI can see several alternative options for your return flight on May 17th. Here are some choices:\n\n1. BOS-SEA-LAS: Departure 3:00 AM, arrival 6:30 PM (via Seattle)\n2. BOS-MCO-LAS: Departure 4:00 AM, arrival 2:00 PM (via Orlando)\n3. BOS-MIA-LAS: Departure 8:00 AM, arrival 12:30 AM next day (via Miami)\n\nSince your current reservation is in basic economy, I should note that some of these options may have limited basic economy availability. Would you like to proceed with changin"
+SEV-083,retail,"$.variants[""7453605304""].item_id","""7453605304""","""7453605305""",,,,"Observation:
+- name:
+  - Desk Lamp
+- product_id:
+  - 6817146515
+- variants:
+  - 1270145486:
+    - available:
+      - no
+    - item_id:
+      - 1270145486
+    - options:
+      - brightness:
+        - high
+      - color:
+        - white
+      - power source:
+        - battery
+    - price:
+      - 144.07
+  - 1569765161:
+    - available:
+      - yes
+    - item_id:
+      - 1569765161
+    - options:
+      - brightness:
+        - low
+      - color:
+        - silver
+      - power source:
+        - AC adapter
+    - price:
+      - 143.02
+  - 4385534692:
+    - available:
+      - no
+    - item_id:
+      - 4385534692
+    - options:
+      - brightness:
+        - high
+      - color:
+        - white
+      - power source:
+        - AC adapter
+    - price:
+      - 138.07
+  - 4447749792:
+    - available:
+      - no
+    - item_id:
+      - 4447749792
+    - options:
+      - brightness:
+        - medium
+      ","{""content"":""\n\nI can help you with the exchange. Here are your current items and the available options:\n\nCurrent Water Bottle:\n- 500ml capacity, glass material, black color\n\nCurrent Desk Lamp:\n- White color, medium brightness, USB power source\n\nFor a larger water bottle, I can offer these options:\n1. 750ml glass bottle in black (price: $54.85)\n2. 1000ml stainless steel bottle in black (price: $46.51)\n3. 750ml stainless steel bottle in various colors\n\nFor a brighter desk lamp, I can"
+SEV-084,retail,$.name,"""Bluetooth Speaker""","""Water Bottle""",,,,"Observation:
+- name:
+  - Water Bottle
+- product_id:
+  - 4768869376
+- variants:
+  - 1052700637:
+    - available:
+      - yes
+    - item_id:
+      - 1052700637
+    - options:
+      - battery life:
+        - 20 hours
+      - color:
+        - red
+      - water resistance:
+        - no
+    - price:
+      - 285.81
+  - 1689914594:
+    - available:
+      - yes
+    - item_id:
+      - 1689914594
+    - options:
+      - battery life:
+        - 10 hours
+      - color:
+        - red
+      - water resistance:
+        - no
+    - price:
+      - 315.2
+  - 2635605237:
+    - available:
+      - yes
+    - item_id:
+      - 2635605237
+    - options:
+      - battery life:
+        - 20 hours
+      - color:
+        - blue
+      - water resistance:
+        - no
+    - price:
+      - 271.89
+  - 2652637226:
+    - available:
+      - no
+    - item_id:
+      - 2652637226
+    - options:
+      - battery life:
+        - 20 ","{""content"":""\n\nLet me check all available product types to see if there are other bluetooth speaker options.\n\n<antml:function_calls>\n<antml:invoke name=\""list_all_product_types\"">\n</antml:invoke>\n</antml:function_calls>"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":[{""function"":{""arguments"":{},""name"":""list_all_product_types""},""id"":""0""}]}"
+SEV-085,retail,$.items[1].options.color,"""green""","""blue""",,,,"Observation:
+- address:
+  - address1:
+    - address_f94188c95045
+  - address2:
+    - address_6afd8def0fab
+  - city:
+    - address_327573e1cd2e
+  - country:
+    - USA
+  - state:
+    - CO
+  - zip:
+    - address_2f9478f7f7b6
+- cancel_reason:
+  - no longer needed
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 6117189161
+    - name:
+      - Action Camera
+    - options:
+      - color:
+        - silver
+      - resolution:
+        - 4K
+      - waterproof:
+        - yes
+    - price:
+      - 481.5
+    - product_id:
+      - 3377618313
+  - [1]:
+    - item_id:
+      - 9879255677
+    - name:
+      - Patio Umbrella
+    - options:
+      - color:
+        - blue
+      - material:
+        - olefin
+      - size:
+        - 6 ft
+      - tilt mechanism:
+        - auto tilt
+    - price:
+      - 288.82
+    - product_id:
+      - 9743693396
+  - [2]:
+    - item_id:
+      - 7453605304
+    ","{""content"":""\n\nI've cancelled your order #W9348897. The refund of $1,166.98 will be processed back to your Visa card ending in 6593 within 5-7 business days. You're now free to place a new order with your preferred payment method.\n\nIs there anything else I can help you with?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-086,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-05T23:00:15
+- destination:
+  - MSP
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - MCO
+    - flight_number:
+      - HAT235
+    - origin:
+      - BOS
+    - price:
+      - 122
+  - [1]:
+    - date:
+      - 2024-05-19
+    - destination:
+      - MSP
+    - flight_number:
+      - HAT298
+    - origin:
+      - MCO
+    - price:
+      - 127
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - BOS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_07abd7b730cc
+    - first_name:
+      - person_a06b9af8c4f1
+    - last_name:
+      - person_95e2ec02eaf8
+  - [1]:
+    - dob:
+      - dob_945ff36c6f85
+    - first_name:
+      - person_7bb0603f3e10
+    - last_name:
+      - person_352fb6153597
+- payment_history:
+  - [0]:
+    - amount:
+      - 498
+    - payment_id:
+      - payment_3d65b3f9e0d6
+","{""content"":""\n\nI can see your reservation details. This is a one-way economy flight from Boston (BOS) to Minneapolis (MSP) with a stop in Orlando (MCO), scheduled for May 18-19, 2024, for two passengers.\n\nWhat changes would you like to make to your reservation? I can help you with:\n1. Changing the flights (keeping the same origin and destination)\n2. Changing the cabin class\n3. Adding checked baggage\n4. Updating passenger information\n\nPlease let me know what specific changes you'd like t"
+SEV-087,airline,$.flights[3].origin,"""EWR""","""IAH""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-13T03:26:54
+- destination:
+  - MIA
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-27
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT228
+    - origin:
+      - LAX
+    - price:
+      - 76
+  - [1]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - MIA
+    - flight_number:
+      - HAT202
+    - origin:
+      - EWR
+    - price:
+      - 54
+  - [2]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - EWR
+    - flight_number:
+      - HAT192
+    - origin:
+      - MIA
+    - price:
+      - 67
+  - [3]:
+    - date:
+      - 2024-05-29
+    - destination:
+      - LAX
+    - flight_number:
+      - HAT041
+    - origin:
+      - IAH
+    - price:
+      - 58
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - LAX
+- passengers:
+  - [0]:
+    - dob:
+      - dob_ef550abdc724
+    - f","{""content"":""\n\nI can see your most recent reservation (SDZQKO) is for a round-trip flight from LAX to MIA scheduled for May 27-29, but it hasn't happened yet. Your previous reservation (4OG6T3) is a round-trip flight from BOS to LAS with connections in SEA, which was scheduled for May 11-17. Was this the delayed flight you're referring to?\n\nI notice that you're a Gold member, so if you experienced a delay and would like to discuss compensation, I can help you with that. Could you confirm if i"
+SEV-088,airline,$.flights[0].flight_number,"""HAT223""","""HAT224""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-05T04:17:23
+- destination:
+  - SEA
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-15
+    - destination:
+      - ATL
+    - flight_number:
+      - HAT224
+    - origin:
+      - ORD
+    - price:
+      - 173
+  - [1]:
+    - date:
+      - 2024-05-15
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT039
+    - origin:
+      - ATL
+    - price:
+      - 180
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - ORD
+- passengers:
+  - [0]:
+    - dob:
+      - dob_3d1dded40d3d
+    - first_name:
+      - person_0a765d1e2e78
+    - last_name:
+      - person_c04e232922eb
+  - [1]:
+    - dob:
+      - dob_55e832a29c34
+    - first_name:
+      - person_16060e3d2c33
+    - last_name:
+      - person_19085611f351
+  - [2]:
+    - dob:
+      - dob_d5eb00a49133
+    - first_name:
+      - person_0466b186f02b
+    - last","{""content"":""\n\nI've found your reservation with flight HAT039. This is reservation M61CQM, which is a one-way journey from ORD to SEA with a connection in ATL. You're traveling in economy class with two other passengers (Mia Thomas and Liam Johnson).\n\nSince this flight is scheduled for today (May 15, 2024) and you're mentioning it's delayed, as a silver member who is experiencing a delay, you may have options available to you. Would you like to:\n\n1. Change your flights to different ones (if"
+SEV-089,airline,$.insurance,"""no""","""yes""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-01T23:25:01
+- destination:
+  - DTW
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - ORD
+    - flight_number:
+      - HAT079
+    - origin:
+      - JFK
+    - price:
+      - 63
+  - [1]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - DTW
+    - flight_number:
+      - HAT020
+    - origin:
+      - ORD
+    - price:
+      - 78
+  - [2]:
+    - date:
+      - 2024-05-24
+    - destination:
+      - JFK
+    - flight_number:
+      - HAT263
+    - origin:
+      - DTW
+    - price:
+      - 53
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - JFK
+- passengers:
+  - [0]:
+    - dob:
+      - dob_26353bbbdf86
+    - first_name:
+      - person_1d41ab69e607
+    - last_name:
+      - person_95e2ec02eaf8
+- payment_history:
+  - [0]:
+    - amount:
+      - 194
+    - payment_id:
+","{""content"":""Your reservation DF89BM is a round-trip flight in basic economy class with the following itinerary:\n\n- **Outbound:**\n  - JFK to ORD on flight HAT079, departing on 2024-05-17\n  - ORD to DTW on flight HAT020, departing on 2024-05-17\n\n- **Return:**\n  - DTW to JFK on flight HAT263, departing on 2024-05-24\n\nPlease note that basic economy flights cannot be modified. If you need to make changes, you might need to cancel and rebook, subject to the cancellation policy. Would you like"
+SEV-090,retail,$.items[0].options.capacity,"""1.5L""",null,,,,"Observation:
+- address:
+  - address1:
+    - address_afe3ba4fce95
+  - address2:
+    - address_9ae426ab35e0
+  - city:
+    - address_32b762631aef
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_a40cfeb82fc2
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 2698416822
+    - name:
+      - Electric Kettle
+    - options:
+      - color:
+        - white
+      - material:
+        - plastic
+    - price:
+      - 149.45
+    - product_id:
+      - 1075968781
+  - [1]:
+    - item_id:
+      - 9949163720
+    - name:
+      - Wristwatch
+    - options:
+      - dial color:
+        - black
+      - strap material:
+        - leather
+    - price:
+      - 1908.15
+    - product_id:
+      - 6066914160
+  - [2]:
+    - item_id:
+      - 3778705663
+    - name:
+      - Bookshelf
+    - options:
+      - color:
+        - black
+      - height:
+        - 6 ft
+      - material:
+        -","{""content"":""The wristwatch in your order #W9810810 has been successfully modified to have a black dial while keeping the leather strap. The price difference of $77.15 has been refunded to your gift card.\n\nIf there's anything else you need help with, feel free to let me know!"",""role"":""assistant""}"
+SEV-091,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-03T23:15:42
+- destination:
+  - ORD
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-26
+    - destination:
+      - DTW
+    - flight_number:
+      - HAT248
+    - origin:
+      - MSP
+    - price:
+      - 160
+  - [1]:
+    - date:
+      - 2024-05-26
+    - destination:
+      - ORD
+    - flight_number:
+      - HAT119
+    - origin:
+      - DTW
+    - price:
+      - 178
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - MSP
+- passengers:
+  - [0]:
+    - dob:
+      - dob_1396892aede8
+    - first_name:
+      - person_15a9b20b6741
+    - last_name:
+      - person_c04e232922eb
+- payment_history:
+  - [0]:
+    - amount:
+      - 338
+    - payment_id:
+      - payment_bb4e2c9f7a33
+- reservation_id:
+  - THY2DG
+- total_baggages:
+  - 1
+- user_id:
+  - user_b37181cfc2cb","{""content"":""\n\nI apologize, but I don't see a current round-trip reservation from Newark (EWR) to Austin (AUS) for today in your reservations. I see:\n1. A flight from Newark (EWR) to Houston (IAH) for May 28\n2. A flight from Las Vegas (LAS) to Orlando (MCO) for May 17\n3. A flight from Minneapolis (MSP) to Chicago (ORD) for May 26\n\nCould you double-check if you might have booked this reservation under a different user ID? Or could you verify if the travel dates or cities might be different "
+SEV-092,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-02T06:02:56
+- destination:
+  - SFO
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-19
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT214
+    - origin:
+      - MCO
+    - price:
+      - 57
+  - [1]:
+    - date:
+      - 2024-05-20
+    - destination:
+      - SFO
+    - flight_number:
+      - HAT009
+    - origin:
+      - PHX
+    - price:
+      - 83
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - MCO
+- passengers:
+  - [0]:
+    - dob:
+      - dob_71355a7ec10b
+    - first_name:
+      - person_b8356a746fdd
+    - last_name:
+      - person_d837556a6b2f
+  - [1]:
+    - dob:
+      - dob_c6680ace8780
+    - first_name:
+      - person_c3898523b9ad
+    - last_name:
+      - person_95e2ec02eaf8
+- payment_history:
+  - [0]:
+    - amount:
+      - 280
+    - payment_id:
+      - payment_717d05cc5","{""content"":""\n\nLet me check your eligibility for cancellation. I can see that:\n1. This is a basic economy reservation\n2. No travel insurance was purchased\n3. The reservation was made on May 2, 2024 (more than 24 hours ago)\n4. The flights haven't been taken yet\n\nAccording to our policy, basic economy tickets can only be cancelled in these cases:\n- Within 24 hours of booking\n- If you have travel insurance and meet the conditions\n- If the airline cancelled the flight\n\nSince none of thes"
+SEV-093,retail,"$.variants[""5222576926""].item_id","""5222576926""","""5222576927""",,,,"Observation:
+- name:
+  - Mechanical Keyboard
+- product_id:
+  - 1656367028
+- variants:
+  - 1151293680:
+    - available:
+      - yes
+    - item_id:
+      - 1151293680
+    - options:
+      - backlight:
+        - RGB
+      - size:
+        - full size
+      - switch type:
+        - linear
+    - price:
+      - 272.33
+  - 1340995114:
+    - available:
+      - no
+    - item_id:
+      - 1340995114
+    - options:
+      - backlight:
+        - none
+      - size:
+        - full size
+      - switch type:
+        - tactile
+    - price:
+      - 235.13
+  - 1421289881:
+    - available:
+      - yes
+    - item_id:
+      - 1421289881
+    - options:
+      - backlight:
+        - none
+      - size:
+        - 80%
+      - switch type:
+        - linear
+    - price:
+      - 268.77
+  - 2299424241:
+    - available:
+      - yes
+    - item_id:
+      - 2299424241
+    - options:
+      - backlight:
+        - RGB
+      - si","{""content"":""\n\nHere are your current items in the pending order:\n1. Running Shoes (item_id: 9791469541) - Yellow, Size 9, Synthetic, Rubber sole - $147.05\n2. Mechanical Keyboard (item_id: 1340995114) - Tactile switch, No backlight, Full size - $235.13\n\nAvailable options:\n\nFor Running Shoes (same size 9):\n- Black synthetic with rubber sole (item_id: 4107812777) - $155.33\n- White mesh with rubber sole (item_id: 9635758562) - $148.95\n\nFor Mechanical Keyboard:\n- Linear switch, no backlig"
+SEV-094,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- name:
+  - Desk Lamp
+- product_id:
+  - 6817146515
+- variants:
+  - 1270145486:
+    - available:
+      - no
+    - item_id:
+      - 1270145486
+    - options:
+      - brightness:
+        - high
+      - color:
+        - white
+      - power source:
+        - battery
+    - price:
+      - 144.07
+  - 1569765161:
+    - available:
+      - yes
+    - item_id:
+      - 1569765161
+    - options:
+      - brightness:
+        - low
+      - color:
+        - silver
+      - power source:
+        - AC adapter
+    - price:
+      - 143.02
+  - 4385534692:
+    - available:
+      - no
+    - item_id:
+      - 4385534692
+    - options:
+      - brightness:
+        - high
+      - color:
+        - white
+      - power source:
+        - AC adapter
+    - price:
+      - 138.07
+  - 4447749792:
+    - available:
+      - no
+    - item_id:
+      - 4447749792
+    - options:
+      - brightness:
+        - medium
+      ","{""content"":""The cheapest available Desk Lamp option is the one with the following specifications:\n\n- Color: Black\n- Brightness: Medium\n- Power Source: AC Adapter\n- Price: $135.24\n\nWould you like to proceed with changing the Desk Lamp in your order to this option? If so, please confirm the payment method you'd like to use for the price difference. Your current payment method is a gift card."",""role"":""assistant""}"
+SEV-095,retail,$.items[0].item_id,"""5796612084""","""5796612085""",,,,"Observation:
+- address:
+  - address1:
+    - address_74a5dd7c896b
+  - address2:
+    - address_88308d86e380
+  - city:
+    - address_c6502b0406c2
+  - country:
+    - USA
+  - state:
+    - IN
+  - zip:
+    - address_dd2a23b88d94
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 5796612084
+    - tracking_id:
+      - [0]:
+        - 200246490130
+- items:
+  - [0]:
+    - item_id:
+      - 5796612085
+    - name:
+      - Gaming Mouse
+    - options:
+      - color:
+        - RGB
+      - connectivity:
+        - wired
+      - sensor type:
+        - optical
+    - price:
+      - 158.89
+    - product_id:
+      - 5713490933
+- order_id:
+  - #W7387996
+- payment_history:
+  - [0]:
+    - amount:
+      - 158.89
+    - payment_method_id:
+      - payment_571f589eedce
+    - transaction_type:
+      - payment
+- status:
+  - delivered
+- user_id:
+  - user_e520db3fee59","{""content"":""Here are your recent orders:\n\n1. **Order #W5490111** (Delivered)\n   - Water Bottle (750ml, glass, black)\n   - Mechanical Keyboard (linear switch, 80%)\n   - Action Camera (4K, waterproof, silver)\n   - Backpack (medium, leather, camera compartment)\n\n2. **Order #W7387996** (Delivered)\n   - Gaming Mouse (RGB, optical, wired)\n\nPlease let me know which items you would like to return or cancel, and I'll assist you further."",""role"":""assistant""}"
+SEV-096,retail,$.address.state,"""IL""","""IN""",,,,"Observation:
+- address:
+  - address1:
+    - address_ccb94f2783c1
+  - address2:
+    - address_77539b202950
+  - city:
+    - address_e22e74699906
+  - country:
+    - USA
+  - state:
+    - IN
+  - zip:
+    - address_dec88d428d1c
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 4803681337
+      - [1]:
+        - 8725040869
+      - [2]:
+        - 6439196450
+      - [3]:
+        - 1345513440
+      - [4]:
+        - 4983901480
+    - tracking_id:
+      - [0]:
+        - 840887978435
+- items:
+  - [0]:
+    - item_id:
+      - 4803681337
+    - name:
+      - Tablet
+    - options:
+      - color:
+        - black
+      - screen size:
+        - 8-inch
+      - storage:
+        - 64GB
+    - price:
+      - 962.34
+    - product_id:
+      - 8024098596
+  - [1]:
+    - item_id:
+      - 8725040869
+    - name:
+      - Action Camera
+    - options:
+      - color:
+        - black
+      - resolution:
+        -","{""content"":""The order with ID **#W7895761** was sent to the following address in Chicago:\n\n- **Address:** 943 Maple Drive, Suite 356, Chicago, IL 60621, USA\n\nThe status of this order is **delivered**. If your daughter hasn't received it, you might want to check with the delivery service or the building's management to see if it was left in a secure location. If you need further assistance, feel free to let me know!"",""role"":""assistant""}"
+SEV-097,airline,$[3].scheduled_arrival_time_est,"""00:00:00+1""","""01:00:00+1""",,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 20
+    - business:
+      - 20
+    - economy:
+      - 10
+  - destination:
+    - JFK
+  - flight_number:
+    - HAT021
+  - origin:
+    - SEA
+  - prices:
+    - basic_economy:
+      - 96
+    - business:
+      - 337
+    - economy:
+      - 152
+  - scheduled_arrival_time_est:
+    - 01:00:00+1
+  - scheduled_departure_time_est:
+    - 19:00:00
+  - status:
+    - available
+- [1]:
+  - available_seats:
+    - basic_economy:
+      - 19
+    - business:
+      - 13
+    - economy:
+      - 5
+  - destination:
+    - JFK
+  - flight_number:
+    - HAT089
+  - origin:
+    - SEA
+  - prices:
+    - basic_economy:
+      - 89
+    - business:
+      - 417
+    - economy:
+      - 126
+  - scheduled_arrival_time_est:
+    - 16:00:00
+  - scheduled_departure_time_est:
+    - 10:00:00
+  - status:
+    - available
+- [2]:
+  - available_seats:
+    - basic_economy:
+   ","{""content"":null,""role"":""assistant"",""tool_calls"":[{""function"":{""arguments"":""{\""origin\"":\""JFK\"",\""destination\"":\""IAH\"",\""date\"":\""2024-05-22\""}"",""name"":""search_direct_flight""},""id"":""call_4kpZcVNr2yC8MhcrER6d2lva"",""type"":""function""}]}"
+SEV-098,airline,$[0].prices.basic_economy,53,54,,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 7
+    - business:
+      - 19
+    - economy:
+      - 15
+  - destination:
+    - LAX
+  - flight_number:
+    - HAT041
+  - origin:
+    - EWR
+  - prices:
+    - basic_economy:
+      - 54
+    - business:
+      - 458
+    - economy:
+      - 136
+  - scheduled_arrival_time_est:
+    - 12:30:00
+  - scheduled_departure_time_est:
+    - 07:00:00
+  - status:
+    - available","{""content"":""\n\nI found one nonstop flight available on May 21st:\n- Flight Number: HAT041\n- From: EWR (Newark)\n- To: LAX (Los Angeles)\n- Departure: 7:00 AM EST\n- Arrival: 12:30 PM EST\n\nAvailable fare options:\n- Basic Economy: $53\n- Economy: $136\n- Business: $458\n\nWould you like to proceed with booking this flight? If so, I'll need:\n1. Your user ID to make the booking\n2. Which fare class you prefer (basic economy, economy, or business)\n3. Whether you'd like to add travel insurance "
+SEV-099,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_ccb94f2783c1
+  - address2:
+    - address_77539b202950
+  - city:
+    - address_e22e74699906
+  - country:
+    - USA
+  - state:
+    - IL
+  - zip:
+    - address_dec88d428d1c
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 4803681337
+      - [1]:
+        - 8725040869
+      - [2]:
+        - 6439196450
+      - [3]:
+        - 1345513440
+      - [4]:
+        - 4983901480
+    - tracking_id:
+      - [0]:
+        - 840887978435
+- items:
+  - [0]:
+    - item_id:
+      - 4803681337
+    - name:
+      - Tablet
+    - options:
+      - color:
+        - black
+      - screen size:
+        - 8-inch
+      - storage:
+        - 64GB
+    - price:
+      - 962.34
+    - product_id:
+      - 8024098596
+  - [1]:
+    - item_id:
+      - 8725040869
+    - name:
+      - Action Camera
+    - options:
+      - color:
+        - black
+      - resolution:
+        -","{""content"":""\n\nI've found the order that was sent to Chicago (Order #W7895761). The order includes a Tablet, Action Camera, Mechanical Keyboard, Vacuum Cleaner, and Smart Thermostat. According to our records, this order has been delivered to:\n\n943 Maple Drive\nSuite 356\nChicago, IL 60621\n\nThe order status shows as \""delivered\"" with tracking number 840887978435. Since the system confirms delivery, I recommend checking with your daughter to make sure she received the package, as it should h"
+SEV-100,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - business
+- created_at:
+  - 2024-05-13T05:37:57
+- destination:
+  - SEA
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-13
+    - destination:
+      - PHX
+    - flight_number:
+      - HAT214
+    - origin:
+      - MCO
+    - price:
+      - 1377
+  - [1]:
+    - date:
+      - 2024-05-14
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT045
+    - origin:
+      - PHX
+    - price:
+      - 1712
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - MCO
+- passengers:
+  - [0]:
+    - dob:
+      - dob_29c001393af3
+    - first_name:
+      - person_0f41e336893e
+    - last_name:
+      - person_226ee52c0f7e
+  - [1]:
+    - dob:
+      - dob_a681b28190a3
+    - first_name:
+      - person_0f41e336893e
+    - last_name:
+      - person_1967d4da9c91
+- payment_history:
+  - [0]:
+    - amount:
+      - 6178
+    - payment_id:
+      - payment_1ea0cea98","{""content"":""The reservation with ID NQNU5R has been successfully cancelled. The refund will be processed to your original payment method within 5 to 7 business days.\n\nIf there's anything else you need assistance with, feel free to let me know!"",""role"":""assistant""}"
+SEV-101,retail,$.payment_history[0].transaction_type,"""payment""","""refund""",$.payment_history[1].transaction_type,"""refund""","""payment""","Observation:
+- address:
+  - address1:
+    - address_c96394161ced
+  - address2:
+    - address_b71ea9f9c4a2
+  - city:
+    - address_90b9a8242756
+  - country:
+    - USA
+  - state:
+    - NY
+  - zip:
+    - address_899f6cf376ff
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 9440686670
+    - name:
+      - Bluetooth Speaker
+    - options:
+      - battery life:
+        - 20 hours
+      - color:
+        - green
+      - water resistance:
+        - no
+    - price:
+      - 298.91
+    - product_id:
+      - 4768869376
+  - [1]:
+    - item_id:
+      - 4273929280
+    - name:
+      - E-Reader
+    - options:
+      - connectivity:
+        - Wi-Fi + Cellular
+      - screen size:
+        - 7-inch
+      - storage:
+        - 32GB
+    - price:
+      - 244.95
+    - product_id:
+      - 3801771308
+- order_id:
+  - #W6750959
+- payment_history:
+  - [0]:
+    - amount:
+      - 547.62
+    - paym","{""content"":""The item in your order **#W6750959** has been successfully modified. The Bluetooth Speaker has been changed to the green option with 20 hours of battery life and no water resistance. A refund of $3.76 has been processed to your original payment method.\n\nIf there's anything else you need, feel free to ask!"",""role"":""assistant""}"
+SEV-102,retail,$.items[0].options.theme,"""art""","""nature""",,,,"Observation:
+- address:
+  - address1:
+    - address_7be44d3db83b
+  - address2:
+    - address_f51397fd8b3c
+  - city:
+    - address_551a9c288929
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_f88b75c89e67
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 1096508426
+    - name:
+      - Jigsaw Puzzle
+    - options:
+      - difficulty level:
+        - beginner
+      - pieces:
+        - 500
+      - theme:
+        - nature
+    - price:
+      - 46.13
+    - product_id:
+      - 1808611083
+  - [1]:
+    - item_id:
+      - 5917587651
+    - name:
+      - Backpack
+    - options:
+      - color:
+        - grey
+      - compartment:
+        - laptop
+      - material:
+        - polyester
+      - size:
+        - medium
+    - price:
+      - 212.79
+    - product_id:
+      - 2524789262
+  - [2]:
+    - item_id:
+      - 3876764226
+    - name:
+      - Grill
+    - options:
+","{""content"":""\n\nThe puzzle has been successfully changed to the 500-piece beginner art puzzle. A refund of $7.98 will be processed to your PayPal account.\n\nNow, regarding your address, I need to update it from 443 to 445 Maple Drive. Would you like me to make this address correction now? Please confirm with \""yes\"" to proceed with the address update."",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-103,airline,$.insurance,"""yes""","""no""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-01T16:18:10
+- destination:
+  - ORD
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-25
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT056
+    - origin:
+      - EWR
+    - price:
+      - 155
+  - [1]:
+    - date:
+      - 2024-05-25
+    - destination:
+      - ORD
+    - flight_number:
+      - HAT138
+    - origin:
+      - IAH
+    - price:
+      - 185
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - EWR
+- passengers:
+  - [0]:
+    - dob:
+      - dob_1560226a3822
+    - first_name:
+      - person_94655e5080be
+    - last_name:
+      - person_d837556a6b2f
+- payment_history:
+  - [0]:
+    - amount:
+      - 161
+    - payment_id:
+      - payment_9652813524c4
+  - [1]:
+    - amount:
+      - 209
+    - payment_id:
+      - payment_9652813524c4
+- reservation_id:
+  - FQ8APE
+- total_baggages:
+ ","{""content"":""\n\nNow, let me update the passenger information:\n\n<antml:function_calls>\n<antml:invoke name=\""update_reservation_passengers\"">\n<antml:parameter name=\""reservation_id\"">FQ8APE</antml:parameter>\n<antml:parameter name=\""passengers\"">[{\""first_name\"": \""Omar\"", \""last_name\"": \""Rossi\"", \""dob\"": \""1970-06-06\""}]</antml:parameter>\n</antml:invoke>\n</antml:function_calls>"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":[{""function"":{""arguments"":{""passengers"":[{""dob"":""1970-06-06"
+SEV-104,airline,$.flights[1].flight_number,"""HAT204""","""HAT205""",$.flights[1].date,"""2024-05-28""","""2024-05-29""","Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-14T16:03:16
+- destination:
+  - SFO
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-26
+    - destination:
+      - SFO
+    - flight_number:
+      - HAT023
+    - origin:
+      - JFK
+    - price:
+      - 53
+  - [1]:
+    - date:
+      - 2024-05-29
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT205
+    - origin:
+      - SFO
+    - price:
+      - 71
+  - [2]:
+    - date:
+      - 2024-05-28
+    - destination:
+      - JFK
+    - flight_number:
+      - HAT021
+    - origin:
+      - SEA
+    - price:
+      - 65
+- insurance:
+  - no
+- nonfree_baggages:
+  - 0
+- origin:
+  - JFK
+- passengers:
+  - [0]:
+    - dob:
+      - dob_21a586e8517b
+    - first_name:
+      - person_848a59ec306a
+    - last_name:
+      - person_8470850ea7ae
+  - [1]:
+    - dob:
+      - dob_17f7bcc9de3f
+    - first_name:
+      - pe","{""content"":""\n\nNow, I'll book your new business class reservation.\n\n<antml:function_calls>\n<antml:invoke name=\""book_reservation\"">\n<antml:parameter name=\""user_id\"">mohamed_silva_9265</antml:parameter>\n<antml:parameter name=\""origin\"">JFK</antml:parameter>\n<antml:parameter name=\""destination\"">SFO</antml:parameter>\n<antml:parameter name=\""flight_type\"">round_trip</antml:parameter>\n<antml:parameter name=\""cabin\"">business</antml:parameter>\n<antml:parameter name=\""flights\"">[\n  {\""flig"
+SEV-105,airline,$.flights[1].flight_number,"""HAT279""","""HAT270""",,,,"Observation:
+- cabin:
+  - business
+- created_at:
+  - 2024-05-06T19:53:46
+- destination:
+  - IAH
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-21
+    - destination:
+      - JFK
+    - flight_number:
+      - HAT276
+    - origin:
+      - SEA
+    - price:
+      - 117
+  - [1]:
+    - date:
+      - 2024-05-22
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT270
+    - origin:
+      - JFK
+    - price:
+      - 102
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - SEA
+- passengers:
+  - [0]:
+    - dob:
+      - dob_0e71fe96a5f8
+    - first_name:
+      - person_b1a38147d887
+    - last_name:
+      - person_dfc40b8c5b1d
+  - [1]:
+    - dob:
+      - dob_c1b5d534c136
+    - first_name:
+      - person_b8356a746fdd
+    - last_name:
+      - person_19085611f351
+- payment_history:
+  - [0]:
+    - amount:
+      - 5662
+    - payment_id:
+      - payment_a8713fb472","{""content"":""\n\nI've changed all your business class reservations to economy. Here's your total savings breakdown:\n\n1. JG7FMM: Refund of $6,594\n2. 2FBBAH: Refund of $3,925\n3. X7BYG1: Refund of $5,418\n4. EQ1G6C: Refund of $2,452\n5. BOH180: Refund of $5,164\n\nTotal savings: $23,553\n\nThe refunds have been processed to the original payment methods used for each booking. They should appear in your accounts within 5-7 business days.\n\nIs there anything else you need help with?"",""role"":""assis"
+SEV-106,retail,$.Mechanical Keyboard,"""1656367028""","""1656367029""",$.Water Bottle,"""8310926033""","""8310926034""","Observation:
+- Action Camera:
+  - 3377618313
+- Air Purifier:
+  - 3821016478
+- Backpack:
+  - 2524789262
+- Bicycle:
+  - 9783735446
+- Bluetooth Speaker:
+  - 4768869376
+- Bookshelf:
+  - 8600330539
+- Coffee Maker:
+  - 7996920482
+- Cycling Helmet:
+  - 7765186836
+- Desk Lamp:
+  - 6817146515
+- Digital Camera:
+  - 8940227892
+- Dumbbell Set:
+  - 7233192239
+- E-Reader:
+  - 3801771308
+- Electric Kettle:
+  - 1075968781
+- Electric Toothbrush:
+  - 7352963235
+- Espresso Machine:
+  - 4354588079
+- Fleece Jacket:
+  - 8560156827
+- Gaming Mouse:
+  - 5713490933
+- Garden Hose:
+  - 6679515468
+- Grill:
+  - 6819683148
+- Headphones:
+  - 6992792935
+- Hiking Boots:
+  - 7363354090
+- Indoor Security Camera:
+  - 2985987096
+- Jigsaw Puzzle:
+  - 1808611083
+- LED Light Bulb:
+  - 2696197613
+- Laptop:
+  - 4760268021
+- Luggage Set:
+  - 5426915165
+- Makeup Kit:
+  - 5149340237
+- Mechanical Keyboard:
+  - 1656367029
+- Notebook:
+","{""content"":""\n\nI see that there's only one type of Mechanical Keyboard in our system (product ID: 1656367028) - which is the one you currently have in your order. Could you please:\n\n1. Confirm if you'd like to see the available options for this keyboard model, or\n2. Let me know if you're interested in a different product entirely?\n\nI want to make sure we modify your order correctly before making any changes that would affect your gift card balance."",""role"":""assistant"",""tool_call_id"":null,"""
+SEV-107,retail,$.items[0].name,"""Luggage Set""","""Water Bottle""",,,,"Observation:
+- address:
+  - address1:
+    - address_2dc58d4227aa
+  - address2:
+    - address_fbdffe61f9e8
+  - city:
+    - address_90b9a8242756
+  - country:
+    - USA
+  - state:
+    - NY
+  - zip:
+    - address_4c991eb1e075
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 5209958006
+    - name:
+      - Water Bottle
+    - options:
+      - color:
+        - silver
+      - material:
+        - hardshell
+      - piece count:
+        - 2-piece
+    - price:
+      - 514.72
+    - product_id:
+      - 5426915165
+- order_id:
+  - #W4860251
+- payment_history:
+  - [0]:
+    - amount:
+      - 514.72
+    - payment_method_id:
+      - payment_21014154b787
+    - transaction_type:
+      - payment
+- status:
+  - pending
+- user_id:
+  - user_c3978951ae55","{""content"":""\n\nI see your pending order (#W4860251) for a Luggage Set is currently set to be delivered to a New York address. Would you like me to update it to your Chicago address:\n\n921 Park Avenue\nSuite 892\nChicago, IL 60612\nUSA\n\nPlease confirm with a \""yes\"" if you'd like me to make this change."",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-108,airline,$[0].destination,"""JFK""","""LAS""",,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 20
+    - business:
+      - 20
+    - economy:
+      - 10
+  - destination:
+    - LAS
+  - flight_number:
+    - HAT021
+  - origin:
+    - SEA
+  - prices:
+    - basic_economy:
+      - 96
+    - business:
+      - 337
+    - economy:
+      - 152
+  - scheduled_arrival_time_est:
+    - 01:00:00+1
+  - scheduled_departure_time_est:
+    - 19:00:00
+  - status:
+    - available
+- [1]:
+  - available_seats:
+    - basic_economy:
+      - 19
+    - business:
+      - 13
+    - economy:
+      - 5
+  - destination:
+    - JFK
+  - flight_number:
+    - HAT089
+  - origin:
+    - SEA
+  - prices:
+    - basic_economy:
+      - 89
+    - business:
+      - 417
+    - economy:
+      - 126
+  - scheduled_arrival_time_est:
+    - 16:00:00
+  - scheduled_departure_time_est:
+    - 10:00:00
+  - status:
+    - available
+- [2]:
+  - available_seats:
+    - basic_economy:
+   ","{""content"":null,""role"":""assistant"",""tool_calls"":[{""function"":{""arguments"":""{\""origin\"":\""JFK\"",\""destination\"":\""IAH\"",\""date\"":\""2024-05-22\""}"",""name"":""search_direct_flight""},""id"":""call_4kpZcVNr2yC8MhcrER6d2lva"",""type"":""function""}]}"
+SEV-109,airline,$.insurance,"""no""","""yes""",,,,"Observation:
+- cabin:
+  - economy
+- created_at:
+  - 2024-05-05T23:00:15
+- destination:
+  - MSP
+- flight_type:
+  - one_way
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-18
+    - destination:
+      - MCO
+    - flight_number:
+      - HAT235
+    - origin:
+      - BOS
+    - price:
+      - 350
+  - [1]:
+    - date:
+      - 2024-05-19
+    - destination:
+      - MSP
+    - flight_number:
+      - HAT298
+    - origin:
+      - MCO
+    - price:
+      - 499
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - BOS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_07abd7b730cc
+    - first_name:
+      - person_a06b9af8c4f1
+    - last_name:
+      - person_95e2ec02eaf8
+  - [1]:
+    - dob:
+      - dob_945ff36c6f85
+    - first_name:
+      - person_7bb0603f3e10
+    - last_name:
+      - person_352fb6153597
+- payment_history:
+  - [0]:
+    - amount:
+      - 498
+    - payment_id:
+      - payment_3d65b3f9e0d6","{""content"":""\n\nAll changes have been completed successfully:\n1. Upgraded both passengers to business class (additional charge of $1,200)\n2. Added 2 checked bags (no additional charge)\n\nYour flight is now in business class with 2 checked bags. Is there anything else you need assistance with?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-110,retail,$.status,"""pending""","""delivered""",,,,"Observation:
+- address:
+  - address1:
+    - address_490d87ef06e9
+  - address2:
+    - address_4b8977cb52de
+  - city:
+    - address_327573e1cd2e
+  - country:
+    - USA
+  - state:
+    - CO
+  - zip:
+    - address_af7c754240bf
+- fulfillments:
+  - (empty list)
+- items:
+  - [0]:
+    - item_id:
+      - 3330317167
+    - name:
+      - Gaming Mouse
+    - options:
+      - color:
+        - black
+      - connectivity:
+        - wired
+      - sensor type:
+        - optical
+    - price:
+      - 137.32
+    - product_id:
+      - 5713490933
+  - [1]:
+    - item_id:
+      - 1775591963
+    - name:
+      - Running Shoes
+    - options:
+      - color:
+        - white
+      - material:
+        - leather
+      - size:
+        - 10
+      - sole:
+        - EVA
+    - price:
+      - 154.75
+    - product_id:
+      - 6938111410
+  - [2]:
+    - item_id:
+      - 3624655057
+    - name:
+      - Bicycle
+    - options:
+      -","{""content"":""\n\nI can see that you have a Fleece Jacket in order #W2466703. This order appears to be in \""pending\"" status, which means it hasn't been shipped yet. Since the order is still pending, instead of an exchange, we can modify the item directly. \n\nLet me get the product details to see what other options are available for the Fleece Jacket.\n\n<antml:function_calls>\n<antml:invoke name=\""get_product_details\"">\n<antml:parameter name=\""product_id\"">8560156827</antml:parameter>\n</antml:"
+SEV-111,airline,$.created_at,"""2024-05-08T18:28:13""",null,,,,"Observation:
+- cabin:
+  - economy
+- destination:
+  - LGA
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - JFK
+    - flight_number:
+      - HAT169
+    - origin:
+      - DTW
+    - price:
+      - 171
+  - [1]:
+    - date:
+      - 2024-05-19
+    - destination:
+      - DTW
+    - flight_number:
+      - HAT088
+    - origin:
+      - JFK
+    - price:
+      - 185
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - DTW
+- passengers:
+  - [0]:
+    - dob:
+      - dob_6a62db372f88
+    - first_name:
+      - person_864c39c831e6
+    - last_name:
+      - person_2f8c7f5cc9bb
+- payment_history:
+  - [0]:
+    - amount:
+      - 686
+    - payment_id:
+      - payment_bc9067afd222
+  - [1]:
+    - amount:
+      - -300
+    - payment_id:
+      - payment_bc9067afd222
+- reservation_id:
+  - VA5SGQ
+- total_baggages:
+  - 1
+- user_id:
+  - user_ea7698231aae","{""content"":""\n\nGreat! All changes have been completed successfully. Here's your updated itinerary:\n\n1. Outbound Flight:\n   - May 17: HAT169 DTW to JFK\n   - Departure: 04:00 EST, Arrival: 06:00 EST\n\n2. Return Flight:\n   - May 19: HAT088 JFK to DTW\n   - Departure: 04:00 EST, Arrival: 06:00 EST\n\n3. Baggage: 1 checked bag (included free with your economy ticket)\n4. Cabin: Economy\n5. Travel insurance: Included\n\nThe fare difference has been processed using your credit card on file. Is t"
+SEV-112,retail,$.status,"""delivered""","""pending""",$.items[3].name,"""Vacuum Cleaner""","""Water Bottle""","Observation:
+- address:
+  - address1:
+    - address_ccb94f2783c1
+  - address2:
+    - address_77539b202950
+  - city:
+    - address_e22e74699906
+  - country:
+    - USA
+  - state:
+    - IL
+  - zip:
+    - address_dec88d428d1c
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 4803681337
+      - [1]:
+        - 8725040869
+      - [2]:
+        - 6439196450
+      - [3]:
+        - 1345513440
+      - [4]:
+        - 4983901480
+    - tracking_id:
+      - [0]:
+        - 840887978435
+- items:
+  - [0]:
+    - item_id:
+      - 4803681337
+    - name:
+      - Tablet
+    - options:
+      - color:
+        - black
+      - screen size:
+        - 8-inch
+      - storage:
+        - 64GB
+    - price:
+      - 962.34
+    - product_id:
+      - 8024098596
+  - [1]:
+    - item_id:
+      - 8725040869
+    - name:
+      - Action Camera
+    - options:
+      - color:
+        - black
+      - resolution:
+        -","{""content"":""\n\nI've found the order that was sent to Chicago (Order #W7895761). The order includes a Tablet, Action Camera, Mechanical Keyboard, Vacuum Cleaner, and Smart Thermostat. According to our records, this order has been delivered to:\n\n943 Maple Drive\nSuite 356\nChicago, IL 60621\n\nThe order status shows as \""delivered\"" with tracking number 840887978435. Since the system confirms delivery, I recommend checking with your daughter to make sure she received the package, as it should h"
+SEV-113,airline,$[0][1].origin,"""LAS""","""LAX""",,,,"Observation:
+- [0]:
+  - [0]:
+    - available_seats:
+      - basic_economy:
+        - 10
+      - business:
+        - 19
+      - economy:
+        - 11
+    - date:
+      - 2024-05-24
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT112
+    - origin:
+      - IAH
+    - prices:
+      - basic_economy:
+        - 54
+      - business:
+        - 404
+      - economy:
+        - 135
+    - scheduled_arrival_time_est:
+      - 01:00:00+1
+    - scheduled_departure_time_est:
+      - 22:00:00
+    - status:
+      - available
+  - [1]:
+    - available_seats:
+      - basic_economy:
+        - 15
+      - business:
+        - 13
+      - economy:
+        - 12
+    - date:
+      - 2024-05-25
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT047
+    - origin:
+      - LAX
+    - prices:
+      - basic_economy:
+        - 56
+      - business:
+        - 202
+      - economy:
+        - 165
+    - sche","{""content"":""\n\nI found available connecting flights on May 24th. Before proceeding, I need to confirm the changes with you:\n\n1. Change outbound flights to:\n   - IAH to LAS: HAT190 on May 24 (departs 01:00 AM)\n   - LAS to SEA: HAT047 on May 24 (departs 1:00 PM)\n   (The return flights will remain the same)\n\n2. Upgrade from economy to business class for all flights in the reservation\n\nSince this involves both flight changes and a cabin upgrade, there will be additional charges. As a gold "
+SEV-114,retail,$.items[0].name,"""Perfume""","""Water Bottle""",,,,"Observation:
+- address:
+  - address1:
+    - address_7b2ea3c4487b
+  - address2:
+    - address_7081b8ef95c7
+  - city:
+    - address_551a9c288929
+  - country:
+    - USA
+  - state:
+    - TX
+  - zip:
+    - address_85b16e8219b4
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 5081446110
+    - tracking_id:
+      - [0]:
+        - 820626058356
+- items:
+  - [0]:
+    - item_id:
+      - 5081446110
+    - name:
+      - Water Bottle
+    - options:
+      - gender:
+        - men
+      - scent family:
+        - woody
+      - size:
+        - 30ml
+    - price:
+      - 322.52
+    - product_id:
+      - 6858788497
+- order_id:
+  - #W1671835
+- payment_history:
+  - [0]:
+    - amount:
+      - 322.52
+    - payment_method_id:
+      - payment_da041d210199
+    - transaction_type:
+      - payment
+- status:
+  - delivered
+- user_id:
+  - user_3b3c062e1737","{""content"":""\n\nI see what happened - I only looked at your most recent order, but there might be a more recent order that hasn't been updated in the system yet. Could you please help me by either:\n1. Providing your order number, or\n2. Letting me know approximately when you made your recent perfume purchase?\n\nThis will help me locate the correct order and provide accurate information about the available sizes for your specific perfume."",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":nul"
+SEV-115,retail,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- address:
+  - address1:
+    - address_45f236890d93
+  - address2:
+    - address_98df5cd62c4f
+  - city:
+    - address_bf6ae3300983
+  - country:
+    - USA
+  - state:
+    - PA
+  - zip:
+    - address_9001b621634e
+- fulfillments:
+  - [0]:
+    - item_ids:
+      - [0]:
+        - 7292993796
+      - [1]:
+        - 7292993796
+    - tracking_id:
+      - [0]:
+        - 555227871167
+- items:
+  - [0]:
+    - item_id:
+      - 7292993796
+    - name:
+      - Tea Kettle
+    - options:
+      - capacity:
+        - 2 liters
+      - material:
+        - glass
+      - stovetop compatibility:
+        - induction
+    - price:
+      - 94.8
+    - product_id:
+      - 9832717871
+  - [1]:
+    - item_id:
+      - 7292993796
+    - name:
+      - Tea Kettle
+    - options:
+      - capacity:
+        - 2 liters
+      - material:
+        - glass
+      - stovetop compatibility:
+        - induction
+    - price:
+     ","{""content"":""I found your order #W4316152, which contains two tea kettles. Both are made of glass, have a capacity of 2 liters, and are compatible with induction stovetops. \n\nPlease let me know the new item options you'd like for the exchange, and confirm if you want to proceed with exchanging both tea kettles. Also, note that the refund or additional payment will be processed using your gift card."",""role"":""assistant""}"
+SEV-116,airline,$[0].origin,"""ORD""","""PHL""",,,,"Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 7
+    - business:
+      - 7
+    - economy:
+      - 1
+  - destination:
+    - PHL
+  - flight_number:
+    - HAT139
+  - origin:
+    - PHL
+  - prices:
+    - basic_economy:
+      - 65
+    - business:
+      - 395
+    - economy:
+      - 114
+  - scheduled_arrival_time_est:
+    - 19:00:00
+  - scheduled_departure_time_est:
+    - 17:00:00
+  - status:
+    - available
+- [1]:
+  - available_seats:
+    - basic_economy:
+      - 20
+    - business:
+      - 14
+    - economy:
+      - 3
+  - destination:
+    - PHL
+  - flight_number:
+    - HAT271
+  - origin:
+    - ORD
+  - prices:
+    - basic_economy:
+      - 83
+    - business:
+      - 338
+    - economy:
+      - 174
+  - scheduled_arrival_time_est:
+    - 21:00:00
+  - scheduled_departure_time_est:
+    - 19:00:00
+  - status:
+    - available
+- [2]:
+  - available_seats:
+    - basic_economy:
+      - ","{""content"":""\n\nI'm sorry, but I can see that HAT139 now only has 1 economy seat available. Here are your current options:\n\n1. HAT289: 5:00 AM - 7:00 AM EST (14 economy seats available at $161 each)\n2. HAT271: 7:00 PM - 9:00 PM EST (3 economy seats available at $174 each)\n3. Consider splitting between cabins on HAT139 (1 economy at $114 and 1 basic economy at $65 or 1 business at $395)\n4. Consider booking a different cabin class together on HAT139 (either both basic economy at $65 each or b"
+SEV-117,airline,$.created_at,"""2024-05-15T15:00:00""","""2024-05-15T15:00:00""",,,,"Observation:
+- cabin:
+  - basic_economy
+- created_at:
+  - 2024-05-09T15:14:07
+- destination:
+  - LAS
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-11
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT006
+    - origin:
+      - BOS
+    - price:
+      - 87
+  - [1]:
+    - date:
+      - 2024-05-11
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT018
+    - origin:
+      - SEA
+    - price:
+      - 96
+  - [2]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - SEA
+    - flight_number:
+      - HAT040
+    - origin:
+      - LAS
+    - price:
+      - 63
+  - [3]:
+    - date:
+      - 2024-05-17
+    - destination:
+      - BOS
+    - flight_number:
+      - HAT253
+    - origin:
+      - SEA
+    - price:
+      - 52
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - BOS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_ef550abdc724
+    - ","{""content"":""\n\nI see your most recent reservation (4OG6T3) which is a round-trip from Boston (BOS) to Las Vegas (LAS) with connections in Seattle (SEA). I can see that you:\n- Are traveling in basic economy\n- Have travel insurance\n- Are a gold member\n\nSince you have travel insurance and are a gold member, and you're experiencing a delay, you may be eligible for compensation. Would you like to tell me what you'd like to do? Your options are:\n1. Change your flights to different times (I can "
+SEV-118,airline,$[2].available_seats.economy,20,21,$[2].destination,"""LAS""","""LAX""","Observation:
+- [0]:
+  - available_seats:
+    - basic_economy:
+      - 5
+    - business:
+      - 0
+    - economy:
+      - 15
+  - destination:
+    - LAS
+  - flight_number:
+    - HAT112
+  - origin:
+    - IAH
+  - prices:
+    - basic_economy:
+      - 67
+    - business:
+      - 471
+    - economy:
+      - 149
+  - scheduled_arrival_time_est:
+    - 01:00:00+1
+  - scheduled_departure_time_est:
+    - 22:00:00
+  - status:
+    - available
+- [1]:
+  - available_seats:
+    - basic_economy:
+      - 3
+    - business:
+      - 13
+    - economy:
+      - 3
+  - destination:
+    - LAS
+  - flight_number:
+    - HAT131
+  - origin:
+    - IAH
+  - prices:
+    - basic_economy:
+      - 73
+    - business:
+      - 359
+    - economy:
+      - 198
+  - scheduled_arrival_time_est:
+    - 21:00:00
+  - scheduled_departure_time_est:
+    - 18:00:00
+  - status:
+    - available
+- [2]:
+  - available_seats:
+    - basic_economy:
+      ","{""content"":""\n\nI found several direct flight options available. Before proceeding with the change, I'll need:\n\n1. Your flight selection for both directions:\n   - Outbound (May 19): Two options\n     - HAT175: LAS-IAH 17:00-20:00\n     - HAT266: LAS-IAH 13:00-16:00\n   - Return (May 27): Four options\n     - HAT112: IAH-LAS 22:00-01:00 (next day)\n     - HAT131: IAH-LAS 18:00-21:00\n     - HAT190: IAH-LAS 01:00-04:00\n     - HAT286: IAH-LAS 22:00-01:00 (next day)\n\n2. A payment method from y"
+SEV-119,airline,$.created_at,"""2024-05-08T11:37:17""",null,,,,"Observation:
+- cabin:
+  - economy
+- destination:
+  - IAH
+- flight_type:
+  - round_trip
+- flights:
+  - [0]:
+    - date:
+      - 2024-05-19
+    - destination:
+      - IAH
+    - flight_number:
+      - HAT266
+    - origin:
+      - LAS
+    - price:
+      - 146
+  - [1]:
+    - date:
+      - 2024-05-27
+    - destination:
+      - LAS
+    - flight_number:
+      - HAT112
+    - origin:
+      - IAH
+    - price:
+      - 184
+- insurance:
+  - yes
+- nonfree_baggages:
+  - 0
+- origin:
+  - LAS
+- passengers:
+  - [0]:
+    - dob:
+      - dob_175af1cc35ce
+    - first_name:
+      - person_483da344ace7
+    - last_name:
+      - person_3022484ca3b6
+  - [1]:
+    - dob:
+      - dob_09eee290b33d
+    - first_name:
+      - person_94655e5080be
+    - last_name:
+      - person_3022484ca3b6
+- payment_history:
+  - [0]:
+    - amount:
+      - 1134
+    - payment_id:
+      - payment_a210f6ecbdf9
+  - [1]:
+    - amount:
+      - -4","{""content"":""\n\nI've successfully updated your reservation. Your outbound flight has been changed to the nonstop flight HAT266 on May 19th, departing LAS at 13:00 EST and arriving at IAH at 16:00 EST. Your return flight remains unchanged.\n\nThe refund of $207 will be credited back to your gift card within 5-7 business days.\n\nIs there anything else you need assistance with?"",""role"":""assistant"",""tool_call_id"":null,""tool_calls"":null}"
+SEV-120,retail,"$.variants[""6017636844""].options.storage","""1TB SSD""","""512GB SSD""","$.variants[""8997785118""].options.storage","""256GB SSD""","""512GB SSD""","Observation:
+- name:
+  - Laptop
+- product_id:
+  - 4760268021
+- variants:
+  - 1657832319:
+    - available:
+      - yes
+    - item_id:
+      - 1657832319
+    - options:
+      - color:
+        - black
+      - processor:
+        - i7
+      - ram:
+        - 32GB
+      - screen size:
+        - 13-inch
+      - storage:
+        - 512GB SSD
+    - price:
+      - 2729.32
+  - 1684786391:
+    - available:
+      - yes
+    - item_id:
+      - 1684786391
+    - options:
+      - color:
+        - black
+      - processor:
+        - i7
+      - ram:
+        - 32GB
+      - screen size:
+        - 17-inch
+      - storage:
+        - 1TB SSD
+    - price:
+      - 2508.06
+  - 2216662955:
+    - available:
+      - yes
+    - item_id:
+      - 2216662955
+    - options:
+      - color:
+        - space grey
+      - processor:
+        - i5
+      - ram:
+        - 32GB
+      - screen size:
+        - 15-inch
+      - storage:
+   ","{""content"":""\n\nI can see that you recently purchased a laptop with the following specifications:\n- Screen size: 15-inch\n- Processor: i5\n- RAM: 32GB\n- Storage: 256GB SSD\n- Color: Space grey\n\nSince the order is already delivered, we can process an exchange for a different variant of the same laptop model. Looking at the available options, there are several variants with better specifications. Could you please let me know which specifications you're specifically looking to upgrade (processo"
