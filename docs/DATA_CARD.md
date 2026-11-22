@@ -152,7 +152,7 @@ within-prefix contrasts and for benchmarking detection/flagging behavior.
 
 ## 11. Release contents (v1.0.1)
 
-Staged at `release/ToolResult-800-v1.0.1/` (uploaded to the DOI record; see
+Staged locally at `release/ToolResult-800-v1.0.1/` (not yet uploaded; DOI deposit record at
 `docs/submission/doi_record.md`):
 
 - `manifests/` — frozen manifest + SHA-256 sidecar, perturbation records, source pin.

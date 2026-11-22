@@ -9,7 +9,8 @@ abstract: >-
   complete: pooled conditional-logit slope 0.877 [0.770, 0.998] with three
   failed gate criteria (parser 1.55% vs 1%, severity s2/s3 88.3% vs 90%,
   crude recovery on the semantic risk set 24.4/32.9/21.3% vs 50%); no causal or content-sensitivity
-  claim. Dataset v1.0 staged for DOI release (scrubbed derived data only).
+  claim. Dataset v1.0.1 staged for DOI release (scrubbed, redacted derived data
+  only; one scrubber-artifact identity is replaced at build time).
 authors:
   - family-names: Rahaman
     given-names: Md. Atikur
@@ -18,8 +19,8 @@ authors:
   - family-names: Tuhin
     given-names: Ohidujjaman
     orcid: "https://orcid.org/0000-0002-8776-7145"
-version: 0.2.0
-date-released: 2026-11-22
+version: 1.0.1
+date-released: 2026-11-23
 repository-code: "https://github.com/Atik203/tool-observation"
 url: "https://github.com/Atik203/tool-observation"
 license: MIT

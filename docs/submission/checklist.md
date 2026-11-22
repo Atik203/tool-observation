@@ -42,7 +42,9 @@ require author action and name the artifact that unblocks them.
 ## Human-gated items (cannot be completed by the agent)
 
 - [ ] Independent human PII re-scan of the release candidate (automated scan is clean;
-  one scrubber-artifact fragment flagged in `pii_rescan.json` for the reviewer).
+  the v1.0.1 builder redacts the scrubber-artifact identity class on every build and
+  `pii_rescan.json` reports zero hits plus `n_redactions`, so no fragment remains in the
+  package).
 - [ ] Human audit subset (G0 40-item + 60–120-item held-out) or accept the disclosed
   AI-only status quo for this venue.
 - [ ] Ethics determination for the annotation procedure (paper cites as pending).

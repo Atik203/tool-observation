@@ -442,25 +442,28 @@ def pii_rescan(root: Path) -> tuple[list[str], list[str], list[str], list[str]]:
 # Release-copy redaction (P6.4 / D-046, v1.0.1)
 # ---------------------------------------------------------------------------
 
-# One scrubber-artifact identity survived the harvest scrub because the email
-# rule saw an already-tokenised local part. The frozen source is bit-identical
+# One scrubber-artifact identity class survived the harvest scrub: an
+# already-tokenised local part followed by an unsanitized given-name+digits
+# local part on a reserved example domain. The frozen source is bit-identical
 # under the manifest hash and is never distributed; every distributed copy is
-# redacted here, at build time, so a rebuild cannot reintroduce the fragment.
+# redacted here, at build time, so a rebuild cannot reintroduce the class.
 REDACTION_TOKEN = "person_redacted_0001"
 
-# Longest first. The bare token ``person_0f41e336893e`` is a legitimate
-# pseudonym (PII map never released) and is not redacted; only the given-name
-# + digits residual and the full email form are.
-REDACTION_RULES: tuple[tuple[str, str], ...] = (
-    ("person_0f41e336893e.ahmed6699@example.com", REDACTION_TOKEN),
-    ("person_0f41e336893e.ahmed6699", REDACTION_TOKEN),
-    ("ahmed6699", "redacted"),
+# Generic detector: no fragment literal is stored in the repository. The bare
+# ``person_<12 hex>`` token is a legitimate pseudonym (the PII map is never
+# released) and is left intact; only the token+unsanitized-local-part email
+# form is replaced.
+_SCRUBBER_RESIDUAL = re.compile(
+    r"\bperson_[0-9a-f]{12}\.[A-Za-z]+[0-9]+@(?:example\.(?:com|org|net))\b"
 )
+REDACTION_PATTERNS: tuple[re.Pattern[str], ...] = (_SCRUBBER_RESIDUAL,)
 
 REDACTION_NOTE = (
     "The frozen source is not distributed and remains bit-identical under its "
     "manifest hash. Every staged release file passes through this redaction "
-    "before checksums are written; the count below is per string occurrence."
+    "before checksums are written; the count below is per string occurrence. "
+    "The matched class is a scrubber token followed by an unsanitized "
+    "given-name+digits local part on a reserved example domain."
 )
 
 _TEXT_NAMES = frozenset({"LICENSE", "LICENSE-DOCS", "TAU_BENCH_LICENSE_MIT"})
@@ -470,16 +473,15 @@ _TEXT_SUFFIXES = frozenset({
 
 
 def redact_text(text: str) -> tuple[str, int]:
-    """Apply the frozen redaction rules to one text blob.
+    """Apply the generic release-copy redaction patterns to one text blob.
 
     Returns the redacted text and the number of replaced occurrences.
-    Deterministic and idempotent: the synthetic token contains none of the
-    rule strings.
+    Deterministic and idempotent: the synthetic token matches no pattern.
     """
     n = 0
-    for old, new in REDACTION_RULES:
-        n += text.count(old)
-        text = text.replace(old, new)
+    for pattern in REDACTION_PATTERNS:
+        n += len(pattern.findall(text))
+        text = pattern.sub(REDACTION_TOKEN, text)
     return text, n
 
 
@@ -512,8 +514,8 @@ def apply_redactions(root: Path) -> dict:
         "n_occurrences": total,
         "n_files": len(changed),
         "files": changed,
-        "rule": "scrubber-artifact email fragment (given-name + digits) "
-        "replaced by a synthetic identity token",
+        "rule": "scrubber token + unsanitized given-name+digits local part on "
+        "a reserved example domain replaced by a synthetic identity token",
         "frozen_source_unchanged": True,
         "note": REDACTION_NOTE,
     }

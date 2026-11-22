@@ -10,20 +10,29 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 - **Date:** 2026-11-23
 - **Status:** accepted (release errata; frozen source untouched)
-- **Context:** Q1 register V3 confirmed one scrubber-artifact identity (a given name plus
-  digits surviving inside an `@example.com` address) in `data/frozen/prefixes.jsonl` and in
-  the v1.0.0 release derivatives (`frozen/prefixes.jsonl`, two T6 packet files, one recovery
-  trace, and the `pii_rescan.json` note). `DATA_LICENSE.md` and `docs/DATA_CARD.md` claimed
-  "No raw PII is released" while the package shipped the fragment and a note flagging it. The
-  register's stop rule treats a PII leak as release-blocking; C2 confirms the fragment is in
-  gitignored frozen/release data, not in committed files, so repository history is unaffected.
+- **Context:** Q1 register V3 confirmed a scrubber-artifact identity class (a bare
+  `person_<12 hex>` token followed by a given name plus digits on a reserved
+  `example.com` domain) in `data/frozen/prefixes.jsonl` and in the v1.0.0 release
+  derivatives (`frozen/prefixes.jsonl`, two T6 packet files, one recovery trace, and the
+  `pii_rescan.json` note). `DATA_LICENSE.md` and `docs/DATA_CARD.md` claimed
+  "No raw PII is released" while the package shipped the fragment and a note flagging it.
+  The register's stop rule treats a PII leak as release-blocking. Correction C2
+  understated the repository exposure: the identifier is in gitignored frozen/release
+  data **and** in published repository history and current tracked docs
+  (`docs/DECISIONS.md` D-045, `docs/reviews/2026-11-22/Q1_PANEL_REGISTER.md`,
+  `docs/superpowers/plans/p6-q1-hardening.md`); the first T3 source/test commit
+  (`a9a13b7`) also repeated the literal. The released package is clean after the
+  redaction below. Repository history will not be rewritten (AGENTS.md §4/§7). The
+  residual uses the reserved `example.com` domain and is not a working address, but it
+  is direct-identifier-shaped and is treated as PII.
 - **Decision:** Redact the release copy only, in the builder, and bump the package to
   **v1.0.1** (metadata/errata; no frozen-source change):
-  - `scripts/18_build_release.py` defines ordered redaction rules in `REDACTION_RULES` and
-    rewrites every staged text file through `apply_redactions()` after copying/generating and
-    before `SHA256SUMS`. The replacement is `person_redacted_0001`; the bare
-    `person_0f41e336893e` pseudonym is left intact (it is a legitimate scrubber token whose map
-    is never released).
+  - `scripts/18_build_release.py` defines a generic detector in
+    `_SCRUBBER_RESIDUAL`/`REDACTION_PATTERNS` (no fragment literal in source) and
+    rewrites every staged text file through `apply_redactions()` after copying/generating
+    and before `SHA256SUMS`. The replacement is `person_redacted_0001`; the bare
+    `person_<12 hex>` pseudonym is left intact (it is a legitimate scrubber token whose
+    map is never released).
   - `frozen/prefixes.jsonl` is copied from `data/frozen/prefixes.jsonl` and then redacted in
     the package. The frozen source stays bit-identical under the manifest hash. The package
     records both `frozen_prefixes_hash_source` (manifest) and
@@ -32,10 +41,11 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
     prefix file.
   - `pii_rescan.json` gains `n_redactions`, `n_redacted_files`, `redactions`, `redaction_token`,
     and `redaction_note`; its old note naming the fragment is removed.
-  - `tests/test_release.py` adds a guard: `redact_text()` must remove the literal; no file under
-    `release/` may contain the literal or the `ahmed6699` pattern; a present package's
-    `pii_rescan.json` must report zero hits and a positive redaction count. The guard was
-    verified red (probe file under `release/`) then green after removing the probe.
+  - `tests/test_release.py` adds a guard using a synthetic fixture and the generic
+    detector; no fragment literal is stored. It requires zero matches under
+    `release/`, checks the bare-token/redaction-token distinction, and verifies LF and
+    CRLF files are preserved. The guard was verified red (probe file under `release/`)
+    then green after removing the probe.
   - Version bump: `PACKAGE_NAME = ToolResult-800-v1.0.1`, `PACKAGE_VERSION = 1.0.1`,
     `BUILDER_VERSION = stage-18 v2`; package `CHANGELOG.md` and repository `CHANGELOG.md` record
     v1.0.0 → v1.0.1. The superseded local v1.0.0 and pre-v1.0 `toolresult800-v1` candidates are
@@ -55,8 +65,10 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   `data/frozen/prefixes.jsonl`, and `paper/toolresults.tex` (the paper's short `59a200c`
   reference is correct).
 - **Consequences:** v1.0.1 is the publishable candidate for P6.5; a rebuild cannot reintroduce
-  the fragment without a guard failure. The release is still gated on the independent human
-  PII re-scan, DOI mint, and clean-room compile.
+  the fragment without a guard failure. Current T3 source/tests are literal-free, but the
+  literal remains in the published history/current docs listed under Context; P6.5 should
+  disclose that in the deposit/errata if its policy requires it. The release is still gated on
+  the independent human PII re-scan, DOI mint, and clean-room compile.
 
 ---
 

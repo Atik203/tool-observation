@@ -18,6 +18,9 @@ _REPO = Path(__file__).resolve().parents[1]
 _TEX = _REPO / "paper" / "toolresults.tex"
 _BIB = _REPO / "paper" / "ref.bib"
 
+# Synthetic scrubber-token fixture; never the flagged identity.
+_SYNTHETIC_SCRUBBER_TOKEN = "person_" + "0123456789ab"
+
 
 def _tex() -> str:
     return _TEX.read_text(encoding="utf-8")
@@ -209,7 +212,9 @@ def test_p6_2_recovery_and_strata_numbers() -> None:
 
 def test_pii_scanner_buckets() -> None:
     scan = build_release._scan_text
-    hits, placeholders, echoes = scan('{"a": "person_0f41e336893e"}', "x.json")
+    hits, placeholders, echoes = scan(
+        f'{{"a": "{_SYNTHETIC_SCRUBBER_TOKEN}"}}', "x.json"
+    )
     assert (hits, placeholders, echoes) == ([], [], [])
     hits, placeholders, echoes = scan('contact atikurrahaman0305@gmail.com', "CITATION.cff")
     assert hits == [] and placeholders == [] and echoes == []
@@ -233,10 +238,13 @@ def test_pii_scanner_buckets() -> None:
     assert hits == []  # public researcher identifier, masked by design
 
 
-# The scrubber-artifact identity that must never reach a distributed file
-# (Q1 register V3 / D-046). The bare person_0f41e336893e token is legitimate.
-_PII_FRAGMENT = "person_0f41e336893e.ahmed6699@example.com"
-_PII_PATTERN = re.compile(r"ahmed6699")
+# The scrubber-artifact class that must never reach a distributed file
+# (Q1 register V3 / D-046). This is a synthetic fixture, not the flagged
+# identity; the detector is generic and stores no fragment literal.
+_SYNTHETIC_RESIDUAL = f"{_SYNTHETIC_SCRUBBER_TOKEN}.fixture42@example.com"
+_SCRUBBER_RESIDUAL_RE = re.compile(
+    r"\bperson_[0-9a-f]{12}\.[A-Za-z]+[0-9]+@example\.com\b"
+)
 _RELEASE = _REPO / "release"
 _RELEASE_TEXT_SUFFIXES = frozenset({
     ".json", ".jsonl", ".csv", ".md", ".txt", ".cff", ".yaml", ".yml",
@@ -272,13 +280,16 @@ def _release_texts() -> list[tuple[Path, str]]:
 
 
 def test_release_pii_redaction_guard() -> None:
-    """The flagged identity cannot appear in any release file (D-046)."""
-    # The builder's rule must remove both the full form and the name pattern.
-    redacted, n = build_release.redact_text(f"write to {_PII_FRAGMENT} today")
+    """No release file may contain the generic scrubber-residual class (D-046)."""
+    redacted, n = build_release.redact_text(f"write to {_SYNTHETIC_RESIDUAL} today")
     assert n == 1
-    assert _PII_FRAGMENT not in redacted
-    assert not _PII_PATTERN.search(redacted)
+    assert not _SCRUBBER_RESIDUAL_RE.search(redacted)
     assert build_release.REDACTION_TOKEN in redacted
+    # The bare scrubber token is a legitimate pseudonym and stays intact.
+    assert build_release.redact_text(_SYNTHETIC_SCRUBBER_TOKEN) == (
+        _SYNTHETIC_SCRUBBER_TOKEN,
+        0,
+    )
     # Idempotent: a rebuild of an already-redacted file changes nothing.
     again, n_again = build_release.redact_text(redacted)
     assert n_again == 0 and again == redacted
@@ -286,27 +297,35 @@ def test_release_pii_redaction_guard() -> None:
     offenders = [
         path.relative_to(_REPO).as_posix()
         for path, text in _release_texts()
-        if _PII_FRAGMENT in text or _PII_PATTERN.search(text)
+        if build_release._SCRUBBER_RESIDUAL.search(text)
     ]
-    assert offenders == [], f"PII fragment in release file(s): {offenders}"
+    assert offenders == [], f"scrubber residual in release file(s): {offenders}"
 
 
 def test_redaction_preserves_line_endings(tmp_path: Path) -> None:
-    """Redaction changes only the matched strings, not every line ending."""
-    payload = (
-        f'{{"observation_json": "mail {_PII_FRAGMENT} now"}}\n'
-        '{"observation_json": "unchanged"}\n'
-    ).encode("utf-8")
-    target = tmp_path / "prefixes.jsonl"
-    target.write_bytes(payload)
-    stats = build_release.apply_redactions(tmp_path)
-    data = target.read_bytes()
-    assert stats["n_occurrences"] == 1
-    assert stats["files"] == {"prefixes.jsonl": 1}
-    assert b"\r\n" not in data
-    assert data.count(b"\n") == 2
-    assert _PII_FRAGMENT.encode() not in data
-    assert b"unchanged" in data
+    """Redaction changes only the matched strings, for LF and CRLF files."""
+    for label, newline, expect_crlf in (
+        ("lf", b"\n", 0),
+        ("crlf", b"\r\n", 2),
+    ):
+        case_dir = tmp_path / label
+        case_dir.mkdir()
+        payload = (
+            f'{{"observation_json": "mail {_SYNTHETIC_RESIDUAL} now"}}'.encode()
+            + newline
+            + b'{"observation_json": "unchanged"}'
+            + newline
+        )
+        target = case_dir / "prefixes.jsonl"
+        target.write_bytes(payload)
+        stats = build_release.apply_redactions(case_dir)
+        data = target.read_bytes()
+        assert stats["n_occurrences"] == 1, label
+        assert stats["files"] == {"prefixes.jsonl": 1}, label
+        assert data.count(b"\r\n") == expect_crlf, label
+        assert data.count(b"\n") == 2, label
+        assert _SYNTHETIC_RESIDUAL.encode() not in data, label
+        assert b"unchanged" in data, label
 
 
 def test_release_pii_report_records_redaction() -> None:

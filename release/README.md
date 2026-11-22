@@ -16,7 +16,7 @@ candidate. Built packages are gitignored; only this README is tracked.
 - `licenses/` — upstream τ-bench MIT notice (verbatim) + model-output license verification.
 - `SHA256SUMS`, `CITATION.cff`, `README.md`, `CHANGELOG.md`.
 
-## Pre-release checklist (status 2026-11-22, Task 7)
+## Pre-release checklist (status 2026-11-23; v1.0.1 redaction rebuild)
 
 - [x] G0, G1, G2, G3, G4 reports are present and unmodified.
 - [x] The frozen manifest hash verifies against the analysis artifacts (`make validate-release`: manifest chain ok).
