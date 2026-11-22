@@ -55,7 +55,7 @@ identifiers. The release pipeline excludes profile tools and replaces direct ide
 stable synthetic tokens. **The distributed release contains no unredacted participant
 identifiers** (the corresponding-author contact email in `CITATION.cff`/the data card is
 intentional and allowlisted).
-One scrubber-artifact email fragment survived the harvest scrub inside a frozen prefix; because
+One scrubber-artifact email fragment survived the harvest scrub in the frozen prefix set; because
 the freeze is bit-identical, the fragment remains in the gitignored frozen source, which is
 **not distributed**. The release builder replaces it with `person_redacted_0001` in every staged
 file on every build (D-046, v1.0.1) and records the counts in `pii_rescan.json` and

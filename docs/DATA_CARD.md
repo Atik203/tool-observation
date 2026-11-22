@@ -96,11 +96,12 @@ database and verified by replay, not LLM-generated prose.
 
 Raw τ-bench trajectories may contain names, emails, addresses, phone numbers, and payment
 identifiers. The release excludes profile-tool observations and scrubs direct identifiers.
-Decision-relevant content that is itself PII is excluded. A 40-item human audit checks PII before
-freeze; a separate automated re-scan runs before release.
+Decision-relevant content that is itself PII is excluded. A 40-item PII pre-audit was run before
+freeze (AI pre-audit adopted by the author; human verification deferred, D-021/A-005); a separate
+automated re-scan runs before release.
 
-One scrubber-artifact email fragment (a given name plus digits) survived the harvest scrub inside
-one frozen prefix. Freeze integrity requires the frozen source to stay bit-identical, so the
+One scrubber-artifact email fragment (a given name plus digits) survived the harvest scrub in the
+frozen prefix set. Freeze integrity requires the frozen source to stay bit-identical, so the
 fragment remains there; **the frozen source is not distributed**. The release builder replaces it
 with `person_redacted_0001` in every staged file on every build (D-046, v1.0.1), and
 `pii_rescan.json` reports the replacement counts. **The distributed release therefore contains no
