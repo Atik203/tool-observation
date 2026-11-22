@@ -229,6 +229,13 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   2/3 primary groups.
 - **Amendment record (2026-11-22):** entered as A-009 in `prereg/AMENDMENTS.md`, with the
   post-estimate timing and "not blind" status disclosed.
+- **Supersession (2026-11-23; P6.2):** the two triples above are not censoring variants.
+  `27.3/34.7/27.2` is the crude Events/n triple on the v1 run-time hash risk set, and
+  `32.4/47.6/28.2` is its Kaplan–Meier secondary, both from
+  `artifacts/analysis/g4_recovery.json`. The primary recovery set is now the v2 semantic risk
+  set, crude `24.4/32.9/21.3` (KM `28.2/44.6/22.0`; `g4_recovery_v2.json`), everywhere in the
+  paper and submission documents. The v1 triple is retained only as the reconciliation record,
+  and the "Ministral close" reading of D-040 is retired. No historical text above is changed.
 
 ## D-039 - Label-free audit re-rating (supersedes the label-visible round)
 

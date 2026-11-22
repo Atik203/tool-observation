@@ -8,7 +8,7 @@ abstract: >-
   three open-weight 8-9B models, 21,611 generations. Confirmatory analysis
   complete: pooled conditional-logit slope 0.877 [0.770, 0.998] with three
   failed gate criteria (parser 1.55% vs 1%, severity s2/s3 88.3% vs 90%,
-  crude recovery 27.3/34.7/27.2% vs 50%); no causal or content-sensitivity
+  crude recovery on the semantic risk set 24.4/32.9/21.3% vs 50%); no causal or content-sensitivity
   claim. Dataset v1.0 staged for DOI release (scrubbed derived data only).
 authors:
   - family-names: Rahaman

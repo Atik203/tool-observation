@@ -12,7 +12,7 @@
 > (13,200 generations), the 10% seed-repeat shard, and the recovery sequences are complete.
 > The preregistered G3 slope passes (pooled beta 0.877, 95% CI [0.770, 0.998]); the G3
 > parser-failure criterion (1.55% vs <1%), the severity s2/s3 decision-changing criterion
-> (88.3% vs ≥90%), and the G4 recovery gate (27.3–34.7% crude; KM 32.4–47.6% vs ≥50%) fail
+> (88.3% vs ≥90%), and the G4 recovery gate (21.3–32.9% semantic crude; KM 22.0–44.6% vs ≥50%) fail
 > and are reported as failures. The audit gates were rated by AI-agent sessions sharing one
 > model family, not by human raters; the G0 sheet verification remains deferred (D-021). The
 > 60-prefix pilot remains a screening signal, **not** a dose-response law.

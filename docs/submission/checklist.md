@@ -8,7 +8,7 @@ require author action and name the artifact that unblocks them.
 - [x] Title/abstract/intro/results/conclusion use one measurement claim; no causal or
   content-sensitivity claim (C1; `tab:gate-status`, `tab:hypotheses`).
 - [x] All three gate failures stated (parser 1.55%, severity 88.3%, crude recovery
-  27.3/34.7/27.2%); G1 original criterion reported as failed (A-004/D-041).
+  24.4/32.9/21.3% on the semantic risk set); G1 original criterion reported as failed (A-004/D-041).
 - [x] 25 tables all cited; 10 figures all cited; 0 undefined refs; 0 duplicate labels
   (`pytest tests/test_release.py`).
 - [x] 69/69 bib entries cited; 9 author lists completed from arXiv (4 legacy

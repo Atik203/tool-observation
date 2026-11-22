@@ -129,6 +129,48 @@ def test_highlights_shape() -> None:
         assert len(core) <= 85, core
 
 
+def test_p6_2_recovery_and_strata_numbers() -> None:
+    """P6.2: one primary recovery set, one v1 note, and the 617/649/2,458 strata split."""
+    tex = _tex()
+    v1_crude = "27.3/34.7/27.2"
+    v1_km = "32.4/47.6/28.2"
+    v2_crude = "24.4/32.9/21.3"
+    assert tex.count(v1_crude) == 1
+    assert tex.count(v1_km) == 1
+    marker = "Run-risk-set (v1) reconciliation"
+    assert marker in tex
+    start = tex.index(marker)
+    block = tex[start : start + 900]
+    assert v1_crude in block and v1_km in block
+    for bridge in ("54+18=72", "116+25=141", "80+32=112"):
+        assert bridge in block
+    assert tex.count(v2_crude) >= 4
+    assert "617 informative" in tex
+    assert "2{,}458" in tex
+    assert "649 strata (28.3\\%)" in tex
+    assert "26.9\\% of the 2{,}297" in tex
+    assert "32 of the 649" in tex
+    assert "649 of the 2{,}297" not in tex
+
+    for rel in ("README.md", "ROADMAP.md", "CITATION.cff",
+                "docs/submission/cover_letter.md", "docs/submission/highlights.md",
+                "docs/submission/checklist.md"):
+        text = (_REPO / rel).read_text(encoding="utf-8")
+        assert v1_crude not in text, rel
+        assert v1_km not in text, rel
+    letter = (_REPO / "docs/submission/cover_letter.md").read_text(encoding="utf-8")
+    assert v2_crude in letter
+    citation = (_REPO / "CITATION.cff").read_text(encoding="utf-8")
+    assert v2_crude in citation
+
+    decisions = (_REPO / "docs" / "DECISIONS.md").read_text(encoding="utf-8")
+    d040 = decisions[decisions.index("## D-040") : decisions.index("## D-039")]
+    assert v1_crude in d040
+    assert "Supersession (2026-11-23; P6.2)" in d040
+    assert "not censoring variants" in d040
+    assert "Ministral close" in d040
+
+
 def test_pii_scanner_buckets() -> None:
     scan = build_release._scan_text
     hits, placeholders, echoes = scan('{"a": "person_0f41e336893e"}', "x.json")

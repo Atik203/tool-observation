@@ -29,7 +29,7 @@
 | **P0** | 13,605 candidates → 5,516 eligible → 5,511 replay-matched → 880 sampled (800 primary + 80 reserve); 4,400 arms; 2,640 perturbation records; 100% s=0 value-set equality; frozen manifest `toolresult800_v1.json` (SHA-256 `d6e034d7…`); G0 audit is an AI pre-audit 40/40 with human verification deferred (D-021). | `data/manifests/toolresult800_v1.json`; `artifacts/audit/g0_report.md`; `artifacts/audit/freeze_dry_run.json` |
 | **P1** | 60 disjoint prefixes × 3 models; parse 98.3 / 100 / 96.7%; gated negative-control jitter 11.9 / 13.3 / 10.5%; original V-vs-s0 format jitter 20.3 / 36.7 / 45.6% failed and was replaced by A-004 after calibration (post-freeze, not blind). | `artifacts/audit/g1_calibration_v3.json`; D-026, D-041, A-004 |
 | **P2** | 13,200 base generations + 7,211 recovery rows + 1,200 jitter rows = 21,611; 8.9 GPU-hours; no paid API; ledger per generation. | `data/runs/main/*/ledger.jsonl`; `artifacts/cost/` |
-| **P3** | Pooled β 0.877 (SE 0.059, 95% CI [0.770, 0.998]); 3/3 positive, Holm-significant; silent share 21.3% (419/1,964); label-free audits α .911, κ .987, recovery κ .920/.917. Gate failures: parser 1.55%, severity s2/s3 88.3%, recovery 27.3/34.7/27.2% crude (KM 32.4/47.6/28.2). | `artifacts/analysis/g3_analysis.json`; `g4_recovery.json`; `artifacts/audit/blind_audit_result.json`; D-039/D-043 |
+| **P3** | Pooled β 0.877 (SE 0.059, 95% CI [0.770, 0.998]); 3/3 positive, Holm-significant; silent share 21.3% (419/1,964); label-free audits α .911, κ .987, recovery κ .920/.917. Gate failures: parser 1.55%, severity s2/s3 88.3%, recovery 24.4/32.9/21.3% crude on the semantic risk set (KM 28.2/44.6/22.0). | `artifacts/analysis/g3_analysis.json`; `g4_recovery_v2.json`; `artifacts/audit/blind_audit_result.json`; D-039/D-043 |
 
 The detailed 25-row G0 table and ten-day sprint from the original plan are retired; the evidence above is the record.
 
@@ -43,7 +43,7 @@ The detailed 25-row G0 table and ten-day sprint from the original plan are retir
 | **G1** | ✅ completed, amended | Original V-vs-s0 format jitter failed at 20.3–45.6%; A-004 replaced it with s0-vs-s1 negative control 10.5–13.3% after calibration, not blind | Main run proceeded under A-004; original criterion must be reported as failed |
 | **G2** | ✅ | 21,611 rows; 8.9 GPU-hours; within 45-hour / 200 GB stop line | Sample complete; recovery conditional on switching |
 | **G3** | ❌ | Slope passes; parser failure 1.55% (fail); severity s2/s3 88.3% (fail); outcome κ .987 (pass); silent PPV 1.00 point, exact lower bound .66 | Measurement paper; no content-sensitivity claim |
-| **G4** | ❌ | Crude recovery 27.3/34.7/27.2% by H=4 (KM 32.4/47.6/28.2); Weibull shape rejected 2/3 | Report curve/RMST; half-life exploratory; remove “Ministral close” unless failure-treated estimate is close |
+| **G4** | ❌ | Crude recovery 24.4/32.9/21.3% by H=4 on the semantic risk set (KM 28.2/44.6/22.0); Weibull shape rejected 2/3 | Report curve/RMST; half-life exploratory; the “Ministral close” reading is retired |
 
 ---
 
@@ -81,7 +81,7 @@ The detailed 25-row G0 table and ten-day sprint from the original plan are retir
 
 ## 5. Claim boundary (current)
 
-**What the study supports.** A bounded, renderer-local, mover-weighted measurement: within a frozen real τ-bench prefix, changing the prose observation changes the probability that the next decision departs from the faithful-prose continuation; the assigned-severity gradient is positive but threshold-like; format sensitivity is 20–46% in calibration and 19.8–38.1% in the main run; silent propagation is at least 21.3% of critical-arm switches; persistence is 27.2–34.7% crude recovery by H=4.
+**What the study supports.** A bounded, renderer-local, mover-weighted measurement: within a frozen real τ-bench prefix, changing the prose observation changes the probability that the next decision departs from the faithful-prose continuation; the assigned-severity gradient is positive but threshold-like; format sensitivity is 20–46% in calibration and 19.8–38.1% in the main run; silent propagation is at least 21.3% of critical-arm switches; recovery is 21.3–32.9% crude by H=4 on the semantic risk set.
 
 **What it does not support.** A causal content-sensitivity claim (G3 parser and severity gates failed); a task-success effect; a model ranking; transfer to frontier/API models, live tools, or other renderers; a universal dose–response law.
 

@@ -20,12 +20,12 @@ decomposition, and a four-step recovery curve — reported with failures stated,
 
 **Claim boundary (no overclaim).** The pre-registered content-sensitivity claim is *not* made:
 three gate criteria failed and are reported as failures — protocol parser-failure rate 1.55%
-against 1%, severity-audit s2/s3 decision share 88.3% against 90%, and crude recovery
-27.3/34.7/27.2% by model against 50% (Kaplan–Meier 22.0–44.6% secondary). The G1 placebo
+against 1%, severity-audit s2/s3 decision share 88.3% against 90%, and crude recovery on the
+semantic risk set 24.4/32.9/21.3% by model (Qwen/Ministral/Llama) against 50% (Kaplan–Meier 28.2/44.6/22.0% secondary). The G1 placebo
 criterion was amended post-freeze (A-004, not blind) and is reported as a failed original
 criterion. Within that bound we report a measured shift among movers (pooled slope 0.877
 [0.770, 0.998]), at least 21.3% silent propagation of critical-arm switches (recall-adjusted
-≈28.5%), a semantic recovery re-estimation, bounded severity-mismeasurement sensitivity,
+≈28.5%), semantic-risk-set recovery (v2) as the primary estimand, bounded severity-mismeasurement sensitivity,
 cluster-robust inference checks, and an exploratory blinded task-utility endpoint.
 
 **Reproducibility.** The v1.0 release is staged with a DOI deposit record: scrubbed prefixes,
