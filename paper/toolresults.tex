@@ -287,9 +287,14 @@
   risk set as a secondary with a competing-risk caveat). Within that bound, we report a measured shift among movers: the
   pooled conditional-logistic slope of the switch indicator on severity is 0.877 (95\% CI
   0.770--0.998), positive in all three models, with tier odds ratios against the prose placebo of
-  1.27 (non-critical), 4.60 (critical), and 11.21 (critical plus contradiction). Linearity is
+  1.27 (non-critical --- the $s1$ control is not inert, $p=.019$), 4.60 (critical), and
+  11.21 (critical plus contradiction). These are assigned-severity effects: the audit finds
+  7--16 of 60 critical-arm stimuli donor-unused (blind majority 7, blind verifier 16), and a
+  bounded reclassification sensitivity steepens rather than flattens the $s1$--$s2$ contrast.
+  Linearity is
   rejected, so the slope summarizes a threshold at $s=2$, not a per-level law. Of 1{,}964 critical-arm
-  switches, 21.3\% silently repeat the injected value without flagging, and identifiers and money
+  switches, at least 21.3\% silently repeat the injected value without flagging
+  (recall-adjusted $\approx$28.5\%), and identifiers and money
   carry most of that propagation; status fields
   almost never do. Fewer than half of corrupted episodes return to the reference decision within
   four steps (22.0--44.6\% Kaplan--Meier secondary on the semantic risk set). Re-serializing the same observation without changing its
@@ -1422,7 +1427,8 @@ s0--s3, which share one format.
   \end{tabular}
 \end{table}
 \noindent $^{\ast}$As a measurement estimate only (gate fail action). $^{\dagger}$Descriptive
-secondary analysis, gated on the outcome audit (pass); silent share is a lower bound (recall .75).
+secondary analysis, gated on the outcome audit (pass); silent share is a lower bound
+(observed 21.3\%, recall .75, recall-adjusted $\approx$28.5\%).
 
 \begin{table}[pos=htbp]
   \centering
@@ -1524,6 +1530,13 @@ $\hat\beta = 1.03$ [0.88, 1.19]. At the analyzed sample the realized pooled MDE 
 logit/level (OR 1.18, 80\% power), and realized power at the observed effect is 1.0.
 Diagnostics trace to \texttt{artifacts/analysis/prereg\_secondary.json}, with the $s1$ tier
 near one and the jump at $s2$.
+The $s1$ negative control is not inert and is reported as a low dose with contamination
+rather than a clean zero: the conditional $s1$-vs-$s0$ odds ratio is 1.27 [1.04, 1.55]
+($p=.019$), while the marginal $s1$--$s0$ contrast is $+1.1$ points (Newcombe 95\%
+$[-1.6, +3.8]$), not significant on the margin. The audit rates 3/30 $s1$ items
+decision-changing (majority; Wilson 95\% [3.5, 25.6]\%), so the non-critical arm carries
+realized critical content at the margin. The threshold reading is therefore a gradient from
+$s0$ through a contaminated $s1$ to $s2$, steepening at $s2$, not a step from a true zero.
 
 \begin{table}[pos=htbp]
   \centering
@@ -1624,7 +1637,7 @@ audits were re-run label-free (D-039): severity $\alpha = .911$ (nominal; interv
 outcome $\kappa = .987$, silent-propagation PPV $= 1.00$ (9/9; exact 95\% lower bound .66) with
 silent recall $.75$ (the coder misses three panel-confirmed silent items), and recovery
 $\kappa = .920$ (step) and $.917$ (endpoint). The severity audit misses one of its five criteria: 88.3\% of
-the design's $s2/s3$ items are rated decision-changing against the 90\% threshold (Table~\ref{tab:audit}; seven items,
+the design's $s2/s3$ items are rated decision-changing against the 90\% threshold (Table~\ref{tab:audit}; 7 majority-flagged items, 11--16 across verifier passes,
 listed in \texttt{artifacts/audit/blind\_audit\_result.json}); the other severity criteria pass
 (Jonckheere--Terpstra $p<10^{-4}$, $s1$ non-decision-changing 90.0\%, $s3$ absurd 3.3\%). The
 earlier label-visible round ($\alpha = .919$, $\kappa = .975$, PPV $= 1.00$, recovery $.787$) is
@@ -1646,7 +1659,7 @@ rather than smoothed over.
     $s=2/s=3$ decision share & 53/60 (88.3\%) & $\ge 90\%$ & \textbf{fail} \\
     $s=3$ absurd share & 1/30 (3.3\%) & $\le 20\%$ & pass \\
     Outcome Cohen's $\kappa$ & .987 & $\ge .80$ & pass \\
-    Silent-propagation PPV & 9/9 (1.00) & $\ge .90$ & pass \\
+    Silent-propagation PPV & 9/9 (1.00; exact 95\% lower bound .66) & $\ge .90$ & pass \\
     Recovery Cohen's $\kappa$ & .920 / .917 & $\ge .75$ & pass \\
     Parser failure (G3) & 205/13{,}200 (1.55\%) & $<1\%$ & \textbf{fail} \\
     \bottomrule
@@ -1654,17 +1667,26 @@ rather than smoothed over.
 \end{table}
 
 The miss is concentrated at $s2$: 25/30 $s2$ items are rated decision-changing (83.3\%) against
-28/30 at $s3$ (93.3\%). The seven items are ones the donor continuation never reads: a flight
-status, four route leaves, a cabin, two payment-type leaves, and insurance. The sheet-visible
-verifier adds four more (two at $s2$, two at $s3$), all redundant route echoes or category words.
-In at least
+28/30 at $s3$ (93.3\%). The seven majority-flagged items are ones the donor continuation never
+reads: a flight status, four route leaves, a cabin, two payment-type leaves, and insurance. The
+range across passes is 7/60 (majority; 5 at $s2$, 2 at $s3$), 11/60 (sheet-visible verifier;
+7 at $s2$, 4 at $s3$), and 16/60 (blind verifier; 11 at $s2$, 5 at $s3$), i.e.\ 12--27\% of
+audited critical-arm stimuli are donor-unused (Wilson 95\% [5.8, 22.2]\%, [10.6, 29.9]\%,
+[17.1, 39.0]\% respectively). In at least
 three, the design's automatic usage test matched a short token in prose (``business'' in
 ``business days'', ``no'' in ``no additional charge'') or a route summary that restates an
-unchanged top-level field. The same test flags three $s1$ items as decision-changing (the
-verifier keeps one), so the noise runs both ways. Because the misclassified share is larger at
-$s2$ (7/30 under the verifier) than at $s3$ (4/30), correcting the
-assigned doses would if anything steepen the $s1$--$s2$ contrast; the observed threshold is not an
-artifact of this audit failure, but the per-level magnitudes are attenuated and are read as
+unchanged top-level field. The same test flags three $s1$ items as decision-changing (each
+verifier keeps one of the three), so the
+noise runs both ways. A bounded dilution sensitivity
+(\texttt{artifacts/analysis/severity\_sensitivity.json}) re-estimates the marginal tier odds
+ratios treating donor-unused critical-arm rows as switching at the pooled $s1$ rate: the
+observed marginal ORs of 1.56 ($s2$) and 2.02 ($s3$) rise to 1.64/2.19, 1.70/2.31, and
+1.79/2.52 under $m=7/60$, $11/60$, and $16/60$, and the marginal $s1$--$s2$ gap widens from
+9.0 to 12.3 points at the blind-verifier bound. Correcting the
+assigned doses therefore steepens the $s1$--$s2$ contrast under every pass; the observed threshold is not an
+artifact of this audit failure. The estimand is labelled assigned-severity throughout: the
+conditional tier ORs 1.27/4.60/11.21 are contrasts over assigned arms, attenuated
+(conservative) for realized criticality, and the per-level magnitudes are read as
 descriptive rather than as a calibrated dose--response function.
 
 An agent verification panel re-derived the ratings from the same packets (D-043; Table~\ref{tab:panel}). On outcome, the
@@ -1708,8 +1730,9 @@ The descriptive secondary analysis reports the share of decision changes that ar
 propagation, separately for $s=2$ and $s=3$, together with the detection and action-switch shares
 and the exclusive typology of Equation~\ref{eq:partition}. Of the 1{,}964 decision switches on the
 critical arms ($s=2$, $s=3$), 42.7\% are action switches, 1.5\% carry a flag without an action
-switch, 21.3\% are silent propagation (the model repeats the injected false value without flagging
-it), and 34.4\% are other value-level changes not attributable to the injected false value
+switch, at least 21.3\% [19.6, 23.2] are silent propagation (the model repeats the injected false value without flagging
+it; a lower bound because the coder misses panel-confirmed silent items --- recall .75 [.47, .91],
+recall-adjusted share $\approx$28.5\%, range 23.4--45.6\% over the recall CI), and 34.4\% are other value-level changes not attributable to the injected false value
 ($Y^{O}$). The per-model silent share of switches is 24.4\% (Qwen3.5-9B), 23.3\%
 (Ministral-3-8B), and 17.2\% (Llama-3.1-8B). Detection is rare in all three (0.1--1.9\% of
 critical-arm rows), so silent propagation is the dominant \emph{identified} failure mode, not the
@@ -1912,9 +1935,10 @@ Two statistical properties bound the interpretation. First, $\beta$ is a conditi
 not a risk difference, and it is not collapsible: the marginal paired contrasts (+10.2, +16.3,
 and +6.2 percentage points for $s2-s0$, $s3-s0$, and $s3-s2$) answer the population-average
 question and are reported separately from the within-stratum slope. Second, the assigned severity
-is measured rather than perfectly manipulated. The audit finds donor-unused items in the critical
-arms and decision-changing items in $s1$, so $\beta$ is a weighted contrast between intended and
-realized doses, not a clean per-level effect parameter. The sign is stable across every audit pass
+is measured rather than perfectly manipulated. The audit finds 7--16 of 60 donor-unused items in the critical
+arms and 3/30 decision-changing items in $s1$, so $\beta$ is a weighted contrast between intended and
+realized doses, not a clean per-level effect parameter; the bounded sensitivity in
+\texttt{artifacts/analysis/severity\_sensitivity.json} shows correction steepens the contrast. The sign is stable across every audit pass
 and coding, but the per-level magnitudes should not be read as a calibrated dose--response law. The decomposition changes the interpretation of a positive slope. A slope driven by detection is
 a slope in which the agent notices the conflict; a slope driven by silent propagation is a slope
 in which the agent absorbs the error. The two have opposite engineering implications even though
@@ -2003,8 +2027,8 @@ $\tau$-bench prefixes fixed, varies only the observation across five arms, and r
 within-prefix conditional-logistic slope with a silent-propagation decomposition and a four-step
 recovery curve. The study is pre-registered, gated, and ran at \$0
 cash on a university H200 slice. The base matrix, recovery sequences, and seed-repeat shard are
-complete; the pooled slope is $0.877$ [0.770, 0.998], positive in all three models, and 21.3\% of
-critical-arm switches silently repeat the injected value. Three gate criteria failed: the
+complete; the pooled slope is $0.877$ [0.770, 0.998], positive in all three models, and at least 21.3\% of
+critical-arm switches silently repeat the injected value (recall-adjusted $\approx$28.5\%). Three gate criteria failed: the
 protocol parser-failure rate
 (1.55\% against 1\%), the severity audit's $s2/s3$ decision-changing share (88.3\% against 90\%),
 and recovery (crude 27.3/34.7/27.2\%, Kaplan--Meier 22.0--44.6\%, against 50\%); all are reported
