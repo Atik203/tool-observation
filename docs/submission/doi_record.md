@@ -22,8 +22,10 @@ printed, logged, or committed).
   released JSONs modulo `recorded_utc`/`git_commit`.
 - **Clean-room compile:** the 14-file Overleaf zip (`toolresults.tex`, `ref.bib`,
   `cas-common.sty`, `cas-sc.cls`, `figures/fig1–fig10.png`) compiled with TeX Live
-  2026 via `latexmk -pdf`: **35 pages, 0 undefined references, 0 undefined
-  citations, 0 BibTeX warnings**.
+  2026 via `latexmk -pdf`: **35 pages** at the packaging snapshot and **36 pages** on
+  the current tree (paper SHA-256 `20564bda…`, including Task 6's pending parser/renderer
+  notes); both runs have **0 undefined references, 0 undefined citations, 0 BibTeX
+  warnings**. Recompile at tag time if further paper edits land.
 - **Redaction:** applied at build time (D-046); `pii_rescan.json` reports 0
   identifier hits and `n_redactions > 0`. The independent human re-scan remains an
   author-gated item (`docs/submission/checklist.md`).

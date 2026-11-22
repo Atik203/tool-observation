@@ -20,10 +20,12 @@ them.
 - [x] PDF metadata title matches; byline/ORCID/CRediT reconciled (pending signatures below).
 - [x] Clean-room compile from the 14-file Overleaf zip with the installed TeX Live 2026:
   `latexmk -pdf -interaction=nonstopmode -halt-on-error toolresults.tex` in a fresh temp
-  directory — 35 pages, 0 undefined references, 0 undefined citations, 0 BibTeX warnings
-  (`dist/toolresults-overleaf.zip` refreshed from the current `paper/` tree).
-  Structural checks also pass locally: 75/75 labels defined, all floats cited, all cite keys
-  resolve (`pytest tests/test_release.py`).
+  directory — current tree (2026-11-23 03:15, paper SHA-256 `20564bda…`, including the
+  pending Task 6 parser/renderer notes) compiles to **36 pages, 0 undefined references,
+  0 undefined citations, 0 BibTeX warnings**; the earlier packaging snapshot compiled to
+  **35 pages** with the same zero-warning result. `dist/toolresults-overleaf.zip` is
+  refreshed from the current `paper/` tree. Structural checks also pass locally: 75/75
+  labels defined, all floats cited, all cite keys resolve (`pytest tests/test_release.py`).
 
 ## Release / DOI
 
