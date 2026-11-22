@@ -6,6 +6,85 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-048 - P6.7 second deterministic renderer (field-list surface, exploratory GPU run)
+
+- **Date:** 2026-11-23
+- **Status:** accepted (exploratory; never pooled with the confirmatory slope)
+- **Context:** The Q1 panel register (§1 item 4, P6.7) records that the study uses one
+  renderer, so every claim is template-local. The highest-value A* run is to re-render the same
+  frozen information in a second deterministic surface and ask whether the severity result
+  survives it. The register budget is 2-4 GPU hours on the approved H200 MIG 1g.18gb slice.
+- **Decision (fixed before the run):**
+  - **Renderer.** `src/toolobs/render/render2.py` defines `toolresult-fieldlist-v1`: a flat
+    one-line-per-scalar-leaf surface, `path = value` under the header
+    `Observation (field list):`, where `path` is the dotted/bracketed JSON path with list
+    indices and `value` uses JSON-style scalars (`true`/`false`/`null`, escaped control
+    characters). This differs from `toolresult-prose-v1`'s nested bullet/key-value form while
+    emitting exactly the same scalar leaf set for every arm. `V` remains the exact scrubbed
+    observation JSON in both renderers, so `V` is an identical anchor.
+  - **Perturbations.** Renderer 2 reuses the frozen arm construction: the same
+    `choose_perturbation` calls, candidate fields, and seed (`20261108`) as stage 07. The run
+    verifies that re-rendering the resulting observations with the v1 prose renderer reproduces
+    every frozen `arm_observations` string bit-for-bit; a mismatch aborts the run. No new
+    perturbation is introduced and the frozen perturbation records are unchanged.
+  - **Sample.** 150 frozen prefixes drawn from the 800 primary prefixes (reserve excluded),
+    with 75 airline and 75 retail selected by a seeded shuffle within domain (`seed=20261108`,
+    sorted ids), without replacement. The id list and its SHA-256 are written to the artifact.
+  - **Run.** 150 prefixes x 5 arms x 3 pinned models = 2,250 generations on `uiu-h200`
+    (H200 MIG 1g.18gb), temperature 0, same `toolresult-next-decision-v3` prompt, parser
+    `toolresult-parser-v4`, and signature `toolresult800-signature-v2` as the confirmatory run.
+    New ledgers go under `data/runs/renderer2/` (gitignored; hashed in the artifact, not
+    committed). GPU wall time is measured per model and reported separately; stop at 4 hours.
+  - **Analysis.** A switch is `y_any` exactly as in `analysis/outcomes.py`: the parsed decision
+    signature differs from that prefix-model's `V` signature, or the output contains an
+    explicit doubt/inconsistency flag. Reports per-model per-arm switch rates, the
+    conditional-logit severity slope (s0-s3, prefix-cluster SE), the s3-s0 switch contrast,
+    and the same quantities recomputed from the confirmatory main ledgers on the same prefixes
+    and, for differences, the same parsed units.
+  - **Renderer-robustness bound (criterion fixed before the run).** The bound is descriptive,
+    not a gate. It "holds" if (i) every model's renderer-2 s0-vs-V switch rate differs from
+    renderer 1's by at most 10 percentage points, and (ii) the pooled and every per-model
+    renderer-2 severity slope is positive and lies inside the renderer-1 95% prefix-bootstrap
+    interval for the same prefixes (equivalently, the paired bootstrap interval for
+    beta_2 - beta_1 covers 0). If either fails, the paper keeps a template-local claim and
+    reports the observed sensitivity; no pooling is permitted either way.
+- **What is not claimed:** this is an exploratory format-robustness check on 150 prefixes, not
+  a preregistered confirmatory test, not a model comparison, and not a second dataset. It does
+  not change the primary sample, estimand, manifest, or preregistration.
+- **Consequences:** new `src/toolobs/render/render2.py`,
+  `src/toolobs/analysis/renderer2.py`, `scripts/20_renderer2.py`, and
+  `tests/test_renderer2.py`; `artifacts/analysis/renderer2.json` (gitignored, folded into the
+  release by P6.5). Paper text is folded in by a Task 6 follow-up; this task does not edit
+  `paper/toolresults.tex`.
+- **Outcome (2026-11-23):** the run completed on all three pinned models. 150 prefixes
+  (75 airline, 75 retail; id-list SHA-256 `f4bc6d0b...49ad0c9`), 2,250 generations; GPU wall
+  hours 0.199 (Qwen), 0.277 (Ministral), 0.146 (Llama), total **0.622 h** including model
+  load. Parseable outputs under renderer 2: Qwen 708/750, Ministral 718/750, Llama 739/750
+  (refusals 41/6/0; parse errors 1/26/11). The V anchor is stable: identical V signatures
+  across renderers for 142/143 Qwen, 144/144 Ministral, 147/147 Llama parsed units.
+  - Format sensitivity (s0 vs V, renderer2 - renderer1): +0.7 pp Qwen, +5.0 pp Ministral,
+    0.0 pp Llama; pooled +1.9 pp, 95% prefix-bootstrap CI [-1.9, +5.7]. Every model is within
+    the pre-stated 10 pp bound.
+  - Severity slope: renderer 2 beta 0.635 Qwen, 0.628 Ministral, 0.696 Llama; renderer 1 on
+    the same prefixes 1.068, 0.653, 0.517; pooled 0.649 vs 0.728. Every renderer-2 slope is
+    positive and inside its renderer-1 95% prefix-bootstrap interval; paired differences are
+    -0.433 [-1.292, +0.151] Qwen, -0.025 [-0.523, +0.530] Ministral, +0.179
+    [-0.349, +0.723] Llama.
+  - The s3-s0 switch contrast is nearly unchanged pooled: renderer 2 13.7 pp [9.2, 18.3] vs
+    renderer 1 13.9 pp [9.3, 18.9].
+  - **Bound holds: yes** under the pre-stated criterion. This is exploratory evidence that the
+    severity result is not a single-template artifact; it does not widen the confirmatory
+    claim, which stays preregistered and pooled-only.
+  - Comparators were recomputed from the locally rescored parser-v4 main ledgers on the same
+    prefixes; the server copy of the main ledgers is still parser-v3 (1,619 of 4,400 Qwen
+    rows differ in signature), so analysis ran locally after the GPU shards finished. The
+    renderer-2 ledgers are gitignored and hashed in `artifacts/analysis/renderer2.json`.
+  - Hours and the full tables are in the artifact and
+    `.superpowers/sdd/p6-q1-hardening/task-7-report.md`; paper text remains for a Task 6
+    follow-up.
+
+---
+
 ## D-046 - P6.4 release-copy PII redaction, v1.0.1, attribution and license consistency
 
 - **Date:** 2026-11-23
