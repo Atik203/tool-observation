@@ -9,9 +9,10 @@
 - **External registry:** none. The deposit is in-repo until the release DOI
   (Task 7): `prereg/PREREGISTRATION.md` (frozen) + `prereg/AMENDMENTS.md`
   (A-001–A-011) + `data/manifests/toolresult800_v1.json` (hash sidecar).
-  A-007–A-011 record the post-freeze analysis decisions and were entered
-  on 2026-11-22 (D-036, D-039, D-040, D-043, D-044); see the amendment
-  table for the entry-date convention.
+  A-007–A-011 record post-freeze analysis-record items (decisions and the
+  A-011 provenance finding) and were entered on 2026-11-22 (D-036, D-039,
+  D-040, D-043, D-044); see the amendment table for the entry-date
+  convention.
 - **This task (P4.4) itself adds no amendment**; A-007–A-011 were entered
   later under P6.1 and are listed above. Outcome-definition handling is by
   reported sensitivity, not by rule change: strict flag-excluding coding

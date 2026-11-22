@@ -105,6 +105,13 @@ def test_amendments_record_integrity() -> None:
     for amendment in ("A-007", "A-008", "A-009", "A-010", "A-011"):
         assert re.search(rf"^\| {amendment} \|", amendments, re.M), amendment
 
+    # A-009 must keep the v1 hash-risk-set triple as reconciliation only, not
+    # mislabel it as an H=4-censoring estimate, and must name the P6.2 primary.
+    a009 = next(line for line in amendments.splitlines() if line.startswith("| A-009 |"))
+    assert "v1 hash-risk-set crude triple 27.3/34.7/27.2" in a009
+    assert "v2 semantic crude 24.4/32.9/21.3" in a009
+    assert "H=4-censoring triple" not in a009
+
 
 def test_keywords_within_limit() -> None:
     match = re.search(r"\\begin\{keywords\}(.*?)\\end\{keywords\}", _tex(), re.S)

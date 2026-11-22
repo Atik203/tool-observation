@@ -152,7 +152,7 @@ Staged at `release/ToolResult-800-v1.0/` (uploaded to the DOI record; see
   `g4_recovery`, `g4_recovery_v2`, `severity_sensitivity`, `inference_robustness`,
   `wrong_direction`, `new_evidence`, `field_taxonomy`, `prereg_secondary`, jitter stability).
 - `packets/` — T6 blinded packets, sealed maps, and codes (single-agent coded, author-overseen).
-- `prereg/` — frozen preregistration, amendments A-001–A-011, deposit note.
+- `prereg/` — frozen preregistration, amendments A-001–A-011 (release rebuild pending, P6.5), deposit note.
 - `licenses/` — upstream τ-bench MIT text (verbatim) + model-output license verification.
 - `TABLE_MAP.md` (every paper table → artifact), `VALIDATION.md` (one-command validation),
   `SHA256SUMS`, `release_record.json`, `pii_rescan.json`.
