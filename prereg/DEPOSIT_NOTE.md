@@ -1,12 +1,19 @@
 # Preregistration freeze and deposit note (P4.4)
 
-- **Frozen version:** commit `1675376` (2026-11-15), tag `prereg-freeze-v1`,
-  prereg hash `e0d107c6` (authoritative; the document header's DRAFT/TBD
-  lines are stale and are not amended, per the no-edit rule).
+- **Frozen version:** commit `1673856cc6cd335ae9fd8b0132343082f167077a`
+  (short `1673856`, 2026-11-15), tag `prereg-freeze-v1`, prereg hash
+  `e0d107c6` (authoritative; the document header's DRAFT/TBD lines are stale
+  and are not amended, per the no-edit rule). The tag object and the
+  manifest's `freeze.git_commit` carry the same full hash; the earlier
+  `1675376` here was a typo, corrected 2026-11-22 under P6.1.
 - **External registry:** none. The deposit is in-repo until the release DOI
   (Task 7): `prereg/PREREGISTRATION.md` (frozen) + `prereg/AMENDMENTS.md`
-  (A-001–A-006) + `data/manifests/toolresult800_v1.json` (hash sidecar).
-- **This task (P4.4) adds no amendment.** Outcome-definition handling is by
+  (A-001–A-011) + `data/manifests/toolresult800_v1.json` (hash sidecar).
+  A-007–A-011 record the post-freeze analysis decisions and were entered
+  on 2026-11-22 (D-036, D-039, D-040, D-043, D-044); see the amendment
+  table for the entry-date convention.
+- **This task (P4.4) itself adds no amendment**; A-007–A-011 were entered
+  later under P6.1 and are listed above. Outcome-definition handling is by
   reported sensitivity, not by rule change: strict flag-excluding coding
   (≈ signature-only $Y$) leaves the slope unchanged (0.876 vs 0.877), and
   $Y^O$ is decomposed separately. See

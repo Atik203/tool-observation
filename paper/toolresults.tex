@@ -301,7 +301,7 @@
   four steps (22.0--44.6\% Kaplan--Meier secondary on the semantic risk set). Re-serializing the same observation without changing its
   values already shifts 20.3--45.6\% of G1 calibration decisions (main-run $s=0$ rates are
   19.8/31.9/38.1\%), so the slope is read over the prose arms
-  $s0$--$s3$ only. Audits were blind-rated label-free and checked by a multi-role agent panel,
+  $s0$--$s3$ only. Audits were blind-rated label-free (A-008) and checked by a multi-role agent panel,
   author-overseen. The G0 harvest audit is an AI pre-audit (40/40 adopted) with human verification
   deferred (D-021), so the freeze stands provisional on that item.
 \end{abstract}
@@ -762,9 +762,9 @@ perturbations, in shuffled item order, and excludes arm-derived annotations; the
 includes the injected true/false values; the recovery packet includes the per-step evidence.
 
 A first round was label-visible; the author accepted it under
-D-035, and it is archived as a sensitivity. The label-free sheets were checked by a multi-role
-agent panel, author-overseen (one verifier per audit, plus a second-rater pair on a stratified 120-item
-subset); the panel is recorded under D-043. Its ratings are agent-produced and share one model
+D-035, and it is archived as a sensitivity. The label-free round is primary (A-008). Its sheets were
+checked by a multi-role agent panel, author-overseen (one verifier per audit, plus a second-rater
+pair on a stratified 120-item subset); the panel is recorded under D-043. Its ratings are agent-produced and share one model
 family, so they establish reproducibility rather than human independence.
 The ratings were produced by blind rater sessions operated with an AI agent. The severity gate
 requires Krippendorff's $\alpha \ge .75$ \cite{krippendorff}, a Jonckheere--Terpstra trend test at
@@ -1128,7 +1128,7 @@ budget, and G3 and G4 the slope and recovery claims.
     G0 & At least 880 eligible; at least 440 per domain before audit and 400 after audit; replay at least 98\%; 40-item audit at least 36/40; freeze hash stable. & Fall back to 500 prefixes and 2 models, or stop. \\
     G1 & Per model: parse at least 95\%; placebo jitter at most 20\%; $s=3$ switch 10--80\%; format refusal below 5\%. & Fix prompt or parser and rerun; no main-run start. \\
     G2 & Stop at 45 GPU-hours or 200~GB storage, whichever comes first; ledger complete. & Analyse completed shards; disclose the shortfall. \\
-    G3 & Pooled $\beta>0$; positive in at least 2 of 3 models with the same sign; severity $\alpha \ge .75$; outcome $\kappa \ge .80$ (or adjudicated at least .70 with downgrade); recovery $\kappa \ge .75$; silent-propagation PPV at least .90; parser failure below 1\% (protocol criterion from \texttt{docs/GATES.md}, absent from the frozen prereg G3 row). & Measurement paper; no causal or content-sensitivity claim. \\
+    G3 & Pooled $\beta>0$; positive in at least 2 of 3 models with the same sign; severity $\alpha \ge .75$; outcome $\kappa \ge .80$ (or adjudicated at least .70 with downgrade); recovery $\kappa \ge .75$; silent-propagation PPV at least .90; parser failure below 1\% (protocol criterion from \texttt{docs/GATES.md}, absent from the frozen prereg G3 row; A-011). & Measurement paper; no causal or content-sensitivity claim. \\
     G4 & At least 50\% of the $s=3$ risk set recovers by $H=4$; Weibull shape not rejected at $p \ge .01$. & Report RMST and the curve; $t_{1/2}$ exploratory only. \\
     \bottomrule
   \end{tabular}
@@ -1137,8 +1137,9 @@ budget, and G3 and G4 the slope and recovery claims.
   \centering
   \caption{Gate outcomes as executed. Origin marks whether the criterion is in the frozen
   preregistration or was introduced by protocol/amendment. Three gate criteria failed (parser,
-  severity $s2/s3$, recovery); the original G1 criterion failed but the main run proceeded under
-  the post-freeze amendment A-004, so it is disclosed separately rather than counted. The Weibull
+  severity $s2/s3$, recovery); the parser criterion's provenance is A-011, and the original G1
+  criterion failed but the main run proceeded under the post-freeze amendment A-004, so it is
+  disclosed separately rather than counted. The Weibull
   rejection is part of the G4 recovery failure, not a separate count. Recovery crude rates are
   run-risk-set Events/n (Qwen 72/264, Ministral 141/406, Llama 112/412),
   recomputed in \texttt{artifacts/analysis/g4\_recovery.json} (\texttt{transient\_s3} groups);
@@ -1157,7 +1158,7 @@ budget, and G3 and G4 the slope and recovery claims.
     G3 slope & pooled $\beta>0$; $\ge2/3$ models same sign (preregistered) & $\hat\beta=0.877$; 3/3 positive & pass$^{\ast}$ \\
     G3 severity & $\alpha\ge.75$; $s2/s3$ $\ge90\%$ (preregistered) & $\alpha=.911$; 88.3\% (53/60) & \textbf{fail} \\
     G3 outcome & $\kappa\ge.80$; PPV $\ge.90$ (preregistered) & $\kappa=.987$; PPV 1.00, 9/9 (95\% lower bound .66) & pass \\
-    G3 parser & failure $<1\%$ (protocol, not frozen prereg) & 205/13{,}200 (1.55\%) & \textbf{fail} \\
+    G3 parser & failure $<1\%$ (protocol, not frozen prereg; A-011) & 205/13{,}200 (1.55\%) & \textbf{fail} \\
     G3 recovery agr.\ & $\kappa\ge.75$ (preregistered) & .920 / .917 & pass \\
     G4 & $\ge50\%$ of $s3$ risk set recovers by $H=4$; Weibull $p\ge.01$ (preregistered) & crude 27.3/34.7/27.2\% (72/264; 141/406; 112/412); KM 32.4/47.6/28.2\%; Weibull rejected in 2/3 primary groups & \textbf{fail} \\
     \bottomrule
@@ -1385,16 +1386,18 @@ in the paper traces to a manifest row, a ledger extract, or an analysis artifact
 refuses to build without a passed audit and a clean identifier re-scan. The release record binds
 the preregistration, configuration, and renderer hashes to every bundled file. The workflow follows reproducibility
 guidance that combines preregistration, artifact manifests, and leakage checks
-\cite{nosek2018,munafo2017,pineau,kapoor2023}. The preregistration freeze (commit 1675376,
-tag prereg-freeze-v1, hash \texttt{e0d107c6}; no external registry) and the no-new-amendment
-record for this analysis are in \texttt{prereg/DEPOSIT\_NOTE.md} \cite{toolresult800prereg}; amendments A-001--A-006 are
-in \texttt{prereg/AMENDMENTS.md}.
+\cite{nosek2018,munafo2017,pineau,kapoor2023}. The preregistration freeze (commit 1673856,
+tag prereg-freeze-v1, hash \texttt{e0d107c6}; no external registry) and the deposit record are in
+\texttt{prereg/DEPOSIT\_NOTE.md} \cite{toolresult800prereg}; amendments A-001--A-011 are
+in \texttt{prereg/AMENDMENTS.md} (A-007--A-011 entered 2026-11-22 for the post-freeze analysis
+decisions; A-010 is exploratory).
 
 \section{Results}\label{sec:results}
 
 The confirmatory analysis of the base matrix is complete. The run generated the full 880-prefix
 matrix (13,200 base generations, five arms, three models, greedy decoding); the confirmatory
-analysis uses the 800 primary prefixes and excludes the 80 reserve prefixes, as pre-registered.
+analysis uses the 800 primary prefixes and excludes the 80 reserve prefixes, as pre-registered
+(A-007).
 The recovery sequences and the 10\% seed-repeat shard are collected, and the blind audits are
 complete in a label-free round; a multi-role agent panel, author-overseen, re-derived the ratings (D-043). This
 section reports the pilot, the G0 harvest counts, the G1 calibration, the
@@ -1559,7 +1562,7 @@ ratio of $e^{0.877} \approx 2.40$ per level, but that summary hides the shape: t
 ratios against $s0$ are 1.27 (s1), 4.60 (s2), and 11.21 (s3) (Table~\ref{tab:tiers} and
 Figure~\ref{fig:tiers}), and the pre-registered linearity diagnostics reject a constant gradient. The estimate uses 617 prefix$\times$model strata
 (423 unique prefixes) and 2{,}458 slope rows from the 800 primary prefixes; the 80 reserve
-prefixes are excluded. Of the 9{,}075 labelled prose-arm cells, 2{,}297 form prefix$\times$model
+prefixes are excluded (A-007). Of the 9{,}075 labelled prose-arm cells, 2{,}297 form prefix$\times$model
 strata and 617 vary across arms; the conditional logit drops the 1{,}680 concordant strata, which
 contribute no information, so the estimate is a within-stratum effect identified from prefixes
 whose decision varies across arms.
@@ -1574,7 +1577,7 @@ the reserve exclusion for the remainder. The blind audit then found and correcte
 defect (D-028, A-006), and the estimate above is the corrected one. All three are positive and all
 are reported. The G3 gate did not pass: the protocol parser-failure criterion is 1.55\% (205/13{,}200; 3.45\% including
 refusals) against the 1\% threshold (a protocol criterion from \texttt{docs/GATES.md}, absent from
-the frozen prereg G3 row). Under the gate's fail action the paper reports a measured shift among
+the frozen prereg G3 row; A-011). Under the gate's fail action the paper reports a measured shift among
 movers and makes no causal or content-sensitivity claim; the slope is not a confirmed effect. The recovery endpoint is reported separately; the audits gate the label-based
 decomposition, not the switch indicator. Estimates trace to
 \texttt{artifacts/analysis/g3\_analysis.json}.
@@ -1742,7 +1745,7 @@ after the V-unparsed filter
 The claim is conditional on the sign pattern: a positive pooled slope with fewer than two
 positive per-model slopes is a null result under the pre-registered decision rule, not a partial
 success. Here all three are positive, so the slope stands. The severity, outcome, and recovery
-audits were re-run label-free (D-039): severity $\alpha = .911$ (nominal; interval .959),
+audits were re-run label-free (D-039; A-008): severity $\alpha = .911$ (nominal; interval .959),
 outcome $\kappa = .987$, silent-propagation PPV $= 1.00$ (9/9; exact 95\% lower bound .66) with
 silent recall $.75$ (the coder misses three panel-confirmed silent items), and recovery
 $\kappa = .920$ (step) and $.917$ (endpoint). The severity audit misses one of its five criteria: 88.3\% of
@@ -1951,7 +1954,7 @@ or change action where the design anticipated harm, while explicit skepticism is
 
 Deviation from the donor is not task error, so P4.6 added a task-utility stream with no new
 generations (GPU 0.0\,h; CPU-only reanalysis plus blinded coding;
-\texttt{scripts/16\_task\_utility.py}; design logged in D-044 before coding;
+\texttt{scripts/16\_task\_utility.py}; exploratory under A-010; design logged in D-044 before coding;
 \texttt{artifacts/analysis/new\_evidence.json}). It has two layers. First, deterministic
 donor-path adherence on all 1{,}039 semantic $s=3$-switched pairs with parsed decisions at
 both arms (primary sample; 14 unparsed pairs auto-coded degraded and excluded from agent
@@ -2030,7 +2033,7 @@ and 43 Qwen transient-$s3$ members (overlap table in
 376/353/221 transient-$s3$ prefixes (Llama/Ministral/Qwen) against run-set sizes 412/406/264
 and reported switch counts 377/390/286; the hash-based crude triple 72/264, 141/406, 112/412
 in Table~\ref{tab:gate-status} decomposes exactly into semantic plus hash-only events
-(54+18, 116+25, 80+32). Censoring is at the last observed step. G4 does not
+(54+18, 116+25, 80+32). Censoring is at the last observed step (A-009). G4 does not
 pass on the primary set: 24.4\%, 32.9\%, and 21.3\% of the semantic transient $s=3$ risk set
 recover by $H=4$ (Qwen, Ministral, Llama; Wilson 95\% intervals [19.2, 30.5], [28.2, 37.9],
 [17.4, 25.7]). The KM secondary reaches 28.2/44.6/22.0\%; the gap to crude is the
@@ -2245,7 +2248,7 @@ held-out human audit. It does not claim end-to-end task success, frontier-model 
 validity, or a universal law. The tools are benchmark implementations against a pinned database,
 not live services, so a wrong observation here is a controlled counterfactual rather than a
 production incident. The annotation was produced by blind rater sessions operated with an AI
-agent; the reported round is label-free and was checked by a multi-role agent panel,
+agent; the reported round is label-free (A-008) and was checked by a multi-role agent panel,
 author-overseen, not by
 human coauthors or an external vendor. The G0 40-item harvest audit is likewise an AI pre-audit
 (40/40) adopted by the author with human verification deferred (D-021, A-005); the freeze stands
@@ -2256,7 +2259,7 @@ sequences, and two severity sessions were identical on 116/120 items. The 18~GB 
 batch 4 rather than the planned batch 8; the G2 cap was not approached (about 8.9 GPU-hours of the
 45-hour budget), so the sample is complete. Three gate criteria failed and are reported as
 failures: the protocol parser-failure rate is 1.55\% against the 1\% threshold (3.45\% if refusals are
-counted), the severity audit's $s2/s3$ decision-changing share is 88.3\% against 90\%, and G4
+counted; A-011), the severity audit's $s2/s3$ decision-changing share is 88.3\% against 90\%, and G4
 recovery is crude 27.3/34.7/27.2\% (Kaplan--Meier 22.0--44.6\% secondary) against the 50\% threshold. The
 automatic labeling was
 corrected once, after the blind audit found a defect (D-028, A-006); the pre-fix analysis is also
@@ -2322,16 +2325,16 @@ stated limits; because three gate criteria failed, no causal or content-sensitiv
   agent panel, author-overseen, re-derived every rating (one verifier per audit), and a second-rater pair
   re-rated a stratified 120-item subset. An AI-assisted mechanical pre-audit was used for the
   40-item G0 check under D-021. The first, label-visible round was accepted by the author on
-  2026-11-18 (D-035); the reported label-free round and its panel record are documented under
-  D-043 (\texttt{artifacts/audit/verification/panel\_record.json}). Rater sessions ran in this
+  2026-11-18 (D-035); the reported label-free round is primary (A-008) and its panel record is
+  documented under D-043 (\texttt{artifacts/audit/verification/panel\_record.json}). Rater sessions ran in this
   project's agent-harness interface and wrote the released packet/sheet CSVs; the rater
   instruction files state the audit gates but not the study hypotheses, and the label-free packets
   exclude arm labels, reference decisions, and automatic answers, so raters were blind to the
   hypotheses tested. All sessions share one underlying model family (the session model identity was
   not logged), so their agreement is reproducibility evidence, not human
   independence. Dates: severity/outcome/recovery packets 2026-11-19, panel record 2026-11-18/19,
-  task-utility packets and codes 2026-11-22. The task-utility endpoint is single-agent coded,
-  same-session intra-rater only ($\kappa=.92$ on 38 re-codes), author-overseen (T6 forbids
+  task-utility packets and codes 2026-11-22. The task-utility endpoint is exploratory (A-010),
+  single-agent coded, same-session intra-rater only ($\kappa=.92$ on 38 re-codes), author-overseen (T6 forbids
   subagents, so no panel was possible there), and its packets, sealed maps, and codes are released
   in \texttt{packets/}. The authors remain responsible for every label, every gate decision, and every
   claim in this paper.

@@ -129,6 +129,13 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   over the 1,053 switched pairs (and 1,039 analyzed): tool-donor prefixes are
   over-represented among switchers. No design, sample, or code changed; the executed
   245/794 split in `new_evidence.json` and the paper is authoritative.
+- **Amendment record (2026-11-22; supersedes "no amendment is needed" above for the record
+  only):** the task-utility endpoint is entered as A-010 in `prereg/AMENDMENTS.md` as an
+  exploratory post-freeze secondary. The scientific content is unchanged: no new generations,
+  no pooling with confirmatory estimates, and the no-task-success claim boundary stands. The
+  earlier statement judged the endpoint non-confirmatory and therefore outside amendment
+  scope; the P6.1 record-integrity audit records it so every post-freeze endpoint has an
+  amendment row.
 
 ---
 
@@ -166,6 +173,8 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   versions). Per-level dose magnitudes are descriptive; the threshold reading is retained because
   correcting the misclassification would steepen the s1-s2 contrast. No threshold, sample, model,
   or analysis rule changed.
+- **Amendment record (2026-11-22):** the label-free-primary decision is entered as A-008 in
+  `prereg/AMENDMENTS.md`; this entry supplies the final numbers and panel record.
 
 ---
 
@@ -198,6 +207,10 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   artifact gains provisional and human-verification flags; the paper states that the manifest's
   `gate_pass` field records the D-021 adoption, not a human pass.
 - **Consequences:** No data or analysis change; the disclosure is accurate.
+- **Amendment record (2026-11-22):** the parser-failure criterion's provenance is entered as
+  A-011 in `prereg/AMENDMENTS.md`: `<1%` is a pre-freeze protocol criterion in
+  `docs/GATES.md` (commit `ea0f95b`, 2026-11-09), not part of the frozen G3 row. No threshold
+  changed.
 
 ---
 
@@ -214,6 +227,8 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   50%.
 - **Consequences:** Paper tables and text updated; half-lives 4.3-8.0 steps; Weibull rejects
   2/3 primary groups.
+- **Amendment record (2026-11-22):** entered as A-009 in `prereg/AMENDMENTS.md`, with the
+  post-estimate timing and "not blind" status disclosed.
 
 ## D-039 - Label-free audit re-rating (supersedes the label-visible round)
 
@@ -234,6 +249,8 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   α .957/.981 figures came from the annotated, level-ordered severity packet and are archived,
   not reported (D-043). The label-visible round's α .919/κ .975/PPV 1.00/recovery .787 are
   retained as the sensitivity.
+- **Amendment record (2026-11-22):** entered as A-008 in `prereg/AMENDMENTS.md`, with the
+  post-round timing and "not blind" status disclosed.
 
 ---
 
@@ -291,6 +308,8 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
   sample (800 primary) and states the exclusion. No criterion changed; the exclusion makes the
   analysis match the preregistration. The audit packets retain reserve items as label-validity
   evidence; the audit gates do not depend on the analysis sample.
+- **Amendment record (2026-11-22):** entered as A-007 in `prereg/AMENDMENTS.md`, with the
+  post-run timing and "partly blind" status disclosed.
 
 ---
 

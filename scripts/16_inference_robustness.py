@@ -354,10 +354,10 @@ def main() -> int:
         "outcome_definition_sensitivity": outcome_sensitivity,
         "fix_and_circularity_record": fix_record,
         "prereg_deposit": {
-            "frozen_version": "commit 1675376 (2026-11-15), tag prereg-freeze-v1",
+            "frozen_version": "commit 1673856 (2026-11-15), tag prereg-freeze-v1",
             "prereg_hash": "e0d107c6 (authoritative; header DRAFT/TBD lines stale)",
             "external_registry": "none; deposit is in-repo until release DOI (T7)",
-            "amendments": "A-001..A-006 in prereg/AMENDMENTS.md; no new amendment "
+            "amendments": "A-001..A-011 in prereg/AMENDMENTS.md; no new amendment "
                           "in this task (sensitivity reported, no rule changed)",
         },
         "assumptions": [

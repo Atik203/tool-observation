@@ -83,6 +83,29 @@ def test_cite_keys_resolve_and_bib_fully_cited() -> None:
     assert "[VERIFY CITATION]" not in bib
 
 
+def test_amendments_record_integrity() -> None:
+    """The prereg record lists every post-freeze amendment and one frozen hash."""
+    import json
+
+    amendments = (_REPO / "prereg" / "AMENDMENTS.md").read_text(encoding="utf-8")
+    deposit = (_REPO / "prereg" / "DEPOSIT_NOTE.md").read_text(encoding="utf-8")
+    manifest = json.loads(
+        (_REPO / "data" / "manifests" / "toolresult800_v1.json").read_text(encoding="utf-8")
+    )
+    frozen = manifest["freeze"]["git_commit"]
+    assert frozen == "1673856cc6cd335ae9fd8b0132343082f167077a"
+    assert frozen in amendments
+    assert frozen in deposit
+    assert "commit `1675376`" not in deposit
+
+    status = amendments.split("## Status", 1)[1].split("\n## ", 1)[0]
+    for amendment in ("A-004", "A-006", "A-007", "A-008", "A-009", "A-010", "A-011"):
+        assert amendment in status, amendment
+
+    for amendment in ("A-007", "A-008", "A-009", "A-010", "A-011"):
+        assert re.search(rf"^\| {amendment} \|", amendments, re.M), amendment
+
+
 def test_keywords_within_limit() -> None:
     match = re.search(r"\\begin\{keywords\}(.*?)\\end\{keywords\}", _tex(), re.S)
     assert match is not None

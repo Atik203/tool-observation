@@ -20,7 +20,7 @@ release date is the DOI registration date. Hashes below are from the frozen mani
 | Release date | TBD (= DOI registration date) |
 | DOI | TBD (`docs/submission/doi_record.md`) |
 | Manifest hash | `d6e034d7f1132b314ad1f82bf14faa0f6762975ee7b404b54cc365acfac5487a` (`data/manifests/toolresult800_v1.json` + sidecar) |
-| Preregistration hash | `e0d107c6` (freeze commit 1675376, tag prereg-freeze-v1; no external registry; record in `prereg/DEPOSIT_NOTE.md`) |
+| Preregistration hash | `e0d107c6` (freeze commit 1673856, tag prereg-freeze-v1; no external registry; record in `prereg/DEPOSIT_NOTE.md`) |
 
 ## 2. Summary
 
@@ -152,7 +152,7 @@ Staged at `release/ToolResult-800-v1.0/` (uploaded to the DOI record; see
   `g4_recovery`, `g4_recovery_v2`, `severity_sensitivity`, `inference_robustness`,
   `wrong_direction`, `new_evidence`, `field_taxonomy`, `prereg_secondary`, jitter stability).
 - `packets/` — T6 blinded packets, sealed maps, and codes (single-agent coded, author-overseen).
-- `prereg/` — frozen preregistration, amendments A-001–A-006, deposit note.
+- `prereg/` — frozen preregistration, amendments A-001–A-011, deposit note.
 - `licenses/` — upstream τ-bench MIT text (verbatim) + model-output license verification.
 - `TABLE_MAP.md` (every paper table → artifact), `VALIDATION.md` (one-command validation),
   `SHA256SUMS`, `release_record.json`, `pii_rescan.json`.

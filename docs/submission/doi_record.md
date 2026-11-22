@@ -24,7 +24,7 @@ Resolve-check (DOI URL returns the record) is part of the author's upload step.
 - **Related identifiers:**
   - Repository: https://github.com/Atik203/tool-observation
   - Upstream: https://github.com/sierra-research/tau-bench @ 59a200c6d575d5951f1cb70fea53cef032f6b
-  - Preregistration: frozen commit 1675376, tag prereg-freeze-v1, hash e0d107c6 (in-repo)
+  - Preregistration: frozen commit 1673856, tag prereg-freeze-v1, hash e0d107c6 (in-repo)
   - Paper: Tool-Result Errors in Language-Model Agents (measurement study; under submission)
 - **Manifest hash (authoritative):**
   `d6e034d7f1132b314ad1f82bf14faa0f6762975ee7b404b54cc365acfac5487a`
