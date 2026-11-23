@@ -14,7 +14,7 @@ re-license of it. The upstream notices and license terms are preserved below.
 - **Project additions:** CC BY 4.0 (see `DATA_LICENSE.md` and `LICENSE-DOCS`)
 - **Citation:** see `CITATION.cff`; cite the accompanying paper and the upstream τ-bench paper and
   repository for any use.
-- **Version:** 1.0.1 (2026-11-23). The distributed release is redacted; the frozen source under
+- **Version:** see the package `CHANGELOG.md` and `release_record.json` (and the DOI record) for the version and date. The distributed release is redacted; the frozen source under
   `data/frozen/` is not distributed and remains bit-identical under the manifest hash (D-046).
 
 ## τ-bench (upstream data and code)

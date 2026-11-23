@@ -933,12 +933,12 @@ def ledger_hashes_json(root: Path) -> dict:
 
 
 def validation_md() -> str:
-    return """# Validation — ToolResult-800 v1.0.2
+    return f"""# Validation — ToolResult-800 v1.0.2
 
 One-command validation (no GPU, stdlib Python only):
 
-    python scripts/18_build_release.py --validate --root release/ToolResult-800-v1.0.1
-    python scripts/18_build_release.py --validate --root release/ToolResult-800-v1.0.1 --rerun
+    python scripts/18_build_release.py --validate --root release/{PACKAGE_NAME}
+    python scripts/18_build_release.py --validate --root release/{PACKAGE_NAME} --rerun
     make validate-release   # same checks against the live tree
 
 - **L1 (this package alone):** required files present; `SHA256SUMS`
