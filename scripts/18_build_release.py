@@ -933,7 +933,7 @@ def ledger_hashes_json(root: Path) -> dict:
 
 
 def validation_md() -> str:
-    return f"""# Validation — ToolResult-800 v1.0.2
+    return f"""# Validation — ToolResult-800 v{PACKAGE_VERSION}
 
 One-command validation (no GPU, stdlib Python only):
 
