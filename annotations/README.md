@@ -2,6 +2,8 @@
 
 **Do this yourself.** Do not use an AI assistant to fill the sheets.
 
+**New here?** Co-authors start with the [annotation guide](COAUTHOR_GUIDE.md), then pick a task below.
+
 **Legend:** 📂 open · ✍️ fill · ✅ done · 🔄 in progress · ⏳ todo · ⚠️ check · 🚫 don't · 📝 example · 💾 save
 
 **Read first:** [how to fill](common/how_to_fill.md) · [glossary](common/glossary.md) · [rules](common/rubrics.md)
