@@ -26,7 +26,6 @@ coverage.xml
 .mypy_cache/
 .tox/
 .nox/
-.env
 # ---------------------------------------------------------------------------
 # Web frontend (Next.js)
 # ---------------------------------------------------------------------------
@@ -193,4 +192,3 @@ annotations/_trial/*
 
 # Local LaTeX build products
 paper/out/
-.env.local
