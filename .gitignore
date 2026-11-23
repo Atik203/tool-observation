@@ -193,3 +193,4 @@ annotations/_trial/*
 
 # Local LaTeX build products
 paper/out/
+.env.local
