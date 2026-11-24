@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from _requires import requires_files
 import importlib.util
 import json
 import subprocess
@@ -81,6 +82,7 @@ def test_provenance_string() -> None:
     assert severity_sensitivity.PROVENANCE == "multi-role agent panel, author-overseen"
 
 
+@requires_files("artifacts/analysis/prereg_secondary.json", "artifacts/audit/blind_audit_result.json")
 def test_cli_smoke_on_repo_inputs(tmp_path: Path) -> None:
     out = tmp_path / "severity_sensitivity.json"
     completed = subprocess.run(

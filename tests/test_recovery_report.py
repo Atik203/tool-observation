@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from _requires import requires_yaml
 import importlib.util
 import json
 import subprocess
@@ -51,6 +52,7 @@ def test_group_report_computes_recovery_share() -> None:
     assert report["passed"] in (True, False)
 
 
+@requires_yaml
 def test_cli_writes_json_and_markdown(tmp_path) -> None:
     event_dir = tmp_path / "events" / "qwen"
     event_dir.mkdir(parents=True)

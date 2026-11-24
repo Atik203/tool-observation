@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from _requires import requires_yaml
 import importlib.util
 from pathlib import Path
 from types import SimpleNamespace
@@ -59,6 +60,7 @@ def test_stability_counts_signature_matches() -> None:
     assert report["by_arm"]["s3"] == {"n": 2, "stable": 2, "rate": 1.0}
 
 
+@requires_yaml
 def test_report_only_recomputes_from_existing_ledgers(tmp_path) -> None:
     import json as _json
     import subprocess

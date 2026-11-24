@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from _requires import requires_yaml, requires_files
 import importlib.util
 import json
 import subprocess
@@ -78,6 +79,8 @@ def test_repo_inputs_cross_check() -> None:
     assert report["provenance"] == "multi-role agent panel, author-overseen"
 
 
+@requires_yaml
+@requires_files("data/runs/main")
 def test_cli_smoke_on_repo_inputs(tmp_path) -> None:
     out = tmp_path / "wd.json"
     proc = subprocess.run(

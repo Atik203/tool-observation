@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from _requires import requires_files
 import csv
 import importlib.util
 import subprocess
@@ -143,6 +144,7 @@ def test_build_recovery_packet_includes_step_evidence(tmp_path) -> None:
     assert steps[1]["decision"] == '{"tool": "v"}'
 
 
+@requires_files("data/runs/main")
 def test_cli_generates_packets(tmp_path) -> None:
     audit_dir = tmp_path / "audit"
     result = subprocess.run(
@@ -174,6 +176,7 @@ def test_cli_generates_packets(tmp_path) -> None:
     assert len(outcome_rows) == 8
 
 
+@requires_files("data/runs/main")
 def test_cli_generates_recovery_packet(tmp_path) -> None:
     audit_dir = tmp_path / "audit"
     result = subprocess.run(

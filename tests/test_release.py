@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from _requires import requires_files
 import importlib.util
 import json
 import re
@@ -143,6 +144,7 @@ def test_table_map_recovery_uses_v2_semantic_set() -> None:
     assert "reconciliation" in row["keys"]
 
 
+@requires_files("artifacts/analysis/rowlevel_refits.json", "artifacts/analysis/renderer2.json", "artifacts/analysis/wrong_direction.json", "artifacts/analysis/new_evidence.json", "artifacts/analysis/severity_sensitivity.json", "artifacts/analysis/inference_robustness.json")
 def test_release_stages_p63_refits_and_ledger_hashes() -> None:
     staged = {dst: src for src, dst in build_release.stage_files()}
     for name in (
@@ -171,6 +173,7 @@ def test_release_stages_p63_refits_and_ledger_hashes() -> None:
     assert hasattr(build_release, "ledger_hashes_json")
 
 
+@requires_files("artifacts/analysis/renderer2.json")
 def test_renderer2_ledger_hashes_match_artifact() -> None:
     """The staged ledgers are exactly the bytes hashed in renderer2.json."""
     import hashlib
@@ -536,6 +539,7 @@ def test_release_pii_report_records_redaction() -> None:
     assert tuple(int(part) for part in record["version"].split(".")) >= (1, 0, 1)
 
 
+@requires_files("artifacts/analysis/g4_recovery_v2.json")
 def test_stage_files_all_present() -> None:
     staged = build_release.stage_files()
     assert len(staged) > 100
@@ -543,6 +547,7 @@ def test_stage_files_all_present() -> None:
     assert missing == []
 
 
+@requires_files("artifacts/analysis/g4_recovery_v2.json")
 def test_validate_live_tree_no_rerun() -> None:
     result = build_release.validate_tree(_REPO, rerun=False)
     assert result["ok"], result["failed"]

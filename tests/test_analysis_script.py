@@ -10,6 +10,7 @@ from pathlib import Path
 from toolobs.infer.ledger import append_ledger_row
 from toolobs.infer.parse_output import parse_decision, signature_hash, signature_json
 from toolobs.schemas import LedgerRow, PerturbationRecord
+from _requires import requires_yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -39,6 +40,7 @@ def _row(model: str, prefix: str, arm: str, decision_text: str) -> LedgerRow:
     )
 
 
+@requires_yaml
 def test_analysis_script_reports_slope(tmp_path) -> None:
     ledger_root = tmp_path / "runs"
     model_dir = ledger_root / "qwen"
@@ -103,6 +105,7 @@ def test_analysis_script_reports_slope(tmp_path) -> None:
     assert report["bootstrap"]["ci_low"] < report["bootstrap"]["ci_high"]
 
 
+@requires_yaml
 def test_reserve_prefixes_are_excluded_by_default(tmp_path) -> None:
     ledger_root = tmp_path / "runs"
     model_dir = ledger_root / "qwen"

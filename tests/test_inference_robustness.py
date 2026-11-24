@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from _requires import requires_files
 import importlib.util
 import json
 import subprocess
@@ -52,6 +53,7 @@ def test_provenance_string() -> None:
     assert inference_robustness.PROVENANCE == "multi-role agent panel, author-overseen"
 
 
+@requires_files("artifacts/analysis/prereg_secondary.json", "artifacts/analysis/recovery_deep.json")
 def test_cli_smoke_on_repo_inputs() -> None:
     proc = subprocess.run(
         [sys.executable, str(_SCRIPT)],

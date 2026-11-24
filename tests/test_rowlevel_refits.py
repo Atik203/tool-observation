@@ -7,6 +7,7 @@ counts.  No full analysis run is invoked here.
 
 from __future__ import annotations
 
+from _requires import requires_yaml
 import importlib.util
 import json
 import math
@@ -395,6 +396,7 @@ def test_severity_pass_counts_real_audit() -> None:
     assert passes["passes"]["blind_verifier"]["k"] == 16
 
 
+@requires_yaml
 def test_real_ledger_smoke_counts() -> None:
     runs = Path(__file__).resolve().parents[1] / "data" / "runs" / "main"
     if not runs.exists():

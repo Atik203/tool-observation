@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from _requires import requires_yaml
 import importlib.util
 import json
 import subprocess
@@ -119,6 +120,7 @@ def test_repo_evidence_cross_check() -> None:
     assert abs(report["reliability"]["kappa"] - 0.918803) < 1e-6
 
 
+@requires_yaml
 def test_cli_smoke_analyze_on_repo_inputs(tmp_path) -> None:
     needed = [
         "task_utility_packets.json",

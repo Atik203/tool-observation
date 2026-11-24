@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from _requires import requires_yaml
 import importlib.util
 import json
 import subprocess
@@ -119,6 +120,7 @@ def _decision(tool: str, args: dict | None = None) -> str:
     return json.dumps({"tool": tool, "args": args or {}, "slots": {}, "verb": ""})
 
 
+@requires_yaml
 def test_cli_semantic_risk_set_and_crude(tmp_path) -> None:
     ledger_root = tmp_path / "ledgers"
     event_root = tmp_path / "events"

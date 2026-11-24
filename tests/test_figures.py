@@ -9,12 +9,15 @@ type size of at least 8 pt for every figure.
 
 from __future__ import annotations
 
+from _requires import requires_matplotlib
 import subprocess
 import sys
 from pathlib import Path
 
 _REPO = Path(__file__).resolve().parents[1]
 _PY = sys.executable
+
+pytestmark = requires_matplotlib
 
 
 def _run(script: str) -> subprocess.CompletedProcess[str]:
