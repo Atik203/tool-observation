@@ -6,6 +6,25 @@ in `prereg/AMENDMENTS.md` before the affected analysis runs.
 
 ---
 
+## D-051 - First human G0 audit: 38/40 pass (Author 2)
+
+- **Date:** 2026-11-23
+- **Status:** accepted (human verification; closes part of the D-021 provisional gap)
+- **Context:** Author 2 (Saiful-alam105) filled `annotations/g0/sheet.csv` (PR #1, commit
+  `785932b`, merged as `6108da8`): 40/40 rows complete, valid `0`/`1` values, `domain` unchanged,
+  every `0` with a note. Replay column re-verified mechanically against the packet (40/40 match).
+- **Findings:** 38/40 items fully pass; 2 relevance fails with documented reasons — G0-009
+  (`available_seats.basic_economy=10` not used; the "10" in the continuation is the query date
+  `2024-05-10`, a substring trap correctly avoided) and G0-018 (continuation's "basic economy"
+  refers to reservation Z7GOZK, not the observation's `economy` cabin on THY2DG; accepted as a
+  strict-but-fair reading). No PII found (packet-wide scan: synthetic tokens only).
+- **Consequences:** human G0 result is **38/40, above the 36/40 bar** — the G0 gate now has human
+  evidence instead of only the AI pre-audit. The 2 relevance-flagged items stay in the frozen
+  sample (no re-sampling; failures are reported, not smoothed over). Remaining D-021 scope
+  (severity/outcome/recovery human subsets) is still pending.
+
+---
+
 ## D-050 - P6.5 Phase C path-leak errata: build-time path scrub, v1.0.2 DOI
 
 - **Date:** 2026-11-23
